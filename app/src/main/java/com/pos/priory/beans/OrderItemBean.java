@@ -17,6 +17,7 @@ public class OrderItemBean {
      */
 
     private int id;
+    private int returnStockId = -1;
     private String order;
     private StockBean stock;
     private int quantity;
@@ -29,6 +30,14 @@ public class OrderItemBean {
 
     public String getWeight() {
         return weight;
+    }
+
+    public int getReturnStockId() {
+        return returnStockId;
+    }
+
+    public void setReturnStockId(int returnStockId) {
+        this.returnStockId = returnStockId;
     }
 
     public void setWeight(String weight) {

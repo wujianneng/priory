@@ -124,7 +124,7 @@ public class AddNewOrderActivity extends BaseActivity {
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
                     case R.id.btn_change_price:
-                        showEditPriceDialog(position);
+                        showChoiceDiscountDialog(position);
                         break;
                     case R.id.decrease_btn:
                         if (goodList.get(position).getSaleCount() > 1) {
@@ -173,7 +173,7 @@ public class AddNewOrderActivity extends BaseActivity {
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         goodRecyclerView.setLayoutManager(mLayoutManager);
         goodRecyclerView.setAdapter(goodsAdapter);
-        memberid = getIntent().getIntExtra("memberId",0);
+        memberid = getIntent().getIntExtra("memberId", 0);
         staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY, ""),
                 new TypeToken<List<StaffInfoBean>>() {
                 }.getType());
@@ -258,15 +258,108 @@ public class AddNewOrderActivity extends BaseActivity {
         moneyTv.setText((sumMoney + changeGoodsMoeny) + "");
     }
 
+    int yourChoice;
+    AlertDialog choiceSexDialog;
+
+    private double getDiscountByName(String discountName) {
+        if (discountName.equals("6折")) {
+            return 0.6;
+        } else if (discountName.equals("65折")) {
+            return 0.65;
+        } else if (discountName.equals("7折")) {
+            return 0.7;
+        } else if (discountName.equals("75折")) {
+            return 0.75;
+        } else if (discountName.equals("8折")) {
+            return 0.8;
+        } else if (discountName.equals("85折")) {
+            return 0.85;
+        } else if (discountName.equals("9折")) {
+            return 0.9;
+        } else if (discountName.equals("95折")) {
+            return 0.95;
+        }
+        return 1;
+    }
+
+    private void showChoiceDiscountDialog(final int position) {
+        if (choiceSexDialog == null) {
+            final String[] items = {"6折", "65折", "7折", "75折", "8折", "85折", "9折", "95折", "无折扣"};
+            yourChoice = 0;
+            for (int i = 0; i < items.length; i++) {
+                if (goodList.get(position).getDiscountRate() == getDiscountByName(items[i])) {
+                    yourChoice = i;
+                }
+            }
+            AlertDialog.Builder singleChoiceDialog =
+                    new AlertDialog.Builder(this);
+            singleChoiceDialog.setTitle("請選擇折扣");
+            // 第二个参数是默认选项，此处设置为0
+            singleChoiceDialog.setSingleChoiceItems(items, yourChoice,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            yourChoice = which;
+                        }
+                    });
+            singleChoiceDialog.setPositiveButton("確定",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (yourChoice != -1) {
+                                editOrderItemOnOperate(position, goodList.get(position).getId(),
+                                        goodList.get(position).getSaleCount(),
+                                        getDiscountByName(items[yourChoice]), "调折扣");
+                            }
+                            choiceSexDialog.dismiss();
+                        }
+                    });
+            choiceSexDialog = singleChoiceDialog.create();
+            choiceSexDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    choiceSexDialog = null;
+                }
+            });
+            choiceSexDialog.show();
+        }
+    }
+
+    @OnClick({R.id.btn_scan, R.id.btn_next, R.id.btn_add, R.id.back_btn})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_scan:
+                startActivityForResult(new Intent(AddNewOrderActivity.this, MipcaActivityCapture.class), 1000);
+                break;
+            case R.id.btn_add:
+                showInputCodeDialog();
+                break;
+            case R.id.btn_next:
+                if ((sumMoney + changeGoodsMoeny) < 0) {
+                    Toast.makeText(AddNewOrderActivity.this, "新商品总额要大于换货商品总额", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Intent intent = new Intent(AddNewOrderActivity.this, BalanceActivity.class);
+                intent.putExtra("goodlist", gson.toJson(goodList));
+                intent.putExtra("sumMoney", sumMoney);
+                intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
+                intent.putExtra("ordernumber", createOrderResultBean.getOrdernumber());
+                startActivity(intent);
+                break;
+            case R.id.back_btn:
+                onBackPressed();
+                break;
+        }
+    }
+
     AlertDialog actionDialog;
 
-    private void showEditPriceDialog(final int position) {
+    private void showInputCodeDialog() {
         if (actionDialog == null) {
-            View view = LayoutInflater.from(this).inflate(R.layout.dialog_edit_price, null);
-            final EditText edt_count = (EditText) view.findViewById(R.id.edt_count);
-            edt_count.setText(goodList.get(position).getDiscountRate() + "");
+            View view = LayoutInflater.from(this).inflate(R.layout.dialog_input_code, null);
             actionDialog = new AlertDialog.Builder(this).setView(view)
                     .create();
+            final EditText edt_count = (EditText) view.findViewById(R.id.edt_count);
             view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -276,12 +369,9 @@ public class AddNewOrderActivity extends BaseActivity {
             view.findViewById(R.id.btn_commit).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (!edt_count.getText().toString().equals(""))
+                        getGoodBeanByCode(edt_count.getText().toString());
                     actionDialog.dismiss();
-                    if (!edt_count.getText().toString().equals("")) {
-                        editOrderItemOnOperate(position, goodList.get(position).getId(),
-                                goodList.get(position).getSaleCount(),
-                                Double.parseDouble(edt_count.getText().toString()), "调折扣");
-                    }
                 }
             });
             actionDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -295,32 +385,9 @@ public class AddNewOrderActivity extends BaseActivity {
             window.setBackgroundDrawable(getResources().getDrawable(R.drawable.inventory_dialog_bg));
             WindowManager.LayoutParams layoutParams = window.getAttributes();
             layoutParams.width = DeviceUtil.dip2px(this, 200);
-            layoutParams.height = DeviceUtil.dip2px(this, 270);
+            layoutParams.height = DeviceUtil.dip2px(this, 170);
             window.setGravity(Gravity.CENTER);
             window.setAttributes(layoutParams);
-        }
-    }
-
-    @OnClick({R.id.btn_scan, R.id.btn_next, R.id.back_btn})
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_scan:
-                startActivityForResult(new Intent(AddNewOrderActivity.this, MipcaActivityCapture.class), 1000);
-                break;
-            case R.id.btn_next:
-                if ((sumMoney + changeGoodsMoeny) < 0) {
-                    Toast.makeText(AddNewOrderActivity.this, "新商品总额要大于换货商品总额", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                Intent intent = new Intent(AddNewOrderActivity.this, BalanceActivity.class);
-                intent.putExtra("goodlist", gson.toJson(goodList));
-                intent.putExtra("sumMoney", sumMoney);
-                intent.putExtra("ordernumber",createOrderResultBean.getOrdernumber());
-                startActivity(intent);
-                break;
-            case R.id.back_btn:
-                onBackPressed();
-                break;
         }
     }
 
@@ -337,7 +404,6 @@ public class AddNewOrderActivity extends BaseActivity {
 
 
     private void getGoodBeanByCode(String productcode) {
-        productcode = "5001";
         if (customDialog == null)
             customDialog = new CustomDialog(this, "正在添加商品..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {

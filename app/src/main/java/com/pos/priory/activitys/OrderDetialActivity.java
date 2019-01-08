@@ -176,6 +176,8 @@ public class OrderDetialActivity extends BaseActivity {
                 Intent intent = new Intent(OrderDetialActivity.this, ChangeGoodsActivity.class);
                 intent.putExtra("checkedGoodList",gson.toJson(checkedGoodList));
                 intent.putExtra("memberId",orderBean.getMember().getId());
+                intent.putExtra("memberName", orderBean.getMember().getLast_name() +
+                        orderBean.getMember().getLast_name());
                 intent.putExtra("ordernumber",orderBean.getOrdernumber());
                 startActivity(intent);
                 break;
@@ -188,6 +190,8 @@ public class OrderDetialActivity extends BaseActivity {
                 Intent intent2 = new Intent(OrderDetialActivity.this, ReturnGoodsActivity.class);
                 intent2.putExtra("checkedGoodList",gson.toJson(checkedGoodList));
                 intent2.putExtra("memberId",orderBean.getMember().getId());
+                intent2.putExtra("memberName", orderBean.getMember().getLast_name() +
+                        orderBean.getMember().getLast_name());
                 intent2.putExtra("ordernumber",orderBean.getOrdernumber());
                 startActivity(intent2);
                 break;

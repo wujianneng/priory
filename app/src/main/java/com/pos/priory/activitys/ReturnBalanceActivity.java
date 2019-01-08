@@ -87,6 +87,7 @@ public class ReturnBalanceActivity extends BaseActivity {
                         .getStringExtra("goodlist"),new TypeToken<List<OrderItemBean>>(){}.getType());
                 intent.putExtra("goodlist",gson.toJson(covertOrderItemListToGoodbeanList(orderItemBeanList)));
                 intent.putExtra("sumMoney",sumMoney);
+                intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
                 intent.putExtra("receiveMoney",0);
                 intent.putExtra("returnMoney",sumMoney);
                 intent.putExtra("ordernumber",getIntent().getStringExtra("ordernumber"));

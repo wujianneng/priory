@@ -222,6 +222,7 @@ public class ReturnGoodsActivity extends BaseActivity {
                 Intent intent = new Intent(ReturnGoodsActivity.this,ReturnBalanceActivity.class);
                 intent.putExtra("goodlist",gson.toJson(goodList));
                 intent.putExtra("sumMoney",sumMoney);
+                intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
                 intent.putExtra("ordernumber",getIntent().getStringExtra("ordernumber"));
                 startActivity(intent);
                 break;

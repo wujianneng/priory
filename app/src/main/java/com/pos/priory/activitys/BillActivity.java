@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.print.PrintManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -28,6 +29,7 @@ import android.widget.Toast;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
 import com.pos.priory.adapters.BillGoodsAdapter;
+import com.pos.priory.adapters.BillPrintGoodsAdapter;
 import com.pos.priory.adapters.MyPrintDocumentAdapter;
 import com.pos.priory.beans.GoodBean;
 import com.pos.priory.utils.BitmapUtils;
@@ -125,27 +127,36 @@ public class BillActivity extends BaseActivity {
                 showPreviewDialog();
                 break;
             case R.id.back_btn:
-                print(printView);
-//                onBackPressed();
-//                finish();
+                onBackPressed();
+                finish();
                 break;
         }
     }
 
     AlertDialog previewDialog;
     View printView;
+
     private void showPreviewDialog() {
         printView = LayoutInflater.from(this).inflate(R.layout.dialog_preview, null);
-        previewDialog = new AlertDialog.Builder(this).setView(printView).create();
+        ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumberTv.getText().toString());
+        ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(getIntent().getStringExtra("memberName"));
+        ((TextView) printView.findViewById(R.id.date_tv)).setText(createDateTv.getText().toString());
+        RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
+        BillPrintGoodsAdapter adapter = new BillPrintGoodsAdapter(R.layout.bill_print_good_list_item, goodList);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+        listview.setLayoutManager(mLayoutManager);
+        listview.setAdapter(adapter);
+        previewDialog = new AlertDialog.Builder(this).setView(printView).setCancelable(false).create();
         previewDialog.show();
-        Window window = previewDialog.getWindow();
-        WindowManager.LayoutParams layoutParams = window.getAttributes();
-        layoutParams.width = DeviceUtil.getScreenWidth(this);
-        layoutParams.height = DeviceUtil.getScreenHeight(this);
-        window.setGravity(Gravity.CENTER);
-        window.setAttributes(layoutParams);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                previewDialog.dismiss();
+                print(printView);
+            }
+        }, 2000);
     }
-
 
 
     private void print(View view) {

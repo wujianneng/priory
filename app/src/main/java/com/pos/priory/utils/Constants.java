@@ -27,4 +27,5 @@ public class Constants {
     public static final String CHANGE_OR_RETURN_GOOD_URL = "https://pos.annabellaip.com/api/rmaorders";
     public static final String CHANGE_OR_RETURN_GOOD_ITEM_URL = "https://pos.annabellaip.com/api/rmaorderitems";
     public static final String CHANGE_PASSWORD_URL = "https://pos.annabellaip.com/api/rest-auth/password/change/";
+    public static final String RETURN_STOCKS_URL = "https://pos.annabellaip.com/api/returnstocks/";
 }

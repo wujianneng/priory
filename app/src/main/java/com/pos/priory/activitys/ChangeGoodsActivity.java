@@ -30,6 +30,8 @@ import com.pos.priory.utils.DateUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -176,6 +178,7 @@ public class ChangeGoodsActivity extends BaseActivity {
                         goodList.add(orderitem);
                         goodsAdapter.notifyDataSetChanged();
                         resetSumMoney();
+                        createReturnStocks(orderitem);
                     }
 
                     @Override
@@ -183,6 +186,26 @@ public class ChangeGoodsActivity extends BaseActivity {
 
                     }
                 });
+    }
+
+    private void createReturnStocks(final OrderItemBean orderitem){
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("rmanumber", createRefundOrderResultBean.getRmanumber());
+        paramMap.put("name", orderitem.getStock().getProduct().getName());
+        paramMap.put("quantity", orderitem.getOprateCount() + "");
+        paramMap.put("weight", "0");
+        OkHttp3Util.doPostWithToken(Constants.RETURN_STOCKS_URL, gson.toJson(paramMap),
+                sharedPreferences, new Okhttp3StringCallback(this,"createReturnStocks") {
+            @Override
+            public void onSuccess(String results) throws Exception {
+                 orderitem.setReturnStockId(new JSONObject(results).getInt("id"));
+            }
+
+            @Override
+            public void onFailed(String erromsg) {
+
+            }
+        });
     }
 
     @Override
@@ -228,6 +251,7 @@ public class ChangeGoodsActivity extends BaseActivity {
             case R.id.btn_next:
                 Intent intent = new Intent(ChangeGoodsActivity.this, AddNewOrderActivity.class);
                 intent.putExtra("memberId", getIntent().getIntExtra("memberId", 0));
+                intent.putExtra("memberName",getIntent().getStringExtra("memberName"));
                 intent.putExtra("sumMoney", sumMoney);
                 startActivity(intent);
                 break;

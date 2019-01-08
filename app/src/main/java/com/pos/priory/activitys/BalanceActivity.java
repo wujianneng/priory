@@ -255,6 +255,7 @@ public class BalanceActivity extends BaseActivity {
                         Intent intent = new Intent(BalanceActivity.this, BillActivity.class);
                         intent.putExtra("goodlist", getIntent().getStringExtra("goodlist"));
                         intent.putExtra("sumMoney", sumMoney);
+                        intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
                         intent.putExtra("receiveMoney", sumMoney);
                         intent.putExtra("returnMoney",needPayMoney * -1);
                         intent.putExtra("ordernumber",getIntent().getStringExtra("ordernumber"));

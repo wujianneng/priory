@@ -86,6 +86,8 @@ public class MemberActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(MemberActivity.this, AddNewOrderActivity.class);
                 intent.putExtra("memberId", memberList.get(position).getId());
+                intent.putExtra("memberName", memberList.get(position).getLast_name() +
+                        memberList.get(position).getLast_name());
                 startActivity(intent);
             }
         });
