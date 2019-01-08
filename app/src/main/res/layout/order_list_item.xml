@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="90dp"
+    android:layout_gravity="center_horizontal"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:layout_marginLeft="1dp"
+    android:layout_marginRight="1dp"
+    android:layout_marginTop="0.5dp"
+    android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="#fff"
+    app:cardCornerRadius="1dp"
+    app:cardElevation="1dp"
+    app:contentPadding="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/icon_detial"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:src="@drawable/icon_detail" />
+
+        <TextView
+            android:id="@+id/detial_tv"
+            android:layout_marginTop="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/icon_detial"
+            android:text="xc15019840934"
+            android:textColor="#cccccc"
+            android:textSize="12sp" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_below="@+id/icon_detial"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="10dp"
+            android:background="#cccccc" />
+
+        <ImageView
+            android:id="@+id/check_img"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/line"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="13dp"
+            android:src="@drawable/icon_cilck_h" />
+
+        <TextView
+            android:id="@+id/money_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/check_img"
+            android:text="$1576.00"
+            android:textStyle="bold"
+            android:textColor="@color/login_btn_bg"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/unit_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/line"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/money_tv"
+            android:text="MOP"
+            android:textColor="#cccccc"
+            android:textSize="13sp" />
+
+        <ImageView
+            android:layout_below="@+id/line"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_right"
+            android:layout_marginTop="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="0.5dp"
+    android:layout_marginLeft="1dp"
+    android:layout_marginRight="1dp"
+    app:cardBackgroundColor="#fff"
+    app:cardCornerRadius="1dp"
+    app:cardElevation="1dp"
+    app:contentPadding="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RadioButton
+            android:id="@+id/radio"
+            android:layout_marginLeft="3dp"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:checked="false"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/icon_good"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_toRightOf="@+id/radio"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/app_logo" />
+
+        <TextView
+            android:id="@+id/code_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/icon_good"
+            android:text="888666333"
+            android:textColor="#cccccc"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/code_tv"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/icon_good"
+            android:text="大福珠"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+        <TextView
+            android:id="@+id/price_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/icon_good"
+            android:text="$799 x 2"
+            android:textColor="#333333"
+            android:textSize="17sp" />
+
+        <LinearLayout
+            android:id="@+id/change_count_layout"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="25dp"
+            android:visibility="invisible"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:textSize="12sp"
+                android:textColor="#ccc"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:text="操作數量(換貨/回收)"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
+            <LinearLayout
+                android:layout_gravity="center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/decrease_btn"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:src="@drawable/icon_decrease" />
+
+
+                <TextView
+                    android:id="@+id/account_btn"
+                    android:layout_width="50dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textColor="@color/login_btn_bg"
+                    android:textSize="20sp" />
+
+
+                <ImageView
+                    android:id="@+id/increase_btn"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_gravity="center_vertical"
+                    android:padding="5dp"
+                    android:src="@drawable/icon_increase" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>

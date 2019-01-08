@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">ZxingLib</string>
+    <string name="message_denied">权限 \"%1$s\" 已经被关闭.</string>
+    <string name="contents_contact">联系人信息</string>
+    <string name="contents_email">Email地址</string>
+    <string name="contents_location">地理坐标</string>
+    <string name="contents_phone">电话号码</string>
+    <string name="contents_sms">短信地址</string>
+    <string name="contents_text">纯文本</string>
+</resources>

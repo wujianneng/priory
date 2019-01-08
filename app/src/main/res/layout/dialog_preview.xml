@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f3f3f3"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:text="ANNABELLAIP"
+                android:textColor="#333"
+                android:textSize="18sp"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="-安娜貝拉-"
+                android:textColor="#333"
+                android:textSize="14sp"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="Invoice No."
+                android:layout_marginTop="10dp"
+                android:textColor="#333"
+                android:textSize="10sp"
+                android:layout_marginLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="收據編號   S181123012"
+                android:textColor="#333"
+                android:textSize="8sp"
+                android:layout_marginLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="Name"
+                android:layout_marginTop="8dp"
+                android:textColor="#333"
+                android:textSize="10sp"
+                android:layout_marginLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="客戶姓名   羅小姐"
+                android:textColor="#333"
+                android:textSize="8sp"
+                android:layout_marginLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="Date"
+                android:layout_marginTop="8dp"
+                android:textColor="#333"
+                android:textSize="10sp"
+                android:layout_marginLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="購買日期   2018-10-10 10:10:10"
+                android:textColor="#333"
+                android:textSize="8sp"
+                android:layout_marginLeft="25dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+            android:text="澳門路長街(白馬行)20-A號雅明閣地下C座"
+            android:layout_marginTop="40dp"
+            android:textColor="#333"
+            android:textSize="8sp"
+            android:layout_marginLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+            <TextView
+                android:text="Re de perdo Nolasco da slia No. 20-A Nga Meng Kok r/c C"
+                android:textColor="#333"
+                android:textSize="8sp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="+853 2892 0767"
+                android:textColor="#333"
+                android:textSize="8sp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="澳門路長街(白馬行)"
+                android:layout_marginTop="20dp"
+                android:textColor="#333"
+                android:textSize="8sp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="Nga Meng Kok r/c C"
+                android:textColor="#333"
+                android:textSize="8sp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:text="+853 2892 0767"
+                android:textColor="#333"
+                android:textSize="8sp"
+                android:layout_marginLeft="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/list_layout"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1.8">
+
+        <LinearLayout
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="貨品名稱"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:textSize="10sp"
+                android:textColor="#333"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="數量"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textColor="#333"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="原價"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textColor="#333"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="折扣"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textColor="#333"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:text="售價"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="10sp"
+                android:textColor="#333"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="#333"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/good_list"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="30dp"></android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:text="共1件"
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:textSize="10sp"
+            android:layout_marginRight="20dp"
+            android:textColor="#333"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:text="總計"
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:textSize="15sp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:textColor="#333"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/sum_money_tv"
+            android:text="779.00"
+            android:layout_width="match_parent"
+            android:gravity="right"
+            android:textSize="15sp"
+            android:layout_marginRight="20dp"
+            android:textColor="#333"
+            android:layout_height="wrap_content" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <RelativeLayout
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/text0"
+                android:text="客戶注意事項"
+                android:layout_width="wrap_content"
+                android:textSize="10sp"
+                android:layout_marginLeft="20dp"
+                android:textColor="#333"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/text1"
+                android:text="1.客戶注意事項"
+                android:layout_below="@+id/text0"
+                android:layout_width="wrap_content"
+                android:textSize="8sp"
+                android:layout_marginLeft="20dp"
+                android:textColor="#333"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/text2"
+                android:layout_below="@+id/text1"
+                android:text="2.客戶注意事項"
+                android:layout_width="wrap_content"
+                android:textSize="8sp"
+                android:layout_marginLeft="20dp"
+                android:textColor="#333"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/text3"
+                android:text="3.客戶注意事項"
+                android:layout_below="@+id/text2"
+                android:layout_width="wrap_content"
+                android:textSize="8sp"
+                android:layout_marginLeft="20dp"
+                android:textColor="#333"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/text4"
+                android:text="4.客戶注意事項"
+                android:layout_below="@+id/text3"
+                android:layout_width="wrap_content"
+                android:textSize="8sp"
+                android:layout_marginLeft="20dp"
+                android:textColor="#333"
+                android:layout_height="wrap_content" />
+
+
+            <ImageView
+                android:id="@+id/img_barcode"
+                android:src="@drawable/barcode"
+                android:layout_marginRight="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+
+            <TextView
+                android:id="@+id/text5"
+                android:text="保養小Tips"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/img_barcode"
+                android:layout_width="wrap_content"
+                android:textSize="8sp"
+                android:layout_marginRight="25dp"
+                android:textColor="#333"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

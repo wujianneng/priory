@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MipcaActivityCapture">
+
+    <item
+        android:id="@+id/flashlight"
+        android:icon="@drawable/icon_flashlight_normal"
+        android:title="flashlight"
+        app:showAsAction="always" />
+
+</menu>

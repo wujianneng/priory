@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pos.priory">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/app_logo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/app_logo"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activitys.LoginActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activitys.MainActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.SettingActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.EditPasswordActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.MemberActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.RegisterMemberActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.AddNewOrderActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.BalanceActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.OrderDetialActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.ChangeGoodsActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.ReturnGoodsActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.GoodDetialActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.MemberInfoActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.BillActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.ReturnBalanceActivity"
+            android:windowSoftInputMode="adjustPan" />
+    </application>
+
+</manifest>
