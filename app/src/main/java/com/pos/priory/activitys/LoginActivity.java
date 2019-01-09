@@ -1,20 +1,17 @@
 package com.pos.priory.activitys;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.gson.reflect.TypeToken;
+import com.bumptech.glide.Glide;
 import com.pos.priory.R;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
@@ -25,13 +22,11 @@ import com.pos.priory.utils.RunOnUiThreadSafe;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.Headers;
 
 /**
  * Created by Lenovo on 2018/12/29.

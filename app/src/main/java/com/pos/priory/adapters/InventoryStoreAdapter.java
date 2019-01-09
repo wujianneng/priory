@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
 import com.pos.priory.beans.InventoryBean;
+import com.pos.priory.utils.Constants;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class InventoryStoreAdapter extends BaseQuickAdapter<InventoryBean, BaseV
         helper.setImageResource(R.id.icon_check, item.isCheck() ? R.drawable.icon_cilck_h : R.drawable.icon_cilck);
         helper.setText(R.id.code_tv, item.getStock().getProduct().getProductcode() + "");
         helper.setText(R.id.name_tv,item.getStock().getProduct().getName());
-        Glide.with(context).load(item.getStock().getProduct().getImage())
+        Glide.with(context).load(Constants.BASE_URL + item.getStock().getProduct().getImage())
                 .error(android.R.drawable.ic_menu_gallery)
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));

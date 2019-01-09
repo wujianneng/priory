@@ -87,7 +87,7 @@
         android:foreground="?android:attr/selectableItemBackground"
         app:cardBackgroundColor="@color/login_btn_bg"
         app:cardCornerRadius="25dp"
-        app:cardElevation="10dp"
+        app:cardElevation="5dp"
         app:cardPreventCornerOverlap="true"
         app:contentPadding="10dp">
 

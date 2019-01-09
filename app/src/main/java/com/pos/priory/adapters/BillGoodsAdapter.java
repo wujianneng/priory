@@ -12,6 +12,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
 import com.pos.priory.beans.GoodBean;
+import com.pos.priory.utils.Constants;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class BillGoodsAdapter extends BaseQuickAdapter<GoodBean, BaseViewHolder>
          helper.setText(R.id.code_tv,item.getProduct().getProductcode() + "");
          helper.setText(R.id.name_tv,item.getProduct().getName());
         helper.setText(R.id.price_tv,"$" + item.getProduct().getPrice() + "x" + item.getSaleCount());
-        Glide.with(context).load(item.getProduct().getImage())
+        Glide.with(context).load(Constants.BASE_URL + item.getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));

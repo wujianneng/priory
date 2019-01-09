@@ -13,8 +13,8 @@ public class Constants {
     public static final Double CHANGE_GOOD_RAGE = 1D;
     public static final Double RETURN_GOOD_RAGE = 0.8;
 
-
     //Api
+    public static final String BASE_URL = "https://pos.annabellaip.com/";
     public static final String LOGIN_URL = "https://pos.annabellaip.com/api/rest-auth/login/";
     public static final String STAFF_INFO_URL = "https://pos.annabellaip.com/api/staff";
     public static final String GET_ORDERS_URL = "https://pos.annabellaip.com/api/orders";
@@ -28,4 +28,5 @@ public class Constants {
     public static final String CHANGE_OR_RETURN_GOOD_ITEM_URL = "https://pos.annabellaip.com/api/rmaorderitems";
     public static final String CHANGE_PASSWORD_URL = "https://pos.annabellaip.com/api/rest-auth/password/change/";
     public static final String RETURN_STOCKS_URL = "https://pos.annabellaip.com/api/returnstocks/";
+    public static final String PURCHASING_URL = "https://pos.annabellaip.com/api/purchasing";
 }

@@ -106,7 +106,7 @@ public class MainActivity extends BaseActivity {
 
         navigation.setMode(BottomNavigationBar.MODE_FIXED);
         navigation.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
-        if(staffInfoBeanList != null && staffInfoBeanList.get(0).getPermission().equals("店長")) {
+        if(staffInfoBeanList != null && staffInfoBeanList.size() != 0 && staffInfoBeanList.get(0).getPermission().equals("店長")) {
             Log.e("permission","permission:" + staffInfoBeanList.get(0).getPermission());
             navigation.addItem(new BottomNavigationItem(R.drawable.tab_order, "訂單"))
                     .addItem(new BottomNavigationItem(R.drawable.tab_query, "查單"))

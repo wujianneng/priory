@@ -133,6 +133,13 @@ public class BillActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(previewDialog != null)
+            previewDialog.dismiss();
+    }
+
     AlertDialog previewDialog;
     View printView;
 
@@ -152,10 +159,9 @@ public class BillActivity extends BaseActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                previewDialog.dismiss();
                 print(printView);
             }
-        }, 2000);
+        }, 1000);
     }
 
 

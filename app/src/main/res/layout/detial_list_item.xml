@@ -25,7 +25,7 @@
             android:src="@drawable/app_logo" />
 
         <TextView
-            android:id="@+id/yingwen_tv"
+            android:id="@+id/code_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -36,7 +36,7 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/zhongwen_tv"
+            android:id="@+id/name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -48,34 +48,6 @@
             android:textColor="#333333"
             android:textSize="20sp" />
 
-        <FrameLayout
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/line">
-
-            <TextView
-                android:id="@+id/man_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:text="1"
-                android:textColor="#cccccc"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/man_title_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginBottom="20dp"
-                android:text="客人"
-                android:textColor="#cccccc"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-        </FrameLayout>
 
         <View
             android:id="@+id/line"
@@ -84,12 +56,13 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginBottom="30dp"
-            android:layout_marginRight="70dp"
+            android:layout_marginRight="80dp"
             android:layout_marginTop="30dp"
             android:background="#cccccc" />
 
         <FrameLayout
             android:layout_width="60dp"
+            android:layout_marginRight="10dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true">
 

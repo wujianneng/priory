@@ -6,6 +6,7 @@
     android:background="@drawable/login_bg"
     android:orientation="vertical">
 
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0dp"

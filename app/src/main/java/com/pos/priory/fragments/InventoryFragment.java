@@ -15,8 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
 import com.pos.priory.activitys.MainActivity;
@@ -24,6 +28,8 @@ import com.pos.priory.adapters.InventoryRecoverAdapter;
 import com.pos.priory.adapters.InventoryStoreAdapter;
 import com.pos.priory.beans.InventoryBean;
 import com.pos.priory.beans.OrderBean;
+import com.pos.priory.beans.ReturnStockBean;
+import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
@@ -44,7 +50,9 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -59,7 +67,7 @@ public class InventoryFragment extends BaseFragment {
     InventoryStoreAdapter storeAdapter;
     InventoryRecoverAdapter recoverAdapter;
     List<InventoryBean> storeDataList = new ArrayList<>();
-    List<String> recoverDataList = new ArrayList<>();
+    List<ReturnStockBean> recoverDataList = new ArrayList<>();
     int currentStorePage = 1, currentRecoverPage = 1;
     @Bind(R.id.btn_store)
     TextView btnStore;
@@ -107,7 +115,7 @@ public class InventoryFragment extends BaseFragment {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
                 SwipeMenuItem dinghuoItem = new SwipeMenuItem(getActivity())
-                        .setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.drag_btn_green))
+                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
                         .setImage(R.drawable.icon_dinghuo)
                         .setText("訂貨")
                         .setTextColor(Color.WHITE)
@@ -115,7 +123,7 @@ public class InventoryFragment extends BaseFragment {
                         .setWidth(DeviceUtil.dip2px(getContext(), 100));//设置宽
                 swipeRightMenu.addMenuItem(dinghuoItem);//设置右边的侧滑
                 SwipeMenuItem tuihuoItem = new SwipeMenuItem(getActivity())
-                        .setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.drag_btn_red))
+                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_red))
                         .setImage(R.drawable.icon_tuihuo)
                         .setText("退貨")
                         .setTextColor(Color.WHITE)
@@ -130,16 +138,16 @@ public class InventoryFragment extends BaseFragment {
             public void onItemClick(SwipeMenuBridge menuBridge) {
                 menuBridge.closeMenu();
 //                int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。0是左，右是1，暂时没有用到
-//                int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
+                int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
                 int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
                 if (menuPosition == 0) {
-                    showActionDialog(true);
+                    showActionDialog(0, adapterPosition);
                 } else {
-                    showActionDialog(false);
+                    showActionDialog(1, adapterPosition);
                 }
             }
         });
-        storeAdapter = new InventoryStoreAdapter(getActivity(),R.layout.inventory_store_list_item, storeDataList);
+        storeAdapter = new InventoryStoreAdapter(getActivity(), R.layout.inventory_store_list_item, storeDataList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerViewStore.setLayoutManager(mLayoutManager);
@@ -165,21 +173,13 @@ public class InventoryFragment extends BaseFragment {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
                 SwipeMenuItem dinghuoItem = new SwipeMenuItem(getActivity())
-                        .setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.drag_btn_green))
+                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
                         .setImage(R.drawable.icon_dinghuo)
-                        .setText("訂貨")
+                        .setText("入库")
                         .setTextColor(Color.WHITE)
                         .setHeight(DeviceUtil.dip2px(getContext(), 91))//设置高，这里使用match_parent，就是与item的高相同
                         .setWidth(DeviceUtil.dip2px(getContext(), 100));//设置宽
                 swipeRightMenu.addMenuItem(dinghuoItem);//设置右边的侧滑
-                SwipeMenuItem tuihuoItem = new SwipeMenuItem(getActivity())
-                        .setBackgroundColor(ContextCompat.getColor(getActivity(),R.color.drag_btn_red))
-                        .setImage(R.drawable.icon_tuihuo)
-                        .setText("退貨")
-                        .setTextColor(Color.WHITE)
-                        .setHeight(DeviceUtil.dip2px(getContext(), 91))//设置高，这里使用match_parent，就是与item的高相同
-                        .setWidth(DeviceUtil.dip2px(getContext(), 100));//设置宽
-                swipeRightMenu.addMenuItem(tuihuoItem);//设置右边的侧滑
             }
         });
         //设置侧滑菜单的点击事件
@@ -188,12 +188,10 @@ public class InventoryFragment extends BaseFragment {
             public void onItemClick(SwipeMenuBridge menuBridge) {
                 menuBridge.closeMenu();
 //                int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。0是左，右是1，暂时没有用到
-//                int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
+                int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
                 int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
                 if (menuPosition == 0) {
-                    showActionDialog(true);
-                } else {
-                    showActionDialog(false);
+                    showActionDialog(2, adapterPosition);
                 }
             }
         });
@@ -203,18 +201,49 @@ public class InventoryFragment extends BaseFragment {
         recyclerViewRecover.setLayoutManager(mLayoutManager2);
         recyclerViewRecover.setAdapter(recoverAdapter);
 
-        refreshStoreRecyclerView(false);
+        refreshLayoutStore.autoRefresh();
     }
 
     AlertDialog actionDialog;
 
-    private void showActionDialog(boolean isDingHuo) {
+    private void showActionDialog(final int action, final int position) {
         if (actionDialog == null) {
             View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_invertory_action, null);
             actionDialog = new AlertDialog.Builder(getActivity()).setView(view)
                     .create();
-            TextView title = (TextView) view.findViewById(R.id.title) ;
-            title.setText(isDingHuo ? "訂貨" : "退貨");
+            TextView title = (TextView) view.findViewById(R.id.title);
+            ImageView icon_good = view.findViewById(R.id.icon_good);
+            TextView code_tv = view.findViewById(R.id.code_tv);
+            TextView name_tv = view.findViewById(R.id.name_tv);
+            final EditText edt_count = view.findViewById(R.id.edt_count);
+            if (action == 0) {
+                title.setText("訂貨");
+                InventoryBean bean = storeDataList.get(position);
+                Glide.with(getActivity()).load(Constants.BASE_URL + bean.getStock().getProduct().getImage())
+                        .error(android.R.drawable.ic_menu_gallery)
+                        .into(icon_good);
+                code_tv.setText(bean.getStock().getProduct().getProductcode() + "");
+                name_tv.setText(bean.getStock().getProduct().getName());
+                edt_count.setText("1");
+            }
+            if (action == 1) {
+                title.setText("退貨");
+                InventoryBean bean = storeDataList.get(position);
+                Glide.with(getActivity()).load(Constants.BASE_URL + bean.getStock().getProduct().getImage())
+                        .error(android.R.drawable.ic_menu_gallery)
+                        .into(icon_good);
+                code_tv.setText(bean.getStock().getProduct().getProductcode() + "");
+                name_tv.setText(bean.getStock().getProduct().getName());
+            }
+            if (action == 2) {
+                title.setText("入庫");
+                icon_good.setVisibility(View.GONE);
+                ReturnStockBean bean = recoverDataList.get(position);
+                code_tv.setText(bean.getRmaorder() + "");
+                name_tv.setText(bean.getName());
+                edt_count.setText("1");
+            }
+
             view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -224,7 +253,35 @@ public class InventoryFragment extends BaseFragment {
             view.findViewById(R.id.btn_commit).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (edt_count.getText().toString().equals("")) {
+                        Toast.makeText(getActivity(), "請輸入數量", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     actionDialog.dismiss();
+                    int count = Integer.parseInt(edt_count.getText().toString());
+                    if (action == 0) {
+                        InventoryBean bean = storeDataList.get(position);
+                        if (count > bean.getStock().getQuantity()) {
+                            Toast.makeText(getActivity(), "不能超過商品庫存數量", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        createPurchsing(bean,true,count + "");
+                    }
+                    if (action == 1) {
+                        InventoryBean bean = storeDataList.get(position);
+                        if (count > bean.getStock().getQuantity()) {
+                            Toast.makeText(getActivity(), "不能超過商品庫存數量", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        createPurchsing(bean,false,count + "");
+                    }
+                    if (action == 2) {
+                        ReturnStockBean bean = recoverDataList.get(position);
+                        if (count > bean.getQuantity()) {
+                            Toast.makeText(getActivity(), "不能超過商品庫存數量", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
                 }
             });
             actionDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -244,6 +301,42 @@ public class InventoryFragment extends BaseFragment {
         }
     }
 
+    CustomDialog customDialog;
+
+    private void createPurchsing(InventoryBean bean, final boolean isdinghuo, String count) {
+        if (customDialog == null)
+            customDialog = new CustomDialog(getActivity(), isdinghuo ? "訂貨中.." : "退貨中..");
+        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                customDialog = null;
+            }
+        });
+        customDialog.show();
+        String location = ((MainActivity) getActivity()).staffInfoBeanList.get(0).getStore();
+        String staff = ((MainActivity) getActivity()).staffInfoBeanList.get(0).getUser();
+        Map<String, Object> map = new HashMap<>();
+        map.put("location", location);
+        map.put("productcode", bean.getStock().getProduct().getProductcode() + "");
+        map.put("staff", staff);
+        map.put("quantity", bean);
+        map.put("type", isdinghuo ? "purchase" : "return");
+        OkHttp3Util.doPostWithToken(Constants.PURCHASING_URL + "/", gson.toJson(map), sharedPreferences,
+                new Okhttp3StringCallback(getActivity(), "createPurshing") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        customDialog.dismiss();
+                        refreshLayoutStore.autoRefresh();
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        customDialog.dismiss();
+                        Toast.makeText(getActivity(),isdinghuo ? "訂貨失敗" : "退貨失敗",Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void refreshStoreRecyclerView(boolean isLoadMore) {
         if (!isLoadMore) {
             storeDataList.clear();
@@ -252,58 +345,71 @@ public class InventoryFragment extends BaseFragment {
         String location = ((MainActivity) getActivity()).staffInfoBeanList.get(0).getStore();
         OkHttp3Util.doGetWithToken(Constants.GET_INVENTORYS_URL + "?location=" + location,
                 sharedPreferences, new Okhttp3StringCallback("getInventorys") {
-            @Override
-            public void onSuccess(String results) throws Exception {
-                final List<InventoryBean> orderBeanList = gson.fromJson(results,new TypeToken<List<InventoryBean>>(){}.getType());
-                new RunOnUiThreadSafe(getActivity()){
                     @Override
-                    public void runOnUiThread() {
-                        if(orderBeanList != null){
-                            storeDataList.addAll(orderBeanList);
-                            storeAdapter.notifyDataSetChanged();
-                        }
-                        refreshLayoutStore.finishLoadMore();
-                        refreshLayoutStore.finishRefresh();
+                    public void onSuccess(String results) throws Exception {
+                        final List<InventoryBean> orderBeanList = gson.fromJson(results, new TypeToken<List<InventoryBean>>() {
+                        }.getType());
+                        new RunOnUiThreadSafe(getActivity()) {
+                            @Override
+                            public void runOnUiThread() {
+                                if (orderBeanList != null) {
+                                    storeDataList.addAll(orderBeanList);
+                                    storeAdapter.notifyDataSetChanged();
+                                }
+                                refreshLayoutStore.finishLoadMore();
+                                refreshLayoutStore.finishRefresh();
+                            }
+                        };
                     }
-                };
-            }
 
-            @Override
-            public void onFailed(String erromsg) {
-                new RunOnUiThreadSafe(getActivity()){
                     @Override
-                    public void runOnUiThread() {
-                        refreshLayoutStore.finishLoadMore();
-                        refreshLayoutStore.finishRefresh();
+                    public void onFailed(String erromsg) {
+                        new RunOnUiThreadSafe(getActivity()) {
+                            @Override
+                            public void runOnUiThread() {
+                                refreshLayoutStore.finishLoadMore();
+                                refreshLayoutStore.finishRefresh();
+                            }
+                        };
                     }
-                };
-            }
-        });
+                });
     }
 
     private void refreshRecoverRecyclerView(boolean isLoadMore) {
         if (!isLoadMore) {
             recoverDataList.clear();
-            recoverDataList.add("0");
-            recoverDataList.add("0");
-            recoverDataList.add("0");
-            recoverDataList.add("0");
-            recoverDataList.add("0");
-            recoverDataList.add("0");
-            recoverDataList.add("0");
-            recoverAdapter.notifyDataSetChanged();
-        } else {
-            recoverDataList.add("0");
-            recoverDataList.add("0");
-            recoverDataList.add("0");
-            recoverDataList.add("0");
-            recoverDataList.add("0");
-            recoverDataList.add("0");
-            recoverDataList.add("0");
             recoverAdapter.notifyDataSetChanged();
         }
-        refreshLayoutRecover.finishLoadMore();
-        refreshLayoutRecover.finishRefresh();
+        OkHttp3Util.doGetWithToken(Constants.RETURN_STOCKS_URL,
+                sharedPreferences, new Okhttp3StringCallback("getRecovers") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        final List<ReturnStockBean> orderBeanList = gson.fromJson(results, new TypeToken<List<ReturnStockBean>>() {
+                        }.getType());
+                        new RunOnUiThreadSafe(getActivity()) {
+                            @Override
+                            public void runOnUiThread() {
+                                if (orderBeanList != null) {
+                                    recoverDataList.addAll(orderBeanList);
+                                    recoverAdapter.notifyDataSetChanged();
+                                }
+                                refreshLayoutRecover.finishLoadMore();
+                                refreshLayoutRecover.finishRefresh();
+                            }
+                        };
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        new RunOnUiThreadSafe(getActivity()) {
+                            @Override
+                            public void runOnUiThread() {
+                                refreshLayoutRecover.finishLoadMore();
+                                refreshLayoutRecover.finishRefresh();
+                            }
+                        };
+                    }
+                });
     }
 
     @Override
@@ -327,7 +433,7 @@ public class InventoryFragment extends BaseFragment {
                 refreshLayoutStore.setVisibility(View.GONE);
                 refreshLayoutRecover.setVisibility(View.VISIBLE);
                 if (!isNotFirstShowRecover) {
-                    refreshRecoverRecyclerView(false);
+                    refreshLayoutRecover.autoRefresh();
                 }
                 isNotFirstShowRecover = true;
                 break;
