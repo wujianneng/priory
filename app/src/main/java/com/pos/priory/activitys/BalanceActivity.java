@@ -45,9 +45,6 @@ import butterknife.OnClick;
 
 public class BalanceActivity extends BaseActivity {
 
-    List<String> discountList = new ArrayList<>();
-    AddNewOrderDiscountAdapter discountAdapter;
-
     double sumMoney = 0, hasPayedCardMoney = 0, hasPayedCashMoney = 0, needPayMoney = 0;
     @Bind(R.id.padding_laout)
     View paddingLaout;
@@ -61,10 +58,6 @@ public class BalanceActivity extends BaseActivity {
     TextView moneyTv;
     @Bind(R.id.need_money_tv)
     TextView needMoneyTv;
-    @Bind(R.id.discount_recycler_view)
-    RecyclerView discountRecyclerView;
-    @Bind(R.id.discount_layout)
-    FrameLayout discountLayout;
     @Bind(R.id.radio_btn_card)
     CheckBox radioBtnCard;
     @Bind(R.id.edt_card_money)
@@ -182,17 +175,6 @@ public class BalanceActivity extends BaseActivity {
 
             }
         });
-
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountAdapter = new AddNewOrderDiscountAdapter(R.layout.add_new_order_discount_list_item, discountList);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-        gridLayoutManager.setOrientation(GridLayout.VERTICAL);
-        discountRecyclerView.setLayoutManager(gridLayoutManager);
-        discountRecyclerView.setAdapter(discountAdapter);
     }
 
     @OnClick({R.id.btn_finish, R.id.back_btn})

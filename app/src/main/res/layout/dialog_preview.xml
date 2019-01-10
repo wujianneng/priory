@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="40dp"
-                android:text="澳門路長街(白馬行)20-A號雅明閣地下C座"
+                android:text="澳門多祿長街(白馬行)20-A號雅明閣地下C座"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -109,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:text="Re de perdo Nolasco da slia No. 20-A Nga Meng Kok r/c C"
+                android:text="Rua de Perdo Nolasco da Sliva No. 20-A, Nga Meng Kok r/c C"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -126,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="20dp"
-                android:text="澳門路長街(白馬行)"
+                android:text="澳門路賈伯樂提督街35-B號"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -134,7 +134,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:text="Nga Meng Kok r/c C"
+                android:text="Rua do Almirante Costa Cabral No.35-B,Macau"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -142,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:text="+853 2892 0767"
+                android:text="+853 2855 0513"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -279,7 +279,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text0"
                 android:layout_marginLeft="20dp"
-                android:text="1.客戶注意事項"
+                android:text="1.黃金貨品可憑公司收據售回本公司,回售計算方式:重量x當天金價;"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -289,7 +289,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text1"
                 android:layout_marginLeft="20dp"
-                android:text="2.客戶注意事項"
+                android:text="2.黃金貨品可憑公司收據可享有8折換貨服務(不包括手繩製作,水晶,k金);"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -299,7 +299,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text2"
                 android:layout_marginLeft="20dp"
-                android:text="3.客戶注意事項"
+                android:text="3.3000元以上磚石貨品憑公司收據一年內享有8折換貨服務;"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -309,7 +309,17 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text3"
                 android:layout_marginLeft="20dp"
-                android:text="4.客戶注意事項"
+                android:text="4.更換皮繩或編制手繩本公司收取材料費手工費$50MOP;"
+                android:textColor="#333"
+                android:textSize="8sp" />
+
+            <TextView
+                android:id="@+id/text5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text4"
+                android:layout_marginLeft="20dp"
+                android:text="*本公司保留最終解釋權"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -323,7 +333,7 @@
                 android:src="@drawable/barcode" />
 
             <TextView
-                android:id="@+id/text5"
+                android:id="@+id/text6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

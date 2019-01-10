@@ -127,6 +127,15 @@ public class MemberInfoActivity extends BaseActivity {
         refreshRecyclerView(false);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(sharedPreferences.getBoolean("isRefreshOrderFragment",false)){
+            smartRefreshLayout.autoRefresh();
+            sharedPreferences.edit().putBoolean("isRefreshOrderFragment",false).commit();
+        }
+    }
+
     private void refreshRecyclerView(boolean isLoadMore) {
         if (!isLoadMore) {
             orderList.clear();

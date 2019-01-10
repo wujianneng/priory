@@ -21,9 +21,14 @@ import com.pos.priory.adapters.OrderDetialDiscountAdapter;
 import com.pos.priory.adapters.OrderDetialGoodsAdapter;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.beans.OrderItemBean;
+import com.pos.priory.beans.TransactionBean;
+import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +44,6 @@ import butterknife.OnClick;
 public class OrderDetialActivity extends BaseActivity {
     List<OrderItemBean> goodList = new ArrayList<>();
     List<OrderItemBean> checkedGoodList = new ArrayList<>();
-    List<String> discountList = new ArrayList<>();
-    OrderDetialDiscountAdapter discountAdapter;
     OrderDetialGoodsAdapter goodsAdapter;
     @Bind(R.id.padding_laout)
     View paddingLaout;
@@ -62,8 +65,6 @@ public class OrderDetialActivity extends BaseActivity {
     TextView memberNameTv;
     @Bind(R.id.data_layout)
     CardView dataLayout;
-    @Bind(R.id.discount_recycler_view)
-    RecyclerView discountRecyclerView;
     @Bind(R.id.icon_change)
     ImageView iconChange;
     @Bind(R.id.text_scan)
@@ -83,8 +84,6 @@ public class OrderDetialActivity extends BaseActivity {
     TextView orderNumberTv;
     @Bind(R.id.date_tv)
     TextView dateTv;
-    @Bind(R.id.discount_layout)
-    CardView discountLayout;
 
     @Override
     protected void beForeInitViews() {
@@ -103,33 +102,22 @@ public class OrderDetialActivity extends BaseActivity {
         moneyTv.setText(orderBean.getTotalprice() + "");
         memberNameTv.setText(orderBean.getMember().getLast_name() + orderBean.getMember().getFirst_name());
 
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountAdapter = new OrderDetialDiscountAdapter(R.layout.order_detial_discount_list_item, discountList);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-        gridLayoutManager.setOrientation(GridLayout.VERTICAL);
-        discountRecyclerView.setLayoutManager(gridLayoutManager);
-        discountRecyclerView.setAdapter(discountAdapter);
-
         goodsAdapter = new OrderDetialGoodsAdapter(R.layout.order_detial_good_list_item, goodList);
         goodsAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 OrderItemBean orderItemBean = goodList.get(position);
-                if(view.getId() == R.id.decrease_btn){
-                    if(orderItemBean.getOprateCount() > 1){
+                if (view.getId() == R.id.decrease_btn) {
+                    if (orderItemBean.getOprateCount() > 1) {
                         orderItemBean.setOprateCount(orderItemBean.getOprateCount() - 1);
                         goodsAdapter.notifyItemChanged(position);
                     }
-                }else if(view.getId() == R.id.increase_btn){
-                    if(orderItemBean.getOprateCount() < orderItemBean.getQuantity()){
+                } else if (view.getId() == R.id.increase_btn) {
+                    if (orderItemBean.getOprateCount() < orderItemBean.getQuantity()) {
                         orderItemBean.setOprateCount(orderItemBean.getOprateCount() + 1);
                         goodsAdapter.notifyItemChanged(position);
-                    }else {
-                        Toast.makeText(OrderDetialActivity.this,"已达到最大操作数量",Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(OrderDetialActivity.this, "已达到最大操作数量", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -142,11 +130,22 @@ public class OrderDetialActivity extends BaseActivity {
         getOrderDetialData();
     }
 
-    private void getOrderDetialData() {
+    private void getOrderDetialGoodList() {
         OkHttp3Util.doGetWithToken(Constants.GET_ORDER_ITEM_URL + "?ordernumber=" + orderBean.getOrdernumber(), sharedPreferences,
-                new Okhttp3StringCallback(OrderDetialActivity.this, "getOrderDetialData") {
+                new Okhttp3StringCallback(OrderDetialActivity.this, "getOrderDetialGoodList") {
                     @Override
                     public void onSuccess(String results) throws Exception {
+                        customDialog.dismiss();
+                        if(transactionBean != null){
+                            if(transactionBean.getPaymentmethod().equals("現金")){
+                                cashMoneyTv.setText(transactionBean.getAmount());
+                                cardMoneyTv.setText(0 + "");
+                            }else {
+                                cardMoneyTv.setText(transactionBean.getAmount());
+                                cashMoneyTv.setText(0 + "");
+                            }
+                            smallChangeTv.setText(0 + "");
+                        }
                         List<OrderItemBean> orderItemBeanList = gson.fromJson(results, new TypeToken<List<OrderItemBean>>
                                 () {
                         }.getType());
@@ -158,7 +157,51 @@ public class OrderDetialActivity extends BaseActivity {
 
                     @Override
                     public void onFailed(String erromsg) {
+                        customDialog.dismiss();
+                        Toast.makeText(OrderDetialActivity.this, "获取订单详情信息失败", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+    }
 
+    CustomDialog customDialog;
+
+    private void getOrderDetialData() {
+        if (customDialog == null)
+            customDialog = new CustomDialog(this, "正在查询订单详情信息");
+        customDialog.show();
+        OkHttp3Util.doGetWithToken(Constants.INVOICES_URL + "?ordernumber=" + orderBean.getOrdernumber(), sharedPreferences,
+                new Okhttp3StringCallback(OrderDetialActivity.this, "getOrderDetialData") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        getOrderTransaction(new JSONArray(results).getJSONObject(0).getString("invoicenumber"));
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        customDialog.dismiss();
+                        Toast.makeText(OrderDetialActivity.this, "获取订单详情信息失败", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+    }
+
+    TransactionBean transactionBean;
+    private void getOrderTransaction(String invoicenumber) {
+        OkHttp3Util.doGetWithToken(Constants.TRANSACTION_URL + "?invoicenumber=" + invoicenumber, sharedPreferences,
+                new Okhttp3StringCallback(OrderDetialActivity.this, "getOrderTransaction") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        List<TransactionBean> transactionlist = gson.fromJson(results,new TypeToken<List<TransactionBean>>(){}.getType());
+                        transactionBean = transactionlist.get(0);
+                        getOrderDetialGoodList();
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        customDialog.dismiss();
+                        Toast.makeText(OrderDetialActivity.this, "获取订单详情信息失败", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 });
     }
@@ -169,30 +212,30 @@ public class OrderDetialActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_change:
                 resetCheckedGoodList();
-                if(checkedGoodList.size() == 0){
-                    Toast.makeText(OrderDetialActivity.this,"请选择换货商品",Toast.LENGTH_SHORT).show();
+                if (checkedGoodList.size() == 0) {
+                    Toast.makeText(OrderDetialActivity.this, "请选择换货商品", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Intent intent = new Intent(OrderDetialActivity.this, ChangeGoodsActivity.class);
-                intent.putExtra("checkedGoodList",gson.toJson(checkedGoodList));
-                intent.putExtra("memberId",orderBean.getMember().getId());
+                intent.putExtra("checkedGoodList", gson.toJson(checkedGoodList));
+                intent.putExtra("memberId", orderBean.getMember().getId());
                 intent.putExtra("memberName", orderBean.getMember().getLast_name() +
                         orderBean.getMember().getLast_name());
-                intent.putExtra("ordernumber",orderBean.getOrdernumber());
+                intent.putExtra("ordernumber", orderBean.getOrdernumber());
                 startActivity(intent);
                 break;
             case R.id.btn_return:
                 resetCheckedGoodList();
-                if(checkedGoodList.size() == 0){
-                    Toast.makeText(OrderDetialActivity.this,"请选择退货商品",Toast.LENGTH_SHORT).show();
+                if (checkedGoodList.size() == 0) {
+                    Toast.makeText(OrderDetialActivity.this, "请选择退货商品", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Intent intent2 = new Intent(OrderDetialActivity.this, ReturnGoodsActivity.class);
-                intent2.putExtra("checkedGoodList",gson.toJson(checkedGoodList));
-                intent2.putExtra("memberId",orderBean.getMember().getId());
+                intent2.putExtra("checkedGoodList", gson.toJson(checkedGoodList));
+                intent2.putExtra("memberId", orderBean.getMember().getId());
                 intent2.putExtra("memberName", orderBean.getMember().getLast_name() +
                         orderBean.getMember().getLast_name());
-                intent2.putExtra("ordernumber",orderBean.getOrdernumber());
+                intent2.putExtra("ordernumber", orderBean.getOrdernumber());
                 startActivity(intent2);
                 break;
             case R.id.back_btn:
@@ -201,10 +244,10 @@ public class OrderDetialActivity extends BaseActivity {
         }
     }
 
-    private void resetCheckedGoodList(){
+    private void resetCheckedGoodList() {
         checkedGoodList.clear();
-        for(OrderItemBean bean : goodList){
-            if(bean.isSelected()){
+        for (OrderItemBean bean : goodList) {
+            if (bean.isSelected()) {
                 checkedGoodList.add(bean);
             }
         }

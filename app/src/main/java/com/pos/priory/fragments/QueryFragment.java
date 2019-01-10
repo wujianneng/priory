@@ -89,6 +89,7 @@ public class QueryFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), MemberInfoActivity.class);
                 intent.putExtra("memberInfo", gson.toJson(memberList.get(position)));
                 startActivity(intent);
+                edtMemberInput.setText("");
             }
         });
 
@@ -103,6 +104,7 @@ public class QueryFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), OrderDetialActivity.class);
                 intent.putExtra("order",gson.toJson(orderList.get(position)));
                 startActivity(intent);
+                edtOrderInput.setText("");
             }
         });
 

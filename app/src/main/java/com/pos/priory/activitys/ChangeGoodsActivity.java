@@ -57,10 +57,6 @@ public class ChangeGoodsActivity extends BaseActivity {
     TextView moneyUnitTv;
     @Bind(R.id.money_tv)
     TextView moneyTv;
-    @Bind(R.id.discount_recycler_view)
-    RecyclerView discountRecyclerView;
-    @Bind(R.id.discount_layout)
-    FrameLayout discountLayout;
     @Bind(R.id.good_recycler_view)
     RecyclerView goodRecyclerView;
     @Bind(R.id.icon)
@@ -70,10 +66,8 @@ public class ChangeGoodsActivity extends BaseActivity {
     @Bind(R.id.btn_next)
     CardView btnNext;
 
-    List<String> discountList = new ArrayList<>();
     List<OrderItemBean> goodList = new ArrayList<>();
     List<OrderItemBean> tempgoodList = new ArrayList<>();
-    AddNewOrderDiscountAdapter discountAdapter;
     ChangeGoodsAdapter goodsAdapter;
 
     double sumMoney = 0;
@@ -93,16 +87,6 @@ public class ChangeGoodsActivity extends BaseActivity {
         staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY, ""),
                 new TypeToken<List<StaffInfoBean>>() {
                 }.getType());
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountAdapter = new AddNewOrderDiscountAdapter(R.layout.add_new_order_discount_list_item, discountList);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-        gridLayoutManager.setOrientation(GridLayout.VERTICAL);
-        discountRecyclerView.setLayoutManager(gridLayoutManager);
-        discountRecyclerView.setAdapter(discountAdapter);
         tempgoodList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
                 new TypeToken<List<OrderItemBean>>() {
                 }.getType());

@@ -74,16 +74,10 @@ public class AddNewOrderActivity extends BaseActivity {
     TextView moneyUnitTv;
     @Bind(R.id.money_tv)
     TextView moneyTv;
-    @Bind(R.id.discount_recycler_view)
-    RecyclerView discountRecyclerView;
-    @Bind(R.id.discount_layout)
-    FrameLayout discountLayout;
     @Bind(R.id.good_recycler_view)
     SwipeMenuRecyclerView goodRecyclerView;
 
-    List<String> discountList = new ArrayList<>();
     List<GoodBean> goodList = new ArrayList<>();
-    AddNewOrderDiscountAdapter discountAdapter;
     AddNewOrderGoodsAdapter goodsAdapter;
 
     int memberid;
@@ -106,17 +100,6 @@ public class AddNewOrderActivity extends BaseActivity {
         }
         changeGoodsMoeny = getIntent().getDoubleExtra("sumMoney", 0);
         moneyTv.setText("" + (sumMoney + changeGoodsMoeny));
-
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountList.add("0");
-        discountAdapter = new AddNewOrderDiscountAdapter(R.layout.add_new_order_discount_list_item, discountList);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-        gridLayoutManager.setOrientation(GridLayout.VERTICAL);
-        discountRecyclerView.setLayoutManager(gridLayoutManager);
-        discountRecyclerView.setAdapter(discountAdapter);
 
         goodsAdapter = new AddNewOrderGoodsAdapter(this, R.layout.add_new_order_good_list_item, goodList);
         goodsAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {

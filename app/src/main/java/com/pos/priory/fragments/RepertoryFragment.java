@@ -63,8 +63,10 @@ public class RepertoryFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), GoodDetialActivity.class);
                 intent.putExtra("productcode",dataList.get(position).getProduct().getProductcode());
                 intent.putExtra("count",dataList.get(position).getQuantity());
+                intent.putExtra("stockId",dataList.get(position).getId());
                 intent.putExtra("name",dataList.get(position).getProduct().getName());
                 startActivity(intent);
+                ((MainActivity)getActivity()).edtSearch.setText("");
             }
         });
     }

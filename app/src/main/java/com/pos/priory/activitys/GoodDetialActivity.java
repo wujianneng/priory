@@ -92,16 +92,19 @@ public class GoodDetialActivity extends BaseActivity {
     }
 
     int productcode = 0;
+    int slefCount = 0;
+
     @Override
     protected void initViews() {
-        staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY,""),
-                new TypeToken<List<StaffInfoBean>>(){}.getType());
+        staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY, ""),
+                new TypeToken<List<StaffInfoBean>>() {
+                }.getType());
 
         String goodname = getIntent().getStringExtra("name");
-        int count = getIntent().getIntExtra("count",0);
-        productcode = getIntent().getIntExtra("productcode",0);
+        slefCount = getIntent().getIntExtra("count", 0);
+        productcode = getIntent().getIntExtra("productcode", 0);
         titleTv.setText(goodname);
-        repertoryTv.setText(count + "");
+        repertoryTv.setText(slefCount + "");
 
         smartRefreshLayout.setEnableLoadMore(false);
         smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -123,7 +126,7 @@ public class GoodDetialActivity extends BaseActivity {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
                 SwipeMenuItem dinghuoItem = new SwipeMenuItem(GoodDetialActivity.this)
-                        .setBackgroundColor(ContextCompat.getColor(GoodDetialActivity.this,R.color.drag_btn_green))
+                        .setBackgroundColor(ContextCompat.getColor(GoodDetialActivity.this, R.color.drag_btn_green))
                         .setImage(R.drawable.icon_dinghuo)
                         .setText("訂貨")
                         .setTextColor(Color.WHITE)
@@ -131,7 +134,7 @@ public class GoodDetialActivity extends BaseActivity {
                         .setWidth(DeviceUtil.dip2px(GoodDetialActivity.this, 100));//设置宽
                 swipeRightMenu.addMenuItem(dinghuoItem);//设置右边的侧滑
                 SwipeMenuItem tuihuoItem = new SwipeMenuItem(GoodDetialActivity.this)
-                        .setBackgroundColor(ContextCompat.getColor(GoodDetialActivity.this,R.color.drag_btn_red))
+                        .setBackgroundColor(ContextCompat.getColor(GoodDetialActivity.this, R.color.drag_btn_red))
                         .setImage(R.drawable.icon_tuihuo)
                         .setText("調貨")
                         .setTextColor(Color.WHITE)
@@ -149,13 +152,13 @@ public class GoodDetialActivity extends BaseActivity {
                 int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
                 int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
                 if (menuPosition == 0) {
-                    showActionDialog(true,adapterPosition);
+                    showActionDialog(true, adapterPosition);
                 } else {
-                    showActionDialog(false,adapterPosition);
+                    showActionDialog(false, adapterPosition);
                 }
             }
         });
-        goodDetialAdapter = new GoodDetialAdapter(this,R.layout.good_detial_list_item, orderList);
+        goodDetialAdapter = new GoodDetialAdapter(this, R.layout.good_detial_list_item, orderList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -166,11 +169,16 @@ public class GoodDetialActivity extends BaseActivity {
     AlertDialog actionDialog;
 
     private void showActionDialog(final boolean isDingHuo, final int position) {
+        final GoodBean goodbean = orderList.get(position);
+        if(goodbean.getLocation().getName().equals(staffInfoBeanList.get(0).getStore())){
+            Toast.makeText(GoodDetialActivity.this, "只能從其他店鋪調撥", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (actionDialog == null) {
             View view = LayoutInflater.from(this).inflate(R.layout.dialog_invertory_action, null);
             actionDialog = new AlertDialog.Builder(this).setView(view)
                     .create();
-            TextView title = (TextView) view.findViewById(R.id.title);
+            TextView title = view.findViewById(R.id.title);
             final EditText edt_count = view.findViewById(R.id.edt_count);
             title.setText(isDingHuo ? "訂貨" : "調貨");
             view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
@@ -182,9 +190,22 @@ public class GoodDetialActivity extends BaseActivity {
             view.findViewById(R.id.btn_commit).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (edt_count.getText().toString().equals("")) {
+                        Toast.makeText(GoodDetialActivity.this, "请输入数量", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (isDingHuo)
+                        createPurchsing(goodbean, edt_count.getText().toString());
+                    else {
+                        int edtCount = Integer.parseInt(edt_count.getText().toString());
+                        if (edtCount > goodbean.getQuantity()) {
+                            Toast.makeText(GoodDetialActivity.this, "調撥數量不能大於此店鋪該商品庫存", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        int elseStoreCount = goodbean.getQuantity();
+                        allocateElseStock(goodbean.getId(), elseStoreCount, edtCount);
+                    }
                     actionDialog.dismiss();
-                    if(isDingHuo)
-                        createPurchsing(orderList.get(position),edt_count.getText().toString());
                 }
             });
             actionDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -204,36 +225,82 @@ public class GoodDetialActivity extends BaseActivity {
         }
     }
 
+    private void allocateElseStock(int stockid, int elseStoreCount, final int changeCount) {
+        if (customDialog == null)
+            customDialog = new CustomDialog(this, "訂貨中..");
+        customDialog.show();
+        Map<String, Object> map = new HashMap<>();
+        map.put("quantity", elseStoreCount - changeCount);
+        OkHttp3Util.doPatchWithToken(Constants.GET_STOCK_URL + "/" + stockid + "/update/", gson.toJson(map), sharedPreferences,
+                new Okhttp3StringCallback(this, "allocateElseStock") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        allocateSelfStock(getIntent().getIntExtra("stockId", 0),changeCount);
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        customDialog.dismiss();
+                        Toast.makeText(GoodDetialActivity.this, "調撥失敗", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void allocateSelfStock(int stockid,final int changeCount) {
+        Map<String, Object> map = new HashMap<>();
+        slefCount += changeCount;
+        map.put("quantity", slefCount);
+        OkHttp3Util.doPatchWithToken(Constants.GET_STOCK_URL + "/" + stockid + "/update/", gson.toJson(map), sharedPreferences,
+                new Okhttp3StringCallback(this, "allocateSelfStock") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        customDialog.dismiss();
+                        repertoryTv.setText(slefCount + "");
+                        Toast.makeText(GoodDetialActivity.this, "調撥成功", Toast.LENGTH_SHORT).show();
+                        smartRefreshLayout.autoRefresh();
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        customDialog.dismiss();
+                        slefCount -= changeCount;
+                        Toast.makeText(GoodDetialActivity.this, "調撥失敗", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void refreshRecyclerView(boolean isLoadMore) {
         if (!isLoadMore) {
             orderList.clear();
             goodDetialAdapter.notifyDataSetChanged();
         }
         OkHttp3Util.doGetWithToken(Constants.GET_STOCK_URL + "?productcode=" + productcode,
-                sharedPreferences, new Okhttp3StringCallback(this,"getStockList") {
-            @Override
-            public void onSuccess(String results) throws Exception {
-                List<GoodBean> goodBeanList = gson.fromJson(results,new TypeToken<List<GoodBean>>(){}.getType());
-                if(goodBeanList != null) {
-                    orderList.addAll(goodBeanList);
-                    goodDetialAdapter.notifyDataSetChanged();
-                }
-                smartRefreshLayout.finishLoadMore();
-                smartRefreshLayout.finishRefresh();
-            }
+                sharedPreferences, new Okhttp3StringCallback(this, "getStockList") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        List<GoodBean> goodBeanList = gson.fromJson(results, new TypeToken<List<GoodBean>>() {
+                        }.getType());
+                        if (goodBeanList != null) {
+                            orderList.addAll(goodBeanList);
+                            goodDetialAdapter.notifyDataSetChanged();
+                        }
+                        smartRefreshLayout.finishLoadMore();
+                        smartRefreshLayout.finishRefresh();
+                    }
 
-            @Override
-            public void onFailed(String erromsg) {
-                smartRefreshLayout.finishLoadMore();
-                smartRefreshLayout.finishRefresh();
-            }
-        });
+                    @Override
+                    public void onFailed(String erromsg) {
+                        smartRefreshLayout.finishLoadMore();
+                        smartRefreshLayout.finishRefresh();
+                    }
+                });
     }
 
     CustomDialog customDialog;
+
     private void createPurchsing(final GoodBean bean, final String count) {
         if (customDialog == null)
-            customDialog = new CustomDialog(this,"訂貨中..");
+            customDialog = new CustomDialog(this, "訂貨中..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
@@ -249,13 +316,13 @@ public class GoodDetialActivity extends BaseActivity {
                 new Okhttp3StringCallback(this, "createPurshing") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        createPurchsingItem(new JSONObject(results).getInt("id") + "",bean.getId(),count);
+                        createPurchsingItem(new JSONObject(results).getInt("id") + "", bean.getId(), count);
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
                         customDialog.dismiss();
-                        Toast.makeText(GoodDetialActivity.this,"訂貨失敗",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GoodDetialActivity.this, "訂貨失敗", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -271,13 +338,13 @@ public class GoodDetialActivity extends BaseActivity {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(GoodDetialActivity.this,"訂貨成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GoodDetialActivity.this, "訂貨成功", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
                         customDialog.dismiss();
-                        Toast.makeText(GoodDetialActivity.this,"訂貨失敗",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GoodDetialActivity.this, "訂貨失敗", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

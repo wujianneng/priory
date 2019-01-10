@@ -162,7 +162,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:text="1305"
+                            android:text=""
                             android:textColor="#333"
                             android:textSize="15sp" />
 
@@ -204,7 +204,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:text="1305"
+                            android:text=""
                             android:textColor="#333"
                             android:textSize="15sp" />
 
@@ -229,6 +229,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
+                        android:visibility="gone"
                         android:orientation="vertical">
 
                         <TextView
@@ -246,7 +247,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:text="45"
+                            android:text=""
                             android:textColor="#EE5C42"
                             android:textSize="15sp" />
 
@@ -261,6 +262,7 @@
 
                     <View
                         android:layout_width="0.5dp"
+                        android:visibility="gone"
                         android:layout_height="match_parent"
                         android:layout_marginBottom="15dp"
                         android:layout_marginTop="15dp"
@@ -309,33 +311,10 @@
 
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/discount_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/data_layout"
-            android:layout_marginLeft="50px"
-            android:layout_marginRight="50px"
-            android:layout_marginTop="1dp"
-            app:cardBackgroundColor="#fff"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="2dp">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/discount_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"></android.support.v7.widget.RecyclerView>
-
-        </android.support.v7.widget.CardView>
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/good_recycler_view"
             android:layout_marginTop="5dp"
-            android:layout_below="@+id/discount_layout"
+            android:layout_below="@+id/data_layout"
             android:layout_above="@+id/btn_change"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
