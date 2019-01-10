@@ -66,10 +66,11 @@ public abstract class Okhttp3StringCallback implements Callback {
                 public void runOnUiThread() {
                     try {
                         String result = response.body().string();
-                        if (!sentryTitle.equals(""))
-                            Log.e(sentryTitle, "response：" + result);
                         if (response.isSuccessful()) {
-                            Log.e(sentryTitle, "response：isSuccessful");
+                            if (!sentryTitle.equals("")) {
+                                Log.e(sentryTitle, "response：" + result);
+                                Log.e(sentryTitle, "response：isSuccessful");
+                            }
                             onSuccess(result);
                         } else {
                             onFailed(result);

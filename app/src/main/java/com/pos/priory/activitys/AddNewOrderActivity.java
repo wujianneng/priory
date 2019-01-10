@@ -124,7 +124,13 @@ public class AddNewOrderActivity extends BaseActivity {
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
                     case R.id.btn_change_price:
-                        showChoiceDiscountDialog(position);
+                        String[] items0 = {"6折", "65折", "7折", "75折", "8折", "85折", "9折", "95折", "无折扣"};
+                        String[] items1 = {"免费","6折", "65折", "7折", "75折", "8折", "85折", "9折", "95折", "无折扣"};
+                        if(goodList.get(position).getProduct().isDiscountcontrol()){
+                            showChoiceDiscountDialog(items0,position);
+                        }else {
+                            showChoiceDiscountDialog(items1,position);
+                        }
                         break;
                     case R.id.decrease_btn:
                         if (goodList.get(position).getSaleCount() > 1) {
@@ -262,6 +268,9 @@ public class AddNewOrderActivity extends BaseActivity {
     AlertDialog choiceSexDialog;
 
     private double getDiscountByName(String discountName) {
+        if (discountName.equals("免费")) {
+            return 0;
+        }
         if (discountName.equals("6折")) {
             return 0.6;
         } else if (discountName.equals("65折")) {
@@ -282,9 +291,8 @@ public class AddNewOrderActivity extends BaseActivity {
         return 1;
     }
 
-    private void showChoiceDiscountDialog(final int position) {
+    private void showChoiceDiscountDialog(final String[] items,final int position) {
         if (choiceSexDialog == null) {
-            final String[] items = {"6折", "65折", "7折", "75折", "8折", "85折", "9折", "95折", "无折扣"};
             yourChoice = 0;
             for (int i = 0; i < items.length; i++) {
                 if (goodList.get(position).getDiscountRate() == getDiscountByName(items[i])) {

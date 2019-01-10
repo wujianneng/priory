@@ -6,17 +6,20 @@ package com.pos.priory.beans;
 
 public class ReturnStockBean {
 
+
     /**
-     * id : 2
-     * rmaorder : 228
-     * name : test
+     * id : 36
+     * rmaorder : RMA1000048
+     * name : 虎眼石
+     * location : 高士德
      * quantity : 1
-     * weight : 0.20
+     * weight : 6.00
      */
 
     private int id;
-    private int rmaorder;
+    private String rmaorder;
     private String name;
+    private String location;
     private int quantity;
     private String weight;
 
@@ -28,11 +31,11 @@ public class ReturnStockBean {
         this.id = id;
     }
 
-    public int getRmaorder() {
+    public String getRmaorder() {
         return rmaorder;
     }
 
-    public void setRmaorder(int rmaorder) {
+    public void setRmaorder(String rmaorder) {
         this.rmaorder = rmaorder;
     }
 
@@ -42,6 +45,14 @@ public class ReturnStockBean {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public int getQuantity() {

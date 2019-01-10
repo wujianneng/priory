@@ -82,6 +82,15 @@ public class GoodBean {
         private int productcode;
         private String price;
         private String image;
+        private boolean discountcontrol;
+
+        public boolean isDiscountcontrol() {
+            return discountcontrol;
+        }
+
+        public void setDiscountcontrol(boolean discountcontrol) {
+            this.discountcontrol = discountcontrol;
+        }
 
         public int getId() {
             return id;

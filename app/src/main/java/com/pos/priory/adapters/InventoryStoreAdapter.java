@@ -36,5 +36,6 @@ public class InventoryStoreAdapter extends BaseQuickAdapter<InventoryBean, BaseV
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));
         helper.setText(R.id.weight_tv,"" + item.getStock().getQuantity());
+        helper.addOnClickListener(R.id.icon_check);
     }
 }

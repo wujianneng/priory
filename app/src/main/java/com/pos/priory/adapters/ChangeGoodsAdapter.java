@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.Call;
+
 /**
  * Created by Lenovo on 2018/12/29.
  */
@@ -45,15 +47,15 @@ public class ChangeGoodsAdapter extends BaseQuickAdapter<OrderItemBean, BaseView
     protected void convert(final BaseViewHolder helper, final OrderItemBean item) {
         helper.setText(R.id.code_tv, item.getStock().getProduct().getProductcode() + "");
         helper.setText(R.id.name_tv, item.getStock().getProduct().getName());
-        if (context instanceof ReturnGoodsActivity) {
-            helper.setText(R.id.price_tv, "$" + item.getStock().getProduct().getPrice());
-            helper.setGone(R.id.price_tv, true);
-            helper.setText(R.id.retial_price_tv, "$" + LogicUtils.getKeepLastThreeNumberAfterLittlePoint
-                    (Double.parseDouble(item.getStock().getProduct().getPrice()) * Constants.RETURN_GOOD_RAGE));
-        } else {
-            helper.setGone(R.id.price_tv, false);
-            helper.setText(R.id.retial_price_tv, "$" + item.getStock().getProduct().getPrice() + " x " + item.getOprateCount());
-        }
+//        if (context instanceof ReturnGoodsActivity) {
+//            helper.setText(R.id.price_tv, "$" + item.getStock().getProduct().getPrice());
+//            helper.setGone(R.id.price_tv, true);
+//            helper.setText(R.id.retial_price_tv, "$" + LogicUtils.getKeepLastThreeNumberAfterLittlePoint
+//                    (Double.parseDouble(item.getStock().getProduct().getPrice()) * Constants.RETURN_GOOD_RAGE));
+//        } else {
+        helper.setGone(R.id.price_tv, false);
+        helper.setText(R.id.retial_price_tv, "$" + item.getStock().getProduct().getPrice() + " x " + item.getOprateCount());
+//        }
         Glide.with(context).load(Constants.BASE_URL + item.getStock().getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
@@ -96,11 +98,17 @@ public class ChangeGoodsAdapter extends BaseQuickAdapter<OrderItemBean, BaseView
         });
     }
 
+    Call editCall;
+
     private void editReturnStocks(String weight, int returnStockId) {
+        if (editCall != null)
+            editCall.cancel();
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("weight", weight);
-        OkHttp3Util.doPatchWithToken(Constants.RETURN_STOCKS_URL + returnStockId + "/update/", new Gson().toJson(paramMap),
-                PreferenceManager.getDefaultSharedPreferences(context), new Okhttp3StringCallback((Activity) context, "editReturnStocks") {
+        paramMap.put("weight", Double.parseDouble(weight));
+        editCall = OkHttp3Util.doPatchWithToken(Constants.RETURN_STOCKS_URL + "/" + returnStockId
+                        + "/update/", new Gson().toJson(paramMap),
+                PreferenceManager.getDefaultSharedPreferences(context), new Okhttp3StringCallback((Activity) context,
+                        "editReturnStocks") {
                     @Override
                     public void onSuccess(String results) throws Exception {
 

@@ -11,7 +11,7 @@ public class Constants {
     public static final String Authorization_KEY = "Authorization";
     public static final String IS_SAVE_PASSWORD_KEY = "isSavePasswordKey";
     public static final Double CHANGE_GOOD_RAGE = 1D;
-    public static final Double RETURN_GOOD_RAGE = 0.8;
+    public static final Double RETURN_GOOD_RAGE = 1D;
 
     //Api
     public static final String BASE_URL = "https://pos.annabellaip.com/";
@@ -27,6 +27,7 @@ public class Constants {
     public static final String CHANGE_OR_RETURN_GOOD_URL = "https://pos.annabellaip.com/api/rmaorders";
     public static final String CHANGE_OR_RETURN_GOOD_ITEM_URL = "https://pos.annabellaip.com/api/rmaorderitems";
     public static final String CHANGE_PASSWORD_URL = "https://pos.annabellaip.com/api/rest-auth/password/change/";
-    public static final String RETURN_STOCKS_URL = "https://pos.annabellaip.com/api/returnstocks/";
+    public static final String RETURN_STOCKS_URL = "https://pos.annabellaip.com/api/returnstocks";
     public static final String PURCHASING_URL = "https://pos.annabellaip.com/api/purchasing";
+    public static final String PURCHASING_ITEM_URL = "https://pos.annabellaip.com/api/purchasingitems";
 }

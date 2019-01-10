@@ -124,7 +124,7 @@ public class OkHttp3Util {
     }
 
     public static Call doGetWithToken(String url, SharedPreferences sharedPreferences, Okhttp3StringCallback callback) {
-
+        Log.e("doGeturl","url:" + url);
         //创建OkHttpClient请求对象
         OkHttpClient okHttpClient = getInstance();
         //创建Request

@@ -141,11 +141,16 @@ public class ChangeGoodsActivity extends BaseActivity {
 
                     @Override
                     public void onFailed(String erromsg) {
-                        customDialog.dismiss();
+                        if(customDialog != null) {
+                            customDialog.dismiss();
+                            Toast.makeText(ChangeGoodsActivity.this, "创建换货单失败", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        }
                     }
                 });
     }
 
+    int accessCount = 0,tempAccessCount = 0;
     private void editChangeGoodOrder() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("staff", staffInfoBeanList.get(0).getUser());
@@ -154,7 +159,7 @@ public class ChangeGoodsActivity extends BaseActivity {
                 sharedPreferences, new Okhttp3StringCallback(this, "editChangeGoodOrder") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        customDialog.dismiss();
+                        accessCount = tempgoodList.size();
                         for (OrderItemBean bean : tempgoodList) {
                             createRefundOrderItem(bean);
                         }
@@ -162,7 +167,11 @@ public class ChangeGoodsActivity extends BaseActivity {
 
                     @Override
                     public void onFailed(String erromsg) {
-                        customDialog.dismiss();
+                        if(customDialog != null) {
+                            customDialog.dismiss();
+                            Toast.makeText(ChangeGoodsActivity.this, "创建换货单失败", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        }
                     }
                 });
     }
@@ -175,15 +184,16 @@ public class ChangeGoodsActivity extends BaseActivity {
                 sharedPreferences, new Okhttp3StringCallback(this, "createRefundOrderItem") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        goodList.add(orderitem);
-                        goodsAdapter.notifyDataSetChanged();
-                        resetSumMoney();
                         createReturnStocks(orderitem);
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
-
+                        if(customDialog != null) {
+                            customDialog.dismiss();
+                            Toast.makeText(ChangeGoodsActivity.this, "创建换货单失败", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        }
                     }
                 });
     }
@@ -192,18 +202,30 @@ public class ChangeGoodsActivity extends BaseActivity {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("rmanumber", createRefundOrderResultBean.getRmanumber());
         paramMap.put("name", orderitem.getStock().getProduct().getName());
-        paramMap.put("quantity", orderitem.getOprateCount() + "");
-        paramMap.put("weight", "0");
-        OkHttp3Util.doPostWithToken(Constants.RETURN_STOCKS_URL, gson.toJson(paramMap),
+        paramMap.put("quantity", orderitem.getOprateCount());
+        paramMap.put("weight", 0);
+        paramMap.put("location", staffInfoBeanList.get(0).getStore());
+        OkHttp3Util.doPostWithToken(Constants.RETURN_STOCKS_URL + "/", gson.toJson(paramMap),
                 sharedPreferences, new Okhttp3StringCallback(this,"createReturnStocks") {
             @Override
             public void onSuccess(String results) throws Exception {
-                 orderitem.setReturnStockId(new JSONObject(results).getInt("id"));
+                tempAccessCount += 1;
+                orderitem.setReturnStockId(new JSONObject(results).getInt("id"));
+                goodList.add(orderitem);
+                if(tempAccessCount == accessCount) {
+                    customDialog.dismiss();
+                    goodsAdapter.notifyDataSetChanged();
+                    resetSumMoney();
+                }
             }
 
             @Override
             public void onFailed(String erromsg) {
-
+                if(customDialog != null) {
+                    customDialog.dismiss();
+                    Toast.makeText(ChangeGoodsActivity.this, "创建换货单失败", Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                }
             }
         });
     }

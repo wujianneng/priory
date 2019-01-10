@@ -14,13 +14,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
 import com.pos.priory.adapters.GoodDetialAdapter;
 import com.pos.priory.beans.GoodBean;
+import com.pos.priory.beans.InventoryBean;
+import com.pos.priory.beans.StaffInfoBean;
+import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
@@ -39,8 +44,12 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -85,6 +94,9 @@ public class GoodDetialActivity extends BaseActivity {
     int productcode = 0;
     @Override
     protected void initViews() {
+        staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY,""),
+                new TypeToken<List<StaffInfoBean>>(){}.getType());
+
         String goodname = getIntent().getStringExtra("name");
         int count = getIntent().getIntExtra("count",0);
         productcode = getIntent().getIntExtra("productcode",0);
@@ -134,12 +146,12 @@ public class GoodDetialActivity extends BaseActivity {
             public void onItemClick(SwipeMenuBridge menuBridge) {
                 menuBridge.closeMenu();
 //                int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。0是左，右是1，暂时没有用到
-//                int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
+                int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
                 int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
                 if (menuPosition == 0) {
-                    showActionDialog(true);
+                    showActionDialog(true,adapterPosition);
                 } else {
-                    showActionDialog(false);
+                    showActionDialog(false,adapterPosition);
                 }
             }
         });
@@ -153,12 +165,13 @@ public class GoodDetialActivity extends BaseActivity {
 
     AlertDialog actionDialog;
 
-    private void showActionDialog(boolean isDingHuo) {
+    private void showActionDialog(final boolean isDingHuo, final int position) {
         if (actionDialog == null) {
             View view = LayoutInflater.from(this).inflate(R.layout.dialog_invertory_action, null);
             actionDialog = new AlertDialog.Builder(this).setView(view)
                     .create();
             TextView title = (TextView) view.findViewById(R.id.title);
+            final EditText edt_count = view.findViewById(R.id.edt_count);
             title.setText(isDingHuo ? "訂貨" : "調貨");
             view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -170,6 +183,8 @@ public class GoodDetialActivity extends BaseActivity {
                 @Override
                 public void onClick(View view) {
                     actionDialog.dismiss();
+                    if(isDingHuo)
+                        createPurchsing(orderList.get(position),edt_count.getText().toString());
                 }
             });
             actionDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -214,6 +229,60 @@ public class GoodDetialActivity extends BaseActivity {
             }
         });
     }
+
+    CustomDialog customDialog;
+    private void createPurchsing(final GoodBean bean, final String count) {
+        if (customDialog == null)
+            customDialog = new CustomDialog(this,"訂貨中..");
+        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                customDialog = null;
+            }
+        });
+        customDialog.show();
+        String location = staffInfoBeanList.get(0).getStore();
+        Map<String, Object> map = new HashMap<>();
+        map.put("location", location);
+        map.put("confirmed", false);
+        OkHttp3Util.doPostWithToken(Constants.PURCHASING_URL + "/", gson.toJson(map), sharedPreferences,
+                new Okhttp3StringCallback(this, "createPurshing") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        createPurchsingItem(new JSONObject(results).getInt("id") + "",bean.getId(),count);
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        customDialog.dismiss();
+                        Toast.makeText(GoodDetialActivity.this,"訂貨失敗",Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void createPurchsingItem(String id, int stockid, String count) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("purchasing", Integer.parseInt(id));
+        map.put("stock", stockid);
+        map.put("type", "purchase");
+        map.put("quantity", Integer.parseInt(count));
+        OkHttp3Util.doPostWithToken(Constants.PURCHASING_ITEM_URL + "/", gson.toJson(map), sharedPreferences,
+                new Okhttp3StringCallback(this, "createPurchsingItem") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        customDialog.dismiss();
+                        Toast.makeText(GoodDetialActivity.this,"訂貨成功",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        customDialog.dismiss();
+                        Toast.makeText(GoodDetialActivity.this,"訂貨失敗",Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public List<StaffInfoBean> staffInfoBeanList;
 
     @OnClick({R.id.back_btn})
     public void onClick(View v) {

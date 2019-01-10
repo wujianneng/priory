@@ -27,6 +27,8 @@ import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -102,7 +104,6 @@ public class ReturnGoodsActivity extends BaseActivity {
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         goodRecyclerView.setLayoutManager(mLayoutManager);
         goodRecyclerView.setAdapter(goodsAdapter);
-
         createReturnGoodsOrder();
     }
 
@@ -132,11 +133,14 @@ public class ReturnGoodsActivity extends BaseActivity {
                     @Override
                     public void onFailed(String erromsg) {
                         customDialog.dismiss();
+                        Toast.makeText(ReturnGoodsActivity.this,"创建回收单失败",Toast.LENGTH_SHORT).show();
+                        onBackPressed();
                     }
                 });
     }
 
     public List<StaffInfoBean> staffInfoBeanList;
+    int accessCount = 0,tempAccessCount = 0;
     private void editReturnGoodOrder() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("staff", staffInfoBeanList.get(0).getUser());
@@ -145,7 +149,7 @@ public class ReturnGoodsActivity extends BaseActivity {
                 sharedPreferences, new Okhttp3StringCallback(this, "editReturnGoodOrder") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        customDialog.dismiss();
+                        accessCount = tempgoodList.size();
                         for (OrderItemBean bean : tempgoodList) {
                             createReurnOrderItem(bean);
                         }
@@ -153,7 +157,11 @@ public class ReturnGoodsActivity extends BaseActivity {
 
                     @Override
                     public void onFailed(String erromsg) {
-                        customDialog.dismiss();
+                        if(customDialog != null) {
+                            customDialog.dismiss();
+                            Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        }
                     }
                 });
     }
@@ -166,48 +174,85 @@ public class ReturnGoodsActivity extends BaseActivity {
                 sharedPreferences, new Okhttp3StringCallback(this, "createReurnOrderItem") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        goodList.add(orderitem);
-                        goodsAdapter.notifyDataSetChanged();
-                        resetSumMoney();
+                        createReurnStockItem(orderitem);
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
-
+                        if(customDialog != null) {
+                            customDialog.dismiss();
+                            Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        }
                     }
                 });
     }
+
+    private void createReurnStockItem(final OrderItemBean orderitem) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("rmanumber", createRefundOrderResultBean.getRmanumber());
+        paramMap.put("name", orderitem.getStock().getProduct().getName());
+        paramMap.put("quantity", orderitem.getOprateCount());
+        paramMap.put("weight", 0);
+        paramMap.put("location", staffInfoBeanList.get(0).getStore());
+        OkHttp3Util.doPostWithToken(Constants.RETURN_STOCKS_URL + "/", gson.toJson(paramMap),
+                sharedPreferences, new Okhttp3StringCallback(this, "createReurnStockItem") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        tempAccessCount += 1;
+                        orderitem.setReturnStockId(new JSONObject(results).getInt("id"));
+                        goodList.add(orderitem);
+                        if(tempAccessCount == accessCount) {
+                            customDialog.dismiss();
+                            goodsAdapter.notifyDataSetChanged();
+                            resetSumMoney();
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        if(customDialog != null) {
+                            customDialog.dismiss();
+                            Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        }
+                    }
+                });
+    }
+
+
 
     @Override
     public void onBackPressed() {
         deleteReturnOrder();
     }
 
+    CustomDialog deleteDialog;
     private void deleteReturnOrder() {
         if (createRefundOrderResultBean == null) {
             finish();
             return;
         }
-        if (customDialog == null)
-            customDialog = new CustomDialog(this, "正在删除退货订单..");
-        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        if (deleteDialog == null)
+            deleteDialog = new CustomDialog(this, "正在删除退货订单..");
+        deleteDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
-                customDialog = null;
+                deleteDialog = null;
             }
         });
-        customDialog.show();
+        deleteDialog.show();
         OkHttp3Util.doDeleteWithToken(Constants.CHANGE_OR_RETURN_GOOD_URL + "/" + createRefundOrderResultBean.getId() + "/update/", sharedPreferences,
                 new Okhttp3StringCallback(this, "deleteReturnOrder") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        customDialog.dismiss();
+                        deleteDialog.dismiss();
                         finish();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
-                        customDialog.dismiss();
+                        deleteDialog.dismiss();
                         Toast.makeText(ReturnGoodsActivity.this, "删除退货单失败", Toast.LENGTH_SHORT).show();
                     }
                 });

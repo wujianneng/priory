@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
 import com.pos.priory.activitys.MainActivity;
@@ -48,6 +49,8 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -152,6 +155,14 @@ public class InventoryFragment extends BaseFragment {
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerViewStore.setLayoutManager(mLayoutManager);
         recyclerViewStore.setAdapter(storeAdapter);
+        storeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId() == R.id.icon_check) {
+                    doInventory(position);
+                }
+            }
+        });
 
         refreshLayoutRecover.setEnableLoadMore(false);
         refreshLayoutRecover.setOnRefreshListener(new OnRefreshListener() {
@@ -168,33 +179,6 @@ public class InventoryFragment extends BaseFragment {
                 refreshRecoverRecyclerView(true);
             }
         });
-        //设置侧滑菜单
-        recyclerViewRecover.setSwipeMenuCreator(new SwipeMenuCreator() {
-            @Override
-            public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-                SwipeMenuItem dinghuoItem = new SwipeMenuItem(getActivity())
-                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
-                        .setImage(R.drawable.icon_dinghuo)
-                        .setText("入库")
-                        .setTextColor(Color.WHITE)
-                        .setHeight(DeviceUtil.dip2px(getContext(), 91))//设置高，这里使用match_parent，就是与item的高相同
-                        .setWidth(DeviceUtil.dip2px(getContext(), 100));//设置宽
-                swipeRightMenu.addMenuItem(dinghuoItem);//设置右边的侧滑
-            }
-        });
-        //设置侧滑菜单的点击事件
-        recyclerViewRecover.setSwipeMenuItemClickListener(new SwipeMenuItemClickListener() {
-            @Override
-            public void onItemClick(SwipeMenuBridge menuBridge) {
-                menuBridge.closeMenu();
-//                int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。0是左，右是1，暂时没有用到
-                int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
-                int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
-                if (menuPosition == 0) {
-                    showActionDialog(2, adapterPosition);
-                }
-            }
-        });
         LinearLayoutManager mLayoutManager2 = new LinearLayoutManager(getActivity());
         mLayoutManager2.setOrientation(OrientationHelper.VERTICAL);
         recoverAdapter = new InventoryRecoverAdapter(R.layout.inventory_recover_list_item, recoverDataList);
@@ -202,6 +186,35 @@ public class InventoryFragment extends BaseFragment {
         recyclerViewRecover.setAdapter(recoverAdapter);
 
         refreshLayoutStore.autoRefresh();
+    }
+
+    private void doInventory(final int position) {
+        if (customDialog == null)
+            customDialog = new CustomDialog(getActivity(), "盘点中..");
+        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                customDialog = null;
+            }
+        });
+        customDialog.show();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("check", true);
+        OkHttp3Util.doPatchWithToken(Constants.GET_INVENTORYS_URL + "/" + storeDataList.get(position).getId() + "/update/",gson.toJson(paramMap),
+                sharedPreferences, new Okhttp3StringCallback(getActivity(), "doInventory") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        customDialog.dismiss();
+                        storeDataList.get(position).setCheck(true);
+                        storeAdapter.notifyItemChanged(position);
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        customDialog.dismiss();
+                        Toast.makeText(getActivity(), "盘点失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     AlertDialog actionDialog;
@@ -235,14 +248,6 @@ public class InventoryFragment extends BaseFragment {
                 code_tv.setText(bean.getStock().getProduct().getProductcode() + "");
                 name_tv.setText(bean.getStock().getProduct().getName());
             }
-            if (action == 2) {
-                title.setText("入庫");
-                icon_good.setVisibility(View.GONE);
-                ReturnStockBean bean = recoverDataList.get(position);
-                code_tv.setText(bean.getRmaorder() + "");
-                name_tv.setText(bean.getName());
-                edt_count.setText("1");
-            }
 
             view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -265,7 +270,7 @@ public class InventoryFragment extends BaseFragment {
                             Toast.makeText(getActivity(), "不能超過商品庫存數量", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        createPurchsing(bean,true,count + "");
+                        createPurchsing(bean, true, count + "");
                     }
                     if (action == 1) {
                         InventoryBean bean = storeDataList.get(position);
@@ -273,14 +278,7 @@ public class InventoryFragment extends BaseFragment {
                             Toast.makeText(getActivity(), "不能超過商品庫存數量", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        createPurchsing(bean,false,count + "");
-                    }
-                    if (action == 2) {
-                        ReturnStockBean bean = recoverDataList.get(position);
-                        if (count > bean.getQuantity()) {
-                            Toast.makeText(getActivity(), "不能超過商品庫存數量", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+                        createPurchsing(bean, false, count + "");
                     }
                 }
             });
@@ -301,9 +299,10 @@ public class InventoryFragment extends BaseFragment {
         }
     }
 
+
     CustomDialog customDialog;
 
-    private void createPurchsing(InventoryBean bean, final boolean isdinghuo, String count) {
+    private void createPurchsing(final InventoryBean bean, final boolean isdinghuo, final String count) {
         if (customDialog == null)
             customDialog = new CustomDialog(getActivity(), isdinghuo ? "訂貨中.." : "退貨中..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -314,25 +313,43 @@ public class InventoryFragment extends BaseFragment {
         });
         customDialog.show();
         String location = ((MainActivity) getActivity()).staffInfoBeanList.get(0).getStore();
-        String staff = ((MainActivity) getActivity()).staffInfoBeanList.get(0).getUser();
         Map<String, Object> map = new HashMap<>();
         map.put("location", location);
-        map.put("productcode", bean.getStock().getProduct().getProductcode() + "");
-        map.put("staff", staff);
-        map.put("quantity", bean);
-        map.put("type", isdinghuo ? "purchase" : "return");
+        map.put("confirmed", false);
         OkHttp3Util.doPostWithToken(Constants.PURCHASING_URL + "/", gson.toJson(map), sharedPreferences,
                 new Okhttp3StringCallback(getActivity(), "createPurshing") {
                     @Override
                     public void onSuccess(String results) throws Exception {
+                        createPurchsingItem(new JSONObject(results).getInt("id") + "", bean.getStock().getId(), count, isdinghuo);
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
                         customDialog.dismiss();
+                        Toast.makeText(getActivity(), isdinghuo ? "訂貨失敗" : "退貨失敗", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void createPurchsingItem(String id, int stockid, String count, final boolean isdinghuo) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("purchasing", Integer.parseInt(id));
+        map.put("stock", stockid);
+        map.put("type", isdinghuo ? "purchase" : "return");
+        map.put("quantity", Integer.parseInt(count));
+        OkHttp3Util.doPostWithToken(Constants.PURCHASING_ITEM_URL + "/", gson.toJson(map), sharedPreferences,
+                new Okhttp3StringCallback(getActivity(), "createPurchsingItem") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        customDialog.dismiss();
+                        Toast.makeText(getActivity(), isdinghuo ? "訂貨成功" : "退貨成功", Toast.LENGTH_SHORT).show();
                         refreshLayoutStore.autoRefresh();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
                         customDialog.dismiss();
-                        Toast.makeText(getActivity(),isdinghuo ? "訂貨失敗" : "退貨失敗",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), isdinghuo ? "訂貨失敗" : "退貨失敗", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -380,7 +397,8 @@ public class InventoryFragment extends BaseFragment {
             recoverDataList.clear();
             recoverAdapter.notifyDataSetChanged();
         }
-        OkHttp3Util.doGetWithToken(Constants.RETURN_STOCKS_URL,
+        OkHttp3Util.doGetWithToken(Constants.RETURN_STOCKS_URL + "?location=" + ((MainActivity) getActivity()).
+                        staffInfoBeanList.get(0).getStore(),
                 sharedPreferences, new Okhttp3StringCallback("getRecovers") {
                     @Override
                     public void onSuccess(String results) throws Exception {
