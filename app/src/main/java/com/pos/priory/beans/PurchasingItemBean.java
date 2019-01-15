@@ -6,13 +6,14 @@ package com.pos.priory.beans;
 
 public class PurchasingItemBean {
 
+
     /**
-     * id : 2
-     * purchasing : {"id":1,"location":"白馬行","confirmed":true,"created":"2019-01-09T18:43:28.485912+08:00"}
-     * stock : {"id":1,"product":{"id":5,"name":"虎眼石","productcode":2001,"price":"1000.00","image":"static/img/products/flower_GPfBfO8.jpg"},"quantity":5,"location":{"name":"高士德"}}
+     * id : 1
+     * purchasing : {"id":1,"location":"高士德","confirmed":false,"created":"2019-01-15T21:43:54.893367+08:00"}
+     * stock : {"id":1,"batch":{"id":1,"product":{"id":1,"name":"千足小福珠","productcode":1001,"price":"1000.00","image":"static/img/products/flower_j6q4NpE.jpg","discountcontrol":true,"catalog":"黃金","returnable":true},"batchno":"20190113","weight":"0.50"},"quantity":9,"location":{"name":"高士德"}}
      * type : purchase
-     * quantity : 1
-     * staff : staff01
+     * quantity : 3
+     * staff : store01manager
      */
 
     private int id;
@@ -73,9 +74,9 @@ public class PurchasingItemBean {
     public static class PurchasingBean {
         /**
          * id : 1
-         * location : 白馬行
-         * confirmed : true
-         * created : 2019-01-09T18:43:28.485912+08:00
+         * location : 高士德
+         * confirmed : false
+         * created : 2019-01-15T21:43:54.893367+08:00
          */
 
         private int id;
@@ -119,13 +120,13 @@ public class PurchasingItemBean {
     public static class StockBean {
         /**
          * id : 1
-         * product : {"id":5,"name":"虎眼石","productcode":2001,"price":"1000.00","image":"static/img/products/flower_GPfBfO8.jpg"}
-         * quantity : 5
+         * batch : {"id":1,"product":{"id":1,"name":"千足小福珠","productcode":1001,"price":"1000.00","image":"static/img/products/flower_j6q4NpE.jpg","discountcontrol":true,"catalog":"黃金","returnable":true},"batchno":"20190113","weight":"0.50"}
+         * quantity : 9
          * location : {"name":"高士德"}
          */
 
         private int id;
-        private ProductBean product;
+        private BatchBean batch;
         private int quantity;
         private LocationBean location;
 
@@ -137,12 +138,12 @@ public class PurchasingItemBean {
             this.id = id;
         }
 
-        public ProductBean getProduct() {
-            return product;
+        public BatchBean getBatch() {
+            return batch;
         }
 
-        public void setProduct(ProductBean product) {
-            this.product = product;
+        public void setBatch(BatchBean batch) {
+            this.batch = batch;
         }
 
         public int getQuantity() {
@@ -161,20 +162,18 @@ public class PurchasingItemBean {
             this.location = location;
         }
 
-        public static class ProductBean {
+        public static class BatchBean {
             /**
-             * id : 5
-             * name : 虎眼石
-             * productcode : 2001
-             * price : 1000.00
-             * image : static/img/products/flower_GPfBfO8.jpg
+             * id : 1
+             * product : {"id":1,"name":"千足小福珠","productcode":1001,"price":"1000.00","image":"static/img/products/flower_j6q4NpE.jpg","discountcontrol":true,"catalog":"黃金","returnable":true}
+             * batchno : 20190113
+             * weight : 0.50
              */
 
             private int id;
-            private String name;
-            private int productcode;
-            private String price;
-            private String image;
+            private ProductBean product;
+            private String batchno;
+            private String weight;
 
             public int getId() {
                 return id;
@@ -184,36 +183,114 @@ public class PurchasingItemBean {
                 this.id = id;
             }
 
-            public String getName() {
-                return name;
+            public ProductBean getProduct() {
+                return product;
             }
 
-            public void setName(String name) {
-                this.name = name;
+            public void setProduct(ProductBean product) {
+                this.product = product;
             }
 
-            public int getProductcode() {
-                return productcode;
+            public String getBatchno() {
+                return batchno;
             }
 
-            public void setProductcode(int productcode) {
-                this.productcode = productcode;
+            public void setBatchno(String batchno) {
+                this.batchno = batchno;
             }
 
-            public String getPrice() {
-                return price;
+            public String getWeight() {
+                return weight;
             }
 
-            public void setPrice(String price) {
-                this.price = price;
+            public void setWeight(String weight) {
+                this.weight = weight;
             }
 
-            public String getImage() {
-                return image;
-            }
+            public static class ProductBean {
+                /**
+                 * id : 1
+                 * name : 千足小福珠
+                 * productcode : 1001
+                 * price : 1000.00
+                 * image : static/img/products/flower_j6q4NpE.jpg
+                 * discountcontrol : true
+                 * catalog : 黃金
+                 * returnable : true
+                 */
 
-            public void setImage(String image) {
-                this.image = image;
+                private int id;
+                private String name;
+                private int productcode;
+                private String price;
+                private String image;
+                private boolean discountcontrol;
+                private String catalog;
+                private boolean returnable;
+
+                public int getId() {
+                    return id;
+                }
+
+                public void setId(int id) {
+                    this.id = id;
+                }
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
+
+                public int getProductcode() {
+                    return productcode;
+                }
+
+                public void setProductcode(int productcode) {
+                    this.productcode = productcode;
+                }
+
+                public String getPrice() {
+                    return price;
+                }
+
+                public void setPrice(String price) {
+                    this.price = price;
+                }
+
+                public String getImage() {
+                    return image;
+                }
+
+                public void setImage(String image) {
+                    this.image = image;
+                }
+
+                public boolean isDiscountcontrol() {
+                    return discountcontrol;
+                }
+
+                public void setDiscountcontrol(boolean discountcontrol) {
+                    this.discountcontrol = discountcontrol;
+                }
+
+                public String getCatalog() {
+                    return catalog;
+                }
+
+                public void setCatalog(String catalog) {
+                    this.catalog = catalog;
+                }
+
+                public boolean isReturnable() {
+                    return returnable;
+                }
+
+                public void setReturnable(boolean returnable) {
+                    this.returnable = returnable;
+                }
             }
         }
 

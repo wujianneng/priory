@@ -41,6 +41,7 @@ public class RepertoryFragment extends BaseFragment {
     RepertoryAdapter repertoryAdapter;
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
+    MainActivity mainActivity;
 
     @Nullable
     @Override
@@ -52,6 +53,7 @@ public class RepertoryFragment extends BaseFragment {
     }
 
     private void initViews() {
+        mainActivity = (MainActivity) getActivity();
         repertoryAdapter = new RepertoryAdapter(getActivity(),R.layout.repertory_list_item, dataList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
@@ -61,10 +63,11 @@ public class RepertoryFragment extends BaseFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getActivity(), GoodDetialActivity.class);
-                intent.putExtra("productcode",dataList.get(position).getProduct().getProductcode());
+                String productcode = dataList.get(position).getBatch().getProduct().getProductcode() + dataList.get(position).getBatch().getBatchno();
+                intent.putExtra("productcode",productcode);
                 intent.putExtra("count",dataList.get(position).getQuantity());
                 intent.putExtra("stockId",dataList.get(position).getId());
-                intent.putExtra("name",dataList.get(position).getProduct().getName());
+                intent.putExtra("name",dataList.get(position).getBatch().getProduct().getName());
                 startActivity(intent);
                 ((MainActivity)getActivity()).edtSearch.setText("");
             }
@@ -81,7 +84,7 @@ public class RepertoryFragment extends BaseFragment {
         if(str.equals(""))
             return;
         String url = "";
-        String location = ((MainActivity) getActivity()).staffInfoBeanList.get(0).getStore();
+        String location = mainActivity.staffInfoBeanList.get(0).getStore();
         if (LogicUtils.isNumeric(str))
             url = Constants.GET_STOCK_URL + "?productcode=" + str + "&location=" + location;
         else

@@ -1,27 +1,18 @@
 package com.pos.priory.activitys;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.print.PrintManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,16 +21,12 @@ import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
 import com.pos.priory.adapters.BillGoodsAdapter;
 import com.pos.priory.adapters.BillPrintGoodsAdapter;
-import com.pos.priory.adapters.MyPrintDocumentAdapter;
 import com.pos.priory.beans.GoodBean;
 import com.pos.priory.utils.BitmapUtils;
 import com.pos.priory.utils.DateUtils;
-import com.pos.zxinglib.MipcaActivityCapture;
-import com.pos.zxinglib.utils.DeviceUtil;
 import com.pos.zxinglib.utils.PermissionsManager;
 import com.pos.zxinglib.utils.PermissionsResultAction;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 

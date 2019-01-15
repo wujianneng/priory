@@ -299,7 +299,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text2"
                 android:layout_marginLeft="20dp"
-                android:text="3.3000元以上磚石貨品憑公司收據一年內享有8折換貨服務;"
+                android:text="3.3000元以上鉆石貨品憑公司收據一年內享有8折換貨服務;"
                 android:textColor="#333"
                 android:textSize="8sp" />
 

@@ -2,6 +2,7 @@ package com.pos.priory.activitys;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +19,8 @@ import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
+
+import org.json.JSONObject;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -156,6 +159,12 @@ public class RegisterMemberActivity extends BaseActivity {
                 Toast.makeText(RegisterMemberActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
                 customDialog.dismiss();
                 finish();
+                Intent intent = new Intent(RegisterMemberActivity.this, AddNewOrderActivity.class);
+                JSONObject jsonObject = new JSONObject(results);
+                intent.putExtra("memberId", jsonObject.getInt("id"));
+                intent.putExtra("memberName", jsonObject.getString("last_name") +
+                        jsonObject.getString("first_name"));
+                startActivity(intent);
             }
 
             @Override

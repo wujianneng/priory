@@ -54,7 +54,7 @@ public abstract class Okhttp3StringCallback implements Callback {
             onFailed(e.getMessage());
         }
         if (!sentryTitle.equals("")) {
-            Log.e(sentryTitle, "onFailed：" + e.getMessage());
+            Log.e(sentryTitle, "onFailure：" + e.getMessage());
         }
     }
 
@@ -65,6 +65,11 @@ public abstract class Okhttp3StringCallback implements Callback {
                 @Override
                 public void runOnUiThread() {
                     try {
+                        if(response == null){
+                            if (!sentryTitle.equals("")) {
+                                Log.e(sentryTitle, "response == null");
+                            }
+                        }
                         String result = response.body().string();
                         if (response.isSuccessful()) {
                             if (!sentryTitle.equals("")) {
@@ -73,15 +78,15 @@ public abstract class Okhttp3StringCallback implements Callback {
                             }
                             onSuccess(result);
                         } else {
-                            onFailed(result);
                             if (!sentryTitle.equals("")) {
                                 Log.e(sentryTitle, "onFailed：" + result);
                             }
+                            onFailed(result);
                         }
                     } catch (Exception e) {
                         onFailed(e.getMessage());
                         if (!sentryTitle.equals("")) {
-                            Log.e(sentryTitle, "onFailed：" + e.getMessage());
+                            Log.e(sentryTitle, "Exception：" + e.getMessage());
                         }
                     }
                 }

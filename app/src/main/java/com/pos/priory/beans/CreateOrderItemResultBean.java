@@ -139,6 +139,15 @@ public class CreateOrderItemResultBean {
             private int productcode;
             private String price;
             private String image;
+            private String catalog;
+
+            public String getCatalog() {
+                return catalog;
+            }
+
+            public void setCatalog(String catalog) {
+                this.catalog = catalog;
+            }
 
             public int getId() {
                 return id;

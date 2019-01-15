@@ -23,7 +23,6 @@ import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
 import com.pos.priory.adapters.GoodDetialAdapter;
 import com.pos.priory.beans.GoodBean;
-import com.pos.priory.beans.InventoryBean;
 import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
@@ -91,7 +90,7 @@ public class GoodDetialActivity extends BaseActivity {
         ButterKnife.bind(this);
     }
 
-    int productcode = 0;
+    String productcode = "";
     int slefCount = 0;
 
     @Override
@@ -102,7 +101,7 @@ public class GoodDetialActivity extends BaseActivity {
 
         String goodname = getIntent().getStringExtra("name");
         slefCount = getIntent().getIntExtra("count", 0);
-        productcode = getIntent().getIntExtra("productcode", 0);
+        productcode = getIntent().getStringExtra("productcode");
         titleTv.setText(goodname);
         repertoryTv.setText(slefCount + "");
 

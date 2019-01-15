@@ -7,29 +7,41 @@ package com.pos.priory.beans;
 public class OrderItemBean {
 
     /**
-     * id : 25
-     * order : 20181105163316
-     * stock : {"id":5,"product":{"id":1,"name":"千足金小熊","productcode":1001,"price":"1000.00","image":"static/img/products/flower_PecCFzH.jpg"},"quantity":5,"location":{"name":"高士德"}}
+     * id : 3
+     * order : 20190115161512
+     * stock : {"id":1,"batch":{"id":1,"product":{"id":1,"name":"千足小福珠","productcode":1001,"price":"1000.00","image":"static/img/products/flower_j6q4NpE.jpg","discountcontrol":true},"batchno":"20190113","weight":"0.50"},"quantity":9,"location":{"name":"高士德"}}
      * quantity : 1
-     * discount : 1.00
+     * discount : 0.75
      * fixdiscount : 0.00
-     * price : 1000.0
+     * price : 750.0
      */
 
     private int id;
-    private int returnStockId = -1;
     private String order;
     private StockBean stock;
     private int quantity;
-    private int oprateCount = 0;
     private String discount;
     private String fixdiscount;
     private double price;
     private String weight = "";
     boolean isSelected = false;
+    private int returnStockId = -1;
+    private int oprateCount = 0;
 
     public String getWeight() {
         return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public int getReturnStockId() {
@@ -40,24 +52,12 @@ public class OrderItemBean {
         this.returnStockId = returnStockId;
     }
 
-    public void setWeight(String weight) {
-        this.weight = weight;
-    }
-
     public int getOprateCount() {
         return oprateCount;
     }
 
     public void setOprateCount(int oprateCount) {
         this.oprateCount = oprateCount;
-    }
-
-    public boolean isSelected() {
-        return isSelected;
-    }
-
-    public void setSelected(boolean selected) {
-        isSelected = selected;
     }
 
     public int getId() {
@@ -118,14 +118,14 @@ public class OrderItemBean {
 
     public static class StockBean {
         /**
-         * id : 5
-         * product : {"id":1,"name":"千足金小熊","productcode":1001,"price":"1000.00","image":"static/img/products/flower_PecCFzH.jpg"}
-         * quantity : 5
+         * id : 1
+         * batch : {"id":1,"product":{"id":1,"name":"千足小福珠","productcode":1001,"price":"1000.00","image":"static/img/products/flower_j6q4NpE.jpg","discountcontrol":true},"batchno":"20190113","weight":"0.50"}
+         * quantity : 9
          * location : {"name":"高士德"}
          */
 
         private int id;
-        private ProductBean product;
+        private BatchBean batch;
         private int quantity;
         private LocationBean location;
 
@@ -137,12 +137,12 @@ public class OrderItemBean {
             this.id = id;
         }
 
-        public ProductBean getProduct() {
-            return product;
+        public BatchBean getBatch() {
+            return batch;
         }
 
-        public void setProduct(ProductBean product) {
-            this.product = product;
+        public void setBatch(BatchBean batch) {
+            this.batch = batch;
         }
 
         public int getQuantity() {
@@ -161,20 +161,18 @@ public class OrderItemBean {
             this.location = location;
         }
 
-        public static class ProductBean {
+        public static class BatchBean {
             /**
              * id : 1
-             * name : 千足金小熊
-             * productcode : 1001
-             * price : 1000.00
-             * image : static/img/products/flower_PecCFzH.jpg
+             * product : {"id":1,"name":"千足小福珠","productcode":1001,"price":"1000.00","image":"static/img/products/flower_j6q4NpE.jpg","discountcontrol":true}
+             * batchno : 20190113
+             * weight : 0.50
              */
 
             private int id;
-            private String name;
-            private int productcode;
-            private String price;
-            private String image;
+            private ProductBean product;
+            private String batchno;
+            private String weight;
 
             public int getId() {
                 return id;
@@ -184,36 +182,112 @@ public class OrderItemBean {
                 this.id = id;
             }
 
-            public String getName() {
-                return name;
+            public ProductBean getProduct() {
+                return product;
             }
 
-            public void setName(String name) {
-                this.name = name;
+            public void setProduct(ProductBean product) {
+                this.product = product;
             }
 
-            public int getProductcode() {
-                return productcode;
+            public String getBatchno() {
+                return batchno;
             }
 
-            public void setProductcode(int productcode) {
-                this.productcode = productcode;
+            public void setBatchno(String batchno) {
+                this.batchno = batchno;
             }
 
-            public String getPrice() {
-                return price;
+            public String getWeight() {
+                return weight;
             }
 
-            public void setPrice(String price) {
-                this.price = price;
+            public void setWeight(String weight) {
+                this.weight = weight;
             }
 
-            public String getImage() {
-                return image;
-            }
+            public static class ProductBean {
+                /**
+                 * id : 1
+                 * name : 千足小福珠
+                 * productcode : 1001
+                 * price : 1000.00
+                 * image : static/img/products/flower_j6q4NpE.jpg
+                 * discountcontrol : true
+                 */
 
-            public void setImage(String image) {
-                this.image = image;
+                private int id;
+                private String name;
+                private int productcode;
+                private String price;
+                private String realPrice;
+                private String image;
+                private boolean discountcontrol;
+                private String catalog;
+
+                public String getRealPrice() {
+                    return realPrice;
+                }
+
+                public void setRealPrice(String realPrice) {
+                    this.realPrice = realPrice;
+                }
+
+                public String getCatalog() {
+                    return catalog;
+                }
+
+                public void setCatalog(String catalog) {
+                    this.catalog = catalog;
+                }
+
+                public int getId() {
+                    return id;
+                }
+
+                public void setId(int id) {
+                    this.id = id;
+                }
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
+
+                public int getProductcode() {
+                    return productcode;
+                }
+
+                public void setProductcode(int productcode) {
+                    this.productcode = productcode;
+                }
+
+                public String getPrice() {
+                    return price;
+                }
+
+                public void setPrice(String price) {
+                    this.price = price;
+                }
+
+                public String getImage() {
+                    return image;
+                }
+
+                public void setImage(String image) {
+                    this.image = image;
+                }
+
+                public boolean isDiscountcontrol() {
+                    return discountcontrol;
+                }
+
+                public void setDiscountcontrol(boolean discountcontrol) {
+                    this.discountcontrol = discountcontrol;
+                }
             }
         }
 

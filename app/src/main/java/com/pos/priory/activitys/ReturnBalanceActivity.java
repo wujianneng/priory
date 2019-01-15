@@ -111,14 +111,15 @@ public class ReturnBalanceActivity extends BaseActivity {
             GoodBean.LocationBean locationBean = new GoodBean.LocationBean();
             locationBean.setName(orderItemBean.getStock().getLocation().getName());
             goodBean.setLocation(locationBean);
-            GoodBean.ProductBean productBean = new GoodBean.ProductBean();
-            productBean.setName(orderItemBean.getStock().getProduct().getName());
-            productBean.setPrice(LogicUtils.getKeepLastThreeNumberAfterLittlePoint(Double.parseDouble
-                    (orderItemBean.getStock().getProduct().getPrice()) * Constants.RETURN_GOOD_RAGE));
-            productBean.setId(orderItemBean.getStock().getProduct().getId());
-            productBean.setProductcode(orderItemBean.getStock().getProduct().getProductcode());
-            productBean.setImage(orderItemBean.getStock().getProduct().getImage());
-            goodBean.setProduct(productBean);
+            GoodBean.BatchBean batchBean = new GoodBean.BatchBean();
+            GoodBean.BatchBean.ProductBean productBean = new GoodBean.BatchBean.ProductBean();
+            productBean.setName(orderItemBean.getStock().getBatch().getProduct().getName());
+            productBean.setPrice(orderItemBean.getStock().getBatch().getProduct().getRealPrice());
+            productBean.setId(orderItemBean.getStock().getBatch().getProduct().getId());
+            productBean.setProductcode(orderItemBean.getStock().getBatch().getProduct().getProductcode());
+            productBean.setImage(orderItemBean.getStock().getBatch().getProduct().getImage());
+            batchBean.setProduct(productBean);
+            goodBean.setBatch(batchBean);
             goodBeanList.add(goodBean);
         }
         return goodBeanList;

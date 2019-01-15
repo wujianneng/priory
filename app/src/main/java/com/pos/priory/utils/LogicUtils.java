@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import java.io.File;
@@ -171,6 +172,10 @@ public class LogicUtils {
         return true;
     }
 
+    public static void showSystemKeyboard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(view, 0);
+    }
 
     /**
      * 保留小数点后两位
@@ -213,6 +218,36 @@ public class LogicUtils {
         } catch (Exception e) {
             return "0.000";
         }
+    }
+
+    /**
+     * 保留小数点后两位
+     *
+     * @param num
+     * @return
+     */
+    public static String getKeepLastOneNumberAfterLittlePoint(float num) {
+        try {
+            return new DecimalFormat("##0.0").format(num);
+        } catch (Exception e) {
+            return "0.0";
+        }
+
+    }
+
+    /**
+     * 保留小数点后两位
+     *
+     * @param num
+     * @return
+     */
+    public static String getKeepLastOneNumberAfterLittlePoint(double num) {
+        try {
+            return new DecimalFormat("##0.0").format(num);
+        } catch (Exception e) {
+            return "0.0";
+        }
+
     }
 
     /**

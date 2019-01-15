@@ -164,11 +164,11 @@ public class DetialListFragment extends BaseFragment {
             TextView code_tv = view.findViewById(R.id.code_tv);
             TextView name_tv = view.findViewById(R.id.name_tv);
             final EditText edt_count = view.findViewById(R.id.edt_count);
-            Glide.with(getActivity()).load(Constants.BASE_URL + purchasingBean.getStock().getProduct().getImage())
+            Glide.with(getActivity()).load(Constants.BASE_URL + purchasingBean.getStock().getBatch().getProduct().getImage())
                     .error(android.R.drawable.ic_menu_gallery)
                     .into(icon_good);
-            code_tv.setText(purchasingBean.getStock().getProduct().getProductcode() + "");
-            name_tv.setText(purchasingBean.getStock().getProduct().getName());
+            code_tv.setText(purchasingBean.getStock().getBatch().getProduct().getProductcode() + "");
+            name_tv.setText(purchasingBean.getStock().getBatch().getProduct().getName());
             view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

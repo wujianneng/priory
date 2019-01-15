@@ -3,27 +3,25 @@ package com.pos.priory.activitys;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
-import com.pos.priory.adapters.AddNewOrderDiscountAdapter;
 import com.pos.priory.adapters.ChangeGoodsAdapter;
 import com.pos.priory.beans.CreateRefundOrderResultBean;
 import com.pos.priory.beans.OrderItemBean;
 import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
@@ -67,6 +65,9 @@ public class ReturnGoodsActivity extends BaseActivity {
     List<OrderItemBean> goodList = new ArrayList<>();
     List<OrderItemBean> tempgoodList = new ArrayList<>();
     ChangeGoodsAdapter goodsAdapter;
+    String currentGoldPrice = "";
+    @Bind(R.id.gold_price_tv)
+    TextView goldPriceTv;
 
     @Override
     protected void beForeInitViews() {
@@ -86,19 +87,15 @@ public class ReturnGoodsActivity extends BaseActivity {
         tempgoodList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
                 new TypeToken<List<OrderItemBean>>() {
                 }.getType());
-        goodsAdapter = new ChangeGoodsAdapter(this,R.layout.change_good_list_item, goodList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         goodRecyclerView.setLayoutManager(mLayoutManager);
-        goodRecyclerView.setAdapter(goodsAdapter);
-        createReturnGoodsOrder();
+        getCurrentGoldPrice();
     }
 
-    CustomDialog customDialog;
-    CreateRefundOrderResultBean createRefundOrderResultBean;
-    private void createReturnGoodsOrder() {
+    private void getCurrentGoldPrice() {
         if (customDialog == null)
-            customDialog = new CustomDialog(this, "正在新增换货订单..");
+            customDialog = new CustomDialog(this, "正在新增回收单..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
@@ -106,6 +103,32 @@ public class ReturnGoodsActivity extends BaseActivity {
             }
         });
         customDialog.show();
+        OkHttp3Util.doGetWithToken(Constants.GOLD_PRICE_URL, sharedPreferences, new Okhttp3StringCallback(this, "getCurrentGoldPrice") {
+            @Override
+            public void onSuccess(String results) throws Exception {
+                currentGoldPrice = new JSONObject(results).getString("price");
+                goldPriceTv.setText("當前金價：" + currentGoldPrice + "/g");
+                goodsAdapter = new ChangeGoodsAdapter(ReturnGoodsActivity.this, R.layout.change_good_list_item, goodList);
+                goodRecyclerView.setAdapter(goodsAdapter);
+                createReturnGoodsOrder();
+            }
+
+            @Override
+            public void onFailed(String erromsg) {
+                if (customDialog != null) {
+                    customDialog.dismiss();
+                    Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
+                    onBackPressed();
+                }
+            }
+        });
+    }
+
+
+    CustomDialog customDialog;
+    CreateRefundOrderResultBean createRefundOrderResultBean;
+
+    private void createReturnGoodsOrder() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("ordernumber", getIntent().getStringExtra("ordernumber"));
         paramMap.put("type", "return");
@@ -120,14 +143,15 @@ public class ReturnGoodsActivity extends BaseActivity {
                     @Override
                     public void onFailed(String erromsg) {
                         customDialog.dismiss();
-                        Toast.makeText(ReturnGoodsActivity.this,"创建回收单失败",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
                         onBackPressed();
                     }
                 });
     }
 
     public List<StaffInfoBean> staffInfoBeanList;
-    int accessCount = 0,tempAccessCount = 0;
+    int accessCount = 0, tempAccessCount = 0;
+
     private void editReturnGoodOrder() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("staff", staffInfoBeanList.get(0).getUser());
@@ -144,7 +168,7 @@ public class ReturnGoodsActivity extends BaseActivity {
 
                     @Override
                     public void onFailed(String erromsg) {
-                        if(customDialog != null) {
+                        if (customDialog != null) {
                             customDialog.dismiss();
                             Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
                             onBackPressed();
@@ -166,7 +190,7 @@ public class ReturnGoodsActivity extends BaseActivity {
 
                     @Override
                     public void onFailed(String erromsg) {
-                        if(customDialog != null) {
+                        if (customDialog != null) {
                             customDialog.dismiss();
                             Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
                             onBackPressed();
@@ -178,7 +202,7 @@ public class ReturnGoodsActivity extends BaseActivity {
     private void createReurnStockItem(final OrderItemBean orderitem) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("rmanumber", createRefundOrderResultBean.getRmanumber());
-        paramMap.put("name", orderitem.getStock().getProduct().getName());
+        paramMap.put("name", orderitem.getStock().getBatch().getProduct().getName());
         paramMap.put("quantity", orderitem.getOprateCount());
         paramMap.put("weight", 0);
         paramMap.put("location", staffInfoBeanList.get(0).getStore());
@@ -189,16 +213,15 @@ public class ReturnGoodsActivity extends BaseActivity {
                         tempAccessCount += 1;
                         orderitem.setReturnStockId(new JSONObject(results).getInt("id"));
                         goodList.add(orderitem);
-                        if(tempAccessCount == accessCount) {
+                        if (tempAccessCount == accessCount) {
                             customDialog.dismiss();
-                            goodsAdapter.notifyDataSetChanged();
-                            resetSumMoney();
+                            resetSumMoney(true);
                         }
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
-                        if(customDialog != null) {
+                        if (customDialog != null) {
                             customDialog.dismiss();
                             Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
                             onBackPressed();
@@ -208,13 +231,13 @@ public class ReturnGoodsActivity extends BaseActivity {
     }
 
 
-
     @Override
     public void onBackPressed() {
         deleteReturnOrder();
     }
 
     CustomDialog deleteDialog;
+
     private void deleteReturnOrder() {
         if (createRefundOrderResultBean == null) {
             finish();
@@ -246,16 +269,30 @@ public class ReturnGoodsActivity extends BaseActivity {
 
     }
 
+    private boolean isAllWeightEdtHasInput() {
+        for (OrderItemBean bean : goodList) {
+            if(bean.getWeight().equals("")){
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     @OnClick({R.id.btn_next, R.id.back_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_next:
-                Intent intent = new Intent(ReturnGoodsActivity.this,ReturnBalanceActivity.class);
-                intent.putExtra("goodlist",gson.toJson(goodList));
-                intent.putExtra("sumMoney",sumMoney);
+                if(!isAllWeightEdtHasInput()){
+                    Toast.makeText(ReturnGoodsActivity.this,"请输入全部回收商品的重量",Toast
+                            .LENGTH_SHORT).show();
+                    return;
+                }
+                Intent intent = new Intent(ReturnGoodsActivity.this, ReturnBalanceActivity.class);
+                intent.putExtra("goodlist", gson.toJson(goodList));
+                intent.putExtra("sumMoney", sumMoney);
                 intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
-                intent.putExtra("ordernumber",getIntent().getStringExtra("ordernumber"));
+                intent.putExtra("ordernumber", getIntent().getStringExtra("ordernumber"));
                 startActivity(intent);
                 break;
             case R.id.back_btn:
@@ -264,13 +301,36 @@ public class ReturnGoodsActivity extends BaseActivity {
         }
     }
 
-    private void resetSumMoney() {
-        for (OrderItemBean bean : goodList) {
-            sumMoney += Double.parseDouble(bean.getStock().getProduct().getPrice()) * Constants.RETURN_GOOD_RAGE
-                    * bean.getOprateCount();
+    public void resetSumMoney(boolean isNotify) {
+        sumMoney = 0;
+        for (OrderItemBean item : goodList) {
+            item.getStock().getBatch().getProduct().setPrice(item.getPrice() + "");
+            setReturnOrderItemRealPrice(item);
+            sumMoney += Double.parseDouble(item.getStock().getBatch().getProduct().getRealPrice()) * item.getOprateCount();
         }
         sumMoney = -1 * sumMoney;
         moneyTv.setText(sumMoney + "");
+        if (isNotify)
+            goodsAdapter.notifyDataSetChanged();
     }
 
+    private void setReturnOrderItemRealPrice(OrderItemBean item) {
+        if (item.getStock().getBatch().getProduct().getCatalog().equals("黃金")) {
+            if (item.getWeight().equals("")) {
+                item.getStock().getBatch().getProduct().setRealPrice("0");
+            } else {
+                item.getStock().getBatch().getProduct().setRealPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint(
+                        Double.parseDouble(currentGoldPrice) * Double.parseDouble(item.getWeight())));
+            }
+        } else {
+            item.getStock().getBatch().getProduct().setRealPrice(item.getStock().getBatch().getProduct().getPrice());
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

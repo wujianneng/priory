@@ -10,7 +10,7 @@ public class Constants {
     public static final String CURRENT_STAFF_INFO_KEY = "currentStaffInfoKey";
     public static final String Authorization_KEY = "Authorization";
     public static final String IS_SAVE_PASSWORD_KEY = "isSavePasswordKey";
-    public static final Double CHANGE_GOOD_RAGE = 1D;
+    public static final Double CHANGE_GOOD_RAGE = 0.8;
     public static final Double RETURN_GOOD_RAGE = 1D;
 
     //Api
@@ -30,4 +30,5 @@ public class Constants {
     public static final String RETURN_STOCKS_URL = "https://pos.annabellaip.com/api/returnstocks";
     public static final String PURCHASING_URL = "https://pos.annabellaip.com/api/purchasing";
     public static final String PURCHASING_ITEM_URL = "https://pos.annabellaip.com/api/purchasingitems";
+    public static final String GOLD_PRICE_URL = "https://pos.annabellaip.com/api/goldprice/";
 }

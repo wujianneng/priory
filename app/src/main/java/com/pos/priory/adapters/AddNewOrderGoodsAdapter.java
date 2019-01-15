@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
 import com.pos.priory.beans.GoodBean;
 import com.pos.priory.utils.Constants;
+import com.pos.priory.utils.LogicUtils;
 
 import java.util.List;
 
@@ -30,11 +31,11 @@ public class AddNewOrderGoodsAdapter extends BaseQuickAdapter<GoodBean, BaseView
     protected void convert(BaseViewHolder helper, GoodBean item) {
         helper.addOnClickListener(R.id.btn_change_price).addOnClickListener(R.id.decrease_btn)
                 .addOnClickListener(R.id.increase_btn);
-        helper.setText(R.id.code_tv, item.getProduct().getProductcode() + "");
-        helper.setText(R.id.name_tv, item.getProduct().getName());
-        helper.setText(R.id.price_tv, "$" + item.getProduct().getPrice());
+        helper.setText(R.id.code_tv, item.getBatch().getProduct().getProductcode() + "");
+        helper.setText(R.id.name_tv, item.getBatch().getProduct().getName());
+        helper.setText(R.id.price_tv, "$" + item.getBatch().getProduct().getPrice());
         helper.setText(R.id.account_btn, item.getSaleCount() + "");
-        Glide.with(context).load(Constants.BASE_URL + item.getProduct().getImage())
+        Glide.with(context).load(Constants.BASE_URL + item.getBatch().getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));

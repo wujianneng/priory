@@ -31,15 +31,15 @@ public class OrderDetialGoodsAdapter extends BaseQuickAdapter<OrderItemBean, Bas
 
     @Override
     protected void convert(final BaseViewHolder helper, final OrderItemBean item) {
-        Log.e("glide","url:" + Constants.BASE_URL + item.getStock().getProduct().getImage());
-        Glide.with(mContext).load(Constants.BASE_URL + item.getStock().getProduct().getImage())
+        Log.e("glide","url:" + Constants.BASE_URL + item.getStock().getBatch().getProduct().getImage());
+        Glide.with(mContext).load(Constants.BASE_URL + item.getStock().getBatch().getProduct().getImage())
                 .asBitmap()
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));
-        helper.setText(R.id.code_tv,item.getStock().getProduct().getProductcode() + "");
-        helper.setText(R.id.name_tv,item.getStock().getProduct().getName());
-        helper.setText(R.id.price_tv,"$" + item.getStock().getProduct().getPrice() + "x" +
+        helper.setText(R.id.code_tv,item.getStock().getBatch().getProduct().getProductcode() + "");
+        helper.setText(R.id.name_tv,item.getStock().getBatch().getProduct().getName());
+        helper.setText(R.id.price_tv,"$" + item.getPrice() + "x" +
                 item.getQuantity());
         helper.setText(R.id.account_btn,item.getOprateCount() + "");
         RadioButton radioButton = helper.getView(R.id.radio);

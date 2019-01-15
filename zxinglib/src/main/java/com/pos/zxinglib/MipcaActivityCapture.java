@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -57,7 +58,7 @@ import java.util.Vector;
  *
  * @author Ryan.Tang & WJNeng
  */
-public class MipcaActivityCapture extends ActionBarActivity implements
+public class MipcaActivityCapture extends AppCompatActivity implements
         Callback {
     public String SAVE_BITMAP_DIR;
     private boolean isHigherThan4_4;
@@ -91,7 +92,7 @@ public class MipcaActivityCapture extends ActionBarActivity implements
     private boolean canOneCode, canQrCode, canMatrixCode, canBeep, canVibrate,
             canLight, canSeriesScan;
 
-    ImageView btnBack,btnFlashlight;
+    ImageView btnBack, btnFlashlight;
 
 
     /**
@@ -196,7 +197,6 @@ public class MipcaActivityCapture extends ActionBarActivity implements
     }
 
 
-
     private void openOrCloseFlashLight(boolean canLight, Context context) {
         CameraManager.get().openOrCloseFlashLight(canLight, context);
     }
@@ -252,32 +252,32 @@ public class MipcaActivityCapture extends ActionBarActivity implements
      * @throws IOException
      */
     public void handleDecode(Result result, Bitmap barcode) {
-        DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT,
-                DateFormat.SHORT);
-        currentTime = formatter.format(new Date(result.getTimestamp()));
-        Map<ResultMetadataType, Object> metadata = (Map<ResultMetadataType, Object>) result
-                .getResultMetadata();
-        StringBuilder metadataText = null;
-        String meta = "";
-        if (metadata != null) {
-            metadataText = new StringBuilder(20);
-            for (Map.Entry<ResultMetadataType, Object> entry : metadata
-                    .entrySet()) {
-                if (DISPLAYABLE_METADATA_TYPES.contains(entry.getKey())) {
-                    metadataText.append(entry.getValue()).append('\n');
-                }
-            }
-            meta = metadataText.toString();
-        }
-
-
-        String type = ResultHandlerFactory.makeResultHandler(this, result);
-        inactivityTimer.onActivity();
-        playBeepSoundAndVibrate();
-        String resultString = result.getText();
-        String format = result.getBarcodeFormat().toString();
         try {
-            saveBarcodeBitmap("", barcode);
+            DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT,
+                    DateFormat.SHORT);
+            currentTime = formatter.format(new Date(result.getTimestamp()));
+            Map<ResultMetadataType, Object> metadata = (Map<ResultMetadataType, Object>) result
+                    .getResultMetadata();
+            StringBuilder metadataText = null;
+            String meta = "";
+            if (metadata != null) {
+                metadataText = new StringBuilder(20);
+                for (Map.Entry<ResultMetadataType, Object> entry : metadata
+                        .entrySet()) {
+                    if (DISPLAYABLE_METADATA_TYPES.contains(entry.getKey())) {
+                        metadataText.append(entry.getValue()).append('\n');
+                    }
+                }
+                meta = metadataText.toString();
+            }
+
+
+            String type = ResultHandlerFactory.makeResultHandler(this, result);
+            inactivityTimer.onActivity();
+            playBeepSoundAndVibrate();
+            String resultString = result.getText();
+            String format = result.getBarcodeFormat().toString();
+//            saveBarcodeBitmap("", barcode);
             if ("CODE_128".equalsIgnoreCase(result.getBarcodeFormat()
                     .toString())) { // 如果是code128码，且长度为14位，且以0开头，则删除0的开头
                 if (!"".equals(resultString) && resultString.length() == 14
@@ -290,10 +290,6 @@ public class MipcaActivityCapture extends ActionBarActivity implements
             if (resultString.equals("")) {
                 Toast.makeText(MipcaActivityCapture.this, "Scan failed!",
                         Toast.LENGTH_SHORT).show();
-            } else {
-//
-//                Toast.makeText(MipcaActivityCapture.this, resultString,
-//                        Toast.LENGTH_LONG).show();
             }
             if (!canSeriesScan) {
                 Intent intent = new Intent();
@@ -312,7 +308,7 @@ public class MipcaActivityCapture extends ActionBarActivity implements
                 this.startActivity(intent);
                 MipcaActivityCapture.this.finish();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -353,9 +349,7 @@ public class MipcaActivityCapture extends ActionBarActivity implements
     private void initCamera(SurfaceHolder surfaceHolder) {
         try {
             CameraManager.get().openDriver(surfaceHolder);
-        } catch (IOException ioe) {
-            return;
-        } catch (RuntimeException e) {
+        } catch (Exception ioe) {
             return;
         }
         if (handler == null) {

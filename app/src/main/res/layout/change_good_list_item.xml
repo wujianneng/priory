@@ -108,12 +108,13 @@
                 android:textColor="#cccccc"
                 android:textSize="16sp" />
 
-            <EditText
+            <com.pos.priory.coustomViews.LastInputEditText
                 android:id="@+id/edt_weight"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
+                android:text=""
                 android:background="@null"
                 android:gravity="right|center_vertical"
                 android:hint="請輸入重量"

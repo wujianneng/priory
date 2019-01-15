@@ -4,29 +4,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
-import com.pos.priory.adapters.AddNewOrderDiscountAdapter;
 import com.pos.priory.adapters.ChangeGoodsAdapter;
-import com.pos.priory.beans.CreateOrderResultBean;
 import com.pos.priory.beans.CreateRefundOrderResultBean;
-import com.pos.priory.beans.GoodBean;
 import com.pos.priory.beans.OrderItemBean;
 import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
-import com.pos.priory.utils.DateUtils;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
@@ -95,7 +89,6 @@ public class ChangeGoodsActivity extends BaseActivity {
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         goodRecyclerView.setLayoutManager(mLayoutManager);
         goodRecyclerView.setAdapter(goodsAdapter);
-
         createChangeGoodsOrder();
     }
 
@@ -185,7 +178,7 @@ public class ChangeGoodsActivity extends BaseActivity {
     private void createReturnStocks(final OrderItemBean orderitem){
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("rmanumber", createRefundOrderResultBean.getRmanumber());
-        paramMap.put("name", orderitem.getStock().getProduct().getName());
+        paramMap.put("name", orderitem.getStock().getBatch().getProduct().getName());
         paramMap.put("quantity", orderitem.getOprateCount());
         paramMap.put("weight", 0);
         paramMap.put("location", staffInfoBeanList.get(0).getStore());
@@ -198,7 +191,6 @@ public class ChangeGoodsActivity extends BaseActivity {
                 goodList.add(orderitem);
                 if(tempAccessCount == accessCount) {
                     customDialog.dismiss();
-                    goodsAdapter.notifyDataSetChanged();
                     resetSumMoney();
                 }
             }
@@ -255,6 +247,11 @@ public class ChangeGoodsActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_next:
+                if(!isAllWeightEdtHasInput()){
+                    Toast.makeText(ChangeGoodsActivity.this,"请输入全部换货商品的重量",Toast
+                    .LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(ChangeGoodsActivity.this, AddNewOrderActivity.class);
                 intent.putExtra("memberId", getIntent().getIntExtra("memberId", 0));
                 intent.putExtra("memberName",getIntent().getStringExtra("memberName"));
@@ -267,12 +264,29 @@ public class ChangeGoodsActivity extends BaseActivity {
         }
     }
 
+    private boolean isAllWeightEdtHasInput() {
+        for (OrderItemBean bean : goodList) {
+           if(bean.getWeight().equals("")){
+               return false;
+           }
+        }
+        return true;
+    }
+
     private void resetSumMoney() {
         for (OrderItemBean bean : goodList) {
-            sumMoney += Double.parseDouble(bean.getStock().getProduct().getPrice()) * bean.getOprateCount();
+            bean.getStock().getBatch().getProduct().setPrice(bean.getPrice() + "");
+            if (bean.getStock().getBatch().getProduct().getCatalog().equals("黃金")) {
+                bean.getStock().getBatch().getProduct().setRealPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint
+                        (Double.parseDouble(bean.getStock().getBatch().getProduct().getPrice()) * Constants.CHANGE_GOOD_RAGE));
+            } else {
+                bean.getStock().getBatch().getProduct().setRealPrice(bean.getStock().getBatch().getProduct().getPrice());
+            }
+            sumMoney += Double.parseDouble(bean.getStock().getBatch().getProduct().getRealPrice()) * bean.getOprateCount();
         }
         sumMoney = -1 * sumMoney;
         moneyTv.setText(sumMoney + "");
+        goodsAdapter.notifyDataSetChanged();
     }
 
 

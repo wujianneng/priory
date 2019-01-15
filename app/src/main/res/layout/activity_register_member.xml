@@ -232,7 +232,7 @@
                         android:background="@null"
                         android:gravity="center_vertical"
                         android:hint="請輸入電話號碼"
-                        android:inputType="numberPassword"
+                        android:inputType="number"
                         android:textSize="15sp" />
 
                 </LinearLayout>

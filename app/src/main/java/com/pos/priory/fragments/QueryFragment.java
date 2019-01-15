@@ -27,6 +27,7 @@ import com.pos.priory.adapters.QueryOrderAdapter;
 import com.pos.priory.beans.MemberBean;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.utils.Constants;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 import com.pos.priory.utils.RunOnUiThreadSafe;
@@ -142,6 +143,7 @@ public class QueryFragment extends BaseFragment {
             }
         });
     }
+
 
 
     Call memberCall;

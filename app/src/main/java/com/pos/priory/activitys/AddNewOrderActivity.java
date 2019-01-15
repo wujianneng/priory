@@ -38,6 +38,7 @@ import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.DateUtils;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 import com.pos.zxinglib.MipcaActivityCapture;
@@ -108,11 +109,11 @@ public class AddNewOrderActivity extends BaseActivity {
                 switch (view.getId()) {
                     case R.id.btn_change_price:
                         String[] items0 = {"6折", "65折", "7折", "75折", "8折", "85折", "9折", "95折", "无折扣"};
-                        String[] items1 = {"免费","6折", "65折", "7折", "75折", "8折", "85折", "9折", "95折", "无折扣"};
-                        if(goodList.get(position).getProduct().isDiscountcontrol()){
-                            showChoiceDiscountDialog(items0,position);
-                        }else {
-                            showChoiceDiscountDialog(items1,position);
+                        String[] items1 = {"免费", "6折", "65折", "7折", "75折", "8折", "85折", "9折", "95折", "无折扣"};
+                        if (goodList.get(position).getBatch().getProduct().isDiscountcontrol()) {
+                            showChoiceDiscountDialog(items0, position);
+                        } else {
+                            showChoiceDiscountDialog(items1, position);
                         }
                         break;
                     case R.id.decrease_btn:
@@ -242,7 +243,7 @@ public class AddNewOrderActivity extends BaseActivity {
     private void refreshSumMoney() {
         sumMoney = 0;
         for (GoodBean bean : goodList) {
-            sumMoney += Double.parseDouble(bean.getProduct().getPrice()) * bean.getSaleCount();
+            sumMoney += Double.parseDouble(bean.getBatch().getProduct().getPrice()) * bean.getSaleCount();
         }
         moneyTv.setText((sumMoney + changeGoodsMoeny) + "");
     }
@@ -274,7 +275,7 @@ public class AddNewOrderActivity extends BaseActivity {
         return 1;
     }
 
-    private void showChoiceDiscountDialog(final String[] items,final int position) {
+    private void showChoiceDiscountDialog(final String[] items, final int position) {
         if (choiceSexDialog == null) {
             yourChoice = 0;
             for (int i = 0; i < items.length; i++) {
@@ -332,7 +333,7 @@ public class AddNewOrderActivity extends BaseActivity {
                 }
                 Intent intent = new Intent(AddNewOrderActivity.this, BalanceActivity.class);
                 intent.putExtra("goodlist", gson.toJson(goodList));
-                intent.putExtra("sumMoney", sumMoney);
+                intent.putExtra("sumMoney", sumMoney + changeGoodsMoeny);
                 intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
                 intent.putExtra("ordernumber", createOrderResultBean.getOrdernumber());
                 startActivity(intent);
@@ -404,14 +405,20 @@ public class AddNewOrderActivity extends BaseActivity {
             }
         });
         customDialog.show();
-        OkHttp3Util.doGetWithToken(Constants.GET_STOCK_URL + "?productcode=" + productcode,
+        OkHttp3Util.doGetWithToken(Constants.GET_STOCK_URL + "?productcode=" + productcode + "&location="
+                        + staffInfoBeanList.get(0).getStore(),
                 sharedPreferences, new Okhttp3StringCallback(this, "getStockList") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         List<GoodBean> goodBeanList = gson.fromJson(results, new TypeToken<List<GoodBean>>() {
                         }.getType());
-                        if (goodBeanList != null) {
-                            createOrderItem(goodBeanList.get(0));
+                        if (goodBeanList != null && goodBeanList.size() != 0) {
+                            if (goodBeanList.get(0).getQuantity() > 1) {
+                                createOrderItem(goodBeanList.get(0));
+                            } else {
+                                customDialog.dismiss();
+                                Toast.makeText(AddNewOrderActivity.this, "此商品庫存不足", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             customDialog.dismiss();
                             Toast.makeText(AddNewOrderActivity.this, "添加商品失败", Toast.LENGTH_SHORT).show();
@@ -470,7 +477,8 @@ public class AddNewOrderActivity extends BaseActivity {
         });
     }
 
-    private void editOrderItemOnOperate(final int position, int orderitemId, int quantity, final double discount, final String oprateName) {
+    private void editOrderItemOnOperate(final int position, int orderitemId, int quantity, final double discount,
+                                        final String oprateName) {
         if (customDialog == null)
             customDialog = new CustomDialog(this, "正在修改商品信息..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -487,17 +495,21 @@ public class AddNewOrderActivity extends BaseActivity {
             @Override
             public void onSuccess(String results) throws Exception {
                 customDialog.dismiss();
+                GoodBean goodBean = goodList.get(position);
                 if (oprateName.equals("加数量")) {
-                    goodList.get(position).setSaleCount(goodList.get(position).getSaleCount() + 1);
+                    goodBean.setSaleCount(goodBean.getSaleCount() + 1);
                     goodsAdapter.notifyItemChanged(position);
                     refreshSumMoney();
                 } else if (oprateName.equals("减数量")) {
-                    goodList.get(position).setSaleCount(goodList.get(position).getSaleCount() - 1);
+                    goodBean.setSaleCount(goodBean.getSaleCount() - 1);
                     goodsAdapter.notifyItemChanged(position);
                     refreshSumMoney();
                 } else if (oprateName.equals("调折扣")) {
-                    goodList.get(position).setDiscountRate(discount);
+                    goodBean.setDiscountRate(discount);
+                    goodBean.getBatch().getProduct().setPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint(
+                            Double.parseDouble(goodBean.getBatch().getProduct().getPrice()) * discount));
                     goodsAdapter.notifyItemChanged(position);
+                    refreshSumMoney();
                 }
 
             }

@@ -232,21 +232,21 @@ public class InventoryFragment extends BaseFragment {
             if (action == 0) {
                 title.setText("訂貨");
                 InventoryBean bean = storeDataList.get(position);
-                Glide.with(getActivity()).load(Constants.BASE_URL + bean.getStock().getProduct().getImage())
+                Glide.with(getActivity()).load(Constants.BASE_URL + bean.getStock().getBatch().getProduct().getImage())
                         .error(android.R.drawable.ic_menu_gallery)
                         .into(icon_good);
-                code_tv.setText(bean.getStock().getProduct().getProductcode() + "");
-                name_tv.setText(bean.getStock().getProduct().getName());
+                code_tv.setText(bean.getStock().getBatch().getProduct().getProductcode() + "");
+                name_tv.setText(bean.getStock().getBatch().getProduct().getName());
                 edt_count.setText("1");
             }
             if (action == 1) {
                 title.setText("退貨");
                 InventoryBean bean = storeDataList.get(position);
-                Glide.with(getActivity()).load(Constants.BASE_URL + bean.getStock().getProduct().getImage())
+                Glide.with(getActivity()).load(Constants.BASE_URL + bean.getStock().getBatch().getProduct().getImage())
                         .error(android.R.drawable.ic_menu_gallery)
                         .into(icon_good);
-                code_tv.setText(bean.getStock().getProduct().getProductcode() + "");
-                name_tv.setText(bean.getStock().getProduct().getName());
+                code_tv.setText(bean.getStock().getBatch().getProduct().getProductcode() + "");
+                name_tv.setText(bean.getStock().getBatch().getProduct().getName());
             }
 
             view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {

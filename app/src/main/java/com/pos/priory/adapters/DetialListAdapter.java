@@ -29,11 +29,11 @@ public class DetialListAdapter extends BaseQuickAdapter<PurchasingItemBean,BaseV
 
     @Override
     protected void convert(BaseViewHolder helper, PurchasingItemBean item) {
-        helper.setText(R.id.code_tv,item.getStock().getProduct().getProductcode() + "");
-        helper.setText(R.id.name_tv,item.getStock().getProduct().getName());
+        helper.setText(R.id.code_tv,item.getStock().getBatch().getProduct().getProductcode() + "");
+        helper.setText(R.id.name_tv,item.getStock().getBatch().getProduct().getName());
         helper.setText(R.id.count_tv,item.getQuantity() + "");
         helper.setText(R.id.status_tv,item.getType().equals("return") ? "退貨" : "訂貨");
-        Glide.with(mContext).load(Constants.BASE_URL + item.getStock().getProduct().getImage())
+        Glide.with(mContext).load(Constants.BASE_URL + item.getStock().getBatch().getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .priority(Priority.LOW)

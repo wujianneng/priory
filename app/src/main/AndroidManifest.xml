@@ -37,13 +37,13 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activitys.EditPasswordActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan|stateVisible" />
         <activity
             android:name=".activitys.MemberActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan|stateVisible" />
         <activity
             android:name=".activitys.RegisterMemberActivity"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan|stateVisible" />
         <activity
             android:name=".activitys.AddNewOrderActivity"
             android:windowSoftInputMode="adjustPan" />
