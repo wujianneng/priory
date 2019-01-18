@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/money_unit_tv"
                 android:gravity="top"
-                android:text="2305"
+                android:text="0"
                 android:textColor="#fff"
                 android:textSize="55sp"
                 android:textStyle="bold" />
@@ -154,15 +154,6 @@
                 android:textColor="#333"
                 android:textSize="16sp" />
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="20dp"
-                android:text="MOP"
-                android:textColor="#cccccc"
-                android:textSize="16sp" />
         </LinearLayout>
 
 

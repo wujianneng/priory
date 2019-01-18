@@ -2,14 +2,11 @@ package com.pos.priory.activitys;
 
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,18 +14,17 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
-import com.pos.priory.adapters.OrderDetialDiscountAdapter;
 import com.pos.priory.adapters.OrderDetialGoodsAdapter;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.beans.OrderItemBean;
 import com.pos.priory.beans.TransactionBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
+import com.pos.priory.utils.DateUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +94,7 @@ public class OrderDetialActivity extends BaseActivity {
         }
         orderBean = gson.fromJson(getIntent().getStringExtra("order"), OrderBean.class);
         orderNumberTv.setText(orderBean.getOrdernumber());
-        dateTv.setText(orderBean.getCreated());
+        dateTv.setText(DateUtils.covertIso8601ToDate(orderBean.getCreated()));
         moneyTv.setText(orderBean.getTotalprice() + "");
         memberNameTv.setText(orderBean.getMember().getLast_name() + orderBean.getMember().getFirst_name());
 
@@ -131,7 +127,7 @@ public class OrderDetialActivity extends BaseActivity {
     }
 
     private void getOrderDetialGoodList() {
-        OkHttp3Util.doGetWithToken(Constants.GET_ORDER_ITEM_URL + "?ordernumber=" + orderBean.getOrdernumber(), sharedPreferences,
+        OkHttp3Util.doGetWithToken(Constants.GET_ORDER_ITEM_URL + "?ordernumber=" + orderBean.getOrdernumber() + "&rmaaction=true", sharedPreferences,
                 new Okhttp3StringCallback(OrderDetialActivity.this, "getOrderDetialGoodList") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -211,7 +207,7 @@ public class OrderDetialActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_change:
-                resetCheckedGoodList();
+                resetCheckedGoodList(false);
                 if (checkedGoodList.size() == 0) {
                     Toast.makeText(OrderDetialActivity.this, "请选择换货商品", Toast.LENGTH_SHORT).show();
                     return;
@@ -225,7 +221,7 @@ public class OrderDetialActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.btn_return:
-                resetCheckedGoodList();
+                resetCheckedGoodList(true);
                 if (checkedGoodList.size() == 0) {
                     Toast.makeText(OrderDetialActivity.this, "请选择退货商品", Toast.LENGTH_SHORT).show();
                     return;
@@ -244,10 +240,14 @@ public class OrderDetialActivity extends BaseActivity {
         }
     }
 
-    private void resetCheckedGoodList() {
+    private void resetCheckedGoodList(boolean isReturn) {
         checkedGoodList.clear();
         for (OrderItemBean bean : goodList) {
             if (bean.isSelected()) {
+                if(bean.getStock().getBatch().getProduct().getCatalog().equals("其他") && isReturn){
+                    Toast.makeText(OrderDetialActivity.this, "只有黃金類型商品才能進行回收", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 checkedGoodList.add(bean);
             }
         }

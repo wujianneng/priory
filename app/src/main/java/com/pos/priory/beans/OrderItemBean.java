@@ -224,6 +224,15 @@ public class OrderItemBean {
                 private String image;
                 private boolean discountcontrol;
                 private String catalog;
+                private boolean returnable;
+
+                public boolean isReturnable() {
+                    return returnable;
+                }
+
+                public void setReturnable(boolean returnable) {
+                    this.returnable = returnable;
+                }
 
                 public String getRealPrice() {
                     return realPrice;

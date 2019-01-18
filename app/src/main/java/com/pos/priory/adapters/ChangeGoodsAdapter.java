@@ -47,7 +47,7 @@ public class ChangeGoodsAdapter extends BaseQuickAdapter<OrderItemBean, BaseView
 
     @Override
     protected void convert(final BaseViewHolder helper, final OrderItemBean item) {
-        helper.setText(R.id.code_tv, item.getStock().getBatch().getProduct().getProductcode() + "");
+        helper.setText(R.id.code_tv, item.getStock().getBatch().getProduct().getProductcode() + item.getStock().getBatch().getBatchno());
         helper.setText(R.id.name_tv, item.getStock().getBatch().getProduct().getName());
         if (context instanceof ReturnGoodsActivity) {
             if (item.getStock().getBatch().getProduct().getCatalog().equals("黃金")) {

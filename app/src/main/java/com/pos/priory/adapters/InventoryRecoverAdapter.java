@@ -22,9 +22,11 @@ public class InventoryRecoverAdapter extends BaseQuickAdapter<ReturnStockBean, B
 
     @Override
     protected void convert(BaseViewHolder helper, ReturnStockBean item) {
+        helper.setImageResource(R.id.icon_check, item.isCheck() ? R.drawable.icon_cilck_h : R.drawable.icon_cilck);
         helper.setText(R.id.code_tv,item.getRmaorder());
         helper.setText(R.id.name_tv,item.getName());
         helper.setText(R.id.count_tv,item.getQuantity() + "");
         helper.setText(R.id.weight_tv,item.getWeight());
+        helper.addOnClickListener(R.id.icon_check);
     }
 }

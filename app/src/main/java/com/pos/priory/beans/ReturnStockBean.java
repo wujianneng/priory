@@ -19,9 +19,18 @@ public class ReturnStockBean {
     private int id;
     private String rmaorder;
     private String name;
+    private boolean check;
     private String location;
     private int quantity;
     private String weight;
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
+    }
 
     public int getId() {
         return id;

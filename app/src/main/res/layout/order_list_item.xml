@@ -38,6 +38,17 @@
             android:textColor="#cccccc"
             android:textSize="12sp" />
 
+        <TextView
+            android:id="@+id/date_tv"
+            android:layout_marginTop="3dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:text="2019-10-10 10:10:10"
+            android:textColor="#cccccc"
+            android:textSize="12sp" />
+
         <View
             android:id="@+id/line"
             android:layout_width="match_parent"
@@ -70,17 +81,6 @@
             android:textColor="@color/login_btn_bg"
             android:textSize="25sp" />
 
-        <TextView
-            android:id="@+id/unit_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/line"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@+id/money_tv"
-            android:text="MOP"
-            android:textColor="#cccccc"
-            android:textSize="13sp" />
 
         <ImageView
             android:layout_below="@+id/line"

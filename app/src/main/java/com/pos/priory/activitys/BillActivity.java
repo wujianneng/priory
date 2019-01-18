@@ -135,6 +135,8 @@ public class BillActivity extends BaseActivity {
         ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumberTv.getText().toString());
         ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(getIntent().getStringExtra("memberName"));
         ((TextView) printView.findViewById(R.id.date_tv)).setText(createDateTv.getText().toString());
+        ((TextView) printView.findViewById(R.id.good_size_tv)).setText("共" + goodList.size() + "件");
+        ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(getIntent().getDoubleExtra("sumMoney", 0) + "");
         RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
         BillPrintGoodsAdapter adapter = new BillPrintGoodsAdapter(R.layout.bill_print_good_list_item, goodList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);

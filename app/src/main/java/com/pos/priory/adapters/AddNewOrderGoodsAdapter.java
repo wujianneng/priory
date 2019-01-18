@@ -31,7 +31,7 @@ public class AddNewOrderGoodsAdapter extends BaseQuickAdapter<GoodBean, BaseView
     protected void convert(BaseViewHolder helper, GoodBean item) {
         helper.addOnClickListener(R.id.btn_change_price).addOnClickListener(R.id.decrease_btn)
                 .addOnClickListener(R.id.increase_btn);
-        helper.setText(R.id.code_tv, item.getBatch().getProduct().getProductcode() + "");
+        helper.setText(R.id.code_tv, item.getBatch().getProduct().getProductcode() + item.getBatch().getBatchno());
         helper.setText(R.id.name_tv, item.getBatch().getProduct().getName());
         helper.setText(R.id.price_tv, "$" + item.getBatch().getProduct().getPrice());
         helper.setText(R.id.account_btn, item.getSaleCount() + "");

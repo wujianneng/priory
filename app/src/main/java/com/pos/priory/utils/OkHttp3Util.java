@@ -417,5 +417,24 @@ public class OkHttp3Util {
         return call;
     }
 
+    public static Call doPutWithToken(String url, String paramString, SharedPreferences sharedPreferences, Okhttp3StringCallback callback) {
+        Log.e("dopost", "paramstring:" + paramString);
+
+//创建OkHttpClient请求对象
+        OkHttpClient okHttpClient = getInstance();
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), paramString);
+        //创建Request
+        Request request = null;
+        request = new Request.Builder()
+                .url(url)
+                .put(requestBody)
+                .addHeader(Constants.Authorization_KEY,
+                        "Token " + sharedPreferences.getString(Constants.Authorization_KEY, ""))
+                .build();
+        Call call = okHttpClient.newCall(request);
+        call.enqueue(callback);
+        return call;
+    }
+
 
 }

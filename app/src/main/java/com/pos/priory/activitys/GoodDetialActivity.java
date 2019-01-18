@@ -127,19 +127,11 @@ public class GoodDetialActivity extends BaseActivity {
                 SwipeMenuItem dinghuoItem = new SwipeMenuItem(GoodDetialActivity.this)
                         .setBackgroundColor(ContextCompat.getColor(GoodDetialActivity.this, R.color.drag_btn_green))
                         .setImage(R.drawable.icon_dinghuo)
-                        .setText("訂貨")
-                        .setTextColor(Color.WHITE)
-                        .setHeight(DeviceUtil.dip2px(GoodDetialActivity.this, 91))//设置高，这里使用match_parent，就是与item的高相同
-                        .setWidth(DeviceUtil.dip2px(GoodDetialActivity.this, 100));//设置宽
-                swipeRightMenu.addMenuItem(dinghuoItem);//设置右边的侧滑
-                SwipeMenuItem tuihuoItem = new SwipeMenuItem(GoodDetialActivity.this)
-                        .setBackgroundColor(ContextCompat.getColor(GoodDetialActivity.this, R.color.drag_btn_red))
-                        .setImage(R.drawable.icon_tuihuo)
                         .setText("調貨")
                         .setTextColor(Color.WHITE)
                         .setHeight(DeviceUtil.dip2px(GoodDetialActivity.this, 91))//设置高，这里使用match_parent，就是与item的高相同
                         .setWidth(DeviceUtil.dip2px(GoodDetialActivity.this, 100));//设置宽
-                swipeRightMenu.addMenuItem(tuihuoItem);//设置右边的侧滑
+                swipeRightMenu.addMenuItem(dinghuoItem);//设置右边的侧滑
             }
         });
         //设置侧滑菜单的点击事件
@@ -151,8 +143,6 @@ public class GoodDetialActivity extends BaseActivity {
                 int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
                 int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
                 if (menuPosition == 0) {
-                    showActionDialog(true, adapterPosition);
-                } else {
                     showActionDialog(false, adapterPosition);
                 }
             }
@@ -224,7 +214,7 @@ public class GoodDetialActivity extends BaseActivity {
         }
     }
 
-    private void allocateElseStock(int stockid, int elseStoreCount, final int changeCount) {
+    private void allocateElseStock(final int stockid, int elseStoreCount, final int changeCount) {
         if (customDialog == null)
             customDialog = new CustomDialog(this, "訂貨中..");
         customDialog.show();
@@ -234,7 +224,7 @@ public class GoodDetialActivity extends BaseActivity {
                 new Okhttp3StringCallback(this, "allocateElseStock") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        allocateSelfStock(getIntent().getIntExtra("stockId", 0),changeCount);
+                        allocateSelfStock(getIntent().getIntExtra("stockId", 0),stockid,changeCount);
                     }
 
                     @Override
@@ -245,7 +235,7 @@ public class GoodDetialActivity extends BaseActivity {
                 });
     }
 
-    private void allocateSelfStock(int stockid,final int changeCount) {
+    private void allocateSelfStock( final int stockid, final int elseStockid, final int changeCount) {
         Map<String, Object> map = new HashMap<>();
         slefCount += changeCount;
         map.put("quantity", slefCount);
@@ -257,6 +247,7 @@ public class GoodDetialActivity extends BaseActivity {
                         repertoryTv.setText(slefCount + "");
                         Toast.makeText(GoodDetialActivity.this, "調撥成功", Toast.LENGTH_SHORT).show();
                         smartRefreshLayout.autoRefresh();
+                        createStockTransaction(changeCount,stockid,elseStockid);
                     }
 
                     @Override
@@ -266,6 +257,25 @@ public class GoodDetialActivity extends BaseActivity {
                         Toast.makeText(GoodDetialActivity.this, "調撥失敗", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void createStockTransaction(final int changeCount,int selfId,int elseid) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("stockout", selfId);
+        map.put("stockin", elseid);
+        map.put("quantity", changeCount);
+        OkHttp3Util.doPostWithToken(Constants.GET_STOCK_TRANSACTIONS_URL + "/", gson.toJson(map), sharedPreferences,
+                new Okhttp3StringCallback(this,"createStockTransaction") {
+            @Override
+            public void onSuccess(String results) throws Exception {
+
+            }
+
+            @Override
+            public void onFailed(String erromsg) {
+
+            }
+        });
     }
 
     private void refreshRecyclerView(boolean isLoadMore) {

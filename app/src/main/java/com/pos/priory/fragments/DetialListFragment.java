@@ -68,6 +68,8 @@ public class DetialListFragment extends BaseFragment {
 
     DetialListAdapter detialListAdapter;
     List<PurchasingItemBean> dataList = new ArrayList<>();
+    @Bind(R.id.btn_summit)
+    CardView btnCommit;
 
     @Nullable
     @Override
@@ -79,6 +81,14 @@ public class DetialListFragment extends BaseFragment {
     }
 
     private void initViews() {
+        btnCommit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (dataList != null && dataList.size() != 0)
+                    showIsComfirmDialog(dataList.get(0));
+            }
+        });
+
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -98,16 +108,8 @@ public class DetialListFragment extends BaseFragment {
         recyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-                SwipeMenuItem commitItem = new SwipeMenuItem(getActivity())
-                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
-                        .setImage(R.drawable.edit)
-                        .setText("确认")
-                        .setTextColor(Color.WHITE)
-                        .setHeight(DeviceUtil.dip2px(getContext(), 91))//设置高，这里使用match_parent，就是与item的高相同
-                        .setWidth(DeviceUtil.dip2px(getContext(), 100));//设置宽
-                swipeRightMenu.addMenuItem(commitItem);//设置右边的侧滑
                 SwipeMenuItem dinghuoItem = new SwipeMenuItem(getActivity())
-                        .setBackgroundColor(Color.parseColor("#87CEFA"))
+                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
                         .setImage(R.drawable.edit)
                         .setText("編輯")
                         .setTextColor(Color.WHITE)
@@ -134,11 +136,9 @@ public class DetialListFragment extends BaseFragment {
                 int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
                 int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
                 if (menuPosition == 0) {
-                   comfirmPurshing(dataList.get(adapterPosition));
-                } else if(menuPosition == 1){
                     showEditDialog(adapterPosition);
-                }else {
-                    deletePurshing(dataList.get(adapterPosition),adapterPosition);
+                } else {
+                    deletePurshing(dataList.get(adapterPosition), adapterPosition);
                 }
             }
         });
@@ -148,6 +148,35 @@ public class DetialListFragment extends BaseFragment {
         recyclerView.setAdapter(detialListAdapter);
 
         refreshLayout.autoRefresh();
+    }
+
+    AlertDialog isComfirmDialog;
+
+    private void showIsComfirmDialog(final PurchasingItemBean purchasingItemBean) {
+        if (isComfirmDialog == null) {
+            isComfirmDialog = new AlertDialog.Builder(getActivity()).setTitle("提示")
+                    .setMessage("確認送出訂退貨單到系統？")
+                    .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            comfirmPurshing(purchasingItemBean);
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            isComfirmDialog.dismiss();
+                        }
+                    })
+                    .create();
+        }
+        isComfirmDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                isComfirmDialog = null;
+            }
+        });
+        isComfirmDialog.show();
     }
 
     AlertDialog actionDialog;
@@ -246,8 +275,8 @@ public class DetialListFragment extends BaseFragment {
         });
         customDialog.show();
         Map<String, Object> map = new HashMap<>();
-        map.put("confirmed", true);
-        OkHttp3Util.doPatchWithToken(Constants.PURCHASING_URL + "/" + bean.getPurchasing().getId() + "/update/", gson.toJson(map), sharedPreferences,
+        map.put("confirmed", "true");
+        OkHttp3Util.doPutWithToken(Constants.PURCHASING_URL + "/" + bean.getPurchasing().getId() + "/update/", gson.toJson(map), sharedPreferences,
                 new Okhttp3StringCallback(getActivity(), "comfirmPurshing") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -264,7 +293,7 @@ public class DetialListFragment extends BaseFragment {
                 });
     }
 
-    private void deletePurshing(PurchasingItemBean bean,final int position) {
+    private void deletePurshing(PurchasingItemBean bean, final int position) {
         if (customDialog == null)
             customDialog = new CustomDialog(getActivity(), "删除中..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -274,7 +303,7 @@ public class DetialListFragment extends BaseFragment {
             }
         });
         customDialog.show();
-        OkHttp3Util.doDeleteWithToken(Constants.PURCHASING_URL + "/" + bean.getPurchasing().getId() + "/update/",sharedPreferences,
+        OkHttp3Util.doDeleteWithToken(Constants.PURCHASING_URL + "/" + bean.getPurchasing().getId() + "/update/", sharedPreferences,
                 new Okhttp3StringCallback(getActivity(), "comfirmPurshing") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -294,7 +323,6 @@ public class DetialListFragment extends BaseFragment {
     }
 
 
-
     private void refreshRecyclerView(boolean isLoadMore) {
         if (!isLoadMore) {
             dataList.clear();
@@ -302,37 +330,28 @@ public class DetialListFragment extends BaseFragment {
         }
         final String location = ((MainActivity) getActivity()).staffInfoBeanList.get(0).getStore();
         OkHttp3Util.doGetWithToken(Constants.PURCHASING_ITEM_URL + "?location=" + location,
-                sharedPreferences, new Okhttp3StringCallback("getPurchasings") {
+                sharedPreferences, new Okhttp3StringCallback(getActivity(), "getPurchasings") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         final List<PurchasingItemBean> orderBeanList = gson.fromJson(results, new TypeToken<List<PurchasingItemBean>>() {
                         }.getType());
-                        new RunOnUiThreadSafe(getActivity()) {
-                            @Override
-                            public void runOnUiThread() {
-                                if (orderBeanList != null) {
-                                    for(PurchasingItemBean bean : orderBeanList){
-                                        if(!bean.getPurchasing().isConfirmed()){
-                                            dataList.add(bean);
-                                        }
-                                    }
-                                    detialListAdapter.notifyDataSetChanged();
+                        if (orderBeanList != null) {
+                            for (PurchasingItemBean bean : orderBeanList) {
+                                if (!bean.getPurchasing().isConfirmed()) {
+                                    dataList.add(bean);
                                 }
-                                refreshLayout.finishLoadMore();
-                                refreshLayout.finishRefresh();
                             }
-                        };
+                            detialListAdapter.notifyDataSetChanged();
+                        }
+                        btnCommit.setVisibility(dataList.size() == 0 ? View.GONE : View.VISIBLE);
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
-                        new RunOnUiThreadSafe(getActivity()) {
-                            @Override
-                            public void runOnUiThread() {
-                                refreshLayout.finishLoadMore();
-                                refreshLayout.finishRefresh();
-                            }
-                        };
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
                     }
                 });
 

@@ -20,6 +20,7 @@ public class Constants {
     public static final String GET_ORDERS_URL = "https://pos.annabellaip.com/api/orders";
     public static final String GET_ORDER_ITEM_URL = "https://pos.annabellaip.com/api/orderitems";
     public static final String GET_STOCK_URL = "https://pos.annabellaip.com/api/stocks";
+    public static final String GET_STOCK_TRANSACTIONS_URL = "https://pos.annabellaip.com/api/stocktransactions";
     public static final String GET_INVENTORYS_URL = "https://pos.annabellaip.com/api/inventory";
     public static final String GET_MEMBERS_URL = "https://pos.annabellaip.com/api/members";
     public static final String INVOICES_URL = "https://pos.annabellaip.com/api/invoices";
@@ -30,5 +31,8 @@ public class Constants {
     public static final String RETURN_STOCKS_URL = "https://pos.annabellaip.com/api/returnstocks";
     public static final String PURCHASING_URL = "https://pos.annabellaip.com/api/purchasing";
     public static final String PURCHASING_ITEM_URL = "https://pos.annabellaip.com/api/purchasingitems";
+//    public static final String PURCHASING_URL = "http://103.16.218.16:8000/api/purchasing";
+//    public static final String PURCHASING_ITEM_URL = "http://103.16.218.16:8000/api/purchasingitems";
     public static final String GOLD_PRICE_URL = "https://pos.annabellaip.com/api/goldprice/";
+    public static final String CHANGE_OR_RETURN_GOOD_VOICES_URL = "https://pos.annabellaip.com/api/rmainvoices";
 }

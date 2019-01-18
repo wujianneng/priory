@@ -91,6 +91,7 @@
                 android:layout_marginLeft="16dp"
                 android:background="@null"
                 android:inputType="number"
+                android:imeOptions="actionDone"
                 android:hint="請輸入手機號碼"
                 android:textSize="15sp"
                 android:layout_width="0dp"

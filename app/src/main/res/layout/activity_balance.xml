@@ -157,14 +157,6 @@
                 android:textSize="16sp" />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="20dp"
-                android:text="MOP"
-                android:textColor="#cccccc"
-                android:textSize="16sp" />
         </LinearLayout>
 
 
@@ -242,16 +234,6 @@
                 android:textColor="#333"
                 android:textSize="16sp" />
 
-
-            <TextView
-                android:id="@+id/cash_unit_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="20dp"
-                android:text="MOP"
-                android:textColor="#cccccc"
-                android:textSize="16sp" />
         </LinearLayout>
 
 

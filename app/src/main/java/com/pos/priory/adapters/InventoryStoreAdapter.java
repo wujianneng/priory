@@ -29,7 +29,7 @@ public class InventoryStoreAdapter extends BaseQuickAdapter<InventoryBean, BaseV
     @Override
     protected void convert(BaseViewHolder helper, InventoryBean item) {
         helper.setImageResource(R.id.icon_check, item.isCheck() ? R.drawable.icon_cilck_h : R.drawable.icon_cilck);
-        helper.setText(R.id.code_tv, item.getStock().getBatch().getProduct().getProductcode() + "");
+        helper.setText(R.id.code_tv, item.getStock().getBatch().getProduct().getProductcode() + item.getStock().getBatch().getBatchno());
         helper.setText(R.id.name_tv,item.getStock().getBatch().getProduct().getName());
         Glide.with(context).load(Constants.BASE_URL + item.getStock().getBatch().getProduct().getImage())
                 .error(android.R.drawable.ic_menu_gallery)

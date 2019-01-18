@@ -4,13 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -18,8 +15,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,13 +22,10 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
-import com.pos.priory.adapters.AddNewOrderDiscountAdapter;
 import com.pos.priory.adapters.AddNewOrderGoodsAdapter;
-import com.pos.priory.adapters.RepertoryAdapter;
 import com.pos.priory.beans.CreateOrderItemResultBean;
 import com.pos.priory.beans.CreateOrderResultBean;
 import com.pos.priory.beans.GoodBean;
-import com.pos.priory.beans.MemberBean;
 import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
@@ -413,7 +405,7 @@ public class AddNewOrderActivity extends BaseActivity {
                         List<GoodBean> goodBeanList = gson.fromJson(results, new TypeToken<List<GoodBean>>() {
                         }.getType());
                         if (goodBeanList != null && goodBeanList.size() != 0) {
-                            if (goodBeanList.get(0).getQuantity() > 1) {
+                            if (goodBeanList.get(0).getQuantity() >= 1) {
                                 createOrderItem(goodBeanList.get(0));
                             } else {
                                 customDialog.dismiss();
@@ -464,6 +456,7 @@ public class AddNewOrderActivity extends BaseActivity {
             @Override
             public void onSuccess(String results) throws Exception {
                 customDialog.dismiss();
+                goodBean.getBatch().getProduct().setPrePrice(goodBean.getBatch().getProduct().getPrice());
                 goodList.add(goodBean);
                 goodsAdapter.notifyItemInserted(goodList.size() - 1);
                 refreshSumMoney();
@@ -507,7 +500,7 @@ public class AddNewOrderActivity extends BaseActivity {
                 } else if (oprateName.equals("调折扣")) {
                     goodBean.setDiscountRate(discount);
                     goodBean.getBatch().getProduct().setPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint(
-                            Double.parseDouble(goodBean.getBatch().getProduct().getPrice()) * discount));
+                            Double.parseDouble(goodBean.getBatch().getProduct().getPrePrice()) * discount));
                     goodsAdapter.notifyItemChanged(position);
                     refreshSumMoney();
                 }

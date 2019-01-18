@@ -7,6 +7,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.pos.priory.beans.CreateRefundOrderResultBean;
 import com.pos.priory.beans.OrderItemBean;
 import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
+import com.pos.priory.utils.ColseActivityUtils;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
@@ -118,7 +120,7 @@ public class ChangeGoodsActivity extends BaseActivity {
 
                     @Override
                     public void onFailed(String erromsg) {
-                        if(customDialog != null) {
+                        if (customDialog != null) {
                             customDialog.dismiss();
                             Toast.makeText(ChangeGoodsActivity.this, "创建换货单失败", Toast.LENGTH_SHORT).show();
                             onBackPressed();
@@ -127,7 +129,8 @@ public class ChangeGoodsActivity extends BaseActivity {
                 });
     }
 
-    int accessCount = 0,tempAccessCount = 0;
+    int accessCount = 0, tempAccessCount = 0;
+
     private void editChangeGoodOrder() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("staff", staffInfoBeanList.get(0).getUser());
@@ -144,7 +147,7 @@ public class ChangeGoodsActivity extends BaseActivity {
 
                     @Override
                     public void onFailed(String erromsg) {
-                        if(customDialog != null) {
+                        if (customDialog != null) {
                             customDialog.dismiss();
                             Toast.makeText(ChangeGoodsActivity.this, "创建换货单失败", Toast.LENGTH_SHORT).show();
                             onBackPressed();
@@ -166,7 +169,7 @@ public class ChangeGoodsActivity extends BaseActivity {
 
                     @Override
                     public void onFailed(String erromsg) {
-                        if(customDialog != null) {
+                        if (customDialog != null) {
                             customDialog.dismiss();
                             Toast.makeText(ChangeGoodsActivity.this, "创建换货单失败", Toast.LENGTH_SHORT).show();
                             onBackPressed();
@@ -175,7 +178,7 @@ public class ChangeGoodsActivity extends BaseActivity {
                 });
     }
 
-    private void createReturnStocks(final OrderItemBean orderitem){
+    private void createReturnStocks(final OrderItemBean orderitem) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("rmanumber", createRefundOrderResultBean.getRmanumber());
         paramMap.put("name", orderitem.getStock().getBatch().getProduct().getName());
@@ -183,27 +186,27 @@ public class ChangeGoodsActivity extends BaseActivity {
         paramMap.put("weight", 0);
         paramMap.put("location", staffInfoBeanList.get(0).getStore());
         OkHttp3Util.doPostWithToken(Constants.RETURN_STOCKS_URL + "/", gson.toJson(paramMap),
-                sharedPreferences, new Okhttp3StringCallback(this,"createReturnStocks") {
-            @Override
-            public void onSuccess(String results) throws Exception {
-                tempAccessCount += 1;
-                orderitem.setReturnStockId(new JSONObject(results).getInt("id"));
-                goodList.add(orderitem);
-                if(tempAccessCount == accessCount) {
-                    customDialog.dismiss();
-                    resetSumMoney();
-                }
-            }
+                sharedPreferences, new Okhttp3StringCallback(this, "createReturnStocks") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        tempAccessCount += 1;
+                        orderitem.setReturnStockId(new JSONObject(results).getInt("id"));
+                        goodList.add(orderitem);
+                        if (tempAccessCount == accessCount) {
+                            customDialog.dismiss();
+                            resetSumMoney();
+                        }
+                    }
 
-            @Override
-            public void onFailed(String erromsg) {
-                if(customDialog != null) {
-                    customDialog.dismiss();
-                    Toast.makeText(ChangeGoodsActivity.this, "创建换货单失败", Toast.LENGTH_SHORT).show();
-                    onBackPressed();
-                }
-            }
-        });
+                    @Override
+                    public void onFailed(String erromsg) {
+                        if (customDialog != null) {
+                            customDialog.dismiss();
+                            Toast.makeText(ChangeGoodsActivity.this, "创建换货单失败", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -247,16 +250,12 @@ public class ChangeGoodsActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_next:
-                if(!isAllWeightEdtHasInput()){
-                    Toast.makeText(ChangeGoodsActivity.this,"请输入全部换货商品的重量",Toast
-                    .LENGTH_SHORT).show();
+                if (!isAllWeightEdtHasInput()) {
+                    Toast.makeText(ChangeGoodsActivity.this, "请输入全部换货商品的重量", Toast
+                            .LENGTH_SHORT).show();
                     return;
                 }
-                Intent intent = new Intent(ChangeGoodsActivity.this, AddNewOrderActivity.class);
-                intent.putExtra("memberId", getIntent().getIntExtra("memberId", 0));
-                intent.putExtra("memberName",getIntent().getStringExtra("memberName"));
-                intent.putExtra("sumMoney", sumMoney);
-                startActivity(intent);
+                createVoices();
                 break;
             case R.id.back_btn:
                 onBackPressed();
@@ -264,11 +263,45 @@ public class ChangeGoodsActivity extends BaseActivity {
         }
     }
 
+    private void createVoices() {
+        if (customDialog == null)
+            customDialog = new CustomDialog(this, "正在生成換貨單發票..");
+        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                customDialog = null;
+            }
+        });
+        customDialog.show();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("rmaorder", createRefundOrderResultBean.getId());
+        paramMap.put("type", "credit");
+        paramMap.put("amount", sumMoney * -1);
+        OkHttp3Util.doPostWithToken(Constants.CHANGE_OR_RETURN_GOOD_VOICES_URL + "/", gson.toJson(paramMap), sharedPreferences,
+                new Okhttp3StringCallback(this, "createVoices") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        Intent intent = new Intent(ChangeGoodsActivity.this, AddNewOrderActivity.class);
+                        intent.putExtra("memberId", getIntent().getIntExtra("memberId", 0));
+                        intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
+                        intent.putExtra("sumMoney", sumMoney);
+                        startActivity(intent);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        customDialog.dismiss();
+                        Toast.makeText(ChangeGoodsActivity.this, "生成換貨單發票失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private boolean isAllWeightEdtHasInput() {
         for (OrderItemBean bean : goodList) {
-           if(bean.getWeight().equals("")){
-               return false;
-           }
+            if (bean.getWeight().equals("")) {
+                return false;
+            }
         }
         return true;
     }

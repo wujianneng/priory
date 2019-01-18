@@ -16,6 +16,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/icon_check"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="25dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/icon_cilck" />
+
 
         <TextView
             android:id="@+id/code_tv"
@@ -23,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="20dp"
-            android:layout_toRightOf="@+id/icon_good"
+            android:layout_toRightOf="@+id/icon_check"
             android:text="88800666"
             android:textColor="#cccccc"
             android:textSize="18sp" />
@@ -36,7 +45,7 @@
             android:layout_marginBottom="20dp"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="3dp"
-            android:layout_toRightOf="@+id/icon_good"
+            android:layout_toRightOf="@+id/icon_check"
             android:text="大福珠"
             android:textColor="#333333"
             android:textSize="20sp" />

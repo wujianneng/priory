@@ -3,26 +3,17 @@ package com.pos.priory.activitys;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pos.priory.R;
-import com.pos.priory.adapters.AddNewOrderDiscountAdapter;
 import com.pos.priory.beans.InvoicesResultBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.ColseActivityUtils;
@@ -30,9 +21,7 @@ import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -68,8 +57,6 @@ public class BalanceActivity extends BaseActivity {
     CheckBox radioBtnCash;
     @Bind(R.id.edt_cash_money)
     EditText edtCashMoney;
-    @Bind(R.id.cash_unit_tv)
-    TextView cashUnitTv;
     @Bind(R.id.cash_input_layout)
     CardView cashInputLayout;
     @Bind(R.id.icon)
@@ -95,7 +82,7 @@ public class BalanceActivity extends BaseActivity {
 
         moneyTv.setText("" + sumMoney);
         needPayMoney = sumMoney;
-        needMoneyTv.setText("餘額 $" + needPayMoney + "(MOP)");
+        needMoneyTv.setText("餘額 $" + needPayMoney);
         radioBtnCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,7 +130,7 @@ public class BalanceActivity extends BaseActivity {
                     hasPayedCardMoney = Double.parseDouble(charSequence.toString());
                 if (radioBtnCard.isChecked()) {
                     needPayMoney = sumMoney - hasPayedCardMoney;
-                    needMoneyTv.setText("餘額 $" + needPayMoney + "(MOP)");
+                    needMoneyTv.setText("餘額 $" + needPayMoney);
                 }
             }
 
@@ -166,7 +153,7 @@ public class BalanceActivity extends BaseActivity {
                     hasPayedCashMoney = Double.parseDouble(charSequence.toString());
                 if (radioBtnCash.isChecked()) {
                     needPayMoney = sumMoney - hasPayedCashMoney;
-                    needMoneyTv.setText("餘額 $" + needPayMoney + "(MOP)");
+                    needMoneyTv.setText("餘額 $" + needPayMoney);
                 }
             }
 
@@ -182,7 +169,7 @@ public class BalanceActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_finish:
                 if (needPayMoney > 0) {
-                    Toast.makeText(BalanceActivity.this, "还需付" + needPayMoney + "MOP", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BalanceActivity.this, "还需付" + needPayMoney , Toast.LENGTH_SHORT).show();
                     return;
                 }
                 invoice();

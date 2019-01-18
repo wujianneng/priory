@@ -30,7 +30,7 @@ public class BillGoodsAdapter extends BaseQuickAdapter<GoodBean, BaseViewHolder>
 
     @Override
     protected void convert(final BaseViewHolder helper, final GoodBean item) {
-         helper.setText(R.id.code_tv,item.getBatch().getProduct().getProductcode() + "");
+         helper.setText(R.id.code_tv,item.getBatch().getProduct().getProductcode()  + item.getBatch().getBatchno());
          helper.setText(R.id.name_tv,item.getBatch().getProduct().getName());
         helper.setText(R.id.price_tv,"$" + item.getBatch().getProduct().getPrice() + "x" + item.getSaleCount());
         Glide.with(context).load(Constants.BASE_URL + item.getBatch().getProduct().getImage())

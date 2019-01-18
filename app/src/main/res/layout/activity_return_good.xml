@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/money_tv"
                 android:layout_centerHorizontal="true"
-                android:text="總價格(MOP)"
+                android:text="總價格"
                 android:textColor="#fff"
                 android:textSize="15sp" />
 

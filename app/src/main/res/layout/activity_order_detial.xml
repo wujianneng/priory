@@ -128,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/money_tv"
                         android:layout_centerHorizontal="true"
-                        android:text="總價格(MOP)"
+                        android:text="總價格"
                         android:textColor="@color/colorAccent"
                         android:textSize="15sp" />
 
@@ -166,13 +166,7 @@
                             android:textColor="#333"
                             android:textSize="15sp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="MOP"
-                            android:textColor="#ccc"
-                            android:textSize="13sp" />
+
                     </LinearLayout>
 
                     <View
@@ -208,13 +202,6 @@
                             android:textColor="#333"
                             android:textSize="15sp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="MOP"
-                            android:textColor="#ccc"
-                            android:textSize="13sp" />
                     </LinearLayout>
 
                     <View
@@ -251,13 +238,6 @@
                             android:textColor="#EE5C42"
                             android:textSize="15sp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:text="MOP"
-                            android:textColor="#ccc"
-                            android:textSize="13sp" />
                     </LinearLayout>
 
                     <View

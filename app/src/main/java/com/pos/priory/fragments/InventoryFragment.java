@@ -50,6 +50,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -159,7 +160,7 @@ public class InventoryFragment extends BaseFragment {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (view.getId() == R.id.icon_check) {
-                    doInventory(position);
+                    doInventory(position,true);
                 }
             }
         });
@@ -184,11 +185,18 @@ public class InventoryFragment extends BaseFragment {
         recoverAdapter = new InventoryRecoverAdapter(R.layout.inventory_recover_list_item, recoverDataList);
         recyclerViewRecover.setLayoutManager(mLayoutManager2);
         recyclerViewRecover.setAdapter(recoverAdapter);
-
+        recoverAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (view.getId() == R.id.icon_check) {
+                    doInventory(position,false);
+                }
+            }
+        });
         refreshLayoutStore.autoRefresh();
     }
 
-    private void doInventory(final int position) {
+    private void doInventory(final int position,boolean isInventeStoreGoods) {
         if (customDialog == null)
             customDialog = new CustomDialog(getActivity(), "盘点中..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -200,21 +208,39 @@ public class InventoryFragment extends BaseFragment {
         customDialog.show();
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("check", true);
-        OkHttp3Util.doPatchWithToken(Constants.GET_INVENTORYS_URL + "/" + storeDataList.get(position).getId() + "/update/",gson.toJson(paramMap),
-                sharedPreferences, new Okhttp3StringCallback(getActivity(), "doInventory") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        customDialog.dismiss();
-                        storeDataList.get(position).setCheck(true);
-                        storeAdapter.notifyItemChanged(position);
-                    }
+        if(isInventeStoreGoods) {
+            OkHttp3Util.doPatchWithToken(Constants.GET_INVENTORYS_URL + "/" + storeDataList.get(position).getId() + "/update/", gson.toJson(paramMap),
+                    sharedPreferences, new Okhttp3StringCallback(getActivity(), "doInventory") {
+                        @Override
+                        public void onSuccess(String results) throws Exception {
+                            customDialog.dismiss();
+                            storeDataList.get(position).setCheck(true);
+                            storeAdapter.notifyItemChanged(position);
+                        }
 
-                    @Override
-                    public void onFailed(String erromsg) {
-                        customDialog.dismiss();
-                        Toast.makeText(getActivity(), "盘点失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailed(String erromsg) {
+                            customDialog.dismiss();
+                            Toast.makeText(getActivity(), "盘点失败", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }else {
+            OkHttp3Util.doPatchWithToken(Constants.RETURN_STOCKS_URL + "/" + recoverDataList.get(position).getId() + "/update/", gson.toJson(paramMap),
+                    sharedPreferences, new Okhttp3StringCallback(getActivity(), "doInventory") {
+                        @Override
+                        public void onSuccess(String results) throws Exception {
+                            customDialog.dismiss();
+                            recoverDataList.get(position).setCheck(true);
+                            recoverAdapter.notifyItemChanged(position);
+                        }
+
+                        @Override
+                        public void onFailed(String erromsg) {
+                            customDialog.dismiss();
+                            Toast.makeText(getActivity(), "盘点失败", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     AlertDialog actionDialog;
@@ -262,22 +288,27 @@ public class InventoryFragment extends BaseFragment {
                         Toast.makeText(getActivity(), "請輸入數量", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    actionDialog.dismiss();
                     int count = Integer.parseInt(edt_count.getText().toString());
                     if (action == 0) {
-                        InventoryBean bean = storeDataList.get(position);
-                        if (count > bean.getStock().getQuantity()) {
-                            Toast.makeText(getActivity(), "不能超過商品庫存數量", Toast.LENGTH_SHORT).show();
+                        if(count == 0){
+                            Toast.makeText(getActivity(), "訂貨數量不能為零", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        InventoryBean bean = storeDataList.get(position);
+                        actionDialog.dismiss();
                         createPurchsing(bean, true, count + "");
                     }
                     if (action == 1) {
-                        InventoryBean bean = storeDataList.get(position);
-                        if (count > bean.getStock().getQuantity()) {
-                            Toast.makeText(getActivity(), "不能超過商品庫存數量", Toast.LENGTH_SHORT).show();
+                        if(count == 0){
+                            Toast.makeText(getActivity(), "退貨數量不能為零", Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        InventoryBean bean = storeDataList.get(position);
+                        if (count > bean.getStock().getQuantity()) {
+                            Toast.makeText(getActivity(), "退貨數量不能超過商品庫存數量", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        actionDialog.dismiss();
                         createPurchsing(bean, false, count + "");
                     }
                 }
@@ -313,14 +344,11 @@ public class InventoryFragment extends BaseFragment {
         });
         customDialog.show();
         String location = ((MainActivity) getActivity()).staffInfoBeanList.get(0).getStore();
-        Map<String, Object> map = new HashMap<>();
-        map.put("location", location);
-        map.put("confirmed", false);
-        OkHttp3Util.doPostWithToken(Constants.PURCHASING_URL + "/", gson.toJson(map), sharedPreferences,
+        OkHttp3Util.doGetWithToken(Constants.PURCHASING_URL + "?location=" + location,sharedPreferences,
                 new Okhttp3StringCallback(getActivity(), "createPurshing") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        createPurchsingItem(new JSONObject(results).getInt("id") + "", bean.getStock().getId(), count, isdinghuo);
+                        createPurchsingItem(new JSONArray(results).getJSONObject(0).getInt("id") + "", bean.getStock().getId(), count, isdinghuo);
                     }
 
                     @Override

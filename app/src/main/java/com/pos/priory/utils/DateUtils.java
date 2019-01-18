@@ -38,18 +38,19 @@ public class DateUtils {
 
     /**
      * 判断是否过期
+     *
      * @param startdate
      * @param enddate
      * @return
      */
-    public static boolean isExpired(String startdate,String enddate){
+    public static boolean isExpired(String startdate, String enddate) {
         Log.e("sys", "startdate:" + startdate + " enddate:" + enddate);
         boolean isexpired = true;
         long startTime = convertTimeToLong(startdate);
         long endTime = convertTimeToLong(enddate);
         long nowTime = System.currentTimeMillis();
         Log.e("sys", "startTime:" + startTime + " endTime:" + endTime + " nowTime:" + nowTime);
-        if(nowTime >= startTime && nowTime <= endTime){
+        if (nowTime >= startTime && nowTime <= endTime) {
             isexpired = false;
         }
         return isexpired;
@@ -80,6 +81,7 @@ public class DateUtils {
         }
         return isBigger;
     }
+
     /**
      * 转换时间日期格式字串为long型
      *
@@ -97,12 +99,25 @@ public class DateUtils {
         }
     }
 
+    public static String covertIso8601ToDate(String isotime) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            Date date = formatter.parse(isotime);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String sDate = sdf.format(date);
+            return sDate;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     public static String getTomorrowDay(String today) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendar = Calendar.getInstance();//获取日历实例
         try {
             calendar.setTime(sdf.parse(today));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.getMessage();
         }
         calendar.add(Calendar.DATE, 1);  //设置为后一天
@@ -239,12 +254,13 @@ public class DateUtils {
 
     /**
      * 字符串日期格式的计算
+     *
      * @param smdate
      * @param bdate
      * @return
      * @throws ParseException
      */
-    public static int daysBetween(String smdate,String bdate){
+    public static int daysBetween(String smdate, String bdate) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Calendar cal = Calendar.getInstance();
@@ -254,7 +270,7 @@ public class DateUtils {
             long time2 = cal.getTimeInMillis();
             long between_days = (time2 - time1) / (1000 * 3600 * 24);
             return Integer.parseInt(String.valueOf(between_days));
-        }catch (Exception e){
+        } catch (Exception e) {
             return 0;
         }
     }

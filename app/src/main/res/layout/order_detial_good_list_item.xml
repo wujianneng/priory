@@ -68,6 +68,18 @@
             android:textColor="#333333"
             android:textSize="17sp" />
 
+        <TextView
+            android:id="@+id/type_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/price_tv"
+            android:text="類型:黃金"
+            android:textColor="@color/colorAccent"
+            android:textSize="10sp" />
+
         <LinearLayout
             android:id="@+id/change_count_layout"
             android:layout_marginRight="10dp"

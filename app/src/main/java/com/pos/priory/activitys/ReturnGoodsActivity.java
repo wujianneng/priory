@@ -269,9 +269,10 @@ public class ReturnGoodsActivity extends BaseActivity {
 
     }
 
+
     private boolean isAllWeightEdtHasInput() {
         for (OrderItemBean bean : goodList) {
-            if(bean.getWeight().equals("")){
+            if (bean.getWeight().equals("")) {
                 return false;
             }
         }
@@ -283,22 +284,52 @@ public class ReturnGoodsActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_next:
-                if(!isAllWeightEdtHasInput()){
-                    Toast.makeText(ReturnGoodsActivity.this,"请输入全部回收商品的重量",Toast
+                if (!isAllWeightEdtHasInput()) {
+                    Toast.makeText(ReturnGoodsActivity.this, "请输入全部回收商品的重量", Toast
                             .LENGTH_SHORT).show();
                     return;
                 }
-                Intent intent = new Intent(ReturnGoodsActivity.this, ReturnBalanceActivity.class);
-                intent.putExtra("goodlist", gson.toJson(goodList));
-                intent.putExtra("sumMoney", sumMoney);
-                intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
-                intent.putExtra("ordernumber", getIntent().getStringExtra("ordernumber"));
-                startActivity(intent);
+                createVoices();
                 break;
             case R.id.back_btn:
                 onBackPressed();
                 break;
         }
+    }
+
+    private void createVoices() {
+        if (customDialog == null)
+            customDialog = new CustomDialog(this, "正在生成回收單發票..");
+        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                customDialog = null;
+            }
+        });
+        customDialog.show();
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("rmaorder", createRefundOrderResultBean.getId());
+        paramMap.put("type", "refund");
+        paramMap.put("amount", sumMoney * -1);
+        OkHttp3Util.doPostWithToken(Constants.CHANGE_OR_RETURN_GOOD_VOICES_URL + "/", gson.toJson(paramMap), sharedPreferences,
+                new Okhttp3StringCallback(this, "createVoices") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        Intent intent = new Intent(ReturnGoodsActivity.this, ReturnBalanceActivity.class);
+                        intent.putExtra("goodlist", gson.toJson(goodList));
+                        intent.putExtra("sumMoney", sumMoney);
+                        intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
+                        intent.putExtra("ordernumber", getIntent().getStringExtra("ordernumber"));
+                        startActivity(intent);
+                        customDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        customDialog.dismiss();
+                        Toast.makeText(ReturnGoodsActivity.this, "生成回收單發票失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     public void resetSumMoney(boolean isNotify) {

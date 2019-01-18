@@ -2,6 +2,7 @@ package com.pos.priory.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -23,6 +24,13 @@ import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +50,9 @@ public class RepertoryFragment extends BaseFragment {
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
     MainActivity mainActivity;
+    @Bind(R.id.refresh_layout)
+    SmartRefreshLayout refreshLayout;
+    String currentStr = "";
 
     @Nullable
     @Override
@@ -54,6 +65,14 @@ public class RepertoryFragment extends BaseFragment {
 
     private void initViews() {
         mainActivity = (MainActivity) getActivity();
+        refreshLayout.setEnableLoadMore(false);
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                refreshRecyclerView(currentStr);
+            }
+        });
+        refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
         repertoryAdapter = new RepertoryAdapter(getActivity(),R.layout.repertory_list_item, dataList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
@@ -72,23 +91,27 @@ public class RepertoryFragment extends BaseFragment {
                 ((MainActivity)getActivity()).edtSearch.setText("");
             }
         });
+        refreshRecyclerView("");
     }
 
 
     Call call;
     public void refreshRecyclerView(String str) {
+        currentStr = str;
         if (call != null)
             call.cancel();
         dataList.clear();
         repertoryAdapter.notifyDataSetChanged();
-        if(str.equals(""))
-            return;
         String url = "";
         String location = mainActivity.staffInfoBeanList.get(0).getStore();
-        if (LogicUtils.isNumeric(str))
-            url = Constants.GET_STOCK_URL + "?productcode=" + str + "&location=" + location;
-        else
-            url = Constants.GET_STOCK_URL + "?name=" + str + "&location=" + location;
+        if(str.equals("")){
+            url = Constants.GET_STOCK_URL + "?location=" + location;
+        }else {
+            if (LogicUtils.isNumeric(str))
+                url = Constants.GET_STOCK_URL + "?productcode=" + str + "&location=" + location;
+            else
+                url = Constants.GET_STOCK_URL + "?name=" + str + "&location=" + location;
+        }
         Log.e("getStockList","url:" + url);
         call = OkHttp3Util.doGetWithToken(url, sharedPreferences, new Okhttp3StringCallback(getActivity(),"getStockList") {
             @Override
@@ -98,12 +121,12 @@ public class RepertoryFragment extends BaseFragment {
                     dataList.addAll(goodBeanList);
                     repertoryAdapter.notifyDataSetChanged();
                 }
-
+                refreshLayout.finishRefresh();
             }
 
             @Override
             public void onFailed(String erromsg) {
-
+                refreshLayout.finishRefresh();
             }
         });
     }

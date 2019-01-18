@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
 import com.pos.priory.beans.OrderBean;
+import com.pos.priory.utils.DateUtils;
 
 import java.util.List;
 
@@ -22,7 +23,17 @@ public class OrderAdapter extends BaseQuickAdapter<OrderBean, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, OrderBean item) {
+        if(item.getStatus().equals("未完成")){
+            helper.setImageResource(R.id.check_img,R.drawable.icon_cilck);
+        }else if(item.getStatus().equals("已完成")){
+            helper.setImageResource(R.id.check_img,R.drawable.icon_cilck_h);
+        }else if(item.getStatus().equals("已取消")) {
+            helper.setImageResource(R.id.check_img,R.drawable.icon_click_red);
+        }else {
+            helper.setImageResource(R.id.check_img,R.drawable.icon_click_orige);
+        }
         helper.setText(R.id.detial_tv, item.getOrdernumber());
+        helper.setText(R.id.date_tv,DateUtils.covertIso8601ToDate(item.getCreated()));
         helper.setText(R.id.money_tv, "$" + item.getTotalprice());
     }
 }

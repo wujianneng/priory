@@ -128,9 +128,18 @@ public class GoodBean {
             private String name;
             private int productcode;
             private String price;
+            private String prePrice;
             private String image;
             private boolean discountcontrol;
             private String catalog;
+
+            public String getPrePrice() {
+                return prePrice;
+            }
+
+            public void setPrePrice(String prePrice) {
+                this.prePrice = prePrice;
+            }
 
             public String getCatalog() {
                 return catalog;
