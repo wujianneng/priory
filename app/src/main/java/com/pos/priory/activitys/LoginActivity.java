@@ -3,6 +3,7 @@ package com.pos.priory.activitys;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.pos.priory.R;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 import com.pos.priory.utils.RunOnUiThreadSafe;
@@ -58,8 +60,17 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        edtUsename.setText(sharedPreferences.getString(Constants.LAST_USERNAME_KEY, ""));
-        edtPasswrod.setText(sharedPreferences.getString(Constants.LAST_PASSWORD_KEY, ""));
+        if(sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false)) {
+            edtUsename.setText(sharedPreferences.getString(Constants.LAST_USERNAME_KEY, ""));
+            edtPasswrod.setText(sharedPreferences.getString(Constants.LAST_PASSWORD_KEY, ""));
+        }else {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    LogicUtils.openKeybord(edtUsename,LoginActivity.this);
+                }
+            },300);
+        }
         checkbox.setChecked(sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false));
     }
 

@@ -78,6 +78,11 @@ public class QueryFragment extends BaseFragment {
         return view;
     }
 
+    public void showKeyBord() {
+        if (edtMemberInput != null)
+            LogicUtils.openKeybord(edtMemberInput.getVisibility() == View.VISIBLE ? edtMemberInput : edtOrderInput, getActivity());
+    }
+
     private void initViews() {
         memberAdapter = new QueryMemberAdapter(R.layout.query_member_list_item, memberList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -103,7 +108,7 @@ public class QueryFragment extends BaseFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getActivity(), OrderDetialActivity.class);
-                intent.putExtra("order",gson.toJson(orderList.get(position)));
+                intent.putExtra("order", gson.toJson(orderList.get(position)));
                 startActivity(intent);
                 edtOrderInput.setText("");
             }
@@ -117,7 +122,7 @@ public class QueryFragment extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    refreshMemberRecyclerView(charSequence.toString());
+                refreshMemberRecyclerView(charSequence.toString());
             }
 
             @Override
@@ -134,7 +139,7 @@ public class QueryFragment extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    refreshOrderRecyclerView(charSequence.toString());
+                refreshOrderRecyclerView(charSequence.toString());
             }
 
             @Override
@@ -142,8 +147,8 @@ public class QueryFragment extends BaseFragment {
 
             }
         });
+        showKeyBord();
     }
-
 
 
     Call memberCall;
@@ -153,7 +158,7 @@ public class QueryFragment extends BaseFragment {
             memberCall.cancel();
         memberList.clear();
         memberAdapter.notifyDataSetChanged();
-        if(str.equals(""))
+        if (str.equals(""))
             return;
         memberCall = OkHttp3Util.doGetWithToken(Constants.GET_MEMBERS_URL + "?mobile="
                         + str, sharedPreferences,
@@ -188,7 +193,7 @@ public class QueryFragment extends BaseFragment {
             orderCall.cancel();
         orderList.clear();
         orderAdapter.notifyDataSetChanged();
-        if(orderNum.equals(""))
+        if (orderNum.equals(""))
             return;
         orderCall = OkHttp3Util.doGetWithToken(Constants.GET_ORDERS_URL + "?ordernumber=" + orderNum,
                 sharedPreferences, new Okhttp3StringCallback("getOrders") {

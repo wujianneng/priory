@@ -25,6 +25,7 @@ import com.pos.priory.fragments.OrderFragment;
 import com.pos.priory.fragments.QueryFragment;
 import com.pos.priory.fragments.RepertoryFragment;
 import com.pos.priory.utils.Constants;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.zxinglib.MipcaActivityCapture;
 
 import java.util.ArrayList;
@@ -169,6 +170,7 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
                         if (detialListFragment != null && !detialListFragment.isHidden())
                             getSupportFragmentManager().beginTransaction().hide(detialListFragment).commit();
+                        queryFragment.showKeyBord();
                         break;
                     case 2:
                         titleTv.setText("倉庫");
@@ -189,6 +191,7 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
                         if (detialListFragment != null && !detialListFragment.isHidden())
                             getSupportFragmentManager().beginTransaction().hide(detialListFragment).commit();
+                        LogicUtils.openKeybord(edtSearch,MainActivity.this);
                         break;
                     case 3:
                         titleTv.setText("盤點");
