@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
 import com.pos.priory.beans.GoodBean;
+import com.pos.priory.utils.LogicUtils;
 
 import java.util.List;
 
@@ -24,7 +25,13 @@ public class BillPrintGoodsAdapter extends BaseQuickAdapter<GoodBean,BaseViewHol
     protected void convert(BaseViewHolder helper, GoodBean item) {
         helper.setText(R.id.good_name_tv,item.getBatch().getProduct().getName());
         helper.setText(R.id.good_count_tv,item.getSaleCount() + "");
-        helper.setText(R.id.discount_tv,item.getDiscountRate() + "");
+        if(item.getDiscountRate() == 1){
+            helper.setText(R.id.discount_tv, "-");
+        }else if(item.getDiscountRate() == 0){
+            helper.setText(R.id.discount_tv, "赠送");
+        } else {
+            helper.setText(R.id.discount_tv, LogicUtils.getKeepLastOneNumberAfterLittlePoint(item.getDiscountRate() * 10) + "折");
+        }
         helper.setText(R.id.reatial_price_tv,item.getBatch().getProduct().getPrice());
         helper.setText(R.id.price_tv,item.getBatch().getProduct().getPrice());
     }

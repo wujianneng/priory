@@ -47,6 +47,8 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +66,7 @@ public class DetialListFragment extends BaseFragment {
     @Bind(R.id.recycler_view)
     SwipeMenuRecyclerView recyclerView;
     @Bind(R.id.refresh_layout)
-    SmartRefreshLayout refreshLayout;
+    public SmartRefreshLayout refreshLayout;
 
     DetialListAdapter detialListAdapter;
     List<PurchasingItemBean> dataList = new ArrayList<>();
@@ -329,23 +331,36 @@ public class DetialListFragment extends BaseFragment {
             detialListAdapter.notifyDataSetChanged();
         }
         final String location = ((MainActivity) getActivity()).staffInfoBeanList.get(0).getStore();
-        OkHttp3Util.doGetWithToken(Constants.PURCHASING_ITEM_URL + "?location=" + location,
-                sharedPreferences, new Okhttp3StringCallback(getActivity(), "getPurchasings") {
+        OkHttp3Util.doGetWithToken(Constants.PURCHASING_URL + "?location=" + location,sharedPreferences,
+                new Okhttp3StringCallback(getActivity(), "createPurshing") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        final List<PurchasingItemBean> orderBeanList = gson.fromJson(results, new TypeToken<List<PurchasingItemBean>>() {
-                        }.getType());
-                        if (orderBeanList != null) {
-                            for (PurchasingItemBean bean : orderBeanList) {
-                                if (!bean.getPurchasing().isConfirmed()) {
-                                    dataList.add(bean);
-                                }
-                            }
-                            detialListAdapter.notifyDataSetChanged();
-                        }
-                        btnCommit.setVisibility(dataList.size() == 0 ? View.GONE : View.VISIBLE);
-                        refreshLayout.finishLoadMore();
-                        refreshLayout.finishRefresh();
+                        OkHttp3Util.doGetWithToken(Constants.PURCHASING_ITEM_URL + "/?purchasing=" + new JSONArray(results).getJSONObject(0).getInt("id"),
+                                sharedPreferences, new Okhttp3StringCallback(getActivity(), "getPurchasings") {
+                                    @Override
+                                    public void onSuccess(String results) throws Exception {
+                                        final List<PurchasingItemBean> orderBeanList = gson.fromJson(results, new TypeToken<List<PurchasingItemBean>>() {
+                                        }.getType());
+                                        if (orderBeanList != null) {
+                                            for (PurchasingItemBean bean : orderBeanList) {
+                                                if (!bean.getPurchasing().isConfirmed()) {
+                                                    dataList.add(bean);
+                                                }
+                                            }
+                                            detialListAdapter.notifyDataSetChanged();
+                                        }
+                                        btnCommit.setVisibility(dataList.size() == 0 ? View.GONE : View.VISIBLE);
+                                        refreshLayout.finishLoadMore();
+                                        refreshLayout.finishRefresh();
+                                    }
+
+                                    @Override
+                                    public void onFailed(String erromsg) {
+                                        refreshLayout.finishLoadMore();
+                                        refreshLayout.finishRefresh();
+                                    }
+                                });
+
                     }
 
                     @Override
@@ -354,8 +369,6 @@ public class DetialListFragment extends BaseFragment {
                         refreshLayout.finishRefresh();
                     }
                 });
-
-
     }
 
     @Override

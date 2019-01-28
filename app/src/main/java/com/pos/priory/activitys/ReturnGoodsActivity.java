@@ -107,7 +107,8 @@ public class ReturnGoodsActivity extends BaseActivity {
             @Override
             public void onSuccess(String results) throws Exception {
                 currentGoldPrice = new JSONObject(results).getString("price");
-                goldPriceTv.setText("當前金價：" + currentGoldPrice + "/g");
+                goldPriceTv.setText("當前金價：" + currentGoldPrice + "/g" + "  " + LogicUtils.
+                        getKeepLastTwoNumberAfterLittlePoint(Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
                 goodsAdapter = new ChangeGoodsAdapter(ReturnGoodsActivity.this, R.layout.change_good_list_item, goodList);
                 goodRecyclerView.setAdapter(goodsAdapter);
                 createReturnGoodsOrder();
@@ -351,7 +352,7 @@ public class ReturnGoodsActivity extends BaseActivity {
                 item.getStock().getBatch().getProduct().setRealPrice("0");
             } else {
                 item.getStock().getBatch().getProduct().setRealPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint(
-                        Double.parseDouble(currentGoldPrice) * Double.parseDouble(item.getWeight())));
+                        Double.parseDouble(currentGoldPrice) * Double.parseDouble(item.getWeight()) * 0.95));
             }
         } else {
             item.getStock().getBatch().getProduct().setRealPrice(item.getStock().getBatch().getProduct().getPrice());

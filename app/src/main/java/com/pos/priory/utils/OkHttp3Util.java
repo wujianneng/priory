@@ -125,6 +125,7 @@ public class OkHttp3Util {
 
     public static Call doGetWithToken(String url, SharedPreferences sharedPreferences, Okhttp3StringCallback callback) {
         Log.e("doGeturl","url:" + url);
+        Log.e("doGeturl","token:" + sharedPreferences.getString(Constants.Authorization_KEY, ""));
         //创建OkHttpClient请求对象
         OkHttpClient okHttpClient = getInstance();
         //创建Request
@@ -209,8 +210,7 @@ public class OkHttp3Util {
     }
 
     public static Call doPostWithToken(String url, String paramString, SharedPreferences sharedPreferences, Okhttp3StringCallback callback) {
-        Log.e("dopost", "paramstring:" + paramString);
-
+        Log.e("dopost","paramstring:" + paramString + "url:" + url + "token:" + sharedPreferences.getString(Constants.Authorization_KEY, ""));
 //创建OkHttpClient请求对象
         OkHttpClient okHttpClient = getInstance();
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), paramString);

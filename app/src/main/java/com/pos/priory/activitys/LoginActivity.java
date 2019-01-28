@@ -113,7 +113,7 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void runOnUiThread() {
                             customDialog.dismiss();
-                            Toast.makeText(LoginActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "請與總部相關人員聯絡及查詢！", Toast.LENGTH_SHORT).show();
                         }
                     };
                 }
@@ -133,8 +133,8 @@ public class LoginActivity extends BaseActivity {
                                     edtUsename.getText().toString()).commit();
                             sharedPreferences.edit().putString(Constants.LAST_PASSWORD_KEY,
                                     edtPasswrod.getText().toString()).commit();
-                            sharedPreferences.edit().putString(Constants.CURRENT_STAFF_INFO_KEY, results).commit();
                         }
+                        sharedPreferences.edit().putString(Constants.CURRENT_STAFF_INFO_KEY, results).commit();
                         new RunOnUiThreadSafe(LoginActivity.this) {
                             @Override
                             public void runOnUiThread() {

@@ -104,7 +104,7 @@ public class MipcaActivityCapture extends AppCompatActivity implements
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         SAVE_BITMAP_DIR = getExternalFilesDir("barcode").getPath();
-        isHigherThan4_4 = DeviceUtil.isHigherThan4_4();
+        isHigherThan4_4 = Build.VERSION.SDK_INT >= 19;
         sharedPreferences = getSharedPreferences("QRcode", MODE_PRIVATE);
         initSharedData();
 

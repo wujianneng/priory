@@ -371,7 +371,7 @@ public class InventoryFragment extends BaseFragment {
                     public void onSuccess(String results) throws Exception {
                         customDialog.dismiss();
                         Toast.makeText(getActivity(), isdinghuo ? "訂貨成功" : "退貨成功", Toast.LENGTH_SHORT).show();
-                        refreshLayoutStore.autoRefresh();
+                        sharedPreferences.edit().putBoolean(Constants.IS_REFRESH_DETIALLISTFRAGMENT,true).commit();
                     }
 
                     @Override
@@ -388,7 +388,7 @@ public class InventoryFragment extends BaseFragment {
             storeAdapter.notifyDataSetChanged();
         }
         String location = ((MainActivity) getActivity()).staffInfoBeanList.get(0).getStore();
-        OkHttp3Util.doGetWithToken(Constants.GET_INVENTORYS_URL + "?location=" + location,
+        OkHttp3Util.doGetWithToken(Constants.GET_INVENTORYS_URL + "/?location=" + location,
                 sharedPreferences, new Okhttp3StringCallback("getInventorys") {
                     @Override
                     public void onSuccess(String results) throws Exception {

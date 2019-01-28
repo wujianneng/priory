@@ -14,8 +14,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ import com.pos.priory.R;
 import com.pos.priory.adapters.AddNewOrderGoodsAdapter;
 import com.pos.priory.beans.CreateOrderItemResultBean;
 import com.pos.priory.beans.CreateOrderResultBean;
+import com.pos.priory.beans.DiscountBean;
 import com.pos.priory.beans.GoodBean;
 import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
@@ -73,6 +76,7 @@ public class AddNewOrderActivity extends BaseActivity {
     List<GoodBean> goodList = new ArrayList<>();
     AddNewOrderGoodsAdapter goodsAdapter;
 
+
     int memberid;
     public List<StaffInfoBean> staffInfoBeanList;
 
@@ -100,13 +104,7 @@ public class AddNewOrderActivity extends BaseActivity {
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
                     case R.id.btn_change_price:
-                        String[] items0 = {"6折", "65折", "7折", "75折", "8折", "85折", "9折", "95折", "无折扣"};
-                        String[] items1 = {"免费", "6折", "65折", "7折", "75折", "8折", "85折", "9折", "95折", "无折扣"};
-                        if (goodList.get(position).getBatch().getProduct().isDiscountcontrol()) {
-                            showChoiceDiscountDialog(items0, position);
-                        } else {
-                            showChoiceDiscountDialog(items1, position);
-                        }
+                        showChoiceDiscountDialog(position);
                         break;
                     case R.id.decrease_btn:
                         if (goodList.get(position).getSaleCount() > 1) {
@@ -160,6 +158,34 @@ public class AddNewOrderActivity extends BaseActivity {
                 new TypeToken<List<StaffInfoBean>>() {
                 }.getType());
         createNewOrder();
+        getStoreDiscountList();
+    }
+
+    List<DiscountBean> discountBeanList;
+    List<String> discountNames = new ArrayList<>();
+    private void getStoreDiscountList() {
+        OkHttp3Util.doGetWithToken(Constants.GET_DISCOUNT_LIST_URL + "?location=" + staffInfoBeanList.get(0).getStore(), sharedPreferences,
+                new Okhttp3StringCallback(this, "getStoreDiscountList") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        discountBeanList = gson.fromJson(results, new TypeToken<List<DiscountBean>>() {
+                        }.getType());
+                        if(discountBeanList != null){
+                            for(DiscountBean bean : discountBeanList){
+                                discountNames.add(bean.getName());
+                            }
+                        }
+                        if(discountNames.size() == 0){
+                            discountNames.add("無折扣");
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+
+                    }
+                });
     }
 
     CustomDialog customDialog;
@@ -243,43 +269,26 @@ public class AddNewOrderActivity extends BaseActivity {
     int yourChoice;
     AlertDialog choiceSexDialog;
 
-    private double getDiscountByName(String discountName) {
-        if (discountName.equals("免费")) {
-            return 0;
-        }
-        if (discountName.equals("6折")) {
-            return 0.6;
-        } else if (discountName.equals("65折")) {
-            return 0.65;
-        } else if (discountName.equals("7折")) {
-            return 0.7;
-        } else if (discountName.equals("75折")) {
-            return 0.75;
-        } else if (discountName.equals("8折")) {
-            return 0.8;
-        } else if (discountName.equals("85折")) {
-            return 0.85;
-        } else if (discountName.equals("9折")) {
-            return 0.9;
-        } else if (discountName.equals("95折")) {
-            return 0.95;
-        }
-        return 1;
-    }
 
-    private void showChoiceDiscountDialog(final String[] items, final int position) {
+    private void showChoiceDiscountDialog(final int position) {
         if (choiceSexDialog == null) {
-            yourChoice = 0;
-            for (int i = 0; i < items.length; i++) {
-                if (goodList.get(position).getDiscountRate() == getDiscountByName(items[i])) {
-                    yourChoice = i;
+            if(discountNames.size() == 1 && discountNames.get(0).equals("無折扣")){
+                yourChoice = 0;
+            }else {
+                for (int i = 0; i < discountBeanList.size(); i++) {
+                    if (goodList.get(position).getDiscountRate() == Double.parseDouble(discountBeanList.get(i).getValue())) {
+                        yourChoice = i;
+                    }
                 }
             }
+            Log.e("yourChoice","yourChoice:" + yourChoice);
             AlertDialog.Builder singleChoiceDialog =
                     new AlertDialog.Builder(this);
             singleChoiceDialog.setTitle("請選擇折扣");
             // 第二个参数是默认选项，此处设置为0
-            singleChoiceDialog.setSingleChoiceItems(items, yourChoice,
+            ListAdapter adapter = new ArrayAdapter<String>(AddNewOrderActivity.this,
+                    android.R.layout.simple_list_item_single_choice,discountNames);
+            singleChoiceDialog.setSingleChoiceItems(adapter, yourChoice,
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -291,9 +300,14 @@ public class AddNewOrderActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (yourChoice != -1) {
-                                editOrderItemOnOperate(position, goodList.get(position).getId(),
-                                        goodList.get(position).getSaleCount(),
-                                        getDiscountByName(items[yourChoice]), "调折扣");
+                                if(discountNames.size() == 1 && discountNames.get(0).equals("無折扣")){
+                                    editOrderItemOnOperate(position, goodList.get(position).getId(),
+                                            goodList.get(position).getSaleCount(),1, "调折扣");
+                                }else {
+                                    editOrderItemOnOperate(position, goodList.get(position).getId(),
+                                            goodList.get(position).getSaleCount(), Double.parseDouble
+                                                    (discountBeanList.get(yourChoice).getValue()), "调折扣");
+                                }
                             }
                             choiceSexDialog.dismiss();
                         }
@@ -326,6 +340,7 @@ public class AddNewOrderActivity extends BaseActivity {
                 Intent intent = new Intent(AddNewOrderActivity.this, BalanceActivity.class);
                 intent.putExtra("goodlist", gson.toJson(goodList));
                 intent.putExtra("sumMoney", sumMoney + changeGoodsMoeny);
+                intent.putExtra("newOrderSumMoney", sumMoney);
                 intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
                 intent.putExtra("ordernumber", createOrderResultBean.getOrdernumber());
                 startActivity(intent);

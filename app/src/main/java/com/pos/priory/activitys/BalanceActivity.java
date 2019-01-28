@@ -223,7 +223,7 @@ public class BalanceActivity extends BaseActivity {
                         customDialog.dismiss();
                         Intent intent = new Intent(BalanceActivity.this, BillActivity.class);
                         intent.putExtra("goodlist", getIntent().getStringExtra("goodlist"));
-                        intent.putExtra("sumMoney", sumMoney);
+                        intent.putExtra("sumMoney", getIntent().getDoubleExtra("newOrderSumMoney", 0));
                         intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
                         intent.putExtra("receiveMoney", sumMoney);
                         intent.putExtra("returnMoney",needPayMoney * -1);

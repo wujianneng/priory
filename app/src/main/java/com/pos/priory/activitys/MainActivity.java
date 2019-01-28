@@ -191,7 +191,6 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
                         if (detialListFragment != null && !detialListFragment.isHidden())
                             getSupportFragmentManager().beginTransaction().hide(detialListFragment).commit();
-                        LogicUtils.openKeybord(edtSearch,MainActivity.this);
                         break;
                     case 3:
                         titleTv.setText("盤點");
@@ -232,6 +231,10 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(orderFragment).commit();
                         if (inventoryFragment != null && !inventoryFragment.isHidden())
                             getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
+                        if(sharedPreferences.getBoolean(Constants.IS_REFRESH_DETIALLISTFRAGMENT,false) && detialListFragment.refreshLayout != null) {
+                            detialListFragment.refreshLayout.autoRefresh();
+                            sharedPreferences.edit().putBoolean(Constants.IS_REFRESH_DETIALLISTFRAGMENT,false).commit();
+                        }
                         break;
                 }
             }

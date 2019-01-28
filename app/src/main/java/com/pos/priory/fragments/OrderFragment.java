@@ -117,7 +117,7 @@ public class OrderFragment extends BaseFragment {
             orderAdapter.notifyDataSetChanged();
         }
         String storeName = ((MainActivity)getActivity()).staffInfoBeanList.get(0).getStore();
-        OkHttp3Util.doGetWithToken(Constants.GET_ORDERS_URL + "?location=" + storeName ,
+        OkHttp3Util.doGetWithToken(Constants.GET_ORDERS_URL + "?location=" + storeName + "&daycontrol=true",
                 sharedPreferences, new Okhttp3StringCallback("getOrders") {
             @Override
             public void onSuccess(String results) throws Exception {

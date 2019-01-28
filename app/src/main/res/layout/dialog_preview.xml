@@ -279,7 +279,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text0"
                 android:layout_marginLeft="20dp"
-                android:text="1.黃金貨品可憑公司收據售回本公司,回售計算方式:重量x當天金價;"
+                android:text="1.黃金貨品可憑公司收據售回本公司,回售計算方式:重量 x 購入金價 x 0.95;"
                 android:textColor="#333"
                 android:textSize="8sp" />
 

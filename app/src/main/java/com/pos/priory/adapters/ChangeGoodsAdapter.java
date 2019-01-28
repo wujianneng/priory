@@ -67,7 +67,7 @@ public class ChangeGoodsAdapter extends BaseQuickAdapter<OrderItemBean, BaseView
                 helper.setText(R.id.retial_price_tv, "$" + item.getStock().getBatch().getProduct().getRealPrice() + " x " + item.getOprateCount());
             }
         }
-        Glide.with(context).load(Constants.BASE_URL + item.getStock().getBatch().getProduct().getImage())
+        Glide.with(context).load(Constants.BASE_URL_HTTP + item.getStock().getBatch().getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));

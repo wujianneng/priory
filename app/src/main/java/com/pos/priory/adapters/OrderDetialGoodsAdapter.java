@@ -31,8 +31,8 @@ public class OrderDetialGoodsAdapter extends BaseQuickAdapter<OrderItemBean, Bas
 
     @Override
     protected void convert(final BaseViewHolder helper, final OrderItemBean item) {
-        Log.e("glide","url:" + Constants.BASE_URL + item.getStock().getBatch().getProduct().getImage());
-        Glide.with(mContext).load(Constants.BASE_URL + item.getStock().getBatch().getProduct().getImage())
+        Log.e("glide","url:" + Constants.BASE_URL_HTTP + item.getStock().getBatch().getProduct().getImage());
+        Glide.with(mContext).load(Constants.BASE_URL_HTTP + item.getStock().getBatch().getProduct().getImage())
                 .asBitmap()
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)

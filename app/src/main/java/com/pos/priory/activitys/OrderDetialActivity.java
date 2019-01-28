@@ -93,6 +93,12 @@ public class OrderDetialActivity extends BaseActivity {
             paddingLaout.setVisibility(View.GONE);
         }
         orderBean = gson.fromJson(getIntent().getStringExtra("order"), OrderBean.class);
+        if(orderBean.getStatus().equals("已取消")){
+            btnChange.setEnabled(false);
+            btnChange.setAlpha(0.5f);
+            btnReturn.setEnabled(false);
+            btnReturn.setAlpha(0.5f);
+        }
         orderNumberTv.setText(orderBean.getOrdernumber());
         dateTv.setText(DateUtils.covertIso8601ToDate(orderBean.getCreated()));
         moneyTv.setText(orderBean.getTotalprice() + "");

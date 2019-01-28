@@ -35,7 +35,7 @@ public class AddNewOrderGoodsAdapter extends BaseQuickAdapter<GoodBean, BaseView
         helper.setText(R.id.name_tv, item.getBatch().getProduct().getName());
         helper.setText(R.id.price_tv, "$" + item.getBatch().getProduct().getPrice());
         helper.setText(R.id.account_btn, item.getSaleCount() + "");
-        Glide.with(context).load(Constants.BASE_URL + item.getBatch().getProduct().getImage())
+        Glide.with(context).load(Constants.BASE_URL_HTTP + item.getBatch().getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));
