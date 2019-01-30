@@ -1,5 +1,6 @@
 package com.pos.priory.activitys;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,7 +23,9 @@ import com.pos.priory.R;
 import com.pos.priory.adapters.BillGoodsAdapter;
 import com.pos.priory.adapters.BillPrintGoodsAdapter;
 import com.pos.priory.beans.GoodBean;
+import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.utils.BitmapUtils;
+import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.DateUtils;
 import com.pos.zxinglib.utils.PermissionsManager;
 import com.pos.zxinglib.utils.PermissionsResultAction;
@@ -76,6 +79,8 @@ public class BillActivity extends BaseActivity {
     @Bind(R.id.create_date_tv)
     TextView createDateTv;
 
+    public List<StaffInfoBean> staffInfoBeanList;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +97,8 @@ public class BillActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT < 19) {
             paddingLaout.setVisibility(View.GONE);
         }
+        staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY,""),
+                new TypeToken<List<StaffInfoBean>>(){}.getType());
         orderNumberTv.setText(getIntent().getStringExtra("ordernumber"));
         createDateTv.setText(DateUtils.getCurrentTime());
         moneyTv.setText(getIntent().getDoubleExtra("sumMoney", 0) + "");
@@ -111,7 +118,8 @@ public class BillActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_print:
-                showPreviewDialog();
+                previewDialog = showPreviewDialog(this, goodList, orderNumberTv.getText().toString(), getIntent().getStringExtra("memberName"),
+                        createDateTv.getText().toString(), getIntent().getDoubleExtra("sumMoney", 0),staffInfoBeanList.get(0).getStore());
                 break;
             case R.id.back_btn:
                 onBackPressed();
@@ -123,39 +131,47 @@ public class BillActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(previewDialog != null)
+        if (previewDialog != null)
             previewDialog.dismiss();
     }
 
     AlertDialog previewDialog;
-    View printView;
 
-    private void showPreviewDialog() {
-        printView = LayoutInflater.from(this).inflate(R.layout.dialog_preview, null);
-        ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumberTv.getText().toString());
-        ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(getIntent().getStringExtra("memberName"));
-        ((TextView) printView.findViewById(R.id.date_tv)).setText(createDateTv.getText().toString());
+    public static AlertDialog showPreviewDialog(final Activity activity, List<GoodBean> goodList, String orderNumber,
+                                                String memberName, String createDate, double sumMoney, String storeName) {
+        final View printView = LayoutInflater.from(activity).inflate(R.layout.dialog_preview, null);
+        ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
+        ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
+        ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
         ((TextView) printView.findViewById(R.id.good_size_tv)).setText("共" + goodList.size() + "件");
-        ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(getIntent().getDoubleExtra("sumMoney", 0) + "");
+        ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(sumMoney + "");
+        if (storeName.equals("楊明廣場")) {
+            printView.findViewById(R.id.maco_store_info_layout).setVisibility(View.GONE);
+            printView.findViewById(R.id.zhuhai_store_info_layout).setVisibility(View.VISIBLE);
+        } else {
+            printView.findViewById(R.id.maco_store_info_layout).setVisibility(View.VISIBLE);
+            printView.findViewById(R.id.zhuhai_store_info_layout).setVisibility(View.GONE);
+        }
         RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
         BillPrintGoodsAdapter adapter = new BillPrintGoodsAdapter(R.layout.bill_print_good_list_item, goodList);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         listview.setLayoutManager(mLayoutManager);
         listview.setAdapter(adapter);
-        previewDialog = new AlertDialog.Builder(this).setView(printView).setCancelable(false).create();
+        final AlertDialog previewDialog = new AlertDialog.Builder(activity).setView(printView).setCancelable(false).create();
         previewDialog.show();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                print(printView);
+                print(activity, printView);
             }
         }, 1000);
+        return previewDialog;
     }
 
 
-    private void print(View view) {
-        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
+    public static void print(final Activity activity, View view) {
+        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(activity, new PermissionsResultAction() {
             @Override
             public void onGranted() {
 
@@ -163,12 +179,12 @@ public class BillActivity extends BaseActivity {
 
             @Override
             public void onDenied(String permission) {
-                String message = String.format(Locale.getDefault(), getString(com.pos.zxinglib.R.string.message_denied), permission);
-                Toast.makeText(BillActivity.this, message, Toast.LENGTH_SHORT).show();
+                String message = String.format(Locale.getDefault(), activity.getString(com.pos.zxinglib.R.string.message_denied), permission);
+                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
             }
         });
         //实例化类
-        PrintHelper photoPrinter = new PrintHelper(this);
+        PrintHelper photoPrinter = new PrintHelper(activity);
         photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);//设置填充的类型，填充的类型指的是在A4纸上打印时的填充类型，两种模式
 
         //打印

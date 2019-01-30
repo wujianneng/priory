@@ -96,56 +96,89 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/maco_store_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="40dp"
-                android:text="澳門多祿長街(白馬行)20-A號雅明閣地下C座"
-                android:textColor="#333"
-                android:textSize="8sp" />
+                android:orientation="vertical">
 
-            <TextView
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="40dp"
+                    android:text="澳門多祿長街(白馬行)20-A號雅明閣地下C座"
+                    android:textColor="#333"
+                    android:textSize="8sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="Rua de Perdo Nolasco da Sliva No. 20-A, Nga Meng Kok r/c C"
+                    android:textColor="#333"
+                    android:textSize="8sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="+853 2892 0767"
+                    android:textColor="#333"
+                    android:textSize="8sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="20dp"
+                    android:text="澳門路賈伯樂提督街35-B號"
+                    android:textColor="#333"
+                    android:textSize="8sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="Rua do Almirante Costa Cabral No.35-B,Macau"
+                    android:textColor="#333"
+                    android:textSize="8sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="+853 2855 0513"
+                    android:textColor="#333"
+                    android:textSize="8sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/zhuhai_store_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="Rua de Perdo Nolasco da Sliva No. 20-A, Nga Meng Kok r/c C"
-                android:textColor="#333"
-                android:textSize="8sp" />
+                android:visibility="gone"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="+853 2892 0767"
-                android:textColor="#333"
-                android:textSize="8sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="40dp"
+                    android:text="广东省珠海市香洲区凤凰南路1066号扬名广场二期二层2018号商铺"
+                    android:textColor="#333"
+                    android:textSize="8sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="20dp"
-                android:text="澳門路賈伯樂提督街35-B號"
-                android:textColor="#333"
-                android:textSize="8sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:text="0756-6335066"
+                    android:textColor="#333"
+                    android:textSize="8sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="Rua do Almirante Costa Cabral No.35-B,Macau"
-                android:textColor="#333"
-                android:textSize="8sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:text="+853 2855 0513"
-                android:textColor="#333"
-                android:textSize="8sp" />
-
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -299,7 +332,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text2"
                 android:layout_marginLeft="20dp"
-                android:text="3.更換皮繩或編制手繩本公司收取材料費手工費$50MOP;"
+                android:text="3.更換皮繩或編制手繩本公司收取材料費手工費$50;"
                 android:textColor="#333"
                 android:textSize="8sp" />
 

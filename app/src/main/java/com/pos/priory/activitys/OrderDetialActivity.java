@@ -1,11 +1,17 @@
 package com.pos.priory.activitys;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,9 +20,13 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
+import com.pos.priory.adapters.BillPrintGoodsAdapter;
+import com.pos.priory.adapters.OrderDetailPrintGoodsAdapter;
 import com.pos.priory.adapters.OrderDetialGoodsAdapter;
+import com.pos.priory.beans.GoodBean;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.beans.OrderItemBean;
+import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.beans.TransactionBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
@@ -80,6 +90,10 @@ public class OrderDetialActivity extends BaseActivity {
     TextView orderNumberTv;
     @Bind(R.id.date_tv)
     TextView dateTv;
+    @Bind(R.id.btn_print)
+    CardView btnPrint;
+    public List<StaffInfoBean> staffInfoBeanList;
+
 
     @Override
     protected void beForeInitViews() {
@@ -92,12 +106,16 @@ public class OrderDetialActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT < 19) {
             paddingLaout.setVisibility(View.GONE);
         }
+        staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY,""),
+                new TypeToken<List<StaffInfoBean>>(){}.getType());
         orderBean = gson.fromJson(getIntent().getStringExtra("order"), OrderBean.class);
-        if(orderBean.getStatus().equals("已取消")){
+        if (orderBean.getStatus().equals("已取消")) {
             btnChange.setEnabled(false);
             btnChange.setAlpha(0.5f);
             btnReturn.setEnabled(false);
             btnReturn.setAlpha(0.5f);
+        }else if(orderBean.getStatus().equals("已完成")){
+            btnPrint.setVisibility(View.VISIBLE);
         }
         orderNumberTv.setText(orderBean.getOrdernumber());
         dateTv.setText(DateUtils.covertIso8601ToDate(orderBean.getCreated()));
@@ -138,11 +156,11 @@ public class OrderDetialActivity extends BaseActivity {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         customDialog.dismiss();
-                        if(transactionBean != null){
-                            if(transactionBean.getPaymentmethod().equals("現金")){
+                        if (transactionBean != null) {
+                            if (transactionBean.getPaymentmethod().equals("現金")) {
                                 cashMoneyTv.setText(transactionBean.getAmount());
                                 cardMoneyTv.setText(0 + "");
-                            }else {
+                            } else {
                                 cardMoneyTv.setText(transactionBean.getAmount());
                                 cashMoneyTv.setText(0 + "");
                             }
@@ -189,12 +207,14 @@ public class OrderDetialActivity extends BaseActivity {
     }
 
     TransactionBean transactionBean;
+
     private void getOrderTransaction(String invoicenumber) {
         OkHttp3Util.doGetWithToken(Constants.TRANSACTION_URL + "?invoicenumber=" + invoicenumber, sharedPreferences,
                 new Okhttp3StringCallback(OrderDetialActivity.this, "getOrderTransaction") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        List<TransactionBean> transactionlist = gson.fromJson(results,new TypeToken<List<TransactionBean>>(){}.getType());
+                        List<TransactionBean> transactionlist = gson.fromJson(results, new TypeToken<List<TransactionBean>>() {
+                        }.getType());
                         transactionBean = transactionlist.get(0);
                         getOrderDetialGoodList();
                     }
@@ -208,10 +228,56 @@ public class OrderDetialActivity extends BaseActivity {
                 });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(previewDialog != null)
+            previewDialog.dismiss();
+    }
 
-    @OnClick({R.id.btn_change, R.id.btn_return, R.id.back_btn})
+    AlertDialog previewDialog;
+    public static AlertDialog showPreviewDialog(final Activity activity, List<OrderItemBean> goodList, String orderNumber,
+                                         String memberName, String createDate, double sumMoney,String storeName) {
+        final View printView = LayoutInflater.from(activity).inflate(R.layout.dialog_preview, null);
+        ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
+        ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
+        ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
+        ((TextView) printView.findViewById(R.id.good_size_tv)).setText("共" + goodList.size() + "件");
+        ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(sumMoney + "");
+        if(storeName.equals("楊明廣場")){
+            printView.findViewById(R.id.maco_store_info_layout).setVisibility(View.GONE);
+            printView.findViewById(R.id.zhuhai_store_info_layout).setVisibility(View.VISIBLE);
+        }else {
+            printView.findViewById(R.id.maco_store_info_layout).setVisibility(View.VISIBLE);
+            printView.findViewById(R.id.zhuhai_store_info_layout).setVisibility(View.GONE);
+        }
+        RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
+        OrderDetailPrintGoodsAdapter adapter = new OrderDetailPrintGoodsAdapter(R.layout.bill_print_good_list_item, goodList);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
+        mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+        listview.setLayoutManager(mLayoutManager);
+        listview.setAdapter(adapter);
+        final AlertDialog previewDialog = new AlertDialog.Builder(activity).setView(printView)
+                .setCancelable(false)
+                .create();
+        previewDialog.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                BillActivity.print(activity,printView);
+            }
+        }, 1000);
+        return previewDialog;
+    }
+
+
+    @OnClick({R.id.btn_change, R.id.btn_return, R.id.back_btn,R.id.btn_print})
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.btn_print:
+                previewDialog = showPreviewDialog(this,goodList,orderBean.getOrdernumber(),memberNameTv.getText().toString(),
+                        dateTv.getText().toString(),orderBean.getTotalprice(),staffInfoBeanList.get(0).getStore());
+                break;
             case R.id.btn_change:
                 resetCheckedGoodList(false);
                 if (checkedGoodList.size() == 0) {
@@ -250,12 +316,19 @@ public class OrderDetialActivity extends BaseActivity {
         checkedGoodList.clear();
         for (OrderItemBean bean : goodList) {
             if (bean.isSelected()) {
-                if(bean.getStock().getBatch().getProduct().getCatalog().equals("其他") && isReturn){
+                if (bean.getStock().getBatch().getProduct().getCatalog().equals("其他") && isReturn) {
                     Toast.makeText(OrderDetialActivity.this, "只有黃金類型商品才能進行回收", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 checkedGoodList.add(bean);
             }
         }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

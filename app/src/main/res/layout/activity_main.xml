@@ -52,6 +52,7 @@
             android:visibility="gone" />
     </FrameLayout>
 
+
     <FrameLayout
         android:id="@+id/repertory_search_layout"
         android:visibility="gone"
