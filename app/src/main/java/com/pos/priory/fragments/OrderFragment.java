@@ -129,7 +129,7 @@ public class OrderFragment extends BaseFragment {
                 goldPriceLayout.setVisibility(View.VISIBLE);
                 goldPriceTv.setVisibility(View.VISIBLE);
                 setGoldPriceTvAplaAnimator();
-                goldPriceTv.setText("當前金價：" + (int)Double.parseDouble(currentGoldPrice) + "/g" + "  " +
+                goldPriceTv.setText("當前金價(MOP)：" + (int)Double.parseDouble(currentGoldPrice) + "/g" + "  " +
                         (int)(Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
             }
 

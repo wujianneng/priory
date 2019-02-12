@@ -62,6 +62,7 @@ public abstract class Okhttp3StringCallback implements Callback {
 
     @Override
     public void onResponse(Call call, final Response response) throws IOException {
+        final String result = response.body().string();
         if (activity != null) {
             new RunOnUiThreadSafe(activity) {
                 @Override
@@ -71,8 +72,11 @@ public abstract class Okhttp3StringCallback implements Callback {
                             if (!sentryTitle.equals("")) {
                                 Log.e(sentryTitle, "response == null");
                             }
+                        }else {
+                            if (!sentryTitle.equals("")) {
+                                Log.e(sentryTitle, new Gson().toJson(response.body()));
+                            }
                         }
-                        String result = response.body().string();
                         if (response.isSuccessful()) {
                             if (!sentryTitle.equals("")) {
                                 Log.e(sentryTitle, "response：" + result);
@@ -95,7 +99,6 @@ public abstract class Okhttp3StringCallback implements Callback {
             };
         } else {
             try {
-                String result = response.body().string();
                 if (!sentryTitle.equals(""))
                     Log.e(sentryTitle, "response：" + result);
                 if (response.isSuccessful()) {

@@ -465,7 +465,7 @@ public class AddNewOrderActivity extends BaseActivity {
     private void editOrderItem(final GoodBean goodBean) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("quantity", goodBean.getSaleCount());
-        paramMap.put("discount", goodBean.getDiscountRate());
+        paramMap.put("discount", LogicUtils.getKeepLastTwoNumberAfterLittlePoint(goodBean.getDiscountRate()));
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + goodBean.getId()
                 + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItem") {
             @Override
@@ -497,9 +497,9 @@ public class AddNewOrderActivity extends BaseActivity {
         });
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("quantity", quantity);
-        paramMap.put("discount", discount);
+        paramMap.put("discount", LogicUtils.getKeepLastTwoNumberAfterLittlePoint(discount));
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + orderitemId
-                + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItem") {
+                + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItemOnOperate") {
             @Override
             public void onSuccess(String results) throws Exception {
                 customDialog.dismiss();

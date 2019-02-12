@@ -113,7 +113,8 @@ public class RepertoryFragment extends BaseFragment {
                 url = Constants.GET_STOCK_URL + "?name=" + str + "&location=" + location;
         }
         Log.e("getStockList","url:" + url);
-        call = OkHttp3Util.doGetWithToken(url, sharedPreferences, new Okhttp3StringCallback(getActivity(),"getStockList") {
+        call = OkHttp3Util.doGetWithToken(url, sharedPreferences, new Okhttp3StringCallback(getActivity(),
+                "getStockList") {
             @Override
             public void onSuccess(String results) throws Exception {
                  List<GoodBean> goodBeanList = gson.fromJson(results,new TypeToken<List<GoodBean>>(){}.getType());

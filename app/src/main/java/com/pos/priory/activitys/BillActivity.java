@@ -119,7 +119,7 @@ public class BillActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_print:
                 previewDialog = showPreviewDialog(this, goodList, orderNumberTv.getText().toString(), getIntent().getStringExtra("memberName"),
-                        createDateTv.getText().toString(), getIntent().getDoubleExtra("sumMoney", 0),staffInfoBeanList.get(0).getStore());
+                        createDateTv.getText().toString(), getIntent().getDoubleExtra("sumMoney", 0),staffInfoBeanList.get(0).getStoreid());
                 break;
             case R.id.back_btn:
                 onBackPressed();
@@ -138,14 +138,14 @@ public class BillActivity extends BaseActivity {
     AlertDialog previewDialog;
 
     public static AlertDialog showPreviewDialog(final Activity activity, List<GoodBean> goodList, String orderNumber,
-                                                String memberName, String createDate, double sumMoney, String storeName) {
+                                                String memberName, String createDate, double sumMoney, int storeid) {
         final View printView = LayoutInflater.from(activity).inflate(R.layout.dialog_preview, null);
         ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
         ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
         ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
         ((TextView) printView.findViewById(R.id.good_size_tv)).setText("共" + goodList.size() + "件");
         ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(sumMoney + "");
-        if (storeName.equals("楊明廣場")) {
+        if (storeid == 4) {
             printView.findViewById(R.id.maco_store_info_layout).setVisibility(View.GONE);
             printView.findViewById(R.id.zhuhai_store_info_layout).setVisibility(View.VISIBLE);
         } else {

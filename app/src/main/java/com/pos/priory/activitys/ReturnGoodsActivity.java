@@ -107,7 +107,7 @@ public class ReturnGoodsActivity extends BaseActivity {
             @Override
             public void onSuccess(String results) throws Exception {
                 currentGoldPrice = new JSONObject(results).getString("price");
-                goldPriceTv.setText("當前金價：" + currentGoldPrice + "/g" + "  " + LogicUtils.
+                goldPriceTv.setText("當前金價(MOP)：" + currentGoldPrice + "/g" + "  " + LogicUtils.
                         getKeepLastTwoNumberAfterLittlePoint(Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
                 goodsAdapter = new ChangeGoodsAdapter(ReturnGoodsActivity.this, R.layout.change_good_list_item, goodList);
                 goodRecyclerView.setAdapter(goodsAdapter);

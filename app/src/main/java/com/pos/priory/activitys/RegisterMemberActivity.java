@@ -121,9 +121,9 @@ public class RegisterMemberActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_commit:
-                if(edtFirstName.getText().toString().equals("") || edtName.getText().toString().equals("")
+                if(edtFirstName.getText().toString().equals("")
                         || edtPhone.getText().toString().equals("")){
-                    Toast.makeText(RegisterMemberActivity.this,"姓名和电话都不可为空",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterMemberActivity.this,"姓和电话都不可为空",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(btnSex.getText().toString().equals("請點擊選擇性別")){

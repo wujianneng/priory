@@ -103,7 +103,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="30dp"
-                            android:text="姓"
+                            android:text="姓(必填)"
                             android:textColor="#cccccc"
                             android:textSize="12sp" />
 
@@ -142,7 +142,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="30dp"
-                            android:text="名"
+                            android:text="名(選填)"
                             android:textColor="#cccccc"
                             android:textSize="12sp" />
 
@@ -183,7 +183,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="30dp"
-                        android:text="性別"
+                        android:text="性別(必填)"
                         android:textColor="#cccccc"
                         android:textSize="12sp" />
 
@@ -219,7 +219,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="30dp"
-                        android:text="電話"
+                        android:text="電話(必填)"
                         android:textColor="#cccccc"
                         android:textSize="12sp" />
 
