@@ -18,6 +18,7 @@ import com.pos.priory.beans.InvoicesResultBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.ColseActivityUtils;
 import com.pos.priory.utils.Constants;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
@@ -80,9 +81,9 @@ public class BalanceActivity extends BaseActivity {
         }
         sumMoney = getIntent().getDoubleExtra("sumMoney", 0);
 
-        moneyTv.setText("" + sumMoney);
+        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
         needPayMoney = sumMoney;
-        needMoneyTv.setText("餘額 $" + needPayMoney);
+        needMoneyTv.setText("餘額 $" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
         radioBtnCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,7 +131,7 @@ public class BalanceActivity extends BaseActivity {
                     hasPayedCardMoney = Double.parseDouble(charSequence.toString());
                 if (radioBtnCard.isChecked()) {
                     needPayMoney = sumMoney - hasPayedCardMoney;
-                    needMoneyTv.setText("餘額 $" + needPayMoney);
+                    needMoneyTv.setText("餘額 $" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
                 }
             }
 
@@ -153,7 +154,7 @@ public class BalanceActivity extends BaseActivity {
                     hasPayedCashMoney = Double.parseDouble(charSequence.toString());
                 if (radioBtnCash.isChecked()) {
                     needPayMoney = sumMoney - hasPayedCashMoney;
-                    needMoneyTv.setText("餘額 $" + needPayMoney);
+                    needMoneyTv.setText("餘額 $" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
                 }
             }
 

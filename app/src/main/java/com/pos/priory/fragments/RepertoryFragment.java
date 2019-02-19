@@ -91,7 +91,7 @@ public class RepertoryFragment extends BaseFragment {
                 ((MainActivity)getActivity()).edtSearch.setText("");
             }
         });
-        refreshRecyclerView("");
+        refreshLayout.autoRefresh();
     }
 
 

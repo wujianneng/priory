@@ -27,6 +27,7 @@ import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.utils.BitmapUtils;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.DateUtils;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.zxinglib.utils.PermissionsManager;
 import com.pos.zxinglib.utils.PermissionsResultAction;
 
@@ -101,7 +102,7 @@ public class BillActivity extends BaseActivity {
                 new TypeToken<List<StaffInfoBean>>(){}.getType());
         orderNumberTv.setText(getIntent().getStringExtra("ordernumber"));
         createDateTv.setText(DateUtils.getCurrentTime());
-        moneyTv.setText(getIntent().getDoubleExtra("sumMoney", 0) + "");
+        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(getIntent().getDoubleExtra("sumMoney", 0)));
         edtCashMoney.setText(getIntent().getDoubleExtra("receiveMoney", 0) + "");
         smallChangeTv.setText(getIntent().getDoubleExtra("returnMoney", 0) + "");
         goodList = gson.fromJson(getIntent().getStringExtra("goodlist"), new TypeToken<List<GoodBean>>() {

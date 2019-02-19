@@ -148,8 +148,8 @@ public class RegisterMemberActivity extends BaseActivity {
         });
         customDialog.show();
         Map<String,Object> paramMap = new HashMap<>();
-        paramMap.put("first_name",edtFirstName.getText().toString());
-        paramMap.put("last_name",edtName.getText().toString());
+        paramMap.put("last_name",edtFirstName.getText().toString());
+        paramMap.put("first_name",edtName.getText().toString());
         paramMap.put("mobile",edtPhone.getText().toString());
         paramMap.put("sex",btnSex.getText().toString());
         OkHttp3Util.doPostWithToken(Constants.GET_MEMBERS_URL + "/", gson.toJson(paramMap),

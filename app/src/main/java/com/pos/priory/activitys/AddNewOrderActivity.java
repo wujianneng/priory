@@ -96,7 +96,7 @@ public class AddNewOrderActivity extends BaseActivity {
             paddingLaout.setVisibility(View.GONE);
         }
         changeGoodsMoeny = getIntent().getDoubleExtra("sumMoney", 0);
-        moneyTv.setText("" + (sumMoney + changeGoodsMoeny));
+        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
 
         goodsAdapter = new AddNewOrderGoodsAdapter(this, R.layout.add_new_order_good_list_item, goodList);
         goodsAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
@@ -263,7 +263,7 @@ public class AddNewOrderActivity extends BaseActivity {
         for (GoodBean bean : goodList) {
             sumMoney += Double.parseDouble(bean.getBatch().getProduct().getPrice()) * bean.getSaleCount();
         }
-        moneyTv.setText((sumMoney + changeGoodsMoeny) + "");
+        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
     }
 
     int yourChoice;
@@ -465,7 +465,7 @@ public class AddNewOrderActivity extends BaseActivity {
     private void editOrderItem(final GoodBean goodBean) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("quantity", goodBean.getSaleCount());
-        paramMap.put("discount", LogicUtils.getKeepLastTwoNumberAfterLittlePoint(goodBean.getDiscountRate()));
+        paramMap.put("discount",goodBean.getDiscountRate());
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + goodBean.getId()
                 + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItem") {
             @Override
@@ -497,7 +497,7 @@ public class AddNewOrderActivity extends BaseActivity {
         });
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("quantity", quantity);
-        paramMap.put("discount", LogicUtils.getKeepLastTwoNumberAfterLittlePoint(discount));
+        paramMap.put("discount",discount);
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + orderitemId
                 + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItemOnOperate") {
             @Override
