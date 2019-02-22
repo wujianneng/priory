@@ -22,6 +22,7 @@ import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,8 +81,8 @@ public class BalanceActivity extends BaseActivity {
             paddingLaout.setVisibility(View.GONE);
         }
         sumMoney = getIntent().getDoubleExtra("sumMoney", 0);
-
-        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
+        sumMoney = new BigDecimal(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney)).doubleValue();
+        moneyTv.setText(sumMoney + "");
         needPayMoney = sumMoney;
         needMoneyTv.setText("餘額 $" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
         radioBtnCard.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +171,7 @@ public class BalanceActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_finish:
                 if (needPayMoney > 0) {
-                    Toast.makeText(BalanceActivity.this, "还需付" + needPayMoney , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BalanceActivity.this, "还需付" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney) , Toast.LENGTH_SHORT).show();
                     return;
                 }
                 invoice();

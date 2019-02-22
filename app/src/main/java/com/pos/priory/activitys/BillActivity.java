@@ -103,8 +103,8 @@ public class BillActivity extends BaseActivity {
         orderNumberTv.setText(getIntent().getStringExtra("ordernumber"));
         createDateTv.setText(DateUtils.getCurrentTime());
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(getIntent().getDoubleExtra("sumMoney", 0)));
-        edtCashMoney.setText(getIntent().getDoubleExtra("receiveMoney", 0) + "");
-        smallChangeTv.setText(getIntent().getDoubleExtra("returnMoney", 0) + "");
+        edtCashMoney.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(getIntent().getDoubleExtra("receiveMoney", 0)));
+        smallChangeTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(getIntent().getDoubleExtra("returnMoney", 0)));
         goodList = gson.fromJson(getIntent().getStringExtra("goodlist"), new TypeToken<List<GoodBean>>() {
         }.getType());
 
@@ -145,7 +145,7 @@ public class BillActivity extends BaseActivity {
         ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
         ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
         ((TextView) printView.findViewById(R.id.good_size_tv)).setText("共" + goodList.size() + "件");
-        ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(sumMoney + "");
+        ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
         if (storeid == 4) {
             printView.findViewById(R.id.maco_store_info_layout).setVisibility(View.GONE);
             printView.findViewById(R.id.zhuhai_store_info_layout).setVisibility(View.VISIBLE);

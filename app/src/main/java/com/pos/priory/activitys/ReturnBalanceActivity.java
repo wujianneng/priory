@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.pos.priory.R;
 import com.pos.priory.utils.ColseActivityUtils;
+import com.pos.priory.utils.LogicUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,7 +59,7 @@ public class ReturnBalanceActivity extends BaseActivity {
             paddingLaout.setVisibility(View.GONE);
         }
         sumMoney = -1 * getIntent().getDoubleExtra("sumMoney", 0);
-        edtCasMoney.setText(sumMoney + "");
+        edtCasMoney.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney ));
         moneyTv.setText((int)sumMoney + "");
     }
 

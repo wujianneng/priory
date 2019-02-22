@@ -341,7 +341,7 @@ public class ReturnGoodsActivity extends BaseActivity {
             sumMoney += Double.parseDouble(item.getStock().getBatch().getProduct().getRealPrice()) * item.getOprateCount();
         }
         sumMoney = -1 * sumMoney;
-        moneyTv.setText(sumMoney + "");
+        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
         if (isNotify)
             goodsAdapter.notifyDataSetChanged();
     }
