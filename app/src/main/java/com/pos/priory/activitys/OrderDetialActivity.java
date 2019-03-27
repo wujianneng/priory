@@ -29,6 +29,7 @@ import com.pos.priory.beans.TransactionBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.DateUtils;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
@@ -121,7 +122,7 @@ public class OrderDetialActivity extends BaseActivity {
         }
         orderNumberTv.setText(orderBean.getOrdernumber());
         dateTv.setText(DateUtils.covertIso8601ToDate(orderBean.getCreated()));
-        moneyTv.setText(orderBean.getTotalprice() + "");
+        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(orderBean.getTotalprice()));
         memberNameTv.setText(orderBean.getMember().getLast_name() + orderBean.getMember().getFirst_name());
 
         goodsAdapter = new OrderDetialGoodsAdapter(R.layout.order_detial_good_list_item, goodList);
@@ -220,14 +221,14 @@ public class OrderDetialActivity extends BaseActivity {
     AlertDialog previewDialog;
 
     public static AlertDialog showPreviewDialog(final Activity activity, List<OrderItemBean> goodList, String orderNumber,
-                                                String memberName, String createDate, double sumMoney, String storeName) {
+                                         String memberName, String createDate, double sumMoney,int storeId) {
         final View printView = LayoutInflater.from(activity).inflate(R.layout.dialog_preview, null);
         ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
         ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
         ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
         ((TextView) printView.findViewById(R.id.good_size_tv)).setText("共" + goodList.size() + "件");
-        ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(sumMoney + "");
-        if (storeName.equals("楊明廣場")) {
+        ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
+        if(storeId == 4){
             printView.findViewById(R.id.maco_store_info_layout).setVisibility(View.GONE);
             printView.findViewById(R.id.zhuhai_store_info_layout).setVisibility(View.VISIBLE);
         } else {
@@ -259,7 +260,7 @@ public class OrderDetialActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_print:
                 previewDialog = showPreviewDialog(this, goodList, orderBean.getOrdernumber(), memberNameTv.getText().toString(),
-                        dateTv.getText().toString(), orderBean.getTotalprice(), MyApplication.staffInfoBean.getStore());
+                        dateTv.getText().toString(), orderBean.getTotalprice(), MyApplication.staffInfoBean.getStoreid());
                 break;
             case R.id.btn_change:
                 resetCheckedGoodList(false);

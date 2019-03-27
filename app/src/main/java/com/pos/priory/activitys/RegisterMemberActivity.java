@@ -121,9 +121,9 @@ public class RegisterMemberActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.btn_commit:
-                if(edtFirstName.getText().toString().equals("") || edtName.getText().toString().equals("")
+                if(edtFirstName.getText().toString().equals("")
                         || edtPhone.getText().toString().equals("")){
-                    Toast.makeText(RegisterMemberActivity.this,"姓名和电话都不可为空",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterMemberActivity.this,"姓和电话都不可为空",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if(btnSex.getText().toString().equals("請點擊選擇性別")){
@@ -148,8 +148,8 @@ public class RegisterMemberActivity extends BaseActivity {
         });
         customDialog.show();
         Map<String,Object> paramMap = new HashMap<>();
-        paramMap.put("first_name",edtFirstName.getText().toString());
-        paramMap.put("last_name",edtName.getText().toString());
+        paramMap.put("last_name",edtFirstName.getText().toString());
+        paramMap.put("first_name",edtName.getText().toString());
         paramMap.put("mobile",edtPhone.getText().toString());
         paramMap.put("sex",btnSex.getText().toString());
         OkHttp3Util.doPostWithToken(Constants.GET_MEMBERS_URL + "/", gson.toJson(paramMap),

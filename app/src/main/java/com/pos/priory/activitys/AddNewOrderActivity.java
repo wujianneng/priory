@@ -46,6 +46,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -94,7 +95,7 @@ public class AddNewOrderActivity extends BaseActivity {
             paddingLaout.setVisibility(View.GONE);
         }
         changeGoodsMoeny = getIntent().getDoubleExtra("sumMoney", 0);
-        moneyTv.setText("" + (sumMoney + changeGoodsMoeny));
+        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
 
         goodsAdapter = new AddNewOrderGoodsAdapter(this, R.layout.add_new_order_good_list_item, goodList);
         //设置侧滑菜单
@@ -242,9 +243,9 @@ public class AddNewOrderActivity extends BaseActivity {
     private void refreshSumMoney() {
         sumMoney = 0;
         for (GoodBean bean : goodList) {
-            sumMoney += Double.parseDouble(bean.getBatch().getProduct().getPrice()) * bean.getSaleCount();
+            sumMoney += new BigDecimal(bean.getBatch().getProduct().getPrice()).doubleValue() * bean.getSaleCount();
         }
-        moneyTv.setText((sumMoney + changeGoodsMoeny) + "");
+        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
     }
 
     int yourChoice;
@@ -257,7 +258,7 @@ public class AddNewOrderActivity extends BaseActivity {
                 yourChoice = 0;
             }else {
                 for (int i = 0; i < discountBeanList.size(); i++) {
-                    if (goodList.get(position).getDiscountRate() == Double.parseDouble(discountBeanList.get(i).getValue())) {
+                    if (goodList.get(position).getDiscountRate() == new BigDecimal(discountBeanList.get(i).getValue()).doubleValue()) {
                         yourChoice = i;
                     }
                 }
@@ -286,8 +287,7 @@ public class AddNewOrderActivity extends BaseActivity {
                                             goodList.get(position).getSaleCount(),1, "调折扣");
                                 }else {
                                     editOrderItemOnOperate(position, goodList.get(position).getId(),
-                                            goodList.get(position).getSaleCount(), Double.parseDouble
-                                                    (discountBeanList.get(yourChoice).getValue()), "调折扣");
+                                            goodList.get(position).getSaleCount(), new BigDecimal(discountBeanList.get(yourChoice).getValue()).doubleValue(), "调折扣");
                                 }
                             }
                             choiceSexDialog.dismiss();
@@ -446,7 +446,7 @@ public class AddNewOrderActivity extends BaseActivity {
     private void editOrderItem(final GoodBean goodBean) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("quantity", goodBean.getSaleCount());
-        paramMap.put("discount", goodBean.getDiscountRate());
+        paramMap.put("discount",goodBean.getDiscountRate());
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + goodBean.getId()
                 + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItem") {
             @Override
@@ -478,9 +478,9 @@ public class AddNewOrderActivity extends BaseActivity {
         });
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("quantity", quantity);
-        paramMap.put("discount", discount);
+        paramMap.put("discount",discount);
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + orderitemId
-                + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItem") {
+                + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItemOnOperate") {
             @Override
             public void onSuccess(String results) throws Exception {
                 customDialog.dismiss();

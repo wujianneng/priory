@@ -20,6 +20,15 @@ public class StaffInfoBean {
     private String mobile;
     private String store;
     private String permission;
+    private int storeid;
+
+    public int getStoreid() {
+        return storeid;
+    }
+
+    public void setStoreid(int storeid) {
+        this.storeid = storeid;
+    }
 
     public String getPermission() {
         return permission;

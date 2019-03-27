@@ -19,9 +19,11 @@ import com.pos.priory.beans.InvoicesResultBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.ColseActivityUtils;
 import com.pos.priory.utils.Constants;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,10 +102,10 @@ public class BalanceActivity extends BaseActivity {
             paddingLaout.setVisibility(View.GONE);
         }
         sumMoney = getIntent().getDoubleExtra("sumMoney", 0);
-
-        moneyTv.setText("" + sumMoney);
+        sumMoney = new BigDecimal(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney)).doubleValue();
+        moneyTv.setText(sumMoney + "");
         needPayMoney = sumMoney;
-        needMoneyTv.setText("餘額 $" + needPayMoney);
+        needMoneyTv.setText("餘額 $" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
         radioBtnCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -202,7 +204,7 @@ public class BalanceActivity extends BaseActivity {
                 else
                     hasPayedCardMoney = Double.parseDouble(charSequence.toString());
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + needPayMoney);
+                needMoneyTv.setText("剩餘：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
 
             @Override
@@ -223,7 +225,7 @@ public class BalanceActivity extends BaseActivity {
                 else
                     hasPayedCashMoney = Double.parseDouble(charSequence.toString());
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + needPayMoney);
+                needMoneyTv.setText("剩餘：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
 
             @Override
@@ -244,7 +246,7 @@ public class BalanceActivity extends BaseActivity {
                 else
                     hasPayedCouponMoney = Double.parseDouble(charSequence.toString());
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + needPayMoney);
+                needMoneyTv.setText("剩餘：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
 
             @Override
@@ -265,7 +267,7 @@ public class BalanceActivity extends BaseActivity {
                 else
                     hasPayedAlipayMoney = Double.parseDouble(charSequence.toString());
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + needPayMoney);
+                needMoneyTv.setText("剩餘：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
 
             @Override
@@ -319,7 +321,7 @@ public class BalanceActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_finish:
                 if (needPayMoney > 0) {
-                    Toast.makeText(BalanceActivity.this, "还需付" + needPayMoney, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BalanceActivity.this, "还需付" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney) , Toast.LENGTH_SHORT).show();
                     return;
                 }
                 invoice();

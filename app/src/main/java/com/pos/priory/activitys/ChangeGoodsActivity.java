@@ -315,7 +315,7 @@ public class ChangeGoodsActivity extends BaseActivity {
             sumMoney += Double.parseDouble(bean.getStock().getBatch().getProduct().getRealPrice()) * bean.getOprateCount();
         }
         sumMoney = -1 * sumMoney;
-        moneyTv.setText(sumMoney + "");
+        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
         goodsAdapter.notifyDataSetChanged();
     }
 
