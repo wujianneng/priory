@@ -31,8 +31,6 @@ import butterknife.OnClick;
 
 public class EditPasswordActivity extends BaseActivity {
 
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
@@ -45,6 +43,10 @@ public class EditPasswordActivity extends BaseActivity {
     ImageView icon;
     @Bind(R.id.text)
     TextView text;
+    @Bind(R.id.right_img)
+    ImageView rightImg;
+    @Bind(R.id.btn_commit)
+    CardView btnCommit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,15 +61,15 @@ public class EditPasswordActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        if (Build.VERSION.SDK_INT < 19) {
-            paddingLaout.setVisibility(View.GONE);
-        }
+        rightImg.setVisibility(View.GONE);
+        titleTv.setText("修改密碼");
     }
 
     CustomDialog customDialog;
-    private void editPassword(){
-        if(customDialog == null){
-            customDialog = new CustomDialog(this,"正在修改密碼..");
+
+    private void editPassword() {
+        if (customDialog == null) {
+            customDialog = new CustomDialog(this, "正在修改密碼..");
         }
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -76,43 +78,43 @@ public class EditPasswordActivity extends BaseActivity {
             }
         });
         customDialog.show();
-        Map<String,Object> map = new HashMap<>();
-        map.put("new_password1",edtNewPassword.getText().toString());
-        map.put("new_password2",edtRepeatNewPassword.getText().toString());
+        Map<String, Object> map = new HashMap<>();
+        map.put("new_password1", edtNewPassword.getText().toString());
+        map.put("new_password2", edtRepeatNewPassword.getText().toString());
         OkHttp3Util.doPostWithToken(Constants.CHANGE_PASSWORD_URL, gson.toJson(map), sharedPreferences,
-                new Okhttp3StringCallback(this,"editPassword") {
+                new Okhttp3StringCallback(this, "editPassword") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        Toast.makeText(EditPasswordActivity.this,"修改密碼成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditPasswordActivity.this, "修改密碼成功", Toast.LENGTH_SHORT).show();
                         finish();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
                         customDialog.dismiss();
-                        Toast.makeText(EditPasswordActivity.this,"修改密碼失敗",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditPasswordActivity.this, "修改密碼失敗", Toast.LENGTH_SHORT).show();
                     }
                 });
 
     }
 
-    @OnClick({R.id.btn_commit,R.id.back_btn})
-    public void onClick(View v){
-        switch (v.getId()){
+    @OnClick({R.id.btn_commit, R.id.back_btn})
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.btn_commit:
-                if(edtNewPassword.getText().toString().equals("") ||
-                        edtRepeatNewPassword.getText().toString().equals("")){
-                    Toast.makeText(EditPasswordActivity.this,"新密碼和確認密碼輸入框不能爲空",Toast.LENGTH_SHORT).show();
+                if (edtNewPassword.getText().toString().equals("") ||
+                        edtRepeatNewPassword.getText().toString().equals("")) {
+                    Toast.makeText(EditPasswordActivity.this, "新密碼和確認密碼輸入框不能爲空", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(edtNewPassword.getText().toString().length() < 8 ||
-                        edtRepeatNewPassword.getText().length() < 8){
-                    Toast.makeText(EditPasswordActivity.this,"新密碼和確認密碼長度必須大於8位",Toast.LENGTH_SHORT).show();
+                if (edtNewPassword.getText().toString().length() < 8 ||
+                        edtRepeatNewPassword.getText().length() < 8) {
+                    Toast.makeText(EditPasswordActivity.this, "新密碼和確認密碼長度必須大於8位", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(LogicUtils.isNumeric(edtNewPassword.getText().toString())||
-                        LogicUtils.isNumeric(edtRepeatNewPassword.getText().toString())){
-                    Toast.makeText(EditPasswordActivity.this,"新密碼和確認密碼都不能為純數字",Toast.LENGTH_SHORT).show();
+                if (LogicUtils.isNumeric(edtNewPassword.getText().toString()) ||
+                        LogicUtils.isNumeric(edtRepeatNewPassword.getText().toString())) {
+                    Toast.makeText(EditPasswordActivity.this, "新密碼和確認密碼都不能為純數字", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 editPassword();

@@ -9,10 +9,8 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.pos.priory.R;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
@@ -36,16 +34,14 @@ import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity {
 
-    @Bind(R.id.input_cardview)
-    CardView inputCardview;
-    @Bind(R.id.btn_cardview)
-    CardView btnCardview;
-    @Bind(R.id.checkbox)
-    CheckBox checkbox;
     @Bind(R.id.edt_usename)
     EditText edtUsename;
     @Bind(R.id.edt_passwrod)
     EditText edtPasswrod;
+    @Bind(R.id.btn_cardview)
+    CardView btnCardview;
+    @Bind(R.id.checkbox)
+    CheckBox checkbox;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,16 +56,16 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        if(sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false)) {
+        if (sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false)) {
             edtUsename.setText(sharedPreferences.getString(Constants.LAST_USERNAME_KEY, ""));
             edtPasswrod.setText(sharedPreferences.getString(Constants.LAST_PASSWORD_KEY, ""));
-        }else {
+        } else {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    LogicUtils.openKeybord(edtUsename,LoginActivity.this);
+                    LogicUtils.openKeybord(edtUsename, LoginActivity.this);
                 }
-            },300);
+            }, 300);
         }
         checkbox.setChecked(sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false));
     }

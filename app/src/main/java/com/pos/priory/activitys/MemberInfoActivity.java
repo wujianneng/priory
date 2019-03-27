@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
-import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.OrderAdapter;
 import com.pos.priory.beans.MemberBean;
@@ -48,8 +47,6 @@ public class MemberInfoActivity extends BaseActivity {
 
     OrderAdapter orderAdapter;
     List<OrderBean> orderList = new ArrayList<>();
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
@@ -73,6 +70,9 @@ public class MemberInfoActivity extends BaseActivity {
     @Bind(R.id.srf_lay)
     SmartRefreshLayout smartRefreshLayout;
     MemberBean memberBean;
+    @Bind(R.id.right_img)
+    ImageView rightImg;
+    public static final String UPDATE_ORDER_LIST = "memberInfoActivity_update_list";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,10 +86,17 @@ public class MemberInfoActivity extends BaseActivity {
     }
 
     @Override
-    protected void initViews() {
-        if (Build.VERSION.SDK_INT < 19) {
-            paddingLaout.setVisibility(View.GONE);
+    public void handleEventBus(String event) {
+        super.handleEventBus(event);
+        if(event.equals(UPDATE_ORDER_LIST)){
+            smartRefreshLayout.autoRefresh();
         }
+    }
+
+    @Override
+    protected void initViews() {
+        titleTv.setText("會員信息");
+        rightImg.setVisibility(View.GONE);
         memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.class);
         edtFirstName.setText(memberBean.getLast_name());
         edtName.setText(memberBean.getFirst_name());
@@ -128,14 +135,6 @@ public class MemberInfoActivity extends BaseActivity {
         refreshRecyclerView(false);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(sharedPreferences.getBoolean("isRefreshOrderFragment",false)){
-            smartRefreshLayout.autoRefresh();
-            sharedPreferences.edit().putBoolean("isRefreshOrderFragment",false).commit();
-        }
-    }
 
     private void refreshRecyclerView(boolean isLoadMore) {
         if (!isLoadMore) {

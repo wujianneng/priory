@@ -29,13 +29,11 @@ import butterknife.OnClick;
 
 public class BigInventoryActivity extends BaseActivity {
 
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
     TextView titleTv;
-    @Bind(R.id.add_btn)
+    @Bind(R.id.right_img)
     ImageView addBtn;
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -52,6 +50,8 @@ public class BigInventoryActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
+        titleTv.setText("大盤點");
+        addBtn.setImageResource(R.drawable.add_new);
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -85,13 +85,13 @@ public class BigInventoryActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.back_btn,R.id.add_btn})
+    @OnClick({R.id.back_btn,R.id.right_img})
     public void onClick(View v){
         switch (v.getId()){
             case R.id.back_btn:
                 finish();
                 break;
-            case R.id.add_btn:
+            case R.id.right_img:
                 break;
         }
     }

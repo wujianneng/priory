@@ -50,8 +50,6 @@ public class OrderDetialActivity extends BaseActivity {
     List<OrderItemBean> goodList = new ArrayList<>();
     List<OrderItemBean> checkedGoodList = new ArrayList<>();
     OrderDetialGoodsAdapter goodsAdapter;
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
@@ -85,7 +83,7 @@ public class OrderDetialActivity extends BaseActivity {
     TextView orderNumberTv;
     @Bind(R.id.date_tv)
     TextView dateTv;
-    @Bind(R.id.btn_print)
+    @Bind(R.id.right_img)
     ImageView btnPrint;
     @Bind(R.id.count_tv)
     TextView countTv;
@@ -108,9 +106,6 @@ public class OrderDetialActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        if (Build.VERSION.SDK_INT < 19) {
-            paddingLaout.setVisibility(View.GONE);
-        }
         orderBean = gson.fromJson(getIntent().getStringExtra("order"), OrderBean.class);
         if (orderBean.getStatus().equals("已取消")) {
             btnChange.setEnabled(false);
@@ -255,10 +250,10 @@ public class OrderDetialActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.btn_change, R.id.btn_return, R.id.back_btn, R.id.btn_print})
+    @OnClick({R.id.btn_change, R.id.btn_return, R.id.back_btn, R.id.right_img})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_print:
+            case R.id.right_img:
                 previewDialog = showPreviewDialog(this, goodList, orderBean.getOrdernumber(), memberNameTv.getText().toString(),
                         dateTv.getText().toString(), orderBean.getTotalprice(), MyApplication.staffInfoBean.getStoreid());
                 break;

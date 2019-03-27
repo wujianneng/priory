@@ -7,109 +7,93 @@
     android:orientation="vertical">
 
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2.5" />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/login_img_title" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/input_cardview"
+    <LinearLayout
+        android:layout_marginTop="290dp"
         android:layout_width="260dp"
-        android:layout_height="120dp"
+        android:layout_height="116dp"
         android:layout_gravity="center_horizontal"
-        app:cardBackgroundColor="#fff"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="10dp"
-        app:cardPreventCornerOverlap="true"
-        app:contentPadding="10dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="57dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+            <TextView
+                android:text="賬號："
+                android:textColor="#4A4A4A"
+                android:textSize="18sp"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/edt_usename"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/icon_username" />
-
-                <EditText
-                    android:id="@+id/edt_usename"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_weight="1"
-                    android:inputType="text"
-                    android:background="@null"
-                    android:hint="請輸入賬號" />
-            </LinearLayout>
-
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="#cccccc" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/icon_password" />
-
-                <EditText
-                    android:id="@+id/edt_passwrod"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:inputType="textPassword"
-                    android:hint="請輸入密碼" />
-            </LinearLayout>
+                android:layout_marginRight="20dp"
+                android:background="@null"
+                android:hint="請輸入賬號"
+                android:inputType="text"
+                android:textColor="#4A4A4A"
+                android:textSize="18sp" />
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="#000000" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+          <TextView
+              android:text="密碼："
+              android:textColor="#4A4A4A"
+              android:textSize="18sp"
+              android:layout_width="60dp"
+              android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/edt_passwrod"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="20dp"
+                android:background="@null"
+                android:hint="請輸入密碼"
+                android:inputType="textPassword"
+                android:textColor="#4A4A4A"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="#000000" />
+    </LinearLayout>
 
     <android.support.v7.widget.CardView
         android:id="@+id/btn_cardview"
-        android:layout_width="260dp"
+        android:layout_width="230dp"
         android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="40dp"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/login_btn_bg"
+        app:cardBackgroundColor="@color/colorAccent"
         app:cardCornerRadius="25dp"
         app:cardElevation="10dp"
         app:cardPreventCornerOverlap="true"
@@ -120,47 +104,45 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="登錄"
+            android:text="登  錄"
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
     </android.support.v7.widget.CardView>
 
     <LinearLayout
-        android:layout_width="260dp"
+        android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <CheckBox
             android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:padding="10dp"
             android:layout_gravity="center_vertical"
-            android:theme="@style/LoginCheckbox" />
+            style="@style/LoginCheckbox" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp"
             android:text="記住密碼"
-            android:textColor="#fff"
+            android:textColor="@color/colorAccent"
             android:textSize="15sp" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2" />
 
     <TextView
+        android:layout_marginTop="80dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="15dp"
         android:text="copyright(c)2015-2018 AnnaBella ip"
-        android:textColor="#fff"
+        android:textColor="@color/colorAccent"
         android:textSize="13sp" />
 
 </LinearLayout>

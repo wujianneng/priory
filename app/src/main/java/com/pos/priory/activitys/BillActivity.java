@@ -24,13 +24,14 @@ import com.pos.priory.R;
 import com.pos.priory.adapters.BillGoodsAdapter;
 import com.pos.priory.adapters.BillPrintGoodsAdapter;
 import com.pos.priory.beans.GoodBean;
-import com.pos.priory.beans.StaffInfoBean;
+import com.pos.priory.fragments.OrderFragment;
 import com.pos.priory.utils.BitmapUtils;
-import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.DateUtils;
 import com.pos.priory.utils.LogicUtils;
 import com.pos.zxinglib.utils.PermissionsManager;
 import com.pos.zxinglib.utils.PermissionsResultAction;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 import java.util.Locale;
@@ -45,8 +46,6 @@ import butterknife.OnClick;
 
 public class BillActivity extends BaseActivity {
 
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
@@ -80,6 +79,8 @@ public class BillActivity extends BaseActivity {
     TextView orderNumberTv;
     @Bind(R.id.create_date_tv)
     TextView createDateTv;
+    @Bind(R.id.right_img)
+    ImageView rightImg;
 
 
     @Override
@@ -95,9 +96,8 @@ public class BillActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        if (Build.VERSION.SDK_INT < 19) {
-            paddingLaout.setVisibility(View.GONE);
-        }
+        titleTv.setText("賬單");
+        rightImg.setVisibility(View.GONE);
         orderNumberTv.setText(getIntent().getStringExtra("ordernumber"));
         createDateTv.setText(DateUtils.getCurrentTime());
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(getIntent().getDoubleExtra("sumMoney", 0)));
@@ -204,7 +204,8 @@ public class BillActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        sharedPreferences.edit().putBoolean("isRefreshOrderFragment", true).commit();
+        EventBus.getDefault().post(OrderFragment.UPDATE_ORDER_LIST);
+        EventBus.getDefault().post(MemberInfoActivity.UPDATE_ORDER_LIST);
         super.onBackPressed();
     }
 }

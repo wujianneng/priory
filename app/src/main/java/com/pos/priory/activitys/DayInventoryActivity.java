@@ -35,8 +35,6 @@ public class DayInventoryActivity extends BaseActivity {
     TextView text;
     @Bind(R.id.btn_finish)
     CardView btnFinish;
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
@@ -45,6 +43,8 @@ public class DayInventoryActivity extends BaseActivity {
     TextView handCountTv;
     @Bind(R.id.hand_count_edt)
     EditText handCountEdt;
+    @Bind(R.id.right_img)
+    ImageView rightImg;
 
     @Override
     protected void beForeInitViews() {
@@ -54,6 +54,8 @@ public class DayInventoryActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
+        titleTv.setText("日盤點");
+        rightImg.setVisibility(View.GONE);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

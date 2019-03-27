@@ -28,13 +28,11 @@ import butterknife.ButterKnife;
 
 public class BigInventoryDetialActivity extends BaseActivity {
 
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
     TextView titleTv;
-    @Bind(R.id.scan_btn)
+    @Bind(R.id.right_img)
     ImageView scanBtn;
     @Bind(R.id.left_tv)
     TextView leftTv;
@@ -55,6 +53,8 @@ public class BigInventoryDetialActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
+        titleTv.setText("大盤點");
+        scanBtn.setImageResource(R.drawable.scan);
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override

@@ -99,6 +99,7 @@ public class OrderFragment extends BaseFragment {
     TextView row4Tv2;
     @Bind(R.id.row4)
     FrameLayout row4;
+    public static final String UPDATE_ORDER_LIST = "orderFragment_update_list";
 
 
     @Nullable
@@ -108,6 +109,14 @@ public class OrderFragment extends BaseFragment {
         ButterKnife.bind(this, view);
         initViews();
         return view;
+    }
+
+    @Override
+    public void handleEventBus(String event) {
+        super.handleEventBus(event);
+        if(event.equals(UPDATE_ORDER_LIST)){
+            smartRefreshLayout.autoRefresh();
+        }
     }
 
     private void initViews() {
@@ -131,7 +140,7 @@ public class OrderFragment extends BaseFragment {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
                 Log.e("viewtype","viewtype:" + viewType);
-//                if(viewType == 0 && MyApplication.staffInfoBean.getPermission().equals("店員")) {
+                if(viewType == 0 && MyApplication.staffInfoBean.getPermission().equals("店長")) {
                     SwipeMenuItem cancelItem = new SwipeMenuItem(getActivity())
                             .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
                             .setImage(R.drawable.edit)
@@ -140,7 +149,7 @@ public class OrderFragment extends BaseFragment {
                             .setHeight(DeviceUtil.dip2px(getContext(), 91))//设置高，这里使用match_parent，就是与item的高相同
                             .setWidth(DeviceUtil.dip2px(getContext(), 100));//设置宽
                     swipeRightMenu.addMenuItem(cancelItem);//设置右边的侧滑
-//                }
+                }
             }
         });
         orderAdapter = new OrderAdapter(R.layout.order_list_item, orderList);
@@ -169,7 +178,6 @@ public class OrderFragment extends BaseFragment {
             }
         });
         smartRefreshLayout.autoRefresh();
-        sharedPreferences.edit().putBoolean("isRefreshOrderFragment", false).commit();
     }
 
     private void showIsCancelOrderDialog(int adapterPosition) {
@@ -192,29 +200,21 @@ public class OrderFragment extends BaseFragment {
         dialog.show();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (sharedPreferences.getBoolean("isRefreshOrderFragment", false)) {
-            smartRefreshLayout.autoRefresh();
-            sharedPreferences.edit().putBoolean("isRefreshOrderFragment", false).commit();
-        }
-    }
 
     private void getCurrentGoldPrice() {
         row1Tv1.setText("營業額：22222元");
         row2Tv1.setText("現金：222元 | 現金卷：100元");
         row3Tv1.setText("信用卡：100元");
-        row3Tv2.setText("总数：12件");
+        row3Tv2.setText("總數：12件");
         row4Tv1.setText("支付寶：222元 | 微信支付：100元");
-        row4Tv2.setText("总重：15g");
+        row4Tv2.setText("縂重：15g");
         OkHttp3Util.doGetWithToken(Constants.GOLD_PRICE_URL, sharedPreferences, new Okhttp3StringCallback(this, "getCurrentGoldPrice") {
             @Override
             public void onSuccess(String results) throws Exception {
                 String currentGoldPrice = new JSONObject(results).getString("price");
                 goldPriceLayout.setVisibility(View.VISIBLE);
-                row1Tv2.setText("金价：" + (int) Double.parseDouble(currentGoldPrice) + "/g");
-                row2Tv2.setText("金价：" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
+                row1Tv2.setText("金價：" + (int) Double.parseDouble(currentGoldPrice) + "/g");
+                row2Tv2.setText("金價：" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
             }
 
             @Override

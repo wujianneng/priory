@@ -23,6 +23,10 @@
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:checked="false"
+            style="@style/LoginCheckbox"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:padding="5dp"
             android:layout_height="wrap_content" />
 
         <ImageView
@@ -31,7 +35,7 @@
             android:layout_height="60dp"
             android:layout_toRightOf="@+id/radio"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:src="@drawable/app_logo" />
 
         <TextView
@@ -101,7 +105,7 @@
             <TextView
                 android:id="@+id/discount_price_tv"
                 android:textSize="12sp"
-                android:textColor="#D0021B"
+                android:textColor="@color/drag_btn_green"
                 android:layout_marginTop="7dp"
                 android:text="折后价： 47元"
                 android:textStyle="bold"

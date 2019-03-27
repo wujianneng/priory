@@ -142,7 +142,7 @@ public class DateUtils {
      * 获取当期日期
      */
     public static String getToday() {
-        String pattern = "yyyy-MM-dd";
+        String pattern = "yyyy/MM/dd";
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         return dateFormat.format(new Date());
     }

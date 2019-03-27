@@ -3,11 +3,11 @@ package com.pos.priory.activitys;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,9 +19,7 @@ import com.pos.priory.R;
 import com.pos.priory.adapters.ChangeGoodsAdapter;
 import com.pos.priory.beans.CreateRefundOrderResultBean;
 import com.pos.priory.beans.OrderItemBean;
-import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
-import com.pos.priory.utils.ColseActivityUtils;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
@@ -44,8 +42,6 @@ import butterknife.OnClick;
 
 public class ChangeGoodsActivity extends BaseActivity {
 
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
@@ -68,6 +64,8 @@ public class ChangeGoodsActivity extends BaseActivity {
     ChangeGoodsAdapter goodsAdapter;
 
     double sumMoney = 0;
+    @Bind(R.id.right_img)
+    ImageView rightImg;
 
     @Override
     protected void beForeInitViews() {
@@ -77,9 +75,8 @@ public class ChangeGoodsActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        if (Build.VERSION.SDK_INT < 19) {
-            paddingLaout.setVisibility(View.GONE);
-        }
+        titleTv.setText("換貨單");
+        rightImg.setVisibility(View.GONE);
         tempgoodList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
                 new TypeToken<List<OrderItemBean>>() {
                 }.getType());
@@ -181,7 +178,7 @@ public class ChangeGoodsActivity extends BaseActivity {
         paramMap.put("name", orderitem.getStock().getBatch().getProduct().getName());
         paramMap.put("quantity", orderitem.getOprateCount());
         paramMap.put("weight", 0);
-        paramMap.put("location",MyApplication.staffInfoBean.getStore());
+        paramMap.put("location", MyApplication.staffInfoBean.getStore());
         OkHttp3Util.doPostWithToken(Constants.RETURN_STOCKS_URL + "/", gson.toJson(paramMap),
                 sharedPreferences, new Okhttp3StringCallback(this, "createReturnStocks") {
                     @Override
@@ -320,4 +317,10 @@ public class ChangeGoodsActivity extends BaseActivity {
     }
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

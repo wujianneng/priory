@@ -13,6 +13,10 @@ import com.google.gson.Gson;
 import com.pos.priory.utils.ColseActivityUtils;
 import com.pos.zxinglib.utils.SystemBarTintManager;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 /**
  * Created by Lenovo on 2018/12/29.
  */
@@ -31,6 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         ColseActivityUtils.addActivity(this);
         beForeInitViews();
         initViews();
+        EventBus.getDefault().register(this);
     }
 
     public void initNocationBar(int color) {
@@ -57,7 +62,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         ColseActivityUtils.removeActivity(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleEventBus(String event){
+
     }
 
     protected abstract void beForeInitViews();

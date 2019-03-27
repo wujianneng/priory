@@ -38,8 +38,6 @@ import butterknife.OnClick;
 public class BalanceActivity extends BaseActivity {
 
     double sumMoney = 0, hasPayedCardMoney = 0, hasPayedCashMoney = 0, hasPayedCouponMoney = 0, hasPayedAlipayMoney = 0, hasPayedWechatMoney = 0, hasPayedIntegralMoney = 300, needPayMoney = 0;
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
@@ -88,6 +86,8 @@ public class BalanceActivity extends BaseActivity {
     CheckBox radioBtnIntegral;
     @Bind(R.id.integral_tv)
     TextView integralTv;
+    @Bind(R.id.right_img)
+    ImageView rightImg;
 
 
     @Override
@@ -98,9 +98,8 @@ public class BalanceActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        if (Build.VERSION.SDK_INT < 19) {
-            paddingLaout.setVisibility(View.GONE);
-        }
+        titleTv.setText("結算");
+        rightImg.setVisibility(View.GONE);
         sumMoney = getIntent().getDoubleExtra("sumMoney", 0);
         sumMoney = new BigDecimal(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney)).doubleValue();
         moneyTv.setText(sumMoney + "");
@@ -321,7 +320,7 @@ public class BalanceActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_finish:
                 if (needPayMoney > 0) {
-                    Toast.makeText(BalanceActivity.this, "还需付" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney) , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BalanceActivity.this, "还需付" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 invoice();

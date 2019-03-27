@@ -56,8 +56,6 @@ public class MainActivity extends BaseActivity {
     BottomNavigationBar navigation;
     @Bind(R.id.container)
     LinearLayout container;
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.edt_search)
     public EditText edtSearch;
     @Bind(R.id.repertory_search_layout)
@@ -82,10 +80,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        if (Build.VERSION.SDK_INT < 19) {
-            paddingLaout.setVisibility(View.GONE);
-        }
-
         List<StaffInfoBean> staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY,""),
                 new TypeToken<List<StaffInfoBean>>(){}.getType());
         MyApplication.staffInfoBean = staffInfoBeanList.get(0);

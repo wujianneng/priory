@@ -8,10 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="LoginCheckbox" parent="@android:style/Widget.Material.CompoundButton.CheckBox">
-        <item name="colorAccent">@color/login_btn_bg</item>
-        <item name="colorControlHighlight">@color/login_btn_bg</item>
+    <style name="LoginCheckbox" parent="@style/Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/checkbox_bg</item>
     </style>
+
 
     <!-- 自定义dialog的样式 -->
     <style name="CustomDialog">

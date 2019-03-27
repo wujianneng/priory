@@ -19,7 +19,6 @@ import com.pos.priory.R;
 import com.pos.priory.adapters.ChangeGoodsAdapter;
 import com.pos.priory.beans.CreateRefundOrderResultBean;
 import com.pos.priory.beans.OrderItemBean;
-import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.LogicUtils;
@@ -42,9 +41,6 @@ import butterknife.OnClick;
  */
 
 public class ReturnGoodsActivity extends BaseActivity {
-
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
@@ -69,6 +65,8 @@ public class ReturnGoodsActivity extends BaseActivity {
     String currentGoldPrice = "";
     @Bind(R.id.gold_price_tv)
     TextView goldPriceTv;
+    @Bind(R.id.right_img)
+    ImageView rightImg;
 
     @Override
     protected void beForeInitViews() {
@@ -78,9 +76,8 @@ public class ReturnGoodsActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        if (Build.VERSION.SDK_INT < 19) {
-            paddingLaout.setVisibility(View.GONE);
-        }
+        titleTv.setText("回收單");
+        rightImg.setVisibility(View.GONE);
         tempgoodList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
                 new TypeToken<List<OrderItemBean>>() {
                 }.getType());

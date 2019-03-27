@@ -5,40 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <View
-        android:id="@+id/padding_laout"
-        android:layout_width="match_parent"
-        android:layout_height="19dp"
-        android:background="@color/colorAccent"
-        android:elevation="5dp" />
+    <include layout="@layout/title_layout"
+        />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:background="@color/colorAccent"
-        android:elevation="5dp"
-        android:gravity="center_vertical">
-
-        <ImageView
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="6dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="10dp"
-            android:src="@drawable/icon_back" />
-
-        <TextView
-            android:id="@+id/title_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="日盤點"
-            android:textColor="#fff"
-            android:textSize="20sp" />
-
-    </FrameLayout>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -88,6 +57,7 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/input_bg"
                 android:hint="請輸入數量"
+                android:textColor="@color/drag_btn_green"
                 android:inputType="numberDecimal"
                 android:paddingLeft="10dp"
                 android:textSize="15sp" />
@@ -144,6 +114,7 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/input_bg"
                 android:hint="請輸入數量"
+                android:textColor="@color/drag_btn_green"
                 android:inputType="numberDecimal"
                 android:paddingLeft="10dp"
                 android:textSize="15sp" />
@@ -200,6 +171,7 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/input_bg"
                 android:hint="請輸入數量"
+                android:textColor="@color/drag_btn_green"
                 android:inputType="numberDecimal"
                 android:paddingLeft="10dp"
                 android:textSize="15sp" />
@@ -256,6 +228,7 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/input_bg"
                 android:hint="請輸入數量"
+                android:textColor="@color/drag_btn_green"
                 android:inputType="numberDecimal"
                 android:paddingLeft="10dp"
                 android:textSize="15sp" />

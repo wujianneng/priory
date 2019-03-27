@@ -6,5 +6,5 @@
     <color name="login_btn_bg">#71C671</color>
     <color name="drag_btn_green">#71C671</color>
     <color name="drag_btn_red">#FF8D8D</color>
-    <color name="blue_text">#4152A4</color>
+    <color name="blue_text">#000000</color>
 </resources>

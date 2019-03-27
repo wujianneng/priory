@@ -1,6 +1,7 @@
 package com.pos.priory.activitys;
 
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -8,8 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pos.priory.R;
+import com.pos.priory.fragments.OrderFragment;
 import com.pos.priory.utils.ColseActivityUtils;
 import com.pos.priory.utils.LogicUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,9 +24,6 @@ import butterknife.OnClick;
  */
 
 public class ReturnBalanceActivity extends BaseActivity {
-
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
@@ -46,6 +47,8 @@ public class ReturnBalanceActivity extends BaseActivity {
     @Bind(R.id.btn_finish)
     CardView btnFinish;
     double sumMoney = 0;
+    @Bind(R.id.right_img)
+    ImageView rightImg;
 
     @Override
     protected void beForeInitViews() {
@@ -55,19 +58,19 @@ public class ReturnBalanceActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        if (Build.VERSION.SDK_INT < 19) {
-            paddingLaout.setVisibility(View.GONE);
-        }
+        rightImg.setVisibility(View.GONE);
+        titleTv.setText("結算");
         sumMoney = -1 * getIntent().getDoubleExtra("sumMoney", 0);
-        edtCasMoney.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney ));
-        moneyTv.setText((int)sumMoney + "");
+        edtCasMoney.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
+        moneyTv.setText((int) sumMoney + "");
     }
 
     @OnClick({R.id.btn_finish, R.id.back_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_finish:
-                sharedPreferences.edit().putBoolean("isRefreshOrderFragment",true).commit();
+                EventBus.getDefault().post(OrderFragment.UPDATE_ORDER_LIST);
+                EventBus.getDefault().post(MemberInfoActivity.UPDATE_ORDER_LIST);
                 ColseActivityUtils.finishWholeFuntionActivitys();
                 finish();
                 break;
@@ -78,4 +81,10 @@ public class ReturnBalanceActivity extends BaseActivity {
     }
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
     android:orientation="vertical">
 
     <View
@@ -56,10 +55,6 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
             <SurfaceView
                 android:id="@+id/preview_view"
                 android:layout_width="fill_parent"
@@ -70,7 +65,6 @@
                 android:id="@+id/viewfinder_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </RelativeLayout>
     </FrameLayout>
 
 

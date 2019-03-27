@@ -12,12 +12,12 @@ import butterknife.ButterKnife;
 
 public class DetialListActivity extends BaseActivity {
 
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
     TextView titleTv;
+    @Bind(R.id.right_img)
+    ImageView rightImg;
 
     @Override
     protected void beForeInitViews() {
@@ -27,6 +27,8 @@ public class DetialListActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
+        rightImg.setVisibility(View.GONE);
+        titleTv.setText("订货清单");
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,7 +36,6 @@ public class DetialListActivity extends BaseActivity {
             }
         });
     }
-
 
 
 }

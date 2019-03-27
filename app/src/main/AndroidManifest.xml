@@ -15,6 +15,7 @@
         android:allowBackup="true"
         android:icon="@drawable/app_logo"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@drawable/app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -34,9 +35,6 @@
         <activity
             android:name=".activitys.MainActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activitys.SettingActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activitys.EditPasswordActivity"

@@ -60,7 +60,7 @@
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
             android:text="10g"
-            android:textColor="@color/blue_text"
+            android:textColor="@color/drag_btn_green"
             android:textSize="24sp" />
 
 

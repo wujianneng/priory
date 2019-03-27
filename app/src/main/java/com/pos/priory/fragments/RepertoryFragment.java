@@ -81,11 +81,7 @@ public class RepertoryFragment extends BaseFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getActivity(), GoodDetialActivity.class);
-                String productcode = dataList.get(position).getBatch().getProduct().getProductcode() + dataList.get(position).getBatch().getBatchno();
-                intent.putExtra("productcode",productcode);
-                intent.putExtra("count",dataList.get(position).getQuantity());
-                intent.putExtra("stockId",dataList.get(position).getId());
-                intent.putExtra("name",dataList.get(position).getBatch().getProduct().getName());
+                intent.putExtra("goodbean",gson.toJson(dataList.get(position)));
                 startActivity(intent);
                 ((MainActivity)getActivity()).edtSearch.setText("");
             }

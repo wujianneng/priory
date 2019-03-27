@@ -36,8 +36,8 @@ public class OrderAdapter extends BaseQuickAdapter<OrderBean, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, OrderBean item) {
-//        helper.setGone(R.id.right_line,DateUtils.covertIso8601ToDate2(item.getCreated()).equals(DateUtils.getToday())
-//                && MyApplication.staffInfoBean.getPermission().equals("店員") ? true : false);
+        helper.setGone(R.id.right_line,DateUtils.covertIso8601ToDate2(item.getCreated()).equals(DateUtils.getToday())
+                && MyApplication.staffInfoBean.getPermission().equals("店長") ? true : false);
 
         helper.setText(R.id.detial_tv, item.getOrdernumber());
         helper.setText(R.id.date_tv,DateUtils.covertIso8601ToDate(item.getCreated()));

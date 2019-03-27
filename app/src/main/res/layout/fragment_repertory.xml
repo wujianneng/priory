@@ -27,6 +27,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="16dp"
+                    android:textStyle="bold"
                     android:text="黃金：1000件 | 3206.7克"
                     android:textColor="@color/blue_text"
                     android:textSize="15sp" />
@@ -38,6 +39,7 @@
                     android:layout_gravity="center_vertical|right"
                     android:layout_marginRight="16dp"
                     android:text="晶石：1000件"
+                    android:textStyle="bold"
                     android:textColor="@color/blue_text"
                     android:textSize="15sp" />
 

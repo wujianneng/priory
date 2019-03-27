@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.view.Gravity;
@@ -21,6 +22,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
@@ -62,9 +64,6 @@ import butterknife.OnClick;
 
 public class GoodDetialActivity extends BaseActivity {
 
-
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
@@ -82,6 +81,10 @@ public class GoodDetialActivity extends BaseActivity {
     TextView priceTv;
     @Bind(R.id.weight_tv)
     TextView weightTv;
+    @Bind(R.id.btn_dinghuo)
+    CardView btnDinghuo;
+    @Bind(R.id.good_img)
+    ImageView goodImg;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,16 +97,23 @@ public class GoodDetialActivity extends BaseActivity {
         ButterKnife.bind(this);
     }
 
+    GoodBean goodBean;
     String productcode = "";
     int slefCount = 0;
 
     @Override
     protected void initViews() {
-        String goodname = getIntent().getStringExtra("name");
-        slefCount = getIntent().getIntExtra("count", 0);
-        productcode = getIntent().getStringExtra("productcode");
+        goodBean = gson.fromJson(getIntent().getStringExtra("goodbean"), GoodBean.class);
+        String goodname = goodBean.getBatch().getProduct().getName();
+        slefCount = goodBean.getQuantity();
+        productcode = goodBean.getBatch().getProduct().getProductcode() + goodBean.getBatch().getBatchno();
         titleTv.setText(goodname);
-        repertoryTv.setText( "庫存：" + slefCount);
+        priceTv.setText("售價：" + goodBean.getBatch().getProduct().getPrice());
+        Glide.with(this).load(Constants.BASE_URL_HTTP + goodBean.getBatch().getProduct().getImage())
+                .placeholder(android.R.drawable.ic_menu_gallery)
+                .error(android.R.drawable.ic_menu_gallery)
+                .into(goodImg);
+        repertoryTv.setText("庫存：" + slefCount);
 
         smartRefreshLayout.setEnableLoadMore(false);
         smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -285,7 +295,7 @@ public class GoodDetialActivity extends BaseActivity {
                 new Okhttp3StringCallback(this, "allocateElseStock") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        allocateSelfStock(getIntent().getIntExtra("stockId", 0), stockid, changeCount);
+                        allocateSelfStock(goodBean.getId(), stockid, changeCount);
                     }
 
                     @Override
@@ -420,7 +430,7 @@ public class GoodDetialActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.back_btn,R.id.btn_dinghuo})
+    @OnClick({R.id.back_btn, R.id.btn_dinghuo})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:

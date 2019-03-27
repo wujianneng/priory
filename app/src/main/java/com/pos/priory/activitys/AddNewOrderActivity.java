@@ -4,8 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.util.Log;
@@ -21,7 +23,6 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
@@ -30,7 +31,6 @@ import com.pos.priory.beans.CreateOrderItemResultBean;
 import com.pos.priory.beans.CreateOrderResultBean;
 import com.pos.priory.beans.DiscountBean;
 import com.pos.priory.beans.GoodBean;
-import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.DateUtils;
@@ -62,8 +62,6 @@ import butterknife.OnClick;
 
 public class AddNewOrderActivity extends BaseActivity {
 
-    @Bind(R.id.padding_laout)
-    View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
@@ -81,6 +79,8 @@ public class AddNewOrderActivity extends BaseActivity {
 
     double sumMoney = 0, changeGoodsMoeny = 0;
     CreateOrderResultBean createOrderResultBean;
+    @Bind(R.id.right_img)
+    ImageView rightImg;
 
     @Override
     protected void beForeInitViews() {
@@ -91,9 +91,8 @@ public class AddNewOrderActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        if (Build.VERSION.SDK_INT < 19) {
-            paddingLaout.setVisibility(View.GONE);
-        }
+        titleTv.setText("添加商品");
+        rightImg.setVisibility(View.GONE);
         changeGoodsMoeny = getIntent().getDoubleExtra("sumMoney", 0);
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
 
@@ -103,7 +102,7 @@ public class AddNewOrderActivity extends BaseActivity {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
                 SwipeMenuItem discountItem = new SwipeMenuItem(AddNewOrderActivity.this)
-                        .setBackgroundColor(ContextCompat.getColor(AddNewOrderActivity.this,R.color.drag_btn_green))
+                        .setBackgroundColor(ContextCompat.getColor(AddNewOrderActivity.this, R.color.drag_btn_green))
                         .setImage(R.drawable.icon_control)
                         .setText("折扣")
                         .setTextColor(Color.WHITE)
@@ -129,7 +128,7 @@ public class AddNewOrderActivity extends BaseActivity {
                 int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
                 if (menuPosition == 0) {
                     showChoiceDiscountDialog(adapterPosition);
-                }else {
+                } else {
                     deleteOrderItem(adapterPosition, goodList.get(adapterPosition).getId());
                 }
             }
@@ -145,6 +144,7 @@ public class AddNewOrderActivity extends BaseActivity {
 
     List<DiscountBean> discountBeanList;
     List<String> discountNames = new ArrayList<>();
+
     private void getStoreDiscountList() {
         OkHttp3Util.doGetWithToken(Constants.GET_DISCOUNT_LIST_URL + "?location=" + MyApplication.staffInfoBean.getStore(), sharedPreferences,
                 new Okhttp3StringCallback(this, "getStoreDiscountList") {
@@ -152,12 +152,12 @@ public class AddNewOrderActivity extends BaseActivity {
                     public void onSuccess(String results) throws Exception {
                         discountBeanList = gson.fromJson(results, new TypeToken<List<DiscountBean>>() {
                         }.getType());
-                        if(discountBeanList != null){
-                            for(DiscountBean bean : discountBeanList){
+                        if (discountBeanList != null) {
+                            for (DiscountBean bean : discountBeanList) {
                                 discountNames.add(bean.getName());
                             }
                         }
-                        if(discountNames.size() == 0){
+                        if (discountNames.size() == 0) {
                             discountNames.add("無折扣");
                         }
 
@@ -186,7 +186,7 @@ public class AddNewOrderActivity extends BaseActivity {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("ordernumber", DateUtils.getCurrentOrderNumber());
         paramMap.put("member", memberid);
-        paramMap.put("location",MyApplication.staffInfoBean.getStore());
+        paramMap.put("location", MyApplication.staffInfoBean.getStore());
         OkHttp3Util.doPostWithToken(Constants.GET_ORDERS_URL + "/", gson.toJson(paramMap),
                 sharedPreferences, new Okhttp3StringCallback(this, "createOrder") {
                     @Override
@@ -254,22 +254,22 @@ public class AddNewOrderActivity extends BaseActivity {
 
     private void showChoiceDiscountDialog(final int position) {
         if (choiceSexDialog == null) {
-            if(discountNames.size() == 1 && discountNames.get(0).equals("無折扣")){
+            if (discountNames.size() == 1 && discountNames.get(0).equals("無折扣")) {
                 yourChoice = 0;
-            }else {
+            } else {
                 for (int i = 0; i < discountBeanList.size(); i++) {
                     if (goodList.get(position).getDiscountRate() == new BigDecimal(discountBeanList.get(i).getValue()).doubleValue()) {
                         yourChoice = i;
                     }
                 }
             }
-            Log.e("yourChoice","yourChoice:" + yourChoice);
+            Log.e("yourChoice", "yourChoice:" + yourChoice);
             AlertDialog.Builder singleChoiceDialog =
                     new AlertDialog.Builder(this);
             singleChoiceDialog.setTitle("請選擇折扣");
             // 第二个参数是默认选项，此处设置为0
             ListAdapter adapter = new ArrayAdapter<String>(AddNewOrderActivity.this,
-                    android.R.layout.simple_list_item_single_choice,discountNames);
+                    android.R.layout.simple_list_item_single_choice, discountNames);
             singleChoiceDialog.setSingleChoiceItems(adapter, yourChoice,
                     new DialogInterface.OnClickListener() {
                         @Override
@@ -282,10 +282,10 @@ public class AddNewOrderActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (yourChoice != -1) {
-                                if(discountNames.size() == 1 && discountNames.get(0).equals("無折扣")){
+                                if (discountNames.size() == 1 && discountNames.get(0).equals("無折扣")) {
                                     editOrderItemOnOperate(position, goodList.get(position).getId(),
-                                            goodList.get(position).getSaleCount(),1, "调折扣");
-                                }else {
+                                            goodList.get(position).getSaleCount(), 1, "调折扣");
+                                } else {
                                     editOrderItemOnOperate(position, goodList.get(position).getId(),
                                             goodList.get(position).getSaleCount(), new BigDecimal(discountBeanList.get(yourChoice).getValue()).doubleValue(), "调折扣");
                                 }
@@ -446,7 +446,7 @@ public class AddNewOrderActivity extends BaseActivity {
     private void editOrderItem(final GoodBean goodBean) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("quantity", goodBean.getSaleCount());
-        paramMap.put("discount",goodBean.getDiscountRate());
+        paramMap.put("discount", goodBean.getDiscountRate());
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + goodBean.getId()
                 + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItem") {
             @Override
@@ -478,7 +478,7 @@ public class AddNewOrderActivity extends BaseActivity {
         });
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("quantity", quantity);
-        paramMap.put("discount",discount);
+        paramMap.put("discount", discount);
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + orderitemId
                 + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItemOnOperate") {
             @Override
@@ -538,5 +538,12 @@ public class AddNewOrderActivity extends BaseActivity {
                         Toast.makeText(AddNewOrderActivity.this, "删除商品失败", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }
