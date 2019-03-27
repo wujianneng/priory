@@ -9,7 +9,7 @@
     android:layout_marginLeft="1dp"
     android:layout_marginRight="1dp"
     app:cardBackgroundColor="#fff"
-    app:cardCornerRadius="1dp"
+    app:cardCornerRadius="10dp"
     app:cardElevation="1dp"
     app:contentPadding="5dp">
 
@@ -19,7 +19,7 @@
 
         <RadioButton
             android:id="@+id/radio"
-            android:layout_marginLeft="3dp"
+            android:layout_marginLeft="8dp"
             android:layout_centerVertical="true"
             android:layout_width="wrap_content"
             android:checked="false"
@@ -27,34 +27,36 @@
 
         <ImageView
             android:id="@+id/icon_good"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_toRightOf="@+id/radio"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:src="@drawable/app_logo" />
 
         <TextView
-            android:id="@+id/code_tv"
+            android:id="@+id/name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
-            android:layout_toRightOf="@+id/icon_good"
-            android:text="888666333"
-            android:textColor="#cccccc"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/name_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/code_tv"
-            android:layout_marginLeft="10dp"
+            android:textStyle="bold"
             android:layout_toRightOf="@+id/icon_good"
             android:text="大福珠"
-            android:textColor="#333333"
-            android:textSize="17sp" />
+            android:textColor="@color/blue_text"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/code_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name_tv"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@+id/icon_good"
+            android:text="888666333"
+            android:textColor="@color/blue_text"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/price_tv"
@@ -64,80 +66,47 @@
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/icon_good"
-            android:text="$799 x 2"
-            android:textColor="#333333"
-            android:textSize="17sp" />
-
-        <TextView
-            android:id="@+id/type_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@+id/price_tv"
-            android:text="類型:黃金"
-            android:textColor="@color/colorAccent"
-            android:textSize="10sp" />
+            android:text="1克"
+            android:textColor="@color/blue_text"
+            android:textSize="12sp" />
 
         <LinearLayout
-            android:id="@+id/change_count_layout"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="25dp"
-            android:visibility="invisible"
             android:layout_alignParentRight="true"
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/origin_price_tv"
                 android:textSize="12sp"
-                android:textColor="#ccc"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"
-                android:text="操作數量(換貨/回收)"
+                android:textColor="@color/blue_text"
+                android:layout_marginTop="6dp"
+                android:text="原价： 527元"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-
-            <LinearLayout
-                android:layout_gravity="center_horizontal"
+            <TextView
+                android:id="@+id/discount_tv"
+                android:textSize="12sp"
+                android:textColor="@color/blue_text"
+                android:layout_marginTop="6dp"
+                android:text="折扣： 88折"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content" />
 
-                <ImageView
-                    android:id="@+id/decrease_btn"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:src="@drawable/icon_decrease" />
-
-
-                <TextView
-                    android:id="@+id/account_btn"
-                    android:layout_width="50dp"
-                    android:layout_height="70dp"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center"
-                    android:text="2"
-                    android:textColor="@color/login_btn_bg"
-                    android:textSize="20sp" />
-
-
-                <ImageView
-                    android:id="@+id/increase_btn"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:layout_gravity="center_vertical"
-                    android:padding="5dp"
-                    android:src="@drawable/icon_increase" />
-
-            </LinearLayout>
+            <TextView
+                android:id="@+id/discount_price_tv"
+                android:textSize="12sp"
+                android:textColor="#D0021B"
+                android:layout_marginTop="7dp"
+                android:text="折后价： 47元"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
 
         </LinearLayout>

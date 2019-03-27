@@ -24,6 +24,7 @@
             android:layout_width="60dp"
             android:layout_height="match_parent" />
 
+
         <TextView
             android:layout_marginLeft="30dp"
             android:id="@+id/btn_order_number"
@@ -32,6 +33,17 @@
             android:textSize="18sp"
             android:textColor="#cccccc"
             android:text="訂單號"
+            android:layout_width="60dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_marginLeft="30dp"
+            android:id="@+id/btn_date"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:textSize="18sp"
+            android:textColor="#cccccc"
+            android:text="日期"
             android:layout_width="60dp"
             android:layout_height="match_parent" />
 
@@ -48,6 +60,7 @@
         android:layout_weight="1">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/input_layout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginLeft="40px"
@@ -110,6 +123,60 @@
 
         </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.CardView
+            android:id="@+id/date_layout"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="40px"
+            android:layout_marginRight="40px"
+            android:layout_marginTop="1dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_marginBottom="1dp"
+            app:cardBackgroundColor="#fff"
+            app:cardCornerRadius="1dp"
+            app:cardElevation="1dp">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/date_img"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/icon_detail" />
+
+                <TextView
+                    android:id="@+id/date_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="請選擇日期"
+                    android:textColor="#4a4a4a"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/icon_right" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
         <TextView
             android:textSize="13sp"
             android:textColor="#ccc"
@@ -128,7 +195,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"></android.support.v7.widget.RecyclerView>
 
-        <android.support.v7.widget.RecyclerView
+        <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
             android:id="@+id/order_recycler_view"
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
@@ -136,7 +203,7 @@
             android:layout_marginLeft="20dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+            android:layout_weight="1"></com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView>
     </LinearLayout>
 
 

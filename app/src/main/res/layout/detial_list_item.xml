@@ -73,7 +73,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
                 android:text="1"
-                android:textColor="@color/login_btn_bg"
+                android:textColor="@color/blue_text"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 

@@ -18,6 +18,9 @@
         android:roundIcon="@drawable/app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activitys.DetialListActivity"></activity>
+        <activity android:name=".activitys.BigInventoryDetialActivity" />
+        <activity android:name=".activitys.BigInventoryActivity" />
         <activity
             android:name=".activitys.LoginActivity"
             android:label="@string/app_name"
@@ -28,9 +31,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activitys.MainActivity"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activitys.SettingActivity"
@@ -71,8 +74,9 @@
         <activity
             android:name=".activitys.ReturnBalanceActivity"
             android:windowSoftInputMode="adjustPan" />
-
-
+        <activity
+            android:name=".activitys.DayInventoryActivity"
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

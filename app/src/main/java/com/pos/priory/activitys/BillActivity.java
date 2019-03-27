@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.BillGoodsAdapter;
 import com.pos.priory.adapters.BillPrintGoodsAdapter;
@@ -79,7 +80,6 @@ public class BillActivity extends BaseActivity {
     @Bind(R.id.create_date_tv)
     TextView createDateTv;
 
-    public List<StaffInfoBean> staffInfoBeanList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,8 +97,6 @@ public class BillActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT < 19) {
             paddingLaout.setVisibility(View.GONE);
         }
-        staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY,""),
-                new TypeToken<List<StaffInfoBean>>(){}.getType());
         orderNumberTv.setText(getIntent().getStringExtra("ordernumber"));
         createDateTv.setText(DateUtils.getCurrentTime());
         moneyTv.setText(getIntent().getDoubleExtra("sumMoney", 0) + "");
@@ -119,7 +117,7 @@ public class BillActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_print:
                 previewDialog = showPreviewDialog(this, goodList, orderNumberTv.getText().toString(), getIntent().getStringExtra("memberName"),
-                        createDateTv.getText().toString(), getIntent().getDoubleExtra("sumMoney", 0),staffInfoBeanList.get(0).getStore());
+                        createDateTv.getText().toString(), getIntent().getDoubleExtra("sumMoney", 0), MyApplication.staffInfoBean.getStore());
                 break;
             case R.id.back_btn:
                 onBackPressed();

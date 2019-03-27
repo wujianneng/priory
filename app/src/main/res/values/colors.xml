@@ -2,8 +2,9 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FFC0CB</color>
-    <color name="login_btn_bg">#228B22</color>
+    <color name="colorAccent">#FF8D8D</color>
+    <color name="login_btn_bg">#71C671</color>
     <color name="drag_btn_green">#71C671</color>
-    <color name="drag_btn_red">#EE5C42</color>
+    <color name="drag_btn_red">#FF8D8D</color>
+    <color name="blue_text">#4152A4</color>
 </resources>

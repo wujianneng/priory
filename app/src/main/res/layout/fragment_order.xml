@@ -5,43 +5,157 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
-        android:id="@+id/gold_price_layout"
-        android:background="#80000000"
-        android:layout_width="match_parent"
-        android:layout_height="30dp">
-
-        <TextView
-            android:textColor="#fff"
-            android:textSize="15sp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="16dp"
-            android:id="@+id/gold_price_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
-
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/srf_lay"
-        android:layout_below="@+id/gold_price_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/gold_price_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:elevation="3dp"
+                android:orientation="vertical"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+
+                <FrameLayout
+                    android:id="@+id/row1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/row1_tv1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="16dp"
+                        android:textStyle="bold"
+                        android:textColor="#DB2D43"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/row1_tv2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|right"
+                        android:layout_marginRight="16dp"
+                        android:textColor="@color/blue_text"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/row2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/row2_tv1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="16dp"
+                        android:textColor="@color/blue_text"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/row2_tv2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|right"
+                        android:layout_marginRight="16dp"
+                        android:textColor="@color/blue_text"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/row3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/row3_tv1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="16dp"
+                        android:textColor="@color/blue_text"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/row3_tv2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|right"
+                        android:layout_marginRight="16dp"
+                        android:textColor="@color/blue_text"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/row4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/row4_tv1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="16dp"
+                        android:textColor="@color/blue_text"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/row4_tv2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical|right"
+                        android:layout_marginRight="16dp"
+                        android:textColor="@color/blue_text"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+
+                </FrameLayout>
+
+
+            </LinearLayout>
+
+
+            <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"></com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView>
+        </LinearLayout>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
         android:clickable="true"
         android:src="@drawable/add"

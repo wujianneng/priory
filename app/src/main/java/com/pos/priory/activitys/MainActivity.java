@@ -3,11 +3,12 @@ package com.pos.priory.activitys;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.PopupMenu;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -17,18 +18,18 @@ import android.widget.TextView;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.google.gson.reflect.TypeToken;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.beans.StaffInfoBean;
-import com.pos.priory.fragments.DetialListFragment;
+import com.pos.priory.fragments.DatasFragment;
 import com.pos.priory.fragments.InventoryFragment;
 import com.pos.priory.fragments.OrderFragment;
 import com.pos.priory.fragments.QueryFragment;
 import com.pos.priory.fragments.RepertoryFragment;
+import com.pos.priory.utils.ColseActivityUtils;
 import com.pos.priory.utils.Constants;
-import com.pos.priory.utils.LogicUtils;
 import com.pos.zxinglib.MipcaActivityCapture;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -40,7 +41,7 @@ public class MainActivity extends BaseActivity {
     QueryFragment queryFragment;
     RepertoryFragment repertoryFragment;
     InventoryFragment inventoryFragment;
-    DetialListFragment detialListFragment;
+    DatasFragment datasFragment;
 
 
     @Bind(R.id.title_tv)
@@ -64,7 +65,6 @@ public class MainActivity extends BaseActivity {
     @Bind(R.id.btn_clear)
     ImageView btnClear;
 
-    public List<StaffInfoBean> staffInfoBeanList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +86,9 @@ public class MainActivity extends BaseActivity {
             paddingLaout.setVisibility(View.GONE);
         }
 
-        staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY,""),
+        List<StaffInfoBean> staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY,""),
                 new TypeToken<List<StaffInfoBean>>(){}.getType());
+        MyApplication.staffInfoBean = staffInfoBeanList.get(0);
 
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -110,29 +111,20 @@ public class MainActivity extends BaseActivity {
 
         navigation.setMode(BottomNavigationBar.MODE_FIXED);
         navigation.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
-        if(staffInfoBeanList != null && staffInfoBeanList.size() != 0 && staffInfoBeanList.get(0).getPermission().equals("店長")) {
-            Log.e("permission","permission:" + staffInfoBeanList.get(0).getPermission());
-            navigation.addItem(new BottomNavigationItem(R.drawable.tab_order, "訂單"))
+
+        navigation.addItem(new BottomNavigationItem(R.drawable.tab_order, "訂單"))
                     .addItem(new BottomNavigationItem(R.drawable.tab_query, "查單"))
                     .addItem(new BottomNavigationItem(R.drawable.tab_repertory, "倉庫"))
                     .addItem(new BottomNavigationItem(R.drawable.tab_inventory, "盤點"))
-                    .addItem(new BottomNavigationItem(R.drawable.tab_detiallist, "清單"))
+                    .addItem(new BottomNavigationItem(R.drawable.data, "數據"))
                     .setFirstSelectedPosition(0)
                     .initialise();
-        }else {
-            navigation.addItem(new BottomNavigationItem(R.drawable.tab_order, "訂單"))
-                    .addItem(new BottomNavigationItem(R.drawable.tab_query, "查單"))
-                    .addItem(new BottomNavigationItem(R.drawable.tab_repertory, "倉庫"))
-                    .addItem(new BottomNavigationItem(R.drawable.tab_inventory, "盤點"))
-                    .setFirstSelectedPosition(0)
-                    .initialise();
-        }
         navigation.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position) {
                 switch (position) {
                     case 0:
-                        titleTv.setText("訂單");
+                        titleTv.setText("訂 單");
                         settingImg.setVisibility(View.VISIBLE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
@@ -148,11 +140,11 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(repertoryFragment).commit();
                         if (inventoryFragment != null && !inventoryFragment.isHidden())
                             getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
-                        if (detialListFragment != null && !detialListFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(detialListFragment).commit();
+                        if (datasFragment != null && !datasFragment.isHidden())
+                            getSupportFragmentManager().beginTransaction().hide(datasFragment).commit();
                         break;
                     case 1:
-                        titleTv.setText("查單");
+                        titleTv.setText("查 單");
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
@@ -168,12 +160,12 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(repertoryFragment).commit();
                         if (inventoryFragment != null && !inventoryFragment.isHidden())
                             getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
-                        if (detialListFragment != null && !detialListFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(detialListFragment).commit();
-                        queryFragment.showKeyBord();
+                        if (datasFragment != null && !datasFragment.isHidden())
+                            getSupportFragmentManager().beginTransaction().hide(datasFragment).commit();
+//                        queryFragment.showKeyBord();
                         break;
                     case 2:
-                        titleTv.setText("倉庫");
+                        titleTv.setText("倉 庫");
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.VISIBLE);
                         repertorySearchLayout.setVisibility(View.VISIBLE);
@@ -189,11 +181,11 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(orderFragment).commit();
                         if (inventoryFragment != null && !inventoryFragment.isHidden())
                             getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
-                        if (detialListFragment != null && !detialListFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(detialListFragment).commit();
+                        if (datasFragment != null && !datasFragment.isHidden())
+                            getSupportFragmentManager().beginTransaction().hide(datasFragment).commit();
                         break;
                     case 3:
-                        titleTv.setText("盤點");
+                        titleTv.setText("盤 點");
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
@@ -209,19 +201,19 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(repertoryFragment).commit();
                         if (orderFragment != null && !orderFragment.isHidden())
                             getSupportFragmentManager().beginTransaction().hide(orderFragment).commit();
-                        if (detialListFragment != null && !detialListFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(detialListFragment).commit();
+                        if (datasFragment != null && !datasFragment.isHidden())
+                            getSupportFragmentManager().beginTransaction().hide(datasFragment).commit();
                         break;
                     case 4:
-                        titleTv.setText("訂貨清單");
+                        titleTv.setText("數 據");
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
-                        if (detialListFragment == null) {
-                            detialListFragment = new DetialListFragment();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_layout, detialListFragment).commit();
+                        if (datasFragment == null) {
+                            datasFragment = new DatasFragment();
+                            getSupportFragmentManager().beginTransaction().add(R.id.container_layout, datasFragment).commit();
                         } else {
-                            getSupportFragmentManager().beginTransaction().show(detialListFragment).commit();
+                            getSupportFragmentManager().beginTransaction().show(datasFragment).commit();
                         }
                         if (queryFragment != null && !queryFragment.isHidden())
                             getSupportFragmentManager().beginTransaction().hide(queryFragment).commit();
@@ -231,10 +223,6 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(orderFragment).commit();
                         if (inventoryFragment != null && !inventoryFragment.isHidden())
                             getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
-                        if(sharedPreferences.getBoolean(Constants.IS_REFRESH_DETIALLISTFRAGMENT,false) && detialListFragment.refreshLayout != null) {
-                            detialListFragment.refreshLayout.autoRefresh();
-                            sharedPreferences.edit().putBoolean(Constants.IS_REFRESH_DETIALLISTFRAGMENT,false).commit();
-                        }
                         break;
                 }
             }
@@ -252,11 +240,19 @@ public class MainActivity extends BaseActivity {
         navigation.selectTab(0);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
+    }
+
     @OnClick({R.id.setting_img, R.id.scan_img, R.id.btn_clear})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.setting_img:
-                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+                showMainMenu();
                 break;
             case R.id.scan_img:
                 startActivityForResult(new Intent(MainActivity.this, MipcaActivityCapture.class), 1000);
@@ -265,6 +261,35 @@ public class MainActivity extends BaseActivity {
                 edtSearch.setText("");
                 break;
         }
+    }
+
+    private void showMainMenu() {
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(MainActivity.this, settingImg);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.main_menu, popupMenu.getMenu());
+        popupMenu.show();
+        // 通过上面这几行代码，就可以把控件显示出来了
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // 控件每一个item的点击事件
+                switch (item.getItemId()){
+                    case R.id.menu0:
+                        break;
+                    case R.id.menu1:
+                        break;
+                    case R.id.menu2:
+                        startActivity(new Intent(MainActivity.this,EditPasswordActivity.class));
+                        break;
+                    case R.id.menu3:
+                        ColseActivityUtils.closeAllAcitivty();
+                        startActivity(new Intent(MainActivity.this,LoginActivity.class));
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override

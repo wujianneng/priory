@@ -23,17 +23,11 @@ public class QueryOrderAdapter extends BaseQuickAdapter<OrderBean,BaseViewHolder
 
     @Override
     protected void convert(BaseViewHolder helper, OrderBean item) {
-        if(item.getStatus().equals("draft")){
-            helper.setImageResource(R.id.check_img,R.drawable.icon_cilck);
-        }else if(item.getStatus().equals("completed")){
-            helper.setImageResource(R.id.check_img,R.drawable.icon_cilck_h);
-        }else if(item.getStatus().equals("cancelled")) {
-            helper.setImageResource(R.id.check_img,R.drawable.icon_click_red);
-        }else {
-            helper.setImageResource(R.id.check_img,R.drawable.icon_click_orige);
-        }
+
         helper.setText(R.id.detial_tv, item.getOrdernumber());
         helper.setText(R.id.date_tv,DateUtils.covertIso8601ToDate(item.getCreated()));
         helper.setText(R.id.money_tv, "$" + item.getTotalprice());
+        helper.setText(R.id.name_tv,item.getMember().getLast_name() + item.getMember().getFirst_name());
+        helper.setImageResource(R.id.sex_img,item.getMember().getSex().equals("男") ? R.drawable.icon_boy : R.drawable.icon_girl);
     }
 }

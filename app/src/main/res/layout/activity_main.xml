@@ -36,9 +36,9 @@
             android:layout_height="30dp"
             android:layout_gravity="right|center_vertical"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="15dp"
             android:padding="5dp"
-            android:src="@drawable/setting" />
+            android:src="@drawable/more" />
 
         <ImageView
             android:id="@+id/scan_img"
@@ -46,7 +46,7 @@
             android:layout_height="30dp"
             android:layout_gravity="right|center_vertical"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="15dp"
             android:padding="5dp"
             android:src="@drawable/scan"
             android:visibility="gone" />

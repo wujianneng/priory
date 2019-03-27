@@ -39,10 +39,6 @@ public class OrderDetialGoodsAdapter extends BaseQuickAdapter<OrderItemBean, Bas
                 .into((ImageView) helper.getView(R.id.icon_good));
         helper.setText(R.id.code_tv,item.getStock().getBatch().getProduct().getProductcode() + item.getStock().getBatch().getBatchno());
         helper.setText(R.id.name_tv,item.getStock().getBatch().getProduct().getName());
-        helper.setText(R.id.price_tv,"$" + item.getPrice() + "x" +
-                item.getQuantity());
-        helper.setText(R.id.type_tv,"類型:" + item.getStock().getBatch().getProduct().getCatalog());
-        helper.setText(R.id.account_btn,item.getOprateCount() + "");
         RadioButton radioButton = helper.getView(R.id.radio);
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,13 +53,9 @@ public class OrderDetialGoodsAdapter extends BaseQuickAdapter<OrderItemBean, Bas
         });
         if(item.isSelected()) {
             radioButton.setChecked(true);
-            helper.setVisible(R.id.change_count_layout,true);
         }else {
             radioButton.setChecked(false);
-            helper.setVisible(R.id.change_count_layout,false);
         }
         helper.setVisible(R.id.radio,item.getStock().getBatch().getProduct().isReturnable() && item.getQuantity() > 0 ? true : false);
-        helper.addOnClickListener(R.id.decrease_btn)
-                .addOnClickListener(R.id.increase_btn);
     }
 }

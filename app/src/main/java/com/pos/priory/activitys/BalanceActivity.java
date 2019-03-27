@@ -3,6 +3,7 @@ package com.pos.priory.activitys;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,15 +35,13 @@ import butterknife.OnClick;
 
 public class BalanceActivity extends BaseActivity {
 
-    double sumMoney = 0, hasPayedCardMoney = 0, hasPayedCashMoney = 0, needPayMoney = 0;
+    double sumMoney = 0, hasPayedCardMoney = 0, hasPayedCashMoney = 0, hasPayedCouponMoney = 0, hasPayedAlipayMoney = 0, hasPayedWechatMoney = 0, hasPayedIntegralMoney = 300, needPayMoney = 0;
     @Bind(R.id.padding_laout)
     View paddingLaout;
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
     TextView titleTv;
-    @Bind(R.id.money_unit_tv)
-    TextView moneyUnitTv;
     @Bind(R.id.money_tv)
     TextView moneyTv;
     @Bind(R.id.need_money_tv)
@@ -51,20 +50,42 @@ public class BalanceActivity extends BaseActivity {
     CheckBox radioBtnCard;
     @Bind(R.id.edt_card_money)
     EditText edtCardMoney;
-    @Bind(R.id.card_input_layout)
-    CardView cardInputLayout;
     @Bind(R.id.radio_btn_cash)
     CheckBox radioBtnCash;
     @Bind(R.id.edt_cash_money)
     EditText edtCashMoney;
-    @Bind(R.id.cash_input_layout)
-    CardView cashInputLayout;
     @Bind(R.id.icon)
     ImageView icon;
     @Bind(R.id.text)
     TextView text;
     @Bind(R.id.btn_finish)
     CardView btnFinish;
+    @Bind(R.id.count_tv)
+    TextView countTv;
+    @Bind(R.id.member_name_tv)
+    TextView memberNameTv;
+    @Bind(R.id.member_phone_tv)
+    TextView memberPhoneTv;
+    @Bind(R.id.order_number_tv)
+    TextView orderNumberTv;
+    @Bind(R.id.data_layout)
+    CardView dataLayout;
+    @Bind(R.id.radio_btn_coupon)
+    CheckBox radioBtnCoupon;
+    @Bind(R.id.edt_coupon_money)
+    EditText edtCouponMoney;
+    @Bind(R.id.radio_btn_alipay)
+    CheckBox radioBtnAlipay;
+    @Bind(R.id.edt_alipay_money)
+    EditText edtAlipayMoney;
+    @Bind(R.id.radio_btn_wechat)
+    CheckBox radioBtnWechat;
+    @Bind(R.id.edt_wechat_money)
+    EditText edtWechatMoney;
+    @Bind(R.id.radio_btn_integral)
+    CheckBox radioBtnIntegral;
+    @Bind(R.id.integral_tv)
+    TextView integralTv;
 
 
     @Override
@@ -88,31 +109,83 @@ public class BalanceActivity extends BaseActivity {
             public void onClick(View view) {
                 if (radioBtnCard.isChecked()) {
                     radioBtnCard.setChecked(true);
-                    radioBtnCash.setChecked(false);
-                    cardInputLayout.setVisibility(View.VISIBLE);
-                    cashInputLayout.setVisibility(View.INVISIBLE);
+                    edtCardMoney.setVisibility(View.VISIBLE);
                 } else {
                     radioBtnCard.setChecked(false);
-                    radioBtnCash.setChecked(true);
-                    cardInputLayout.setVisibility(View.INVISIBLE);
-                    cashInputLayout.setVisibility(View.VISIBLE);
+                    edtCardMoney.setVisibility(View.GONE);
                 }
+                needPayMoney = sumMoney - getSumHasPayMoney();
+                needMoneyTv.setText("剩餘：" + needPayMoney);
             }
         });
         radioBtnCash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (radioBtnCash.isChecked()) {
-                    radioBtnCard.setChecked(false);
                     radioBtnCash.setChecked(true);
-                    cardInputLayout.setVisibility(View.INVISIBLE);
-                    cashInputLayout.setVisibility(View.VISIBLE);
+                    edtCashMoney.setVisibility(View.VISIBLE);
                 } else {
-                    radioBtnCard.setChecked(true);
                     radioBtnCash.setChecked(false);
-                    cardInputLayout.setVisibility(View.VISIBLE);
-                    cashInputLayout.setVisibility(View.INVISIBLE);
+                    edtCashMoney.setVisibility(View.GONE);
                 }
+                needPayMoney = sumMoney - getSumHasPayMoney();
+                needMoneyTv.setText("剩餘：" + needPayMoney);
+            }
+        });
+        radioBtnCoupon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (radioBtnCoupon.isChecked()) {
+                    radioBtnCoupon.setChecked(true);
+                    edtCouponMoney.setVisibility(View.VISIBLE);
+                } else {
+                    radioBtnCoupon.setChecked(false);
+                    edtCouponMoney.setVisibility(View.GONE);
+                }
+                needPayMoney = sumMoney - getSumHasPayMoney();
+                needMoneyTv.setText("剩餘：" + needPayMoney);
+            }
+        });
+        radioBtnAlipay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (radioBtnAlipay.isChecked()) {
+                    radioBtnAlipay.setChecked(true);
+                    edtAlipayMoney.setVisibility(View.VISIBLE);
+                } else {
+                    radioBtnAlipay.setChecked(false);
+                    edtAlipayMoney.setVisibility(View.GONE);
+                }
+                needPayMoney = sumMoney - getSumHasPayMoney();
+                needMoneyTv.setText("剩餘：" + needPayMoney);
+            }
+        });
+        radioBtnWechat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (radioBtnWechat.isChecked()) {
+                    radioBtnWechat.setChecked(true);
+                    edtWechatMoney.setVisibility(View.VISIBLE);
+                } else {
+                    radioBtnWechat.setChecked(false);
+                    edtWechatMoney.setVisibility(View.GONE);
+                }
+                needPayMoney = sumMoney - getSumHasPayMoney();
+                needMoneyTv.setText("剩餘：" + needPayMoney);
+            }
+        });
+        radioBtnIntegral.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (radioBtnIntegral.isChecked()) {
+                    radioBtnIntegral.setChecked(true);
+                    integralTv.setVisibility(View.VISIBLE);
+                } else {
+                    radioBtnIntegral.setChecked(false);
+                    integralTv.setVisibility(View.GONE);
+                }
+                needPayMoney = sumMoney - getSumHasPayMoney();
+                needMoneyTv.setText("剩餘：" + needPayMoney);
             }
         });
 
@@ -128,10 +201,8 @@ public class BalanceActivity extends BaseActivity {
                     hasPayedCardMoney = 0;
                 else
                     hasPayedCardMoney = Double.parseDouble(charSequence.toString());
-                if (radioBtnCard.isChecked()) {
-                    needPayMoney = sumMoney - hasPayedCardMoney;
-                    needMoneyTv.setText("餘額 $" + needPayMoney);
-                }
+                needPayMoney = sumMoney - getSumHasPayMoney();
+                needMoneyTv.setText("剩餘：" + needPayMoney);
             }
 
             @Override
@@ -151,10 +222,8 @@ public class BalanceActivity extends BaseActivity {
                     hasPayedCashMoney = 0;
                 else
                     hasPayedCashMoney = Double.parseDouble(charSequence.toString());
-                if (radioBtnCash.isChecked()) {
-                    needPayMoney = sumMoney - hasPayedCashMoney;
-                    needMoneyTv.setText("餘額 $" + needPayMoney);
-                }
+                needPayMoney = sumMoney - getSumHasPayMoney();
+                needMoneyTv.setText("剩餘：" + needPayMoney);
             }
 
             @Override
@@ -162,6 +231,87 @@ public class BalanceActivity extends BaseActivity {
 
             }
         });
+        edtCouponMoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().equals(""))
+                    hasPayedCouponMoney = 0;
+                else
+                    hasPayedCouponMoney = Double.parseDouble(charSequence.toString());
+                needPayMoney = sumMoney - getSumHasPayMoney();
+                needMoneyTv.setText("剩餘：" + needPayMoney);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        edtAlipayMoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().equals(""))
+                    hasPayedAlipayMoney = 0;
+                else
+                    hasPayedAlipayMoney = Double.parseDouble(charSequence.toString());
+                needPayMoney = sumMoney - getSumHasPayMoney();
+                needMoneyTv.setText("剩餘：" + needPayMoney);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+        edtWechatMoney.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().equals(""))
+                    hasPayedWechatMoney = 0;
+                else
+                    hasPayedWechatMoney = Double.parseDouble(charSequence.toString());
+                needPayMoney = sumMoney - getSumHasPayMoney();
+                needMoneyTv.setText("剩餘：" + needPayMoney);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+    }
+
+    public double getSumHasPayMoney() {
+        double money = 0;
+        if (radioBtnCard.isChecked())
+            money += hasPayedCardMoney;
+        if (radioBtnCash.isChecked())
+            money += hasPayedCashMoney;
+        if (radioBtnCoupon.isChecked())
+            money += hasPayedCouponMoney;
+        if (radioBtnAlipay.isChecked())
+            money += hasPayedAlipayMoney;
+        if (radioBtnWechat.isChecked())
+            money += hasPayedWechatMoney;
+        if (radioBtnIntegral.isChecked())
+            money += hasPayedIntegralMoney;
+        return money;
     }
 
     @OnClick({R.id.btn_finish, R.id.back_btn})
@@ -169,7 +319,7 @@ public class BalanceActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_finish:
                 if (needPayMoney > 0) {
-                    Toast.makeText(BalanceActivity.this, "还需付" + needPayMoney , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BalanceActivity.this, "还需付" + needPayMoney, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 invoice();
@@ -226,8 +376,8 @@ public class BalanceActivity extends BaseActivity {
                         intent.putExtra("sumMoney", getIntent().getDoubleExtra("newOrderSumMoney", 0));
                         intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
                         intent.putExtra("receiveMoney", sumMoney);
-                        intent.putExtra("returnMoney",needPayMoney * -1);
-                        intent.putExtra("ordernumber",getIntent().getStringExtra("ordernumber"));
+                        intent.putExtra("returnMoney", needPayMoney * -1);
+                        intent.putExtra("ordernumber", getIntent().getStringExtra("ordernumber"));
                         startActivity(intent);
                         ColseActivityUtils.finishWholeFuntionActivitys();
                         finish();
@@ -278,4 +428,10 @@ public class BalanceActivity extends BaseActivity {
     }
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

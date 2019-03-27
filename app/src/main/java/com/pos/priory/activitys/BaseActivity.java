@@ -10,9 +10,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.google.gson.Gson;
-import com.pos.priory.R;
 import com.pos.priory.utils.ColseActivityUtils;
-import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.pos.zxinglib.utils.SystemBarTintManager;
 
 /**
  * Created by Lenovo on 2018/12/29.

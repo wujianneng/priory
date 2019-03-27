@@ -26,7 +26,7 @@ public class OrderItemBean {
     private String weight = "";
     boolean isSelected = false;
     private int returnStockId = -1;
-    private int oprateCount = 0;
+    private int oprateCount = 1;
 
     public String getWeight() {
         return weight;

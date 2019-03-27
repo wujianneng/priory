@@ -65,7 +65,7 @@ public class DateUtils {
      */
     public static boolean isDateOneBigger(String str1, String str2) {
         boolean isBigger = false;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         Date dt1 = null;
         Date dt2 = null;
         try {
@@ -90,7 +90,7 @@ public class DateUtils {
     public static Long convertTimeToLong(String time) {
         Date date = null;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             date = sdf.parse(time);
             return date.getTime();
         } catch (Exception e) {
@@ -103,7 +103,20 @@ public class DateUtils {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         try {
             Date date = formatter.parse(isotime);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            String sDate = sdf.format(date);
+            return sDate;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static String covertIso8601ToDate2(String isotime) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        try {
+            Date date = formatter.parse(isotime);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
             String sDate = sdf.format(date);
             return sDate;
         } catch (Exception e) {
@@ -113,7 +126,7 @@ public class DateUtils {
     }
 
     public static String getTomorrowDay(String today) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         Calendar calendar = Calendar.getInstance();//获取日历实例
         try {
             calendar.setTime(sdf.parse(today));
@@ -142,13 +155,13 @@ public class DateUtils {
         calendar.add(Calendar.DATE, -1);
         Date d = calendar.getTime();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return simpleDateFormat.format(d);// 获取昨天日期
 
     }
 
     public static String getLastMonthFirstDay() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -1);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -156,7 +169,7 @@ public class DateUtils {
     }
 
     public static String getLastMonthLastDay() {
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy/MM/dd");
         Calendar calendar = Calendar.getInstance();
         int month = calendar.get(Calendar.MONTH);
         calendar.set(Calendar.MONTH, month - 1);
@@ -165,7 +178,7 @@ public class DateUtils {
     }
 
     public static String getThisMonthFirstDay() {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         Calendar cale = null;
         cale = Calendar.getInstance();
         cale.add(Calendar.MONTH, 0);
@@ -188,7 +201,7 @@ public class DateUtils {
         // 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
         cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
         cal.add(Calendar.DATE, -7);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return simpleDateFormat.format(cal.getTime());
     }
 
@@ -207,7 +220,7 @@ public class DateUtils {
         // 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
         cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
         cal.add(Calendar.DATE, -1);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return simpleDateFormat.format(cal.getTime());
     }
 
@@ -225,7 +238,7 @@ public class DateUtils {
         int day = cal.get(Calendar.DAY_OF_WEEK);
         // 根据日历的规则，给当前日期减去星期几与一个星期第一天的差值
         cal.add(Calendar.DATE, cal.getFirstDayOfWeek() - day);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return simpleDateFormat.format(cal.getTime());
     }
 
@@ -237,7 +250,7 @@ public class DateUtils {
         calendar.add(Calendar.DATE, day);
         Date d = calendar.getTime();
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return simpleDateFormat.format(d);
 
     }
@@ -262,7 +275,7 @@ public class DateUtils {
      */
     public static int daysBetween(String smdate, String bdate) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
             Calendar cal = Calendar.getInstance();
             cal.setTime(sdf.parse(smdate));
             long time1 = cal.getTimeInMillis();
@@ -280,7 +293,7 @@ public class DateUtils {
      */
     public static List<String> getSpecifyDates(int endDate) {
         List<String> dates = new ArrayList<String>();
-        String pattern = "yyyy-MM-dd";
+        String pattern = "yyyy/MM/dd";
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
 
         Date today = new Date(); // 以当前
@@ -306,7 +319,7 @@ public class DateUtils {
      * @return
      */
     public static String getDateTimeFromMillisecond(Long millisecond) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date(millisecond);
         String dateStr = simpleDateFormat.format(date);
         return dateStr;
@@ -416,7 +429,7 @@ public class DateUtils {
      */
 
     public static String getCurrentTime() {
-        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         String result = mSimpleDateFormat.format(new Date());
         return result;
     }

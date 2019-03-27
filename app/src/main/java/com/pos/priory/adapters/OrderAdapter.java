@@ -2,9 +2,11 @@ package com.pos.priory.adapters;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.utils.DateUtils;
@@ -16,24 +18,31 @@ import java.util.List;
  */
 
 public class OrderAdapter extends BaseQuickAdapter<OrderBean, BaseViewHolder> {
+    List<OrderBean> data;
+
 
     public OrderAdapter(@LayoutRes int layoutResId, @Nullable List<OrderBean> data) {
         super(layoutResId, data);
+        this.data = data;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(DateUtils.covertIso8601ToDate2(data.get(position).getCreated()).equals(DateUtils.getToday()))
+            return 0;
+        else
+            return 1;
     }
 
     @Override
     protected void convert(BaseViewHolder helper, OrderBean item) {
-        if(item.getStatus().equals("未完成")){
-            helper.setImageResource(R.id.check_img,R.drawable.icon_cilck);
-        }else if(item.getStatus().equals("已完成")){
-            helper.setImageResource(R.id.check_img,R.drawable.icon_cilck_h);
-        }else if(item.getStatus().equals("已取消")) {
-            helper.setImageResource(R.id.check_img,R.drawable.icon_click_red);
-        }else {
-            helper.setImageResource(R.id.check_img,R.drawable.icon_click_orige);
-        }
+//        helper.setGone(R.id.right_line,DateUtils.covertIso8601ToDate2(item.getCreated()).equals(DateUtils.getToday())
+//                && MyApplication.staffInfoBean.getPermission().equals("店員") ? true : false);
+
         helper.setText(R.id.detial_tv, item.getOrdernumber());
         helper.setText(R.id.date_tv,DateUtils.covertIso8601ToDate(item.getCreated()));
         helper.setText(R.id.money_tv, "$" + item.getTotalprice());
+        helper.setText(R.id.name_tv,item.getMember().getLast_name() + item.getMember().getFirst_name());
+        helper.setImageResource(R.id.sex_img,item.getMember().getSex().equals("男") ? R.drawable.icon_boy : R.drawable.icon_girl);
     }
 }

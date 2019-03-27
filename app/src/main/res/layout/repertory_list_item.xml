@@ -21,74 +21,55 @@
 
         <ImageView
             android:id="@+id/icon_good"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp" />
+
+
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@+id/icon_good"
+            android:text="大福珠"
+            android:textColor="#333333"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/code_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_below="@+id/name_tv"
             android:layout_toRightOf="@+id/icon_good"
-            android:text=""
-            android:textColor="#cccccc"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/name_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_toRightOf="@+id/icon_good"
-            android:text="大福珠"
+            android:text="1023"
             android:textColor="#333333"
             android:textSize="20sp" />
 
-        <View
-            android:id="@+id/line"
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
+        <TextView
+            android:id="@+id/count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="50dp"
+            android:layout_alignParentRight="true"
+            android:text="10"
+            android:textColor="@color/blue_text"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:layout_height="15dp"
+            android:layout_width="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginRight="70dp"
-            android:layout_marginTop="20dp"
-            android:background="#cccccc" />
+            android:layout_marginRight="15dp"
+            android:src="@drawable/icon_right" />
 
-        <FrameLayout
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true">
 
-            <TextView
-                android:id="@+id/count_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:text="1"
-                android:textColor="@color/login_btn_bg"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/repertory_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginBottom="10dp"
-                android:text="庫存"
-                android:textColor="#cccccc"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-        </FrameLayout>
 
     </RelativeLayout>
 

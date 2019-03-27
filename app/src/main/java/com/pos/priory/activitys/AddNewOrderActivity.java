@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.AddNewOrderGoodsAdapter;
 import com.pos.priory.beans.CreateOrderItemResultBean;
@@ -66,8 +67,6 @@ public class AddNewOrderActivity extends BaseActivity {
     ImageView backBtn;
     @Bind(R.id.title_tv)
     TextView titleTv;
-    @Bind(R.id.money_unit_tv)
-    TextView moneyUnitTv;
     @Bind(R.id.money_tv)
     TextView moneyTv;
     @Bind(R.id.good_recycler_view)
@@ -78,7 +77,6 @@ public class AddNewOrderActivity extends BaseActivity {
 
 
     int memberid;
-    public List<StaffInfoBean> staffInfoBeanList;
 
     double sumMoney = 0, changeGoodsMoeny = 0;
     CreateOrderResultBean createOrderResultBean;
@@ -99,34 +97,18 @@ public class AddNewOrderActivity extends BaseActivity {
         moneyTv.setText("" + (sumMoney + changeGoodsMoeny));
 
         goodsAdapter = new AddNewOrderGoodsAdapter(this, R.layout.add_new_order_good_list_item, goodList);
-        goodsAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                switch (view.getId()) {
-                    case R.id.btn_change_price:
-                        showChoiceDiscountDialog(position);
-                        break;
-                    case R.id.decrease_btn:
-                        if (goodList.get(position).getSaleCount() > 1) {
-                            editOrderItemOnOperate(position, goodList.get(position).getId(), goodList.get(position).getSaleCount() - 1,
-                                    goodList.get(position).getDiscountRate(), "减数量");
-                        }
-                        break;
-                    case R.id.increase_btn:
-                        if (goodList.get(position).getSaleCount() < goodList.get(position).getQuantity()) {
-                            editOrderItemOnOperate(position, goodList.get(position).getId(), goodList.get(position).getSaleCount() + 1,
-                                    goodList.get(position).getDiscountRate(), "加数量");
-                        } else {
-                            Toast.makeText(AddNewOrderActivity.this, "出售数量已经等于库存量", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                }
-            }
-        });
         //设置侧滑菜单
         goodRecyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
+                SwipeMenuItem discountItem = new SwipeMenuItem(AddNewOrderActivity.this)
+                        .setBackgroundColor(ContextCompat.getColor(AddNewOrderActivity.this,R.color.drag_btn_green))
+                        .setImage(R.drawable.icon_control)
+                        .setText("折扣")
+                        .setTextColor(Color.WHITE)
+                        .setHeight(DeviceUtil.dip2px(AddNewOrderActivity.this, 91))//设置高，这里使用match_parent，就是与item的高相同
+                        .setWidth(DeviceUtil.dip2px(AddNewOrderActivity.this, 100));//设置宽
+                swipeRightMenu.addMenuItem(discountItem);//设置右边的侧滑
                 SwipeMenuItem deleteItem = new SwipeMenuItem(AddNewOrderActivity.this)
                         .setBackgroundColor(ContextCompat.getColor(AddNewOrderActivity.this, R.color.drag_btn_red))
                         .setImage(R.drawable.icon_delete)
@@ -145,6 +127,8 @@ public class AddNewOrderActivity extends BaseActivity {
                 int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
                 int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
                 if (menuPosition == 0) {
+                    showChoiceDiscountDialog(adapterPosition);
+                }else {
                     deleteOrderItem(adapterPosition, goodList.get(adapterPosition).getId());
                 }
             }
@@ -154,9 +138,6 @@ public class AddNewOrderActivity extends BaseActivity {
         goodRecyclerView.setLayoutManager(mLayoutManager);
         goodRecyclerView.setAdapter(goodsAdapter);
         memberid = getIntent().getIntExtra("memberId", 0);
-        staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY, ""),
-                new TypeToken<List<StaffInfoBean>>() {
-                }.getType());
         createNewOrder();
         getStoreDiscountList();
     }
@@ -164,7 +145,7 @@ public class AddNewOrderActivity extends BaseActivity {
     List<DiscountBean> discountBeanList;
     List<String> discountNames = new ArrayList<>();
     private void getStoreDiscountList() {
-        OkHttp3Util.doGetWithToken(Constants.GET_DISCOUNT_LIST_URL + "?location=" + staffInfoBeanList.get(0).getStore(), sharedPreferences,
+        OkHttp3Util.doGetWithToken(Constants.GET_DISCOUNT_LIST_URL + "?location=" + MyApplication.staffInfoBean.getStore(), sharedPreferences,
                 new Okhttp3StringCallback(this, "getStoreDiscountList") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -204,7 +185,7 @@ public class AddNewOrderActivity extends BaseActivity {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("ordernumber", DateUtils.getCurrentOrderNumber());
         paramMap.put("member", memberid);
-        paramMap.put("location", staffInfoBeanList.get(0).getStore());
+        paramMap.put("location",MyApplication.staffInfoBean.getStore());
         OkHttp3Util.doPostWithToken(Constants.GET_ORDERS_URL + "/", gson.toJson(paramMap),
                 sharedPreferences, new Okhttp3StringCallback(this, "createOrder") {
                     @Override
@@ -413,7 +394,7 @@ public class AddNewOrderActivity extends BaseActivity {
         });
         customDialog.show();
         OkHttp3Util.doGetWithToken(Constants.GET_STOCK_URL + "?productcode=" + productcode + "&location="
-                        + staffInfoBeanList.get(0).getStore(),
+                        + MyApplication.staffInfoBean.getStore(),
                 sharedPreferences, new Okhttp3StringCallback(this, "getStockList") {
                     @Override
                     public void onSuccess(String results) throws Exception {

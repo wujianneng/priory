@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.ChangeGoodsAdapter;
 import com.pos.priory.beans.CreateRefundOrderResultBean;
@@ -67,7 +68,6 @@ public class ChangeGoodsActivity extends BaseActivity {
     ChangeGoodsAdapter goodsAdapter;
 
     double sumMoney = 0;
-    public List<StaffInfoBean> staffInfoBeanList;
 
     @Override
     protected void beForeInitViews() {
@@ -80,9 +80,6 @@ public class ChangeGoodsActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT < 19) {
             paddingLaout.setVisibility(View.GONE);
         }
-        staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY, ""),
-                new TypeToken<List<StaffInfoBean>>() {
-                }.getType());
         tempgoodList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
                 new TypeToken<List<OrderItemBean>>() {
                 }.getType());
@@ -133,7 +130,7 @@ public class ChangeGoodsActivity extends BaseActivity {
 
     private void editChangeGoodOrder() {
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("staff", staffInfoBeanList.get(0).getUser());
+        paramMap.put("staff", MyApplication.staffInfoBean.getUser());
         OkHttp3Util.doPatchWithToken(Constants.CHANGE_OR_RETURN_GOOD_URL + "/" + createRefundOrderResultBean.getId() + "/update/",
                 gson.toJson(paramMap),
                 sharedPreferences, new Okhttp3StringCallback(this, "editChangeGoodOrder") {
@@ -184,7 +181,7 @@ public class ChangeGoodsActivity extends BaseActivity {
         paramMap.put("name", orderitem.getStock().getBatch().getProduct().getName());
         paramMap.put("quantity", orderitem.getOprateCount());
         paramMap.put("weight", 0);
-        paramMap.put("location", staffInfoBeanList.get(0).getStore());
+        paramMap.put("location",MyApplication.staffInfoBean.getStore());
         OkHttp3Util.doPostWithToken(Constants.RETURN_STOCKS_URL + "/", gson.toJson(paramMap),
                 sharedPreferences, new Okhttp3StringCallback(this, "createReturnStocks") {
                     @Override

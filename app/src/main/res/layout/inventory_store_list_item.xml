@@ -4,9 +4,11 @@
     android:layout_width="match_parent"
     android:layout_height="90dp"
     android:layout_gravity="center_horizontal"
-    android:layout_marginTop="0.5dp"
-    android:layout_marginBottom="8dp"
     android:layout_marginLeft="1dp"
+    android:layout_marginTop="0.5dp"
+    android:layout_marginRight="1dp"
+    android:layout_marginBottom="8dp"
+    android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="#fff"
     app:cardCornerRadius="0dp"
     app:cardElevation="1dp">
@@ -15,95 +17,49 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/icon_check"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+        <android.support.v7.widget.CardView
+            android:id="@+id/status_btn"
+            android:layout_width="64dp"
+            android:layout_height="26dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/icon_cilck" />
+            android:layout_marginLeft="16dp"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:cardBackgroundColor="@color/colorAccent"
+            app:cardCornerRadius="13dp"
+            app:cardElevation="3dp">
 
-        <ImageView
-            android:id="@+id/icon_good"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@+id/icon_check" />
+            <TextView
+                android:id="@+id/status_tv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="5dp"
+                android:gravity="center"
+                android:text="未完成"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
+        </android.support.v7.widget.CardView>
+
 
         <TextView
-            android:id="@+id/code_tv"
+            android:id="@+id/date_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_toRightOf="@+id/icon_good"
-            android:text="88800666"
-            android:textColor="#cccccc"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/status_btn"
+            android:text="2019/03/01 11:10:09"
+            android:textColor="#000000"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/name_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_toRightOf="@+id/icon_good"
-            android:text="大福珠"
-            android:textColor="#333333"
-            android:textSize="20sp" />
 
-        <View
-            android:id="@+id/line"
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="20dp"
-            android:layout_marginRight="70dp"
-            android:layout_marginTop="20dp"
-            android:background="#cccccc" />
-
-        <FrameLayout
-            android:layout_width="60dp"
-            android:layout_marginRight="10dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true">
-
-            <TextView
-                android:id="@+id/weight_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:text="8"
-                android:textColor="@color/login_btn_bg"
-                android:textSize="25sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/weight_title_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginBottom="20dp"
-                android:text="庫存"
-                android:textColor="#cccccc"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-        </FrameLayout>
-
-        <View
-            android:layout_alignParentRight="true"
-            android:layout_gravity="right"
-            android:layout_width="1dp"
-            android:background="@color/drag_btn_green"
-            android:layout_height="match_parent"/>
-
+            android:layout_marginRight="16dp"
+            android:src="@drawable/icon_right" />
 
     </RelativeLayout>
 

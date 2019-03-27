@@ -29,12 +29,12 @@ public class AddNewOrderGoodsAdapter extends BaseQuickAdapter<GoodBean, BaseView
 
     @Override
     protected void convert(BaseViewHolder helper, GoodBean item) {
-        helper.addOnClickListener(R.id.btn_change_price).addOnClickListener(R.id.decrease_btn)
-                .addOnClickListener(R.id.increase_btn);
         helper.setText(R.id.code_tv, item.getBatch().getProduct().getProductcode() + item.getBatch().getBatchno());
         helper.setText(R.id.name_tv, item.getBatch().getProduct().getName());
-        helper.setText(R.id.price_tv, "$" + item.getBatch().getProduct().getPrice());
-        helper.setText(R.id.account_btn, item.getSaleCount() + "");
+//        helper.setText(R.id.weight_tv,item.getBatch().getWeight());
+        helper.setText(R.id.origin_price_tv,"原價：" + item.getBatch().getProduct().getPrePrice());
+        helper.setText(R.id.discount_tv,"折扣：" + item.getDiscountRate());
+        helper.setText(R.id.price_tv, "折後價：" + item.getBatch().getProduct().getPrice());
         Glide.with(context).load(Constants.BASE_URL_HTTP + item.getBatch().getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)

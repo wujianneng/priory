@@ -4,92 +4,83 @@
     android:layout_width="match_parent"
     android:layout_height="90dp"
     android:layout_gravity="center_horizontal"
-    android:foreground="?attr/selectableItemBackground"
-    android:clickable="true"
     android:layout_marginLeft="1dp"
-    android:layout_marginRight="1dp"
     android:layout_marginTop="0.5dp"
+    android:layout_marginRight="1dp"
     android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="#fff"
-    app:cardCornerRadius="1dp"
-    app:cardElevation="1dp"
-    app:contentPadding="10dp">
+    app:cardCornerRadius="0dp"
+    app:cardElevation="2dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/icon_detial"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_marginTop="5dp"
+        <TextView
+            android:id="@+id/date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:src="@drawable/icon_detail" />
+            android:layout_marginTop="11dp"
+            android:text="2019-10-10 10:10:10"
+            android:textColor="#4a4a4a"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/name_tv"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/date_tv"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:text="莫小姐"
+            android:textColor="#333333"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/sex_img"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_below="@+id/date_tv"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@+id/name_tv"
+            android:src="@drawable/icon_boy" />
 
         <TextView
             android:id="@+id/detial_tv"
-            android:layout_marginTop="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/icon_detial"
-            android:text="xc15019840934"
-            android:textColor="#cccccc"
-            android:textSize="12sp" />
+            android:layout_below="@+id/name_tv"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:text="3415019840934"
+            android:textColor="#000000"
+            android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/date_tv"
-            android:layout_marginTop="3dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:text="2019-10-10 10:10:10"
-            android:textColor="#cccccc"
-            android:textSize="12sp" />
-
-        <View
-            android:id="@+id/line"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_below="@+id/icon_detial"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="10dp"
-            android:background="#cccccc" />
-
-        <ImageView
-            android:id="@+id/check_img"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_below="@+id/line"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="13dp"
-            android:src="@drawable/icon_cilck_h" />
 
         <TextView
             android:id="@+id/money_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/line"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_toRightOf="@+id/check_img"
-            android:text="$1576.00"
-            android:textStyle="bold"
-            android:textColor="@color/login_btn_bg"
-            android:textSize="25sp" />
-
-
-        <ImageView
-            android:layout_below="@+id/line"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/icon_right"
-            android:layout_marginTop="15dp"
             android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_centerVertical="true"
+            android:layout_marginRight="25dp"
+            android:text="$1576.00"
+            android:textColor="@color/blue_text"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/right_line"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right"
+            android:background="@color/drag_btn_green" />
     </RelativeLayout>
 
 

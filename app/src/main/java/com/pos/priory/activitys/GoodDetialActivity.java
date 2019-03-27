@@ -14,16 +14,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.GoodDetialAdapter;
 import com.pos.priory.beans.GoodBean;
-import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
@@ -69,8 +71,6 @@ public class GoodDetialActivity extends BaseActivity {
     TextView titleTv;
     @Bind(R.id.repertory_tv)
     TextView repertoryTv;
-    @Bind(R.id.need_money_tv)
-    TextView needMoneyTv;
     @Bind(R.id.recycler_view)
     SwipeMenuRecyclerView recyclerView;
     @Bind(R.id.srf_lay)
@@ -78,6 +78,10 @@ public class GoodDetialActivity extends BaseActivity {
 
     GoodDetialAdapter goodDetialAdapter;
     List<GoodBean> orderList = new ArrayList<>();
+    @Bind(R.id.price_tv)
+    TextView priceTv;
+    @Bind(R.id.weight_tv)
+    TextView weightTv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,15 +99,11 @@ public class GoodDetialActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY, ""),
-                new TypeToken<List<StaffInfoBean>>() {
-                }.getType());
-
         String goodname = getIntent().getStringExtra("name");
         slefCount = getIntent().getIntExtra("count", 0);
         productcode = getIntent().getStringExtra("productcode");
         titleTv.setText(goodname);
-        repertoryTv.setText(slefCount + "");
+        repertoryTv.setText( "庫存：" + slefCount);
 
         smartRefreshLayout.setEnableLoadMore(false);
         smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -124,14 +124,22 @@ public class GoodDetialActivity extends BaseActivity {
         recyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-                SwipeMenuItem dinghuoItem = new SwipeMenuItem(GoodDetialActivity.this)
+                SwipeMenuItem tuihuoItem = new SwipeMenuItem(GoodDetialActivity.this)
                         .setBackgroundColor(ContextCompat.getColor(GoodDetialActivity.this, R.color.drag_btn_green))
+                        .setImage(R.drawable.icon_dinghuo)
+                        .setText("退貨")
+                        .setTextColor(Color.WHITE)
+                        .setHeight(DeviceUtil.dip2px(GoodDetialActivity.this, 91))//设置高，这里使用match_parent，就是与item的高相同
+                        .setWidth(DeviceUtil.dip2px(GoodDetialActivity.this, 100));//设置宽
+                swipeRightMenu.addMenuItem(tuihuoItem);//设置右边的侧滑
+                SwipeMenuItem diaohuoItem = new SwipeMenuItem(GoodDetialActivity.this)
+                        .setBackgroundColor(ContextCompat.getColor(GoodDetialActivity.this, R.color.drag_btn_red))
                         .setImage(R.drawable.icon_dinghuo)
                         .setText("調貨")
                         .setTextColor(Color.WHITE)
                         .setHeight(DeviceUtil.dip2px(GoodDetialActivity.this, 91))//设置高，这里使用match_parent，就是与item的高相同
                         .setWidth(DeviceUtil.dip2px(GoodDetialActivity.this, 100));//设置宽
-                swipeRightMenu.addMenuItem(dinghuoItem);//设置右边的侧滑
+                swipeRightMenu.addMenuItem(diaohuoItem);//设置右边的侧滑
             }
         });
         //设置侧滑菜单的点击事件
@@ -143,7 +151,9 @@ public class GoodDetialActivity extends BaseActivity {
                 int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
                 int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
                 if (menuPosition == 0) {
-                    showActionDialog(false, adapterPosition);
+                    showIsReturnDialog(adapterPosition);
+                } else {
+                    showChoiceDiscountDialog(adapterPosition);
                 }
             }
         });
@@ -155,11 +165,62 @@ public class GoodDetialActivity extends BaseActivity {
         smartRefreshLayout.autoRefresh();
     }
 
+    private void showIsReturnDialog(int adapterPosition) {
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("提示")
+                .setMessage("是否確定要退貨該商品？")
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        dialog.show();
+    }
+
+    int yourChoice = 0;
+    String[] stores = new String[]{"高士德店", "揚名廣場店", "拱北萬家店"};
+
+    private void showChoiceDiscountDialog(final int position) {
+        AlertDialog.Builder singleChoiceDialog =
+                new AlertDialog.Builder(this);
+        singleChoiceDialog.setTitle("請選擇調撥店鋪");
+        // 第二个参数是默认选项，此处设置为0
+        ListAdapter adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_single_choice, stores);
+        singleChoiceDialog.setSingleChoiceItems(adapter, yourChoice,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        yourChoice = which;
+                    }
+                });
+        singleChoiceDialog.setPositiveButton("確定",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (yourChoice != -1) {
+
+                        }
+                        dialog.dismiss();
+                    }
+                });
+        singleChoiceDialog.create().show();
+    }
+
+
     AlertDialog actionDialog;
 
     private void showActionDialog(final boolean isDingHuo, final int position) {
         final GoodBean goodbean = orderList.get(position);
-        if(goodbean.getLocation().getName().equals(staffInfoBeanList.get(0).getStore())){
+        if (goodbean.getLocation().getName().equals(MyApplication.staffInfoBean.getStore())) {
             Toast.makeText(GoodDetialActivity.this, "只能從其他店鋪調撥", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -224,7 +285,7 @@ public class GoodDetialActivity extends BaseActivity {
                 new Okhttp3StringCallback(this, "allocateElseStock") {
                     @Override
                     public void onSuccess(String results) throws Exception {
-                        allocateSelfStock(getIntent().getIntExtra("stockId", 0),stockid,changeCount);
+                        allocateSelfStock(getIntent().getIntExtra("stockId", 0), stockid, changeCount);
                     }
 
                     @Override
@@ -235,7 +296,7 @@ public class GoodDetialActivity extends BaseActivity {
                 });
     }
 
-    private void allocateSelfStock( final int stockid, final int elseStockid, final int changeCount) {
+    private void allocateSelfStock(final int stockid, final int elseStockid, final int changeCount) {
         Map<String, Object> map = new HashMap<>();
         slefCount += changeCount;
         map.put("quantity", slefCount);
@@ -247,7 +308,7 @@ public class GoodDetialActivity extends BaseActivity {
                         repertoryTv.setText(slefCount + "");
                         Toast.makeText(GoodDetialActivity.this, "調撥成功", Toast.LENGTH_SHORT).show();
                         smartRefreshLayout.autoRefresh();
-                        createStockTransaction(changeCount,stockid,elseStockid);
+                        createStockTransaction(changeCount, stockid, elseStockid);
                     }
 
                     @Override
@@ -259,23 +320,23 @@ public class GoodDetialActivity extends BaseActivity {
                 });
     }
 
-    private void createStockTransaction(final int changeCount,int selfId,int elseid) {
+    private void createStockTransaction(final int changeCount, int selfId, int elseid) {
         Map<String, Object> map = new HashMap<>();
         map.put("stockout", selfId);
         map.put("stockin", elseid);
         map.put("quantity", changeCount);
         OkHttp3Util.doPostWithToken(Constants.GET_STOCK_TRANSACTIONS_URL + "/", gson.toJson(map), sharedPreferences,
-                new Okhttp3StringCallback(this,"createStockTransaction") {
-            @Override
-            public void onSuccess(String results) throws Exception {
+                new Okhttp3StringCallback(this, "createStockTransaction") {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
 
-            }
+                    }
 
-            @Override
-            public void onFailed(String erromsg) {
+                    @Override
+                    public void onFailed(String erromsg) {
 
-            }
-        });
+                    }
+                });
     }
 
     private void refreshRecyclerView(boolean isLoadMore) {
@@ -317,7 +378,7 @@ public class GoodDetialActivity extends BaseActivity {
             }
         });
         customDialog.show();
-        String location = staffInfoBeanList.get(0).getStore();
+        String location = MyApplication.staffInfoBean.getStore();
         Map<String, Object> map = new HashMap<>();
         map.put("location", location);
         map.put("confirmed", false);
@@ -358,13 +419,14 @@ public class GoodDetialActivity extends BaseActivity {
                 });
     }
 
-    public List<StaffInfoBean> staffInfoBeanList;
 
-    @OnClick({R.id.back_btn})
+    @OnClick({R.id.back_btn,R.id.btn_dinghuo})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
                 finish();
+                break;
+            case R.id.btn_dinghuo:
                 break;
         }
     }

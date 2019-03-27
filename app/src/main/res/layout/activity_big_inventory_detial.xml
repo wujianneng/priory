@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".activitys.BigInventoryDetialActivity">
+
+    <View
+        android:id="@+id/padding_laout"
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        android:background="@color/colorAccent"
+        android:elevation="5dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/colorAccent"
+        android:elevation="5dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/icon_back" />
+
+        <TextView
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="大盤點"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/scan_btn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="20dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/scan" />
+
+    </FrameLayout>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:background="#ffffff"
+                android:padding="5dp"
+                android:elevation="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/left_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:textStyle="bold"
+                    android:text="黃金：1000件 | 3206.7克"
+                    android:textColor="@color/blue_text"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/right_tv"
+                    android:textStyle="bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginRight="16dp"
+                    android:text="晶石：1000件"
+                    android:textColor="@color/blue_text"
+                    android:textSize="15sp" />
+
+            </FrameLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"></android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/btn_finish"
+        android:layout_width="110dp"
+        android:layout_height="46dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="20dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/colorAccent"
+        app:cardCornerRadius="23dp"
+        app:cardElevation="3dp"
+        app:cardPreventCornerOverlap="true"
+        app:contentPadding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/icon_gou" />
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="完成"
+                android:textColor="#fff"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

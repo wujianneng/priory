@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.OrderAdapter;
 import com.pos.priory.beans.MemberBean;

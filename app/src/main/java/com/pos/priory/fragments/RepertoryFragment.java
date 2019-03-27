@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.activitys.GoodDetialActivity;
 import com.pos.priory.activitys.MainActivity;
@@ -49,7 +50,6 @@ public class RepertoryFragment extends BaseFragment {
     RepertoryAdapter repertoryAdapter;
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
-    MainActivity mainActivity;
     @Bind(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
     String currentStr = "";
@@ -64,7 +64,6 @@ public class RepertoryFragment extends BaseFragment {
     }
 
     private void initViews() {
-        mainActivity = (MainActivity) getActivity();
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -103,7 +102,7 @@ public class RepertoryFragment extends BaseFragment {
         dataList.clear();
         repertoryAdapter.notifyDataSetChanged();
         String url = "";
-        String location = mainActivity.staffInfoBeanList.get(0).getStore();
+        String location = MyApplication.staffInfoBean.getStore();
         if(str.equals("")){
             url = Constants.GET_STOCK_URL + "?location=" + location;
         }else {

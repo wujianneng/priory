@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.reflect.TypeToken;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.activitys.MainActivity;
 import com.pos.priory.adapters.DetialListAdapter;
@@ -330,7 +331,7 @@ public class DetialListFragment extends BaseFragment {
             dataList.clear();
             detialListAdapter.notifyDataSetChanged();
         }
-        final String location = ((MainActivity) getActivity()).staffInfoBeanList.get(0).getStore();
+        final String location = MyApplication.staffInfoBean.getStore();
         OkHttp3Util.doGetWithToken(Constants.PURCHASING_URL + "?location=" + location,sharedPreferences,
                 new Okhttp3StringCallback(getActivity(), "createPurshing") {
                     @Override
