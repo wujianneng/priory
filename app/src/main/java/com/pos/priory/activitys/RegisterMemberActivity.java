@@ -153,7 +153,7 @@ public class RegisterMemberActivity extends BaseActivity {
         paramMap.put("mobile", edtPhone.getText().toString());
         paramMap.put("sex", btnSex.getText().toString());
         OkHttp3Util.doPostWithToken(Constants.GET_MEMBERS_URL + "/", gson.toJson(paramMap),
-                sharedPreferences, new Okhttp3StringCallback(RegisterMemberActivity.this, "registerMember") {
+                new Okhttp3StringCallback(RegisterMemberActivity.this, "registerMember") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         Toast.makeText(RegisterMemberActivity.this, "注册成功", Toast.LENGTH_SHORT).show();

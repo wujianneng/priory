@@ -115,7 +115,7 @@ public class MemberActivity extends BaseActivity {
         if(str.equals(""))
             return;
         memberCall = OkHttp3Util.doGetWithToken(Constants.GET_MEMBERS_URL + "?mobile="
-                        + str, sharedPreferences,
+                        + str,
                 new Okhttp3StringCallback("getMembers") {
                     @Override
                     public void onSuccess(String results) throws Exception {

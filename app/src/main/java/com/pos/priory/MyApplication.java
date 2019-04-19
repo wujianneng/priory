@@ -2,6 +2,7 @@ package com.pos.priory;
 
 import android.app.Application;
 
+import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
 import com.bumptech.glide.load.model.GlideUrl;
@@ -17,11 +18,13 @@ import java.io.InputStream;
 public class MyApplication extends Application {
     private static MyApplication mContext;
     public static StaffInfoBean staffInfoBean;
+    public static String authorization = "";
 
     @Override
     public void onCreate() {
         super.onCreate();
         mContext = this;
+        Utils.init(this);
     }
 
 

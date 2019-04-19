@@ -146,7 +146,7 @@ public class AddNewOrderActivity extends BaseActivity {
     List<String> discountNames = new ArrayList<>();
 
     private void getStoreDiscountList() {
-        OkHttp3Util.doGetWithToken(Constants.GET_DISCOUNT_LIST_URL + "?location=" + MyApplication.staffInfoBean.getStore(), sharedPreferences,
+        OkHttp3Util.doGetWithToken(Constants.GET_DISCOUNT_LIST_URL + "?location=" + MyApplication.staffInfoBean.getStore(),
                 new Okhttp3StringCallback(this, "getStoreDiscountList") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -188,7 +188,7 @@ public class AddNewOrderActivity extends BaseActivity {
         paramMap.put("member", memberid);
         paramMap.put("location", MyApplication.staffInfoBean.getStore());
         OkHttp3Util.doPostWithToken(Constants.GET_ORDERS_URL + "/", gson.toJson(paramMap),
-                sharedPreferences, new Okhttp3StringCallback(this, "createOrder") {
+                new Okhttp3StringCallback(this, "createOrder") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         createOrderResultBean = gson.fromJson(results, CreateOrderResultBean.class);
@@ -219,7 +219,7 @@ public class AddNewOrderActivity extends BaseActivity {
         });
         customDialog.show();
         OkHttp3Util.doDeleteWithToken(Constants.GET_ORDERS_URL + "/" + createOrderResultBean.getId() + "/update/",
-                sharedPreferences, new Okhttp3StringCallback(this, "deleteOrder") {
+                new Okhttp3StringCallback(this, "deleteOrder") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         customDialog.dismiss();
@@ -395,7 +395,7 @@ public class AddNewOrderActivity extends BaseActivity {
         customDialog.show();
         OkHttp3Util.doGetWithToken(Constants.GET_STOCK_URL + "?productcode=" + productcode + "&location="
                         + MyApplication.staffInfoBean.getStore(),
-                sharedPreferences, new Okhttp3StringCallback(this, "getStockList") {
+                 new Okhttp3StringCallback(this, "getStockList") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         List<GoodBean> goodBeanList = gson.fromJson(results, new TypeToken<List<GoodBean>>() {
@@ -425,7 +425,7 @@ public class AddNewOrderActivity extends BaseActivity {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("ordernumber", createOrderResultBean.getOrdernumber());
         paramMap.put("stockid", goodBean.getId());
-        OkHttp3Util.doPostWithToken(Constants.GET_ORDER_ITEM_URL + "/", gson.toJson(paramMap), sharedPreferences,
+        OkHttp3Util.doPostWithToken(Constants.GET_ORDER_ITEM_URL + "/", gson.toJson(paramMap),
                 new Okhttp3StringCallback(this, "createOrderItem") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -448,7 +448,7 @@ public class AddNewOrderActivity extends BaseActivity {
         paramMap.put("quantity", goodBean.getSaleCount());
         paramMap.put("discount", goodBean.getDiscountRate());
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + goodBean.getId()
-                + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItem") {
+                + "/update/", gson.toJson(paramMap),new Okhttp3StringCallback(this, "editOrderItem") {
             @Override
             public void onSuccess(String results) throws Exception {
                 customDialog.dismiss();
@@ -480,7 +480,7 @@ public class AddNewOrderActivity extends BaseActivity {
         paramMap.put("quantity", quantity);
         paramMap.put("discount", discount);
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + orderitemId
-                + "/update/", gson.toJson(paramMap), sharedPreferences, new Okhttp3StringCallback(this, "editOrderItemOnOperate") {
+                + "/update/", gson.toJson(paramMap),new Okhttp3StringCallback(this, "editOrderItemOnOperate") {
             @Override
             public void onSuccess(String results) throws Exception {
                 customDialog.dismiss();
@@ -522,7 +522,7 @@ public class AddNewOrderActivity extends BaseActivity {
         });
         customDialog.show();
         OkHttp3Util.doDeleteWithToken(Constants.GET_ORDER_ITEM_URL + "/" + orderitemid + "/update/",
-                sharedPreferences, new Okhttp3StringCallback(this, "deleteOrderItem") {
+              new Okhttp3StringCallback(this, "deleteOrderItem") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         customDialog.dismiss();

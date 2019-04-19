@@ -2,17 +2,23 @@ package com.pos.priory.activitys;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.Utils;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.coustomViews.CustomDialog;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
@@ -27,6 +33,13 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/29.
@@ -95,56 +108,61 @@ public class LoginActivity extends BaseActivity {
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("username", edtUsename.getText().toString());
             paramMap.put("password", edtPasswrod.getText().toString());
-            OkHttp3Util.doPost(Constants.LOGIN_URL, gson.toJson(paramMap), new Okhttp3StringCallback("login") {
-                @Override
-                public void onSuccess(String results) throws Exception {
-                    String token = new JSONObject(results).getString("key");
-                    sharedPreferences.edit().putString(Constants.Authorization_KEY, token).commit();
-                    getStaffInfo();
-                }
-
-                @Override
-                public void onFailed(String erromsg) {
-                    new RunOnUiThreadSafe(LoginActivity.this) {
+            RetrofitManager
+                    .createString(ApiService.class)
+                    .login(paramMap)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnNext(new Consumer<String>() {
                         @Override
-                        public void runOnUiThread() {
+                        public void accept(String s) throws Exception {
+                            String token = new JSONObject(s).getString("key");
+                            MyApplication.authorization = "Token " + token;
+                        }
+                    })
+                    .doOnError(new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
                             customDialog.dismiss();
                             Toast.makeText(LoginActivity.this, "請與總部相關人員聯絡及查詢！", Toast.LENGTH_SHORT).show();
                         }
-                    };
-                }
-            });
+                    })
+                    .observeOn(Schedulers.io())
+                    .flatMap(new Function<String, Observable<String>>() {
+                        @Override
+                        public Observable<String> apply(String s) throws Exception {
+                            return RetrofitManager.createString(ApiService.class).getStaffInfo(edtUsename.getText().toString());
+                        }
+                    })
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String s) throws Exception {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
+                            if (checkbox.isChecked()) {
+                                editor.putString(Constants.LAST_USERNAME_KEY,
+                                        edtUsename.getText().toString());
+                                editor.putString(Constants.LAST_PASSWORD_KEY,
+                                        edtPasswrod.getText().toString());
+                            }
+                            editor.putString(Constants.CURRENT_STAFF_INFO_KEY, s);
+                            editor.commit();
+                            customDialog.dismiss();
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            customDialog.dismiss();
+                            Toast.makeText(LoginActivity.this, "請與總部相關人員聯絡及查詢！", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
         }
 
     }
 
-    private void getStaffInfo() {
-        OkHttp3Util.doGetWithToken(Constants.STAFF_INFO_URL + "?user=" + edtUsename.getText().toString(),
-                sharedPreferences, new Okhttp3StringCallback("staffInfo") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        sharedPreferences.edit().putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked()).commit();
-                        if (checkbox.isChecked()) {
-                            sharedPreferences.edit().putString(Constants.LAST_USERNAME_KEY,
-                                    edtUsename.getText().toString()).commit();
-                            sharedPreferences.edit().putString(Constants.LAST_PASSWORD_KEY,
-                                    edtPasswrod.getText().toString()).commit();
-                        }
-                        sharedPreferences.edit().putString(Constants.CURRENT_STAFF_INFO_KEY, results).commit();
-                        new RunOnUiThreadSafe(LoginActivity.this) {
-                            @Override
-                            public void runOnUiThread() {
-                                customDialog.dismiss();
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                finish();
-                            }
-                        };
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-
-                    }
-                });
-    }
 }

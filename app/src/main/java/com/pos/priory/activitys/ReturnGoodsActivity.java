@@ -97,7 +97,7 @@ public class ReturnGoodsActivity extends BaseActivity {
             }
         });
         customDialog.show();
-        OkHttp3Util.doGetWithToken(Constants.GOLD_PRICE_URL, sharedPreferences, new Okhttp3StringCallback(this, "getCurrentGoldPrice") {
+        OkHttp3Util.doGetWithToken(Constants.GOLD_PRICE_URL,new Okhttp3StringCallback(this, "getCurrentGoldPrice") {
             @Override
             public void onSuccess(String results) throws Exception {
                 currentGoldPrice = new JSONObject(results).getString("price");
@@ -128,7 +128,7 @@ public class ReturnGoodsActivity extends BaseActivity {
         paramMap.put("ordernumber", getIntent().getStringExtra("ordernumber"));
         paramMap.put("type", "return");
         OkHttp3Util.doPostWithToken(Constants.CHANGE_OR_RETURN_GOOD_URL + "/", gson.toJson(paramMap),
-                sharedPreferences, new Okhttp3StringCallback(this, "createChangeGoodsOrder") {
+                new Okhttp3StringCallback(this, "createChangeGoodsOrder") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         createRefundOrderResultBean = gson.fromJson(results, CreateRefundOrderResultBean.class);
@@ -151,7 +151,7 @@ public class ReturnGoodsActivity extends BaseActivity {
         paramMap.put("staff", MyApplication.staffInfoBean.getUser());
         OkHttp3Util.doPatchWithToken(Constants.CHANGE_OR_RETURN_GOOD_URL + "/" + createRefundOrderResultBean.getId() + "/update/",
                 gson.toJson(paramMap),
-                sharedPreferences, new Okhttp3StringCallback(this, "editReturnGoodOrder") {
+                new Okhttp3StringCallback(this, "editReturnGoodOrder") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         accessCount = tempgoodList.size();
@@ -176,7 +176,7 @@ public class ReturnGoodsActivity extends BaseActivity {
         paramMap.put("rmanumber", createRefundOrderResultBean.getRmanumber());
         paramMap.put("orderitemid", orderitem.getId());
         OkHttp3Util.doPostWithToken(Constants.CHANGE_OR_RETURN_GOOD_ITEM_URL + "/", gson.toJson(paramMap),
-                sharedPreferences, new Okhttp3StringCallback(this, "createReurnOrderItem") {
+               new Okhttp3StringCallback(this, "createReurnOrderItem") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         createReurnStockItem(orderitem);
@@ -201,7 +201,7 @@ public class ReturnGoodsActivity extends BaseActivity {
         paramMap.put("weight", 0);
         paramMap.put("location", MyApplication.staffInfoBean.getStore());
         OkHttp3Util.doPostWithToken(Constants.RETURN_STOCKS_URL + "/", gson.toJson(paramMap),
-                sharedPreferences, new Okhttp3StringCallback(this, "createReurnStockItem") {
+               new Okhttp3StringCallback(this, "createReurnStockItem") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         tempAccessCount += 1;
@@ -246,7 +246,7 @@ public class ReturnGoodsActivity extends BaseActivity {
             }
         });
         deleteDialog.show();
-        OkHttp3Util.doDeleteWithToken(Constants.CHANGE_OR_RETURN_GOOD_URL + "/" + createRefundOrderResultBean.getId() + "/update/", sharedPreferences,
+        OkHttp3Util.doDeleteWithToken(Constants.CHANGE_OR_RETURN_GOOD_URL + "/" + createRefundOrderResultBean.getId() + "/update/",
                 new Okhttp3StringCallback(this, "deleteReturnOrder") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -305,7 +305,7 @@ public class ReturnGoodsActivity extends BaseActivity {
         paramMap.put("rmaorder", createRefundOrderResultBean.getId());
         paramMap.put("type", "refund");
         paramMap.put("amount", sumMoney * -1);
-        OkHttp3Util.doPostWithToken(Constants.CHANGE_OR_RETURN_GOOD_VOICES_URL + "/", gson.toJson(paramMap), sharedPreferences,
+        OkHttp3Util.doPostWithToken(Constants.CHANGE_OR_RETURN_GOOD_VOICES_URL + "/", gson.toJson(paramMap),
                 new Okhttp3StringCallback(this, "createVoices") {
                     @Override
                     public void onSuccess(String results) throws Exception {

@@ -291,7 +291,7 @@ public class GoodDetialActivity extends BaseActivity {
         customDialog.show();
         Map<String, Object> map = new HashMap<>();
         map.put("quantity", elseStoreCount - changeCount);
-        OkHttp3Util.doPatchWithToken(Constants.GET_STOCK_URL + "/" + stockid + "/update/", gson.toJson(map), sharedPreferences,
+        OkHttp3Util.doPatchWithToken(Constants.GET_STOCK_URL + "/" + stockid + "/update/", gson.toJson(map),
                 new Okhttp3StringCallback(this, "allocateElseStock") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -310,7 +310,7 @@ public class GoodDetialActivity extends BaseActivity {
         Map<String, Object> map = new HashMap<>();
         slefCount += changeCount;
         map.put("quantity", slefCount);
-        OkHttp3Util.doPatchWithToken(Constants.GET_STOCK_URL + "/" + stockid + "/update/", gson.toJson(map), sharedPreferences,
+        OkHttp3Util.doPatchWithToken(Constants.GET_STOCK_URL + "/" + stockid + "/update/", gson.toJson(map),
                 new Okhttp3StringCallback(this, "allocateSelfStock") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -335,7 +335,7 @@ public class GoodDetialActivity extends BaseActivity {
         map.put("stockout", selfId);
         map.put("stockin", elseid);
         map.put("quantity", changeCount);
-        OkHttp3Util.doPostWithToken(Constants.GET_STOCK_TRANSACTIONS_URL + "/", gson.toJson(map), sharedPreferences,
+        OkHttp3Util.doPostWithToken(Constants.GET_STOCK_TRANSACTIONS_URL + "/", gson.toJson(map),
                 new Okhttp3StringCallback(this, "createStockTransaction") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -355,7 +355,7 @@ public class GoodDetialActivity extends BaseActivity {
             goodDetialAdapter.notifyDataSetChanged();
         }
         OkHttp3Util.doGetWithToken(Constants.GET_STOCK_URL + "?productcode=" + productcode,
-                sharedPreferences, new Okhttp3StringCallback(this, "getStockList") {
+                new Okhttp3StringCallback(this, "getStockList") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         List<GoodBean> goodBeanList = gson.fromJson(results, new TypeToken<List<GoodBean>>() {
@@ -392,7 +392,7 @@ public class GoodDetialActivity extends BaseActivity {
         Map<String, Object> map = new HashMap<>();
         map.put("location", location);
         map.put("confirmed", false);
-        OkHttp3Util.doPostWithToken(Constants.PURCHASING_URL + "/", gson.toJson(map), sharedPreferences,
+        OkHttp3Util.doPostWithToken(Constants.PURCHASING_URL + "/", gson.toJson(map),
                 new Okhttp3StringCallback(this, "createPurshing") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -413,7 +413,7 @@ public class GoodDetialActivity extends BaseActivity {
         map.put("stock", stockid);
         map.put("type", "purchase");
         map.put("quantity", Integer.parseInt(count));
-        OkHttp3Util.doPostWithToken(Constants.PURCHASING_ITEM_URL + "/", gson.toJson(map), sharedPreferences,
+        OkHttp3Util.doPostWithToken(Constants.PURCHASING_ITEM_URL + "/", gson.toJson(map),
                 new Okhttp3StringCallback(this, "createPurchsingItem") {
                     @Override
                     public void onSuccess(String results) throws Exception {

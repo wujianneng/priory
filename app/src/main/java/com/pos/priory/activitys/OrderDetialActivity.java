@@ -2,7 +2,6 @@ package com.pos.priory.activitys;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -10,6 +9,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,21 +17,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.gson.reflect.TypeToken;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.OrderDetailPrintGoodsAdapter;
 import com.pos.priory.adapters.OrderDetialGoodsAdapter;
+import com.pos.priory.beans.GoodBean;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.beans.OrderItemBean;
 import com.pos.priory.beans.TransactionBean;
 import com.pos.priory.coustomViews.CustomDialog;
-import com.pos.priory.utils.Constants;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.DateUtils;
 import com.pos.priory.utils.LogicUtils;
-import com.pos.priory.utils.OkHttp3Util;
-import com.pos.priory.utils.Okhttp3StringCallback;
 
 import org.json.JSONArray;
 
@@ -41,6 +39,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/31.
@@ -129,11 +132,64 @@ public class OrderDetialActivity extends BaseActivity {
         getOrderDetialData();
     }
 
-    private void getOrderDetialGoodList() {
-        OkHttp3Util.doGetWithToken(Constants.GET_ORDER_ITEM_URL + "?ordernumber=" + orderBean.getOrdernumber() + "&rmaaction=true", sharedPreferences,
-                new Okhttp3StringCallback(OrderDetialActivity.this, "getOrderDetialGoodList") {
+    CustomDialog customDialog;
+    TransactionBean transactionBean;
+    private void getOrderDetialData() {
+        if (customDialog == null)
+            customDialog = new CustomDialog(this, "正在查询订单详情信息");
+        customDialog.show();
+        RetrofitManager
+                .createString(ApiService.class)
+                .getOrderDetailInvoice(orderBean.getOrdernumber())//先獲取訂單的發票
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(new Consumer<Throwable>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
+                    public void accept(Throwable throwable) throws Exception {
+                        customDialog.dismiss();
+                        Toast.makeText(OrderDetialActivity.this, "获取订单详情信息失败", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .map(new Function<String, String>() {
+                    @Override
+                    public String apply(String results) {
+                        String invoiceNumber = "";
+                        try {
+                            invoiceNumber = new JSONArray(results).getJSONObject(0).getString("invoicenumber");
+                        } catch (Exception e) {
+                        }
+                        return invoiceNumber;
+                    }
+                })
+                .flatMap(new Function<String, Observable<List<TransactionBean>>>() {
+                    @Override
+                    public Observable<List<TransactionBean>> apply(String s) throws Exception {
+                        return RetrofitManager.createGson(ApiService.class).getOrderDetailTransaction(s);//再根據發票號，獲取交易流水信息
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnError(new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        customDialog.dismiss();
+                        Toast.makeText(OrderDetialActivity.this, "获取订单详情信息失败", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<List<TransactionBean>, Observable<List<OrderItemBean>>>() {
+                    @Override
+                    public Observable<List<OrderItemBean>> apply(List<TransactionBean> transactionBeans) throws Exception {
+                        transactionBean = transactionBeans.get(0);
+                        return RetrofitManager.createGson(ApiService.class).getOrderDetailItems(orderBean.getOrdernumber(), "true");//最後根據訂單號，獲取訂單商品列表
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<OrderItemBean>>() {
+                    @Override
+                    public void accept(List<OrderItemBean> orderItemBeanList) throws Exception {
                         customDialog.dismiss();
                         if (transactionBean != null) {
                             if (transactionBean.getPaymentmethod().equals("現金")) {
@@ -144,86 +200,34 @@ public class OrderDetialActivity extends BaseActivity {
                                 cashMoneyTv.setText(0 + "");
                             }
                         }
-                        List<OrderItemBean> orderItemBeanList = gson.fromJson(results, new TypeToken<List<OrderItemBean>>
-                                () {
-                        }.getType());
                         if (orderItemBeanList != null) {
                             goodList.addAll(orderItemBeanList);
                             goodsAdapter.notifyDataSetChanged();
                         }
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
                         Toast.makeText(OrderDetialActivity.this, "获取订单详情信息失败", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 });
+
     }
 
-    CustomDialog customDialog;
 
-    private void getOrderDetialData() {
-        if (customDialog == null)
-            customDialog = new CustomDialog(this, "正在查询订单详情信息");
-        customDialog.show();
-        OkHttp3Util.doGetWithToken(Constants.INVOICES_URL + "?ordernumber=" + orderBean.getOrdernumber(), sharedPreferences,
-                new Okhttp3StringCallback(OrderDetialActivity.this, "getOrderDetialData") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        getOrderTransaction(new JSONArray(results).getJSONObject(0).getString("invoicenumber"));
-                    }
 
-                    @Override
-                    public void onFailed(String erromsg) {
-                        customDialog.dismiss();
-                        Toast.makeText(OrderDetialActivity.this, "获取订单详情信息失败", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
-    }
-
-    TransactionBean transactionBean;
-
-    private void getOrderTransaction(String invoicenumber) {
-        OkHttp3Util.doGetWithToken(Constants.TRANSACTION_URL + "?invoicenumber=" + invoicenumber, sharedPreferences,
-                new Okhttp3StringCallback(OrderDetialActivity.this, "getOrderTransaction") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        List<TransactionBean> transactionlist = gson.fromJson(results, new TypeToken<List<TransactionBean>>() {
-                        }.getType());
-                        transactionBean = transactionlist.get(0);
-                        getOrderDetialGoodList();
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-                        customDialog.dismiss();
-                        Toast.makeText(OrderDetialActivity.this, "获取订单详情信息失败", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-                });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (previewDialog != null)
-            previewDialog.dismiss();
-    }
-
-    AlertDialog previewDialog;
-
-    public static AlertDialog showPreviewDialog(final Activity activity, List<OrderItemBean> goodList, String orderNumber,
-                                         String memberName, String createDate, double sumMoney,int storeId) {
+    public static void printViews(final Activity activity, List<OrderItemBean> goodList, String orderNumber,
+                                                String memberName, String createDate, double sumMoney, int storeId) {
+        List<View> views = new ArrayList<>();
         final View printView = LayoutInflater.from(activity).inflate(R.layout.dialog_preview, null);
         ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
         ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
         ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
         ((TextView) printView.findViewById(R.id.good_size_tv)).setText("共" + goodList.size() + "件");
         ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
-        if(storeId == 4){
+        if (storeId == 4) {
             printView.findViewById(R.id.maco_store_info_layout).setVisibility(View.GONE);
             printView.findViewById(R.id.zhuhai_store_info_layout).setVisibility(View.VISIBLE);
         } else {
@@ -231,22 +235,61 @@ public class OrderDetialActivity extends BaseActivity {
             printView.findViewById(R.id.zhuhai_store_info_layout).setVisibility(View.GONE);
         }
         RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
-        OrderDetailPrintGoodsAdapter adapter = new OrderDetailPrintGoodsAdapter(R.layout.bill_print_good_list_item, goodList);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
-        mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
-        listview.setLayoutManager(mLayoutManager);
-        listview.setAdapter(adapter);
-        final AlertDialog previewDialog = new AlertDialog.Builder(activity).setView(printView)
-                .setCancelable(false)
-                .create();
-        previewDialog.show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                BillActivity.print(activity, printView);
+        List<OrderItemBean> templist = new ArrayList<>();
+        for(int i = 0 ; i < 300 ;i++){
+            templist.add(goodList.get(0));
+        }
+        if(templist.size() > 13){
+            List<OrderItemBean> reatList = new ArrayList<>();
+            int tsize = templist.size();
+            for(int i = 0 ; i < tsize ;i++){
+                if(i <= 12){
+                    reatList.add(templist.get(i));
+                }
             }
-        }, 1000);
-        return previewDialog;
+            OrderDetailPrintGoodsAdapter adapter = new OrderDetailPrintGoodsAdapter(R.layout.bill_print_good_list_item, reatList);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
+            mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+            listview.setLayoutManager(mLayoutManager);
+            listview.setAdapter(adapter);
+            views.add(printView);
+
+            int size = (int)((templist.size() - 13)/30);
+            int a = (templist.size() - 13)%30;
+            if(a != 0){
+                size++;
+            }
+            Log.e("test","size:" + size + " a:" + a);
+            for(int i = 0 ; i < size ; i++){
+                List<OrderItemBean> extraList = new ArrayList<>();
+                if(i == (size - 1)){
+                    for(int t = 0 ; t < a ; t++){
+                        extraList.add(templist.get(t + 30 * i + 13));
+                    }
+                }else {
+                    for(int t = 0 ; t < 30 ; t++){
+                        extraList.add(templist.get(t + 30 * i + 13));
+                    }
+                }
+                View extraListView = LayoutInflater.from(activity).inflate(R.layout.print_extra_list_view, null);
+                RecyclerView recyclerView = (RecyclerView) extraListView.findViewById(R.id.extra_list);
+                OrderDetailPrintGoodsAdapter adapter1 = new OrderDetailPrintGoodsAdapter(R.layout.bill_print_good_list_item, extraList);
+                LinearLayoutManager mLayoutManager1 = new LinearLayoutManager(activity);
+                mLayoutManager1.setOrientation(OrientationHelper.VERTICAL);
+                recyclerView.setLayoutManager(mLayoutManager1);
+                recyclerView.setAdapter(adapter1);
+                views.add(extraListView);
+            }
+        } else {
+            OrderDetailPrintGoodsAdapter adapter = new OrderDetailPrintGoodsAdapter(R.layout.bill_print_good_list_item, templist);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
+            mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+            listview.setLayoutManager(mLayoutManager);
+            listview.setAdapter(adapter);
+            views.add(printView);
+        }
+        Log.e("test","viewsize:" + views.size());
+        BillActivity.print(activity, views);
     }
 
 
@@ -254,7 +297,7 @@ public class OrderDetialActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.right_img:
-                previewDialog = showPreviewDialog(this, goodList, orderBean.getOrdernumber(), memberNameTv.getText().toString(),
+                printViews(this, goodList, orderBean.getOrdernumber(), memberNameTv.getText().toString(),
                         dateTv.getText().toString(), orderBean.getTotalprice(), MyApplication.staffInfoBean.getStoreid());
                 break;
             case R.id.btn_change:

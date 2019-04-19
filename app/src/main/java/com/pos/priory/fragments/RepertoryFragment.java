@@ -21,6 +21,8 @@ import com.pos.priory.activitys.MainActivity;
 import com.pos.priory.adapters.OrderAdapter;
 import com.pos.priory.adapters.RepertoryAdapter;
 import com.pos.priory.beans.GoodBean;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
@@ -38,6 +40,11 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 
 /**
@@ -72,7 +79,7 @@ public class RepertoryFragment extends BaseFragment {
             }
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
-        repertoryAdapter = new RepertoryAdapter(getActivity(),R.layout.repertory_list_item, dataList);
+        repertoryAdapter = new RepertoryAdapter(getActivity(), R.layout.repertory_list_item, dataList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
@@ -81,50 +88,52 @@ public class RepertoryFragment extends BaseFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getActivity(), GoodDetialActivity.class);
-                intent.putExtra("goodbean",gson.toJson(dataList.get(position)));
+                intent.putExtra("goodbean", gson.toJson(dataList.get(position)));
                 startActivity(intent);
-                ((MainActivity)getActivity()).edtSearch.setText("");
+                ((MainActivity) getActivity()).edtSearch.setText("");
             }
         });
         refreshLayout.autoRefresh();
     }
 
 
-    Call call;
+    Disposable call;
+
     public void refreshRecyclerView(String str) {
         currentStr = str;
         if (call != null)
-            call.cancel();
+            call.dispose();
         dataList.clear();
         repertoryAdapter.notifyDataSetChanged();
-        String url = "";
         String location = MyApplication.staffInfoBean.getStore();
-        if(str.equals("")){
-            url = Constants.GET_STOCK_URL + "?location=" + location;
-        }else {
+        Observable<String> observable;
+        if (str.equals("")) {
+            observable = RetrofitManager.createString(ApiService.class).getStockListByLocation(location);
+        } else {
             if (LogicUtils.isNumeric(str))
-                url = Constants.GET_STOCK_URL + "?productcode=" + str + "&location=" + location;
+                observable = RetrofitManager.createString(ApiService.class).getStockListByLocationAndProductCode(location, str);
             else
-                url = Constants.GET_STOCK_URL + "?name=" + str + "&location=" + location;
+                observable = RetrofitManager.createString(ApiService.class).getStockListByNameAndProductCode(str, location);
         }
-        Log.e("getStockList","url:" + url);
-        call = OkHttp3Util.doGetWithToken(url, sharedPreferences, new Okhttp3StringCallback(getActivity(),
-                "getStockList") {
-            @Override
-            public void onSuccess(String results) throws Exception {
-                 List<GoodBean> goodBeanList = gson.fromJson(results,new TypeToken<List<GoodBean>>(){}.getType());
-                if(goodBeanList != null) {
-                    dataList.addAll(goodBeanList);
-                    repertoryAdapter.notifyDataSetChanged();
-                }
-                refreshLayout.finishRefresh();
-            }
+        call = observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String results) throws Exception {
+                        List<GoodBean> goodBeanList = gson.fromJson(results, new TypeToken<List<GoodBean>>() {
+                        }.getType());
+                        if (goodBeanList != null) {
+                            dataList.addAll(goodBeanList);
+                            repertoryAdapter.notifyDataSetChanged();
+                        }
+                        refreshLayout.finishRefresh();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        refreshLayout.finishRefresh();
+                    }
+                });
 
-            @Override
-            public void onFailed(String erromsg) {
-                refreshLayout.finishRefresh();
-            }
-        });
     }
 
     @Override

@@ -142,7 +142,7 @@ public class MemberInfoActivity extends BaseActivity {
             orderAdapter.notifyDataSetChanged();
         }
         OkHttp3Util.doGetWithToken(Constants.GET_ORDERS_URL + "?member=" + memberBean.getMobile(),
-                sharedPreferences, new Okhttp3StringCallback("getOrders") {
+             new Okhttp3StringCallback("getOrders") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {

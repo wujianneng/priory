@@ -30,6 +30,8 @@ import com.pos.priory.adapters.QueryMemberAdapter;
 import com.pos.priory.adapters.QueryOrderAdapter;
 import com.pos.priory.beans.MemberBean;
 import com.pos.priory.beans.OrderBean;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
@@ -50,6 +52,12 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 
 /**
@@ -199,20 +207,20 @@ public class QueryFragment extends BaseFragment {
     }
 
 
-    Call memberCall;
+    Disposable memberCall;
 
     private void refreshMemberRecyclerView(String str) {
         if (memberCall != null)
-            memberCall.cancel();
+            memberCall.dispose();
         memberList.clear();
         memberAdapter.notifyDataSetChanged();
         if (str.equals(""))
             return;
-        memberCall = OkHttp3Util.doGetWithToken(Constants.GET_MEMBERS_URL + "?mobile="
-                        + str, sharedPreferences,
-                new Okhttp3StringCallback("getMembers") {
+        memberCall = RetrofitManager.createString(ApiService.class).getMembers(str)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
+                    public void accept(String results) throws Exception {
                         final List<MemberBean> memberBeanList = gson.fromJson(results, new TypeToken<List<MemberBean>>() {
                         }.getType());
                         if (memberBeanList != null) {
@@ -224,11 +232,10 @@ public class QueryFragment extends BaseFragment {
                                 }
                             };
                         }
-
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
 
                     }
                 });
@@ -241,23 +248,18 @@ public class QueryFragment extends BaseFragment {
             dateCall.cancel();
         orderList.clear();
         orderAdapter.notifyDataSetChanged();
-        if (date.equals("") )
+        if (date.equals(""))
             return;
         dateCall = OkHttp3Util.doGetWithToken(Constants.GET_ORDERS_URL + "?date=" + date,
-                sharedPreferences, new Okhttp3StringCallback("getOrders") {
+              new Okhttp3StringCallback("getOrders") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {
                         }.getType());
-                        new RunOnUiThreadSafe(getActivity()) {
-                            @Override
-                            public void runOnUiThread() {
-                                if (orderBeanList != null) {
-                                    orderList.addAll(orderBeanList);
-                                    orderAdapter.notifyDataSetChanged();
-                                }
-                            }
-                        };
+                        if (orderBeanList != null) {
+                            orderList.addAll(orderBeanList);
+                            orderAdapter.notifyDataSetChanged();
+                        }
                     }
 
                     @Override
@@ -266,34 +268,31 @@ public class QueryFragment extends BaseFragment {
                 });
     }
 
-    Call orderCall;
+    Disposable orderCall;
 
     private void refreshOrderRecyclerView(String orderNum) {
         if (orderCall != null)
-            orderCall.cancel();
+            orderCall.dispose();
         orderList.clear();
         orderAdapter.notifyDataSetChanged();
         if (orderNum.equals(""))
             return;
-        orderCall = OkHttp3Util.doGetWithToken(Constants.GET_ORDERS_URL + "?ordernumber=" + orderNum,
-                sharedPreferences, new Okhttp3StringCallback("getOrders") {
+        orderCall = RetrofitManager.createString(ApiService.class).getOrdersByOrdernumber(orderNum)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
+                    public void accept(String results) throws Exception {
                         final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {
                         }.getType());
-                        new RunOnUiThreadSafe(getActivity()) {
-                            @Override
-                            public void runOnUiThread() {
-                                if (orderBeanList != null) {
-                                    orderList.addAll(orderBeanList);
-                                    orderAdapter.notifyDataSetChanged();
-                                }
-                            }
-                        };
+                        if (orderBeanList != null) {
+                            orderList.addAll(orderBeanList);
+                            orderAdapter.notifyDataSetChanged();
+                        }
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
+
                     }
                 });
     }

@@ -2,16 +2,23 @@ package com.pos.priory.activitys;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.print.PrintHelper;
+import android.support.v4.util.LruCache;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,11 +35,14 @@ import com.pos.priory.fragments.OrderFragment;
 import com.pos.priory.utils.BitmapUtils;
 import com.pos.priory.utils.DateUtils;
 import com.pos.priory.utils.LogicUtils;
+import com.pos.priory.utils.MyPrintHelper;
+import com.pos.zxinglib.utils.DeviceUtil;
 import com.pos.zxinglib.utils.PermissionsManager;
 import com.pos.zxinglib.utils.PermissionsResultAction;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -117,7 +127,7 @@ public class BillActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_print:
-                previewDialog = showPreviewDialog(this, goodList, orderNumberTv.getText().toString(), getIntent().getStringExtra("memberName"),
+                printViews(this, goodList, orderNumberTv.getText().toString(), getIntent().getStringExtra("memberName"),
                         createDateTv.getText().toString(), getIntent().getDoubleExtra("sumMoney", 0), MyApplication.staffInfoBean.getStoreid());
                 break;
             case R.id.back_btn:
@@ -127,17 +137,10 @@ public class BillActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (previewDialog != null)
-            previewDialog.dismiss();
-    }
 
-    AlertDialog previewDialog;
-
-    public static AlertDialog showPreviewDialog(final Activity activity, List<GoodBean> goodList, String orderNumber,
+    public static void printViews(final Activity activity, List<GoodBean> goodList, String orderNumber,
                                                 String memberName, String createDate, double sumMoney, int storeid) {
+        List<View> views = new ArrayList<>();
         final View printView = LayoutInflater.from(activity).inflate(R.layout.dialog_preview, null);
         ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
         ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
@@ -157,19 +160,66 @@ public class BillActivity extends BaseActivity {
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         listview.setLayoutManager(mLayoutManager);
         listview.setAdapter(adapter);
-        final AlertDialog previewDialog = new AlertDialog.Builder(activity).setView(printView).setCancelable(false).create();
-        previewDialog.show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                print(activity, printView);
+
+        views.add(printView);
+        print(activity, views);
+    }
+
+    /**
+     * 对RecyclerView进行截图
+     */
+    public static Bitmap shotRecyclerView(RecyclerView view) {
+        RecyclerView.Adapter adapter = view.getAdapter();
+        Bitmap bigBitmap = null;
+        if (adapter != null) {
+            int size = adapter.getItemCount();
+            int height = 0;
+            Paint paint = new Paint();
+            int iHeight = 0;
+            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+
+            // Use 1/8th of the available memory for this memory cache.
+            final int cacheSize = maxMemory / 8;
+            LruCache<String, Bitmap> bitmaCache = new LruCache<>(cacheSize);
+            for (int i = 0; i < size; i++) {
+                RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
+                adapter.onBindViewHolder(holder, i);
+                holder.itemView.measure(
+                        View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(),
+                        holder.itemView.getMeasuredHeight());
+                holder.itemView.setDrawingCacheEnabled(true);
+                holder.itemView.buildDrawingCache();
+                Bitmap drawingCache = holder.itemView.getDrawingCache();
+                if (drawingCache != null) {
+
+                    bitmaCache.put(String.valueOf(i), drawingCache);
+                }
+                height += holder.itemView.getMeasuredHeight();
             }
-        }, 1000);
-        return previewDialog;
+
+            bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), height, Bitmap.Config.ARGB_8888);
+            Canvas bigCanvas = new Canvas(bigBitmap);
+            Drawable lBackground = view.getBackground();
+            if (lBackground instanceof ColorDrawable) {
+                ColorDrawable lColorDrawable = (ColorDrawable) lBackground;
+                int lColor = lColorDrawable.getColor();
+                bigCanvas.drawColor(lColor);
+            }
+
+            for (int i = 0; i < size; i++) {
+                Bitmap bitmap = bitmaCache.get(String.valueOf(i));
+                bigCanvas.drawBitmap(bitmap, 0f, iHeight, paint);
+                iHeight += bitmap.getHeight();
+                bitmap.recycle();
+            }
+        }
+        return bigBitmap;
     }
 
 
-    public static void print(final Activity activity, View view) {
+    public static void print(final Activity activity, List<View> views) {
         PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(activity, new PermissionsResultAction() {
             @Override
             public void onGranted() {
@@ -182,14 +232,22 @@ public class BillActivity extends BaseActivity {
                 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
             }
         });
-        //实例化类
-        PrintHelper photoPrinter = new PrintHelper(activity);
-        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);//设置填充的类型，填充的类型指的是在A4纸上打印时的填充类型，两种模式
-
-        //打印
-        Bitmap bitmap = BitmapUtils.loadBitmapFromViewBySystem(view);
-        photoPrinter.printBitmap("jpgTestPrint", bitmap);//这里的第一个参数是打印的jobName
+//        //实例化类
+//        PrintHelper photoPrinter = new PrintHelper(activity);
+//        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);//设置填充的类型，填充的类型指的是在A4纸上打印时的填充类型，两种模式
+//
+//        //打印
+//        Bitmap bitmap = BitmapUtils.loadBitmapFromViewBySystem(view);
+//        photoPrinter.printBitmap("jpgTestPrint", bitmap);//这里的第一个参数是打印的jobName
 //        A5 - 148x210
+        List<Bitmap> bitmaps = new ArrayList<>();
+        MyPrintHelper myPrintHelper = new MyPrintHelper(activity);
+        for(int i = 0 ; i < views.size() ; i++){
+            View view = views.get(i);
+            Bitmap bitmap = BitmapUtils.loadBitmapFromViewBySystem(view, DeviceUtil.dip2px(activity, 444), DeviceUtil.dip2px(activity, 630));
+            bitmaps.add(bitmap);
+        }
+        myPrintHelper.printBitmap("jpgTestPrint",bitmaps);
 
 //        // Get a PrintManager instance
 //        PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);

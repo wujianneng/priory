@@ -28,6 +28,8 @@ import com.pos.priory.activitys.MemberActivity;
 import com.pos.priory.activitys.OrderDetialActivity;
 import com.pos.priory.adapters.OrderAdapter;
 import com.pos.priory.beans.OrderBean;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
@@ -55,6 +57,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/29.
@@ -114,7 +121,7 @@ public class OrderFragment extends BaseFragment {
     @Override
     public void handleEventBus(String event) {
         super.handleEventBus(event);
-        if(event.equals(UPDATE_ORDER_LIST)){
+        if (event.equals(UPDATE_ORDER_LIST)) {
             smartRefreshLayout.autoRefresh();
         }
     }
@@ -139,8 +146,8 @@ public class OrderFragment extends BaseFragment {
         recyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-                Log.e("viewtype","viewtype:" + viewType);
-                if(viewType == 0 && MyApplication.staffInfoBean.getPermission().equals("店長")) {
+                Log.e("viewtype", "viewtype:" + viewType);
+                if (viewType == 0 && MyApplication.staffInfoBean.getPermission().equals("店長")) {
                     SwipeMenuItem cancelItem = new SwipeMenuItem(getActivity())
                             .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
                             .setImage(R.drawable.edit)
@@ -208,22 +215,24 @@ public class OrderFragment extends BaseFragment {
         row3Tv2.setText("總數：12件");
         row4Tv1.setText("支付寶：222元 | 微信支付：100元");
         row4Tv2.setText("縂重：15g");
-        OkHttp3Util.doGetWithToken(Constants.GOLD_PRICE_URL, sharedPreferences, new Okhttp3StringCallback(this, "getCurrentGoldPrice") {
-            @Override
-            public void onSuccess(String results) throws Exception {
-                String currentGoldPrice = new JSONObject(results).getString("price");
-                goldPriceLayout.setVisibility(View.VISIBLE);
-                row1Tv2.setText("金價：" + (int) Double.parseDouble(currentGoldPrice) + "/g");
-                row2Tv2.setText("金價：" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
-            }
-
-            @Override
-            public void onFailed(String erromsg) {
-                goldPriceLayout.setVisibility(View.GONE);
-            }
-        });
+        RetrofitManager.createString(ApiService.class).getCurrentGoldPrice()
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Log.e("okhttp", "result:" + s);
+                        String currentGoldPrice = new JSONObject(s).getString("price");
+                        goldPriceLayout.setVisibility(View.VISIBLE);
+                        row1Tv2.setText("金價：" + (int) Double.parseDouble(currentGoldPrice) + "/g");
+                        row2Tv2.setText("金價：" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        goldPriceLayout.setVisibility(View.GONE);
+                    }
+                });
     }
-
 
 
     private void refreshRecyclerView(final boolean isLoadMore) {
@@ -234,37 +243,29 @@ public class OrderFragment extends BaseFragment {
             getCurrentGoldPrice();
         }
         String storeName = MyApplication.staffInfoBean.getStore();
-        OkHttp3Util.doGetWithToken(Constants.GET_ORDERS_URL + "?location=" + storeName + "&daycontrol=true",
-                sharedPreferences, new Okhttp3StringCallback("getOrders") {
+        RetrofitManager.createString(ApiService.class).getTodayOrders(storeName, "true")
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
+                    public void accept(String results) throws Exception {
                         currentPage++;
                         final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {
                         }.getType());
-                        new RunOnUiThreadSafe(getActivity()) {
-                            @Override
-                            public void runOnUiThread() {
-                                if (orderBeanList != null) {
-                                    orderList.addAll(orderBeanList);
-                                    orderAdapter.notifyDataSetChanged();
-                                }
-                                smartRefreshLayout.finishLoadMore();
-                                smartRefreshLayout.finishRefresh();
-                            }
-                        };
+                        if (orderBeanList != null) {
+                            orderList.addAll(orderBeanList);
+                            orderAdapter.notifyDataSetChanged();
+                        }
+                        smartRefreshLayout.finishLoadMore();
+                        smartRefreshLayout.finishRefresh();
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
-                        new RunOnUiThreadSafe(getActivity()) {
-                            @Override
-                            public void runOnUiThread() {
-                                smartRefreshLayout.finishLoadMore();
-                                smartRefreshLayout.finishRefresh();
-                            }
-                        };
+                    public void accept(Throwable throwable) throws Exception {
+                        smartRefreshLayout.finishLoadMore();
+                        smartRefreshLayout.finishRefresh();
                     }
                 });
+
     }
 
     @Override

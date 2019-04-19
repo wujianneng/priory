@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import android.os.Environment;
 import android.util.Log;
 
+import com.pos.priory.MyApplication;
+
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
@@ -123,9 +125,8 @@ public class OkHttp3Util {
         return call;
     }
 
-    public static Call doGetWithToken(String url, SharedPreferences sharedPreferences, Okhttp3StringCallback callback) {
+    public static Call doGetWithToken(String url,  Okhttp3StringCallback callback) {
         Log.e("doGeturl","url:" + url);
-        Log.e("doGeturl","token:" + sharedPreferences.getString(Constants.Authorization_KEY, ""));
         //创建OkHttpClient请求对象
         OkHttpClient okHttpClient = getInstance();
         //创建Request
@@ -133,7 +134,7 @@ public class OkHttp3Util {
         request = new Request.Builder()
                 .url(url)
                 .addHeader(Constants.Authorization_KEY,
-                        "Token " + sharedPreferences.getString(Constants.Authorization_KEY, ""))
+                        MyApplication.authorization)
                 .build();
         //得到Call对象
         Call call = okHttpClient.newCall(request);
@@ -209,8 +210,7 @@ public class OkHttp3Util {
         return call;
     }
 
-    public static Call doPostWithToken(String url, String paramString, SharedPreferences sharedPreferences, Okhttp3StringCallback callback) {
-        Log.e("dopost","paramstring:" + paramString + "url:" + url + "token:" + sharedPreferences.getString(Constants.Authorization_KEY, ""));
+    public static Call doPostWithToken(String url, String paramString, Okhttp3StringCallback callback) {
 //创建OkHttpClient请求对象
         OkHttpClient okHttpClient = getInstance();
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), paramString);
@@ -220,7 +220,7 @@ public class OkHttp3Util {
                 .url(url)
                 .post(requestBody)
                 .addHeader(Constants.Authorization_KEY,
-                        "Token " + sharedPreferences.getString(Constants.Authorization_KEY, ""))
+                        MyApplication.authorization)
                 .build();
         Call call = okHttpClient.newCall(request);
         call.enqueue(callback);
@@ -382,7 +382,7 @@ public class OkHttp3Util {
         return call;
     }
 
-    public static Call doDeleteWithToken(String url, SharedPreferences sharedPreferences, Okhttp3StringCallback callback) {
+    public static Call doDeleteWithToken(String url, Okhttp3StringCallback callback) {
 //创建OkHttpClient请求对象
         OkHttpClient okHttpClient = getInstance();
         //创建Request
@@ -391,16 +391,15 @@ public class OkHttp3Util {
                 .url(url)
                 .delete()
                 .addHeader(Constants.Authorization_KEY,
-                        "Token " + sharedPreferences.getString(Constants.Authorization_KEY, ""))
+                        MyApplication.authorization)
                 .build();
         Call call = okHttpClient.newCall(request);
         call.enqueue(callback);
         return call;
     }
 
-    public static Call doPatchWithToken(String url, String paramString, SharedPreferences sharedPreferences, Okhttp3StringCallback callback) {
+    public static Call doPatchWithToken(String url, String paramString,Okhttp3StringCallback callback) {
         Log.e("dopost", "paramstring:" + paramString);
-
 //创建OkHttpClient请求对象
         OkHttpClient okHttpClient = getInstance();
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), paramString);
@@ -410,14 +409,14 @@ public class OkHttp3Util {
                 .url(url)
                 .patch(requestBody)
                 .addHeader(Constants.Authorization_KEY,
-                        "Token " + sharedPreferences.getString(Constants.Authorization_KEY, ""))
+                        MyApplication.authorization)
                 .build();
         Call call = okHttpClient.newCall(request);
         call.enqueue(callback);
         return call;
     }
 
-    public static Call doPutWithToken(String url, String paramString, SharedPreferences sharedPreferences, Okhttp3StringCallback callback) {
+    public static Call doPutWithToken(String url, String paramString, Okhttp3StringCallback callback) {
         Log.e("dopost", "paramstring:" + paramString);
 
 //创建OkHttpClient请求对象
@@ -429,7 +428,7 @@ public class OkHttp3Util {
                 .url(url)
                 .put(requestBody)
                 .addHeader(Constants.Authorization_KEY,
-                        "Token " + sharedPreferences.getString(Constants.Authorization_KEY, ""))
+                        MyApplication.authorization)
                 .build();
         Call call = okHttpClient.newCall(request);
         call.enqueue(callback);

@@ -346,7 +346,7 @@ public class BalanceActivity extends BaseActivity {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("ordernumber", getIntent().getStringExtra("ordernumber"));
         paramMap.put("amount", sumMoney);
-        OkHttp3Util.doPostWithToken(Constants.INVOICES_URL + "/", gson.toJson(paramMap), sharedPreferences,
+        OkHttp3Util.doPostWithToken(Constants.INVOICES_URL + "/", gson.toJson(paramMap),
                 new Okhttp3StringCallback(this, "invoice") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -367,7 +367,7 @@ public class BalanceActivity extends BaseActivity {
         paramMap.put("invoicenumber", invoicesNumber);
         paramMap.put("amount", sumMoney);
         paramMap.put("paymentmethod", radioBtnCard.isChecked() ? "信用卡" : "現金");
-        OkHttp3Util.doPostWithToken(Constants.TRANSACTION_URL + "/", gson.toJson(paramMap), sharedPreferences,
+        OkHttp3Util.doPostWithToken(Constants.TRANSACTION_URL + "/", gson.toJson(paramMap),
                 new Okhttp3StringCallback(this, "transaction") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -413,7 +413,7 @@ public class BalanceActivity extends BaseActivity {
         });
         customDialog.show();
         OkHttp3Util.doDeleteWithToken(Constants.INVOICES_URL + "/" + invoicesResultBean.getId() + "/update/",
-                sharedPreferences, new Okhttp3StringCallback() {
+                new Okhttp3StringCallback() {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         customDialog.dismiss();

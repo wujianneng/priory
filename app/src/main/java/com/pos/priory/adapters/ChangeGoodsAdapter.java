@@ -122,9 +122,8 @@ public class ChangeGoodsAdapter extends BaseQuickAdapter<OrderItemBean, BaseView
             editCall.cancel();
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("weight", Double.parseDouble(weight));
-        editCall = OkHttp3Util.doPatchWithToken(Constants.RETURN_STOCKS_URL + "/" + returnStockId
-                        + "/update/", new Gson().toJson(paramMap),
-                PreferenceManager.getDefaultSharedPreferences(context), new Okhttp3StringCallback((Activity) context,
+        editCall = OkHttp3Util.doPatchWithToken(Constants.RETURN_STOCKS_URL + "/" + returnStockId + "/update/", new Gson().toJson(paramMap),
+                new Okhttp3StringCallback((Activity) context,
                         "editReturnStocks") {
                     @Override
                     public void onSuccess(String results) throws Exception {

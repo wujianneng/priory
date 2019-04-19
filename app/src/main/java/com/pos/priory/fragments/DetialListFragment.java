@@ -250,7 +250,7 @@ public class DetialListFragment extends BaseFragment {
         customDialog.show();
         Map<String, Object> map = new HashMap<>();
         map.put("quantity", count);
-        OkHttp3Util.doPatchWithToken(Constants.PURCHASING_ITEM_URL + "/" + bean.getId() + "/update/", gson.toJson(map), sharedPreferences,
+        OkHttp3Util.doPatchWithToken(Constants.PURCHASING_ITEM_URL + "/" + bean.getId() + "/update/", gson.toJson(map),
                 new Okhttp3StringCallback(getActivity(), "editPurshing") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -279,7 +279,7 @@ public class DetialListFragment extends BaseFragment {
         customDialog.show();
         Map<String, Object> map = new HashMap<>();
         map.put("confirmed", "true");
-        OkHttp3Util.doPutWithToken(Constants.PURCHASING_URL + "/" + bean.getPurchasing().getId() + "/update/", gson.toJson(map), sharedPreferences,
+        OkHttp3Util.doPutWithToken(Constants.PURCHASING_URL + "/" + bean.getPurchasing().getId() + "/update/", gson.toJson(map),
                 new Okhttp3StringCallback(getActivity(), "comfirmPurshing") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -306,7 +306,7 @@ public class DetialListFragment extends BaseFragment {
             }
         });
         customDialog.show();
-        OkHttp3Util.doDeleteWithToken(Constants.PURCHASING_URL + "/" + bean.getPurchasing().getId() + "/update/", sharedPreferences,
+        OkHttp3Util.doDeleteWithToken(Constants.PURCHASING_URL + "/" + bean.getPurchasing().getId() + "/update/",
                 new Okhttp3StringCallback(getActivity(), "comfirmPurshing") {
                     @Override
                     public void onSuccess(String results) throws Exception {
@@ -332,12 +332,12 @@ public class DetialListFragment extends BaseFragment {
             detialListAdapter.notifyDataSetChanged();
         }
         final String location = MyApplication.staffInfoBean.getStore();
-        OkHttp3Util.doGetWithToken(Constants.PURCHASING_URL + "?location=" + location,sharedPreferences,
+        OkHttp3Util.doGetWithToken(Constants.PURCHASING_URL + "?location=" + location,
                 new Okhttp3StringCallback(getActivity(), "createPurshing") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         OkHttp3Util.doGetWithToken(Constants.PURCHASING_ITEM_URL + "/?purchasing=" + new JSONArray(results).getJSONObject(0).getInt("id"),
-                                sharedPreferences, new Okhttp3StringCallback(getActivity(), "getPurchasings") {
+                           new Okhttp3StringCallback(getActivity(), "getPurchasings") {
                                     @Override
                                     public void onSuccess(String results) throws Exception {
                                         final List<PurchasingItemBean> orderBeanList = gson.fromJson(results, new TypeToken<List<PurchasingItemBean>>() {

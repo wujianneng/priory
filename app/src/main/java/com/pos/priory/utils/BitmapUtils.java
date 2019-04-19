@@ -46,10 +46,16 @@ public class BitmapUtils {
         return bitmap;
     }
 
-    public static Bitmap loadBitmapFromViewBySystem(View v) {
+    public static Bitmap loadBitmapFromViewBySystem(View v,int width,int height) {
         if (v == null) {
             return null;
         }
+        v.layout(0, 0, width, height);
+        int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
+        int measuredHeight = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
+        // validate view.measurewidth and view.measureheight
+        v.measure(measuredWidth, measuredHeight);
+        v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
         v.setDrawingCacheEnabled(true);
         v.buildDrawingCache();
         Bitmap bitmap = v.getDrawingCache();

@@ -81,7 +81,7 @@ public class EditPasswordActivity extends BaseActivity {
         Map<String, Object> map = new HashMap<>();
         map.put("new_password1", edtNewPassword.getText().toString());
         map.put("new_password2", edtRepeatNewPassword.getText().toString());
-        OkHttp3Util.doPostWithToken(Constants.CHANGE_PASSWORD_URL, gson.toJson(map), sharedPreferences,
+        OkHttp3Util.doPostWithToken(Constants.CHANGE_PASSWORD_URL, gson.toJson(map),
                 new Okhttp3StringCallback(this, "editPassword") {
                     @Override
                     public void onSuccess(String results) throws Exception {
