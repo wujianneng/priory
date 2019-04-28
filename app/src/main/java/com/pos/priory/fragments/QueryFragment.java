@@ -241,19 +241,20 @@ public class QueryFragment extends BaseFragment {
                 });
     }
 
-    Call dateCall;
+    Disposable dateCall;
 
     private void refreshDateRecyclerView(String date) {
         if (dateCall != null)
-            dateCall.cancel();
+            dateCall.dispose();
         orderList.clear();
         orderAdapter.notifyDataSetChanged();
         if (date.equals(""))
             return;
-        dateCall = OkHttp3Util.doGetWithToken(Constants.GET_ORDERS_URL + "?date=" + date,
-              new Okhttp3StringCallback("getOrders") {
+        dateCall  = RetrofitManager.createString(ApiService.class).getOrdersByDate(date)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
+                    public void accept(String results) throws Exception {
                         final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {
                         }.getType());
                         if (orderBeanList != null) {
@@ -261,9 +262,10 @@ public class QueryFragment extends BaseFragment {
                             orderAdapter.notifyDataSetChanged();
                         }
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
+
                     }
                 });
     }
@@ -358,7 +360,7 @@ public class QueryFragment extends BaseFragment {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 c.set(year, monthOfYear, dayOfMonth);
                 dateTv.setText(DateFormat.format("yyy-MM-dd", c));
-//                refreshDateRecyclerView(dateTv.getText().toString());
+                refreshDateRecyclerView(dateTv.getText().toString());
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         dialog.show();

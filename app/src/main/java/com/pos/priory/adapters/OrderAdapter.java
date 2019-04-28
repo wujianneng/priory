@@ -41,7 +41,7 @@ public class OrderAdapter extends BaseQuickAdapter<OrderBean, BaseViewHolder> {
 
         helper.setText(R.id.detial_tv, item.getOrdernumber());
         helper.setText(R.id.date_tv,DateUtils.covertIso8601ToDate(item.getCreated()));
-        helper.setText(R.id.money_tv, "$" + item.getTotalprice());
+        helper.setText(R.id.money_tv, "" + item.getTotalprice());
         helper.setText(R.id.name_tv,item.getMember().getLast_name() + item.getMember().getFirst_name());
         helper.setImageResource(R.id.sex_img,item.getMember().getSex().equals("男") ? R.drawable.icon_boy : R.drawable.icon_girl);
     }

@@ -6,16 +6,21 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.Utils;
+import com.google.gson.reflect.TypeToken;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
+import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.networks.RetrofitManager;
@@ -28,6 +33,7 @@ import com.pos.priory.utils.RunOnUiThreadSafe;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.Bind;
@@ -52,7 +58,7 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.edt_passwrod)
     EditText edtPasswrod;
     @Bind(R.id.btn_cardview)
-    CardView btnCardview;
+    MaterialButton btnCardview;
     @Bind(R.id.checkbox)
     CheckBox checkbox;
 
@@ -138,24 +144,35 @@ public class LoginActivity extends BaseActivity {
                     .subscribe(new Consumer<String>() {
                         @Override
                         public void accept(String s) throws Exception {
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
-                            if (checkbox.isChecked()) {
-                                editor.putString(Constants.LAST_USERNAME_KEY,
-                                        edtUsename.getText().toString());
-                                editor.putString(Constants.LAST_PASSWORD_KEY,
-                                        edtPasswrod.getText().toString());
+                            List<StaffInfoBean> staffInfoBeanList = gson.fromJson(s,
+                                    new TypeToken<List<StaffInfoBean>>() {
+                                    }.getType());
+                            if (staffInfoBeanList != null && staffInfoBeanList.size() != 0 && !staffInfoBeanList.get(0).getStore().equals("")) {
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
+                                if (checkbox.isChecked()) {
+                                    editor.putString(Constants.LAST_USERNAME_KEY,
+                                            edtUsename.getText().toString());
+                                    editor.putString(Constants.LAST_PASSWORD_KEY,
+                                            edtPasswrod.getText().toString());
+                                }
+                                editor.putString(Constants.CURRENT_STAFF_INFO_KEY, s);
+                                editor.commit();
+                                if (customDialog != null)
+                                    customDialog.dismiss();
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                finish();
+                            } else {
+                                if (customDialog != null)
+                                    customDialog.dismiss();
+                                Toast.makeText(LoginActivity.this, "請與總部相關人員聯絡及查詢！", Toast.LENGTH_SHORT).show();
                             }
-                            editor.putString(Constants.CURRENT_STAFF_INFO_KEY, s);
-                            editor.commit();
-                            customDialog.dismiss();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            finish();
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            customDialog.dismiss();
+                            if (customDialog != null)
+                                customDialog.dismiss();
                             Toast.makeText(LoginActivity.this, "請與總部相關人員聯絡及查詢！", Toast.LENGTH_SHORT).show();
                         }
                     });

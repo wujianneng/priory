@@ -1,5 +1,7 @@
 package com.pos.priory.beans;
 
+import java.util.List;
+
 /**
  * Created by Lenovo on 2019/1/4.
  */
@@ -7,28 +9,30 @@ package com.pos.priory.beans;
 public class OrderBean {
 
     /**
-     * id : 247
-     * ordernumber : 20181230144216
-     * member : {"id":4,"mobile":"12345678","first_name":"小明","last_name":"陳","sex":"男","reward":0}
-     * staff : staff01
-     * status : draft
-     * totalprice : 1000.0
-     * discount : 1.00
+     * id : 7
+     * ordernumber : 12345
+     * member : {"id":1,"mobile":"66236133","first_name":"","last_name":"Lam","sex":"M","reward":0}
+     * staff : 1
+     * status : 未完成
+     * items : []
+     * totalprice : 0
+     * discount : 1.000000
      * fixdiscount : 0.00
-     * location : 高士德
-     * created : 2018-12-30T14:42:17.130687+08:00
+     * location : 调试
+     * created : 2019-04-26T15:38:19.301616+08:00
      */
 
     private int id;
     private String ordernumber;
     private MemberBean member;
-    private String staff;
+    private int staff;
     private String status;
-    private double totalprice;
+    private int totalprice;
     private String discount;
     private String fixdiscount;
     private String location;
     private String created;
+    private List<OrderItemBean> items;
 
     public int getId() {
         return id;
@@ -54,11 +58,11 @@ public class OrderBean {
         this.member = member;
     }
 
-    public String getStaff() {
+    public int getStaff() {
         return staff;
     }
 
-    public void setStaff(String staff) {
+    public void setStaff(int staff) {
         this.staff = staff;
     }
 
@@ -70,11 +74,11 @@ public class OrderBean {
         this.status = status;
     }
 
-    public double getTotalprice() {
+    public int getTotalprice() {
         return totalprice;
     }
 
-    public void setTotalprice(double totalprice) {
+    public void setTotalprice(int totalprice) {
         this.totalprice = totalprice;
     }
 
@@ -110,13 +114,78 @@ public class OrderBean {
         this.created = created;
     }
 
+    public List<OrderItemBean> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItemBean> items) {
+        this.items = items;
+    }
+
+    public static class OrderItemBean{
+        private int id;
+        private int stock;
+        private String discount;
+        private String fixdiscount;
+        private String price;
+        private boolean returned;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getStock() {
+            return stock;
+        }
+
+        public void setStock(int stock) {
+            this.stock = stock;
+        }
+
+        public String getDiscount() {
+            return discount;
+        }
+
+        public void setDiscount(String discount) {
+            this.discount = discount;
+        }
+
+        public String getFixdiscount() {
+            return fixdiscount;
+        }
+
+        public void setFixdiscount(String fixdiscount) {
+            this.fixdiscount = fixdiscount;
+        }
+
+        public String getPrice() {
+            return price;
+        }
+
+        public void setPrice(String price) {
+            this.price = price;
+        }
+
+        public boolean isReturned() {
+            return returned;
+        }
+
+        public void setReturned(boolean returned) {
+            this.returned = returned;
+        }
+    }
+
     public static class MemberBean {
         /**
-         * id : 4
-         * mobile : 12345678
-         * first_name : 小明
-         * last_name : 陳
-         * sex : 男
+         * id : 1
+         * mobile : 66236133
+         * first_name :
+         * last_name : Lam
+         * sex : M
          * reward : 0
          */
 

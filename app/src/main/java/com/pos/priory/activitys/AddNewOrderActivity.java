@@ -3,7 +3,6 @@ package com.pos.priory.activitys;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -75,12 +74,45 @@ public class AddNewOrderActivity extends BaseActivity {
     AddNewOrderGoodsAdapter goodsAdapter;
 
 
-    int memberid;
+    int memberid, memberReward;
+    String memberName, memberMobile;
 
     double sumMoney = 0, changeGoodsMoeny = 0;
     CreateOrderResultBean createOrderResultBean;
     @Bind(R.id.right_img)
     ImageView rightImg;
+    @Bind(R.id.title_layout)
+    CardView titleLayout;
+    @Bind(R.id.count_tv)
+    TextView countTv;
+    @Bind(R.id.member_name_tv)
+    TextView memberNameTv;
+    @Bind(R.id.sex_img)
+    ImageView sexImg;
+    @Bind(R.id.member_phone_tv)
+    TextView memberPhoneTv;
+    @Bind(R.id.member_reward_tv)
+    TextView memberRewardTv;
+    @Bind(R.id.data_layout)
+    CardView dataLayout;
+    @Bind(R.id.icon_scan)
+    ImageView iconScan;
+    @Bind(R.id.text_scan)
+    TextView textScan;
+    @Bind(R.id.btn_scan)
+    CardView btnScan;
+    @Bind(R.id.icon_add)
+    ImageView iconAdd;
+    @Bind(R.id.text_add)
+    TextView textAdd;
+    @Bind(R.id.btn_add)
+    CardView btnAdd;
+    @Bind(R.id.icon)
+    ImageView icon;
+    @Bind(R.id.text)
+    TextView text;
+    @Bind(R.id.btn_next)
+    CardView btnNext;
 
     @Override
     protected void beForeInitViews() {
@@ -138,7 +170,12 @@ public class AddNewOrderActivity extends BaseActivity {
         goodRecyclerView.setLayoutManager(mLayoutManager);
         goodRecyclerView.setAdapter(goodsAdapter);
         memberid = getIntent().getIntExtra("memberId", 0);
-        createNewOrder();
+        memberMobile = getIntent().getStringExtra("memberMobile");
+        memberReward = getIntent().getIntExtra("memberReward", 0);
+        memberName = getIntent().getStringExtra("memberName");
+        memberNameTv.setText("會員：" + memberName);
+        memberPhoneTv.setText("聯係電話：" + memberMobile);
+        memberRewardTv.setText("積分：" + memberReward);
         getStoreDiscountList();
     }
 
@@ -171,74 +208,6 @@ public class AddNewOrderActivity extends BaseActivity {
     }
 
     CustomDialog customDialog;
-    boolean hadCreateOrder = false;
-
-    private void createNewOrder() {
-        if (customDialog == null)
-            customDialog = new CustomDialog(this, "正在新增订单..");
-        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                customDialog = null;
-            }
-        });
-        customDialog.show();
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("ordernumber", DateUtils.getCurrentOrderNumber());
-        paramMap.put("member", memberid);
-        paramMap.put("location", MyApplication.staffInfoBean.getStore());
-        OkHttp3Util.doPostWithToken(Constants.GET_ORDERS_URL + "/", gson.toJson(paramMap),
-                new Okhttp3StringCallback(this, "createOrder") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        createOrderResultBean = gson.fromJson(results, CreateOrderResultBean.class);
-                        hadCreateOrder = true;
-                        customDialog.dismiss();
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-                        customDialog.dismiss();
-                    }
-                });
-
-    }
-
-    private void deleteOrder() {
-        if (!hadCreateOrder) {
-            finish();
-            return;
-        }
-        if (customDialog == null)
-            customDialog = new CustomDialog(this, "正在删除订单..");
-        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                customDialog = null;
-            }
-        });
-        customDialog.show();
-        OkHttp3Util.doDeleteWithToken(Constants.GET_ORDERS_URL + "/" + createOrderResultBean.getId() + "/update/",
-                new Okhttp3StringCallback(this, "deleteOrder") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        customDialog.dismiss();
-                        finish();
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-                        customDialog.dismiss();
-                        Toast.makeText(AddNewOrderActivity.this, "删除订单失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        deleteOrder();
-    }
 
     private void refreshSumMoney() {
         sumMoney = 0;
@@ -322,7 +291,7 @@ public class AddNewOrderActivity extends BaseActivity {
                 intent.putExtra("goodlist", gson.toJson(goodList));
                 intent.putExtra("sumMoney", sumMoney + changeGoodsMoeny);
                 intent.putExtra("newOrderSumMoney", sumMoney);
-                intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
+                intent.putExtra("memberName", memberName);
                 intent.putExtra("ordernumber", createOrderResultBean.getOrdernumber());
                 startActivity(intent);
                 break;
@@ -395,7 +364,7 @@ public class AddNewOrderActivity extends BaseActivity {
         customDialog.show();
         OkHttp3Util.doGetWithToken(Constants.GET_STOCK_URL + "?productcode=" + productcode + "&location="
                         + MyApplication.staffInfoBean.getStore(),
-                 new Okhttp3StringCallback(this, "getStockList") {
+                new Okhttp3StringCallback(this, "getStockList") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         List<GoodBean> goodBeanList = gson.fromJson(results, new TypeToken<List<GoodBean>>() {
@@ -448,7 +417,7 @@ public class AddNewOrderActivity extends BaseActivity {
         paramMap.put("quantity", goodBean.getSaleCount());
         paramMap.put("discount", goodBean.getDiscountRate());
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + goodBean.getId()
-                + "/update/", gson.toJson(paramMap),new Okhttp3StringCallback(this, "editOrderItem") {
+                + "/update/", gson.toJson(paramMap), new Okhttp3StringCallback(this, "editOrderItem") {
             @Override
             public void onSuccess(String results) throws Exception {
                 customDialog.dismiss();
@@ -480,7 +449,7 @@ public class AddNewOrderActivity extends BaseActivity {
         paramMap.put("quantity", quantity);
         paramMap.put("discount", discount);
         OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + orderitemId
-                + "/update/", gson.toJson(paramMap),new Okhttp3StringCallback(this, "editOrderItemOnOperate") {
+                + "/update/", gson.toJson(paramMap), new Okhttp3StringCallback(this, "editOrderItemOnOperate") {
             @Override
             public void onSuccess(String results) throws Exception {
                 customDialog.dismiss();
@@ -522,7 +491,7 @@ public class AddNewOrderActivity extends BaseActivity {
         });
         customDialog.show();
         OkHttp3Util.doDeleteWithToken(Constants.GET_ORDER_ITEM_URL + "/" + orderitemid + "/update/",
-              new Okhttp3StringCallback(this, "deleteOrderItem") {
+                new Okhttp3StringCallback(this, "deleteOrderItem") {
                     @Override
                     public void onSuccess(String results) throws Exception {
                         customDialog.dismiss();

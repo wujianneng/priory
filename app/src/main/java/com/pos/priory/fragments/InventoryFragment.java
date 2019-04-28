@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +27,11 @@ import butterknife.OnClick;
 public class InventoryFragment extends BaseFragment {
     View view;
     @Bind(R.id.day_inventory_btn)
-    CardView dayInventoryBtn;
+    MaterialButton dayInventoryBtn;
     @Bind(R.id.big_inventory_btn)
-    CardView bigInventoryBtn;
+    MaterialButton bigInventoryBtn;
     @Bind(R.id.ding_huo_list_btn)
-    CardView dingHuoListBtn;
+    MaterialButton dingHuoListBtn;
 
 
     @Nullable

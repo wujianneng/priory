@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.pos.priory.R;
 import com.pos.priory.coustomViews.CustomDialog;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
@@ -26,6 +28,9 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/30.
@@ -152,26 +157,35 @@ public class RegisterMemberActivity extends BaseActivity {
         paramMap.put("first_name", edtName.getText().toString());
         paramMap.put("mobile", edtPhone.getText().toString());
         paramMap.put("sex", btnSex.getText().toString());
-        OkHttp3Util.doPostWithToken(Constants.GET_MEMBERS_URL + "/", gson.toJson(paramMap),
-                new Okhttp3StringCallback(RegisterMemberActivity.this, "registerMember") {
+        RetrofitManager.createString(ApiService.class)
+                .registerMember(paramMap)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
+                    public void accept(String results) throws Exception {
+                        JSONObject jsonObject = new JSONObject(results);
                         Toast.makeText(RegisterMemberActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
                         customDialog.dismiss();
                         finish();
                         Intent intent = new Intent(RegisterMemberActivity.this, AddNewOrderActivity.class);
-                        JSONObject jsonObject = new JSONObject(results);
                         intent.putExtra("memberId", jsonObject.getInt("id"));
+                        intent.putExtra("memberMobile", jsonObject.getString("mobile"));
+                        intent.putExtra("memberReward", jsonObject.getInt("reward"));
                         intent.putExtra("memberName", jsonObject.getString("last_name") +
                                 jsonObject.getString("first_name"));
                         startActivity(intent);
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(RegisterMemberActivity.this, erromsg, Toast.LENGTH_SHORT).show();
+                        if (throwable.getMessage().contains("400")) {
+                            Toast.makeText(RegisterMemberActivity.this, "該手機號已經注冊", Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(RegisterMemberActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+
     }
 }

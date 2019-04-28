@@ -23,6 +23,7 @@ public class BillPrintGoodsAdapter extends BaseQuickAdapter<GoodBean,BaseViewHol
 
     @Override
     protected void convert(BaseViewHolder helper, GoodBean item) {
+        helper.setText(R.id.good_code_tv,item.getBatch().getBatchno() + item.getBatch().getProduct().getProductcode());
         helper.setText(R.id.good_name_tv,item.getBatch().getProduct().getName());
         helper.setText(R.id.good_count_tv,item.getSaleCount() + "");
         if(item.getDiscountRate() == 1){

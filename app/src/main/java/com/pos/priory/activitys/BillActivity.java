@@ -141,81 +141,43 @@ public class BillActivity extends BaseActivity {
     public static void printViews(final Activity activity, List<GoodBean> goodList, String orderNumber,
                                                 String memberName, String createDate, double sumMoney, int storeid) {
         List<View> views = new ArrayList<>();
-        final View printView = LayoutInflater.from(activity).inflate(R.layout.dialog_preview, null);
-        ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
-        ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
-        ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
-        ((TextView) printView.findViewById(R.id.good_size_tv)).setText("共" + goodList.size() + "件");
-        ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
-        if (storeid == 4) {
-            printView.findViewById(R.id.maco_store_info_layout).setVisibility(View.GONE);
-            printView.findViewById(R.id.zhuhai_store_info_layout).setVisibility(View.VISIBLE);
-        } else {
-            printView.findViewById(R.id.maco_store_info_layout).setVisibility(View.VISIBLE);
-            printView.findViewById(R.id.zhuhai_store_info_layout).setVisibility(View.GONE);
+        List<GoodBean> templist = new ArrayList<>();
+        templist.addAll(goodList);
+        int perPageSize = 8;
+        int size = templist.size() / perPageSize;
+        int a = templist.size() % perPageSize;
+        if (a != 0) {
+            size++;
         }
-        RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
-        BillPrintGoodsAdapter adapter = new BillPrintGoodsAdapter(R.layout.bill_print_good_list_item, goodList);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
-        mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
-        listview.setLayoutManager(mLayoutManager);
-        listview.setAdapter(adapter);
-
-        views.add(printView);
-        print(activity, views);
-    }
-
-    /**
-     * 对RecyclerView进行截图
-     */
-    public static Bitmap shotRecyclerView(RecyclerView view) {
-        RecyclerView.Adapter adapter = view.getAdapter();
-        Bitmap bigBitmap = null;
-        if (adapter != null) {
-            int size = adapter.getItemCount();
-            int height = 0;
-            Paint paint = new Paint();
-            int iHeight = 0;
-            final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-
-            // Use 1/8th of the available memory for this memory cache.
-            final int cacheSize = maxMemory / 8;
-            LruCache<String, Bitmap> bitmaCache = new LruCache<>(cacheSize);
-            for (int i = 0; i < size; i++) {
-                RecyclerView.ViewHolder holder = adapter.createViewHolder(view, adapter.getItemViewType(i));
-                adapter.onBindViewHolder(holder, i);
-                holder.itemView.measure(
-                        View.MeasureSpec.makeMeasureSpec(view.getWidth(), View.MeasureSpec.EXACTLY),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
-                holder.itemView.layout(0, 0, holder.itemView.getMeasuredWidth(),
-                        holder.itemView.getMeasuredHeight());
-                holder.itemView.setDrawingCacheEnabled(true);
-                holder.itemView.buildDrawingCache();
-                Bitmap drawingCache = holder.itemView.getDrawingCache();
-                if (drawingCache != null) {
-
-                    bitmaCache.put(String.valueOf(i), drawingCache);
+        Log.e("test", "size:" + size + " a:" + a);
+        for (int i = 0; i < size; i++) {
+            List<GoodBean> extraList = new ArrayList<>();
+            if (i == (size - 1)) {
+                for (int t = 0; t < a; t++) {
+                    extraList.add(templist.get(t + perPageSize * i));
                 }
-                height += holder.itemView.getMeasuredHeight();
+            } else {
+                for (int t = 0; t < perPageSize; t++) {
+                    extraList.add(templist.get(t + perPageSize * i));
+                }
             }
-
-            bigBitmap = Bitmap.createBitmap(view.getMeasuredWidth(), height, Bitmap.Config.ARGB_8888);
-            Canvas bigCanvas = new Canvas(bigBitmap);
-            Drawable lBackground = view.getBackground();
-            if (lBackground instanceof ColorDrawable) {
-                ColorDrawable lColorDrawable = (ColorDrawable) lBackground;
-                int lColor = lColorDrawable.getColor();
-                bigCanvas.drawColor(lColor);
-            }
-
-            for (int i = 0; i < size; i++) {
-                Bitmap bitmap = bitmaCache.get(String.valueOf(i));
-                bigCanvas.drawBitmap(bitmap, 0f, iHeight, paint);
-                iHeight += bitmap.getHeight();
-                bitmap.recycle();
-            }
+            final View printView = LayoutInflater.from(activity).inflate(R.layout.dialog_preview, null);
+            ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
+            ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
+            ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
+            ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + size);
+            ((TextView) printView.findViewById(R.id.good_size_tv)).setText(templist.size() + "");
+            ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
+            RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
+            BillPrintGoodsAdapter adapter = new BillPrintGoodsAdapter(R.layout.bill_print_good_list_item, extraList);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
+            mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+            listview.setLayoutManager(mLayoutManager);
+            listview.setAdapter(adapter);
+            views.add(printView);
         }
-        return bigBitmap;
+        Log.e("test", "viewsize:" + views.size());
+       print(activity, views);
     }
 
 
@@ -232,13 +194,6 @@ public class BillActivity extends BaseActivity {
                 Toast.makeText(activity, message, Toast.LENGTH_SHORT).show();
             }
         });
-//        //实例化类
-//        PrintHelper photoPrinter = new PrintHelper(activity);
-//        photoPrinter.setScaleMode(PrintHelper.SCALE_MODE_FIT);//设置填充的类型，填充的类型指的是在A4纸上打印时的填充类型，两种模式
-//
-//        //打印
-//        Bitmap bitmap = BitmapUtils.loadBitmapFromViewBySystem(view);
-//        photoPrinter.printBitmap("jpgTestPrint", bitmap);//这里的第一个参数是打印的jobName
 //        A5 - 148x210
         List<Bitmap> bitmaps = new ArrayList<>();
         MyPrintHelper myPrintHelper = new MyPrintHelper(activity);
@@ -249,15 +204,6 @@ public class BillActivity extends BaseActivity {
         }
         myPrintHelper.printBitmap("jpgTestPrint",bitmaps);
 
-//        // Get a PrintManager instance
-//        PrintManager printManager = (PrintManager) getSystemService(Context.PRINT_SERVICE);
-//        // Set job name, which will be displayed in the print queue
-//        String jobName = getString(R.string.app_name) + " Document";
-//
-//        // Start a print job, passing in a PrintDocumentAdapter implementation
-//        // to handle the generation of a print document
-//        printManager.print(jobName, new MyPrintDocumentAdapter(this),
-//                null); //
     }
 
     @Override

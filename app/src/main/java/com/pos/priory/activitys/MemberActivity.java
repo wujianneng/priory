@@ -1,7 +1,6 @@
 package com.pos.priory.activitys;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +8,6 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,7 +18,8 @@ import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
 import com.pos.priory.adapters.QueryMemberAdapter;
 import com.pos.priory.beans.MemberBean;
-import com.pos.priory.utils.ColseActivityUtils;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
@@ -32,7 +31,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.Call;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/30.
@@ -81,8 +83,10 @@ public class MemberActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(MemberActivity.this, AddNewOrderActivity.class);
                 intent.putExtra("memberId", memberList.get(position).getId());
+                intent.putExtra("memberMobile", memberList.get(position).getMobile());
+                intent.putExtra("memberReward", memberList.get(position).getReward());
                 intent.putExtra("memberName", memberList.get(position).getLast_name() +
-                        memberList.get(position).getLast_name());
+                        memberList.get(position).getFirst_name());
                 startActivity(intent);
             }
         });
@@ -105,21 +109,23 @@ public class MemberActivity extends BaseActivity {
         });
     }
 
-    Call memberCall;
+    Disposable memberCall;
 
     private void refreshMemberRecyclerView(String str) {
         if (memberCall != null)
-            memberCall.cancel();
+            memberCall.dispose();
         memberList.clear();
         memberAdapter.notifyDataSetChanged();
         if(str.equals(""))
             return;
-        memberCall = OkHttp3Util.doGetWithToken(Constants.GET_MEMBERS_URL + "?mobile="
-                        + str,
-                new Okhttp3StringCallback("getMembers") {
+        memberCall = RetrofitManager.createString(ApiService.class)
+                .getMembers(str)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
-                        final List<MemberBean> memberBeanList = gson.fromJson(results, new TypeToken<List<MemberBean>>() {
+                    public void accept(String s) throws Exception {
+                        final List<MemberBean> memberBeanList = gson.fromJson(s, new TypeToken<List<MemberBean>>() {
                         }.getType());
                         if (memberBeanList != null) {
                             new RunOnUiThreadSafe(MemberActivity.this) {
@@ -130,11 +136,10 @@ public class MemberActivity extends BaseActivity {
                                 }
                             };
                         }
-
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
 
                     }
                 });

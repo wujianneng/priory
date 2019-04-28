@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.pos.priory.R;
 import com.pos.priory.coustomViews.CustomDialog;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
@@ -24,6 +26,9 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/29.
@@ -81,21 +86,23 @@ public class EditPasswordActivity extends BaseActivity {
         Map<String, Object> map = new HashMap<>();
         map.put("new_password1", edtNewPassword.getText().toString());
         map.put("new_password2", edtRepeatNewPassword.getText().toString());
-        OkHttp3Util.doPostWithToken(Constants.CHANGE_PASSWORD_URL, gson.toJson(map),
-                new Okhttp3StringCallback(this, "editPassword") {
+        RetrofitManager.createString(ApiService.class)
+                .resetPassword(map)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
+                    public void accept(String s) throws Exception {
                         Toast.makeText(EditPasswordActivity.this, "修改密碼成功", Toast.LENGTH_SHORT).show();
                         finish();
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
                         Toast.makeText(EditPasswordActivity.this, "修改密碼失敗", Toast.LENGTH_SHORT).show();
                     }
                 });
-
     }
 
     @OnClick({R.id.btn_commit, R.id.back_btn})

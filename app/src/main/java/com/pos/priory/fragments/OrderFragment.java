@@ -57,10 +57,13 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -209,15 +212,11 @@ public class OrderFragment extends BaseFragment {
 
 
     private void getCurrentGoldPrice() {
-        row1Tv1.setText("營業額：22222元");
-        row2Tv1.setText("現金：222元 | 現金卷：100元");
-        row3Tv1.setText("信用卡：100元");
-        row3Tv2.setText("總數：12件");
-        row4Tv1.setText("支付寶：222元 | 微信支付：100元");
-        row4Tv2.setText("縂重：15g");
-        RetrofitManager.createString(ApiService.class).getCurrentGoldPrice()
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
+        RetrofitManager.createString(ApiService.class)
+                .getCurrentGoldPrice()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
                         Log.e("okhttp", "result:" + s);
@@ -225,6 +224,26 @@ public class OrderFragment extends BaseFragment {
                         goldPriceLayout.setVisibility(View.VISIBLE);
                         row1Tv2.setText("金價：" + (int) Double.parseDouble(currentGoldPrice) + "/g");
                         row2Tv2.setText("金價：" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
+                    }
+                })
+                .observeOn(Schedulers.io())
+                .flatMap(new Function<String, Observable<String>>() {
+                    @Override
+                    public Observable<String> apply(String s) throws Exception {
+                        return  RetrofitManager.createString(ApiService.class).getDashboard();
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        JSONObject jsonObject = new JSONObject(s);
+                        row1Tv1.setText("營業額：" + jsonObject.getDouble("turnover"));
+                        row2Tv1.setText("現金：" + jsonObject.getDouble("cash") + " | " + " 現金卷：" + jsonObject.getDouble("voucher"));
+                        row3Tv1.setText("信用卡：" + jsonObject.getDouble("credit"));
+                        row3Tv2.setText("總數：" + jsonObject.getDouble("orderitem") + "件");
+                        row4Tv1.setText("支付寶：" + jsonObject.getDouble("alipay") + " | " + " 微信支付：" + jsonObject.getDouble("wechatpay"));
+                        row4Tv2.setText("縂重：" + jsonObject.getDouble("weight") + "g");
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -242,9 +261,9 @@ public class OrderFragment extends BaseFragment {
             orderAdapter.notifyDataSetChanged();
             getCurrentGoldPrice();
         }
-        String storeName = MyApplication.staffInfoBean.getStore();
-        RetrofitManager.createString(ApiService.class).getTodayOrders(storeName, "true")
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        RetrofitManager.createString(ApiService.class).getTodayOrders()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String results) throws Exception {

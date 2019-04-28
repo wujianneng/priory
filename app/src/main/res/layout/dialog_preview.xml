@@ -14,25 +14,17 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:src="@drawable/print_logo"
+                android:layout_width="150dp"
+                android:layout_marginLeft="25dp"
                 android:gravity="center_horizontal"
-                android:text="ANNABELLAIP"
-                android:textColor="#333"
-                android:textSize="18sp" />
+                android:layout_height="wrap_content" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="-安娜貝拉-"
-                android:textColor="#333"
-                android:textSize="14sp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -93,6 +85,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
+            android:layout_marginRight="20dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -108,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="40dp"
-                    android:text="澳門多祿長街(白馬行)20-A號雅明閣地下C座"
+                    android:text="澳門安娜貝拉有限公司"
                     android:textColor="#333"
                     android:textSize="8sp" />
 
@@ -116,7 +109,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:text="Rua de Perdo Nolasco da Sliva No. 20-A, Nga Meng Kok r/c C"
+                    android:text="白馬行店"
+                    android:textColor="#333"
+                    android:textSize="8sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="10dp"
+                    android:text="澳門多祿長街(白馬行)20-A號雅明閣地下C座"
                     android:textColor="#333"
                     android:textSize="8sp" />
 
@@ -128,58 +130,94 @@
                     android:textColor="#333"
                     android:textSize="8sp" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="20dp"
-                    android:text="澳門路賈伯樂提督街35-B號"
-                    android:textColor="#333"
-                    android:textSize="8sp" />
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
+                    android:layout_marginLeft="17dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:text="Rua do Almirante Costa Cabral No.35-B,Macau"
-                    android:textColor="#333"
-                    android:textSize="8sp" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:text="+853 2855 0513"
-                    android:textColor="#333"
-                    android:textSize="8sp" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="頁數"
+                            android:textColor="#333"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/page_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="1/3"
+                            android:textColor="#333"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="總數量(件)"
+                            android:textColor="#333"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/good_size_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="18"
+                            android:textColor="#333"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="總金額"
+                            android:textColor="#333"
+                            android:textSize="10sp" />
+
+                        <TextView
+                            android:id="@+id/sum_money_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:text="1000"
+                            android:textColor="#333"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/zhuhai_store_info_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="40dp"
-                    android:text="广东省珠海市香洲区凤凰南路1066号扬名广场二期二层2018号商铺"
-                    android:textColor="#333"
-                    android:textSize="8sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:text="0756-6335066"
-                    android:textColor="#333"
-                    android:textSize="8sp" />
-
-            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -203,7 +241,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="貨品名稱"
+                android:text="貨品（名稱/條碼）"
                 android:textColor="#333"
                 android:textSize="10sp" />
 
@@ -259,39 +297,6 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"></android.support.v7.widget.RecyclerView>
 
-
-
-        <TextView
-            android:id="@+id/good_size_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
-            android:gravity="right"
-            android:text="共1件"
-            android:textColor="#333"
-            android:textSize="10sp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"
-            android:gravity="right"
-            android:text="總計"
-            android:textColor="#333"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/sum_money_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:gravity="right"
-            android:text="779.00"
-            android:layout_marginBottom="30dp"
-            android:textColor="#333"
-            android:textSize="15sp" />
 
 
         <RelativeLayout
