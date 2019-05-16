@@ -13,12 +13,20 @@ import android.widget.TextView;
 import com.pos.priory.R;
 import com.pos.priory.adapters.DataGoldAdapter;
 import com.pos.priory.beans.DatasSaleBean;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class DatasFragment extends BaseFragment {
     View view;
@@ -43,13 +51,6 @@ public class DatasFragment extends BaseFragment {
     }
 
     private void initViews() {
-        for(int i = 0 ; i < 10 ; i++){
-            DatasSaleBean bean = new DatasSaleBean();
-            bean.setCount(10 * i);
-            bean.setProductName("产品" + i);
-            goldlist.add(bean);
-            sparlist.add(bean);
-        }
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         goldRecyclerview.setLayoutManager(mLayoutManager);
@@ -61,6 +62,43 @@ public class DatasFragment extends BaseFragment {
         sparRecyclerview.setLayoutManager(mLayoutManager2);
         sparAdapter = new DataGoldAdapter(R.layout.datas_sale_list,sparlist);
         sparRecyclerview.setAdapter(sparAdapter);
+        getDatas();
+    }
+
+    private void getDatas() {
+        RetrofitManager.createString(ApiService.class)
+                .getDatas()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        JSONObject jsonObject = new JSONObject(s);
+                        monthMoneyTv.setText("3月營業額： " + jsonObject.getInt("turnover") + "元");
+                        JSONArray itemcountgold = jsonObject.getJSONArray("itemcountgold");
+                        JSONArray itemscountcrystal = jsonObject.getJSONArray("itemscountcrystal");
+                        for(int i = 0 ; i < itemcountgold.length() ;i++){
+                            DatasSaleBean bean = new DatasSaleBean();
+                            bean.setProductName(itemcountgold.getJSONObject(i).getString("stock__product__name"));
+                            bean.setCount(itemcountgold.getJSONObject(i).getInt("catalog_count"));
+                            goldlist.add(bean);
+                        }
+                        goldAdapter.notifyDataSetChanged();
+                        for(int i = 0 ; i < itemscountcrystal.length() ;i++){
+                            DatasSaleBean bean = new DatasSaleBean();
+                            bean.setProductName(itemscountcrystal.getJSONObject(i).getString("stock__product__name"));
+                            bean.setCount(itemscountcrystal.getJSONObject(i).getInt("catalog_count"));
+                            sparlist.add(bean);
+                        }
+                        sparAdapter.notifyDataSetChanged();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+
     }
 
     @Override

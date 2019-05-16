@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.v4.print.PrintHelper;
 import android.support.v4.util.LruCache;
 import android.support.v7.app.AlertDialog;
@@ -76,12 +77,8 @@ public class BillActivity extends BaseActivity {
     TextView smallChangeTv;
     @Bind(R.id.small_change_layout)
     CardView smallChangeLayout;
-    @Bind(R.id.icon)
-    ImageView icon;
-    @Bind(R.id.text)
-    TextView text;
     @Bind(R.id.btn_print)
-    CardView btnPrint;
+    MaterialButton btnPrint;
 
     List<GoodBean> goodList;
     BillGoodsAdapter goodsAdapter;
@@ -199,9 +196,12 @@ public class BillActivity extends BaseActivity {
         MyPrintHelper myPrintHelper = new MyPrintHelper(activity);
         for(int i = 0 ; i < views.size() ; i++){
             View view = views.get(i);
+            Log.e("test", "bitmapsfor:" + i );
             Bitmap bitmap = BitmapUtils.loadBitmapFromViewBySystem(view, DeviceUtil.dip2px(activity, 444), DeviceUtil.dip2px(activity, 630));
+            Log.e("test", "bitmapsfora:" + i );
             bitmaps.add(bitmap);
         }
+        Log.e("test", "bitmaps:" + bitmaps.size());
         myPrintHelper.printBitmap("jpgTestPrint",bitmaps);
 
     }

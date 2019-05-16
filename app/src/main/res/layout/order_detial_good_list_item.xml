@@ -63,7 +63,7 @@
             android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/price_tv"
+            android:id="@+id/weight_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

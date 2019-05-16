@@ -41,34 +41,15 @@ public class DetialListAdapter extends BaseQuickAdapter<PurchasingItemBean, Base
 
     @Override
     protected void convert(final BaseViewHolder helper, PurchasingItemBean item) {
-        helper.setText(R.id.code_tv, item.getStock().getBatch().getProduct().getProductcode() + item.getStock().getBatch().getBatchno());
-        helper.setText(R.id.name_tv, item.getStock().getBatch().getProduct().getName());
+        helper.setText(R.id.code_tv, item.getProduct().getProductcode() + "");
+        helper.setText(R.id.name_tv, item.getProduct().getName());
         helper.setText(R.id.count_tv, item.getQuantity() + "");
-        helper.setText(R.id.status_tv, item.getType().equals("return") ? "退貨" : "訂貨");
-        helper.setTextColor(R.id.count_tv, item.getType().equals("return") ? ContextCompat.getColor(mContext, R.color.drag_btn_red) :
-                ContextCompat.getColor(mContext, R.color.drag_btn_green));
-        String imageurl = Constants.BASE_URL_HTTP + item.getStock().getBatch().getProduct().getImage();
-        Log.e("imageurl", "imageurl:" + imageurl);
+        String imageurl = Constants.BASE_URL_HTTP + item.getProduct().getImage();
         Glide.with(MyApplication.getContext()).load(imageurl)
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));
+        helper.addOnClickListener(R.id.btn_sure);
     }
 
-    RequestListener mRequestListener = new RequestListener() {
-
-
-        @Override
-        public boolean onException(Exception e, Object model, Target target, boolean isFirstResource) {
-            Log.d("glide", "onException: " + e.toString() + "  model:" + model + " isFirstResource: " + isFirstResource);
-            return false;
-        }
-
-        @Override
-        public boolean onResourceReady(Object resource, Object model, Target target, boolean isFromMemoryCache, boolean isFirstResource) {
-            Log.e("glide", "model:" + model + " isFirstResource: " + isFirstResource);
-            return false;
-        }
-
-    };
 }

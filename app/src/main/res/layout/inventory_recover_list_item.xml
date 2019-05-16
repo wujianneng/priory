@@ -19,14 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/icon_good"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/app_logo"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp" />
-
 
         <TextView
             android:id="@+id/name_tv"

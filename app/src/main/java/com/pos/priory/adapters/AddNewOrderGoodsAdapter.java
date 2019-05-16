@@ -29,13 +29,13 @@ public class AddNewOrderGoodsAdapter extends BaseQuickAdapter<GoodBean, BaseView
 
     @Override
     protected void convert(BaseViewHolder helper, GoodBean item) {
-        helper.setText(R.id.code_tv, item.getBatch().getProduct().getProductcode() + item.getBatch().getBatchno());
-        helper.setText(R.id.name_tv, item.getBatch().getProduct().getName());
+        helper.setText(R.id.code_tv, item.getProduct().getProductcode() + item.getStockno());
+        helper.setText(R.id.name_tv, item.getProduct().getName());
 //        helper.setText(R.id.weight_tv,item.getBatch().getWeight());
-        helper.setText(R.id.origin_price_tv,"原價：" + item.getBatch().getProduct().getPrePrice());
+        helper.setText(R.id.origin_price_tv,"原價：" + item.getProduct().getPrePrice());
         helper.setText(R.id.discount_tv,"折扣：" + item.getDiscountRate());
-        helper.setText(R.id.price_tv, "折後價：" + item.getBatch().getProduct().getPrice());
-        Glide.with(context).load(Constants.BASE_URL_HTTP + item.getBatch().getProduct().getImage())
+        helper.setText(R.id.price_tv, "折後價：" + item.getProduct().getPrice());
+        Glide.with(context).load(Constants.BASE_URL_HTTP + item.getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));

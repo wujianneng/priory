@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -250,14 +251,16 @@ public class QueryFragment extends BaseFragment {
         orderAdapter.notifyDataSetChanged();
         if (date.equals(""))
             return;
-        dateCall  = RetrofitManager.createString(ApiService.class).getOrdersByDate(date)
+        dateCall = RetrofitManager.createString(ApiService.class).getOrdersByDate(date)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String results) throws Exception {
+                        Log.e("test", "....refreshDateRecyclerView");
                         final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {
                         }.getType());
                         if (orderBeanList != null) {
+                            Log.e("test", "....orderBeanList != null");
                             orderList.addAll(orderBeanList);
                             orderAdapter.notifyDataSetChanged();
                         }
@@ -322,17 +325,19 @@ public class QueryFragment extends BaseFragment {
                 dateLayout.setVisibility(View.GONE);
                 break;
             case R.id.btn_date:
-                btnDate.setTextColor(getResources().getColor(R.color.colorAccent));
                 btnMember.setTextColor(Color.parseColor("#cccccc"));
                 btnOrderNumber.setTextColor(Color.parseColor("#cccccc"));
+                btnDate.setTextColor(getResources().getColor(R.color.colorAccent));
                 icon.setImageResource(R.drawable.icon_detail);
-                titleTv.setText("電話");
-                edtMemberInput.setVisibility(View.VISIBLE);
-                edtOrderInput.setVisibility(View.GONE);
-                memberRecyclerView.setVisibility(View.VISIBLE);
-                orderRecyclerView.setVisibility(View.GONE);
+                titleTv.setText("訂單號");
+                edtMemberInput.setVisibility(View.GONE);
+                edtOrderInput.setVisibility(View.VISIBLE);
+                memberRecyclerView.setVisibility(View.GONE);
+                orderRecyclerView.setVisibility(View.VISIBLE);
                 inputLayout.setVisibility(View.GONE);
                 dateLayout.setVisibility(View.VISIBLE);
+                if (!dateTv.getText().toString().equals("請選擇日期"))
+                    refreshDateRecyclerView(dateTv.getText().toString());
                 break;
             case R.id.btn_order_number:
                 btnMember.setTextColor(Color.parseColor("#cccccc"));
@@ -346,6 +351,7 @@ public class QueryFragment extends BaseFragment {
                 orderRecyclerView.setVisibility(View.VISIBLE);
                 inputLayout.setVisibility(View.VISIBLE);
                 dateLayout.setVisibility(View.GONE);
+                refreshOrderRecyclerView(edtOrderInput.getText().toString());
                 break;
             case R.id.date_layout:
                 getDate();

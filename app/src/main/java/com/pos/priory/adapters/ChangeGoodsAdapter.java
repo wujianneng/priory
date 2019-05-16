@@ -3,13 +3,12 @@ package com.pos.priory.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
-import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,10 +19,9 @@ import com.google.gson.Gson;
 import com.pos.priory.R;
 import com.pos.priory.activitys.ChangeGoodsActivity;
 import com.pos.priory.activitys.ReturnGoodsActivity;
-import com.pos.priory.beans.OrderItemBean;
+import com.pos.priory.beans.OrderBean;
 import com.pos.priory.coustomViews.LastInputEditText;
 import com.pos.priory.utils.Constants;
-import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
@@ -37,37 +35,22 @@ import okhttp3.Call;
  * Created by Lenovo on 2018/12/29.
  */
 
-public class ChangeGoodsAdapter extends BaseQuickAdapter<OrderItemBean, BaseViewHolder> {
+public class ChangeGoodsAdapter extends BaseQuickAdapter<OrderBean.ItemsBean, BaseViewHolder> {
     Context context;
 
-    public ChangeGoodsAdapter(Context context, @LayoutRes int layoutResId, @Nullable List<OrderItemBean> data) {
+    public ChangeGoodsAdapter(Context context, @LayoutRes int layoutResId, @Nullable List<OrderBean.ItemsBean> data) {
         super(layoutResId, data);
         this.context = context;
     }
 
     @Override
-    protected void convert(final BaseViewHolder helper, final OrderItemBean item) {
-        helper.setText(R.id.code_tv, item.getStock().getBatch().getProduct().getProductcode() + item.getStock().getBatch().getBatchno());
-        helper.setText(R.id.name_tv, item.getStock().getBatch().getProduct().getName());
-        if (context instanceof ReturnGoodsActivity) {
-            if (item.getStock().getBatch().getProduct().getCatalog().equals("黃金")) {
-                helper.setText(R.id.price_tv, "$" + item.getStock().getBatch().getProduct().getPrice());
-                helper.setGone(R.id.price_tv, true);
-                helper.setText(R.id.retial_price_tv, "$" + item.getStock().getBatch().getProduct().getRealPrice() + " x " + item.getOprateCount());
-            } else {
-                helper.setGone(R.id.price_tv, false);
-                helper.setText(R.id.retial_price_tv, "$" + item.getStock().getBatch().getProduct().getRealPrice() + " x " + item.getOprateCount());
-            }
-        } else if (context instanceof ChangeGoodsActivity) {
-            if (item.getStock().getBatch().getProduct().getCatalog().equals("黃金")) {
-                helper.setText(R.id.price_tv, "$" + item.getStock().getBatch().getProduct().getPrice());
-                helper.setGone(R.id.price_tv, true);
-                helper.setText(R.id.retial_price_tv, "$" + item.getStock().getBatch().getProduct().getRealPrice() + " x " + item.getOprateCount());
-            } else {
-                helper.setText(R.id.retial_price_tv, "$" + item.getStock().getBatch().getProduct().getRealPrice() + " x " + item.getOprateCount());
-            }
-        }
-        Glide.with(context).load(Constants.BASE_URL_HTTP + item.getStock().getBatch().getProduct().getImage())
+    protected void convert(final BaseViewHolder helper, final OrderBean.ItemsBean item) {
+        helper.setText(R.id.code_tv, item.getStock().getProduct().getProductcode() + item.getStock().getStockno());
+        helper.setText(R.id.name_tv, item.getStock().getProduct().getName());
+        helper.setText(R.id.price_tv, "$" + item.getStock().getProduct().getPrice());
+        helper.setGone(R.id.price_tv, item.getStock().getProduct().getCatalog().getName().equals("黃金") ? true : false);
+        helper.setText(R.id.retial_price_tv, "$" + item.getPrice());
+        Glide.with(context).load(Constants.BASE_URL_HTTP + item.getStock().getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));
@@ -89,6 +72,7 @@ public class ChangeGoodsAdapter extends BaseQuickAdapter<OrderItemBean, BaseView
                         public void onTextChanged(CharSequence s, int start, int before, int count) {
                             String str = s.toString();
                             item.setWeight(str);
+                            Log.e("itemweight","itemweight:" + item.getWeight());
                             if (context instanceof ReturnGoodsActivity) {
                                 ((ReturnGoodsActivity) context).resetSumMoney(false);
                                 notifyItemChanged(helper.getAdapterPosition());

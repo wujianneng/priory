@@ -2,17 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu0"
-        android:title="黃金日結表"/>
+        android:title="日結表"/>
 
     <item
         android:id="@+id/menu1"
-        android:title="其他日結表"/>
-
-    <item
-        android:id="@+id/menu2"
         android:title="修改密碼"/>
 
     <item
-        android:id="@+id/menu3"
+        android:id="@+id/menu2"
         android:title="登出"/>
 </menu>

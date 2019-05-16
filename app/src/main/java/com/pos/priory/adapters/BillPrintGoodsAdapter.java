@@ -23,9 +23,9 @@ public class BillPrintGoodsAdapter extends BaseQuickAdapter<GoodBean,BaseViewHol
 
     @Override
     protected void convert(BaseViewHolder helper, GoodBean item) {
-        helper.setText(R.id.good_code_tv,item.getBatch().getBatchno() + item.getBatch().getProduct().getProductcode());
-        helper.setText(R.id.good_name_tv,item.getBatch().getProduct().getName());
-        helper.setText(R.id.good_count_tv,item.getSaleCount() + "");
+        helper.setText(R.id.good_code_tv,item.getProduct().getProductcode() + item.getStockno());
+        helper.setText(R.id.good_name_tv,item.getProduct().getName());
+        helper.setText(R.id.good_count_tv,1 + "");
         if(item.getDiscountRate() == 1){
             helper.setText(R.id.discount_tv, "-");
         }else if(item.getDiscountRate() == 0){
@@ -33,7 +33,7 @@ public class BillPrintGoodsAdapter extends BaseQuickAdapter<GoodBean,BaseViewHol
         } else {
             helper.setText(R.id.discount_tv, LogicUtils.getKeepLastOneNumberAfterLittlePoint(item.getDiscountRate() * 10) + "折");
         }
-        helper.setText(R.id.reatial_price_tv,item.getBatch().getProduct().getPrice());
-        helper.setText(R.id.price_tv,item.getBatch().getProduct().getPrice());
+        helper.setText(R.id.reatial_price_tv,item.getProduct().getPrice());
+        helper.setText(R.id.price_tv,item.getProduct().getPrice());
     }
 }

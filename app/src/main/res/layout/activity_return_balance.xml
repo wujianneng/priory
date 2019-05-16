@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/money_tv"
                 android:layout_centerHorizontal="true"
-                android:text="積分"
+                android:text=""
                 android:textColor="#fff"
                 android:textSize="15sp" />
 
@@ -133,56 +133,22 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/btn_finish"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+    <android.support.design.button.MaterialButton
+        android:id="@+id/btn_next"
+        android:layout_width="230dp"
+        android:layout_height="56dp"
+        android:layout_marginTop="40dp"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="30dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/login_btn_bg"
-        app:cardCornerRadius="25dp"
-        app:cardElevation="3dp"
-        app:cardPreventCornerOverlap="true"
-        app:contentPadding="5dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/icon_gou" />
-
-            <TextView
-                android:id="@+id/text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="完成"
-                android:textColor="#fff"
-                android:textSize="16sp" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
-        </LinearLayout>
+        android:background="@color/colorAccent"
+        android:text="完成"
+        android:textColor="#ffffff"
+        android:textSize="20sp"
+        app:icon="@drawable/icon_gou"
+        app:cornerRadius="28dp"
+        />
 
 
-    </android.support.v7.widget.CardView>
 </LinearLayout>

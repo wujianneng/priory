@@ -147,21 +147,26 @@ public class LoginActivity extends BaseActivity {
                             List<StaffInfoBean> staffInfoBeanList = gson.fromJson(s,
                                     new TypeToken<List<StaffInfoBean>>() {
                                     }.getType());
-                            if (staffInfoBeanList != null && staffInfoBeanList.size() != 0 && !staffInfoBeanList.get(0).getStore().equals("")) {
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
-                                if (checkbox.isChecked()) {
-                                    editor.putString(Constants.LAST_USERNAME_KEY,
-                                            edtUsename.getText().toString());
-                                    editor.putString(Constants.LAST_PASSWORD_KEY,
-                                            edtPasswrod.getText().toString());
+
+                            if (staffInfoBeanList != null && staffInfoBeanList.size() != 0) {
+                                for(StaffInfoBean staffInfoBean : staffInfoBeanList){
+                                    if(staffInfoBean.getUser().equals(edtUsename.getText().toString())){
+                                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                                        editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
+                                        if (checkbox.isChecked()) {
+                                            editor.putString(Constants.LAST_USERNAME_KEY,
+                                                    edtUsename.getText().toString());
+                                            editor.putString(Constants.LAST_PASSWORD_KEY,
+                                                    edtPasswrod.getText().toString());
+                                        }
+                                        editor.putString(Constants.CURRENT_STAFF_INFO_KEY, s);
+                                        editor.commit();
+                                        if (customDialog != null)
+                                            customDialog.dismiss();
+                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                        finish();
+                                    }
                                 }
-                                editor.putString(Constants.CURRENT_STAFF_INFO_KEY, s);
-                                editor.commit();
-                                if (customDialog != null)
-                                    customDialog.dismiss();
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                finish();
                             } else {
                                 if (customDialog != null)
                                     customDialog.dismiss();

@@ -103,6 +103,7 @@ public class MyPrintHelper {
             }
 
             PrintAttributes attr = (new PrintAttributes.Builder()).setMediaSize(mediaSize).setColorMode(this.mColorMode).build();
+            Log.e("test", "printBitmap");
             printManager.print(jobName, new MyPrintHelper.PrintBitmapAdapter(jobName, this.mScaleMode, bitmaps, callback), attr);
         }
     }
@@ -620,6 +621,7 @@ public class MyPrintHelper {
                 // Otherwise report an error to the print framework
                 layoutResultCallback.onLayoutFailed("Page count calculation failed.");
             }
+            Log.e("test", "onLayout");
         }
 
         private int computePageCount(PrintAttributes printAttributes) {
@@ -670,7 +672,7 @@ public class MyPrintHelper {
             PageRange[] writtenPages = new PageRange[]{PageRange.ALL_PAGES};
             // Signal the print framework the document is complete
             writeResultCallback.onWriteFinished(writtenPages);
-
+            Log.e("test", "onWrite");
         }
 
 

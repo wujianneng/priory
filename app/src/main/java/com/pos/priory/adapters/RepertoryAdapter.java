@@ -32,10 +32,10 @@ public class RepertoryAdapter extends BaseQuickAdapter<GoodBean,BaseViewHolder> 
 
     @Override
     protected void convert(BaseViewHolder helper, GoodBean item) {
-        helper.setText(R.id.name_tv,item.getBatch().getProduct().getName());
-        helper.setText(R.id.count_tv,item.getQuantity() + "");
-        helper.setText(R.id.code_tv,item.getBatch().getBatchno());
-        Glide.with(context).load(Constants.BASE_URL_HTTP + item.getBatch().getProduct().getImage())
+        helper.setText(R.id.name_tv,item.getProduct().getName());
+        helper.setText(R.id.count_tv, item.getWeight() + "克");
+        helper.setText(R.id.code_tv,item.getProduct().getProductcode() + item.getStockno());
+        Glide.with(context).load(Constants.BASE_URL_HTTP + item.getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));

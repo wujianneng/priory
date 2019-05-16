@@ -3,13 +3,9 @@ package com.pos.priory;
 import android.app.Application;
 
 import com.blankj.utilcode.util.Utils;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader;
-import com.bumptech.glide.load.model.GlideUrl;
+import com.downloader.PRDownloader;
+import com.downloader.PRDownloaderConfig;
 import com.pos.priory.beans.StaffInfoBean;
-import com.pos.priory.utils.OkHttp3Util;
-
-import java.io.InputStream;
 
 /**
  * Created by Lenovo on 2019/1/9.
@@ -25,6 +21,11 @@ public class MyApplication extends Application {
         super.onCreate();
         mContext = this;
         Utils.init(this);
+        //下载库初始化
+        PRDownloader.initialize(getApplicationContext(), PRDownloaderConfig.newBuilder()
+                .setReadTimeout(30_000)
+                .setConnectTimeout(30_000)
+                .build());
     }
 
 

@@ -28,13 +28,13 @@
             android:textColor="#333333"
             android:textSize="18sp" />
 
-        <android.support.v7.widget.RecyclerView
+        <com.pos.priory.coustomViews.DisableReclyerView
             android:id="@+id/gold_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"></android.support.v7.widget.RecyclerView>
+            android:layout_marginRight="20dp"></com.pos.priory.coustomViews.DisableReclyerView>
 
         <TextView
             android:layout_width="wrap_content"
@@ -45,13 +45,13 @@
             android:textColor="#333333"
             android:textSize="18sp" />
 
-        <android.support.v7.widget.RecyclerView
+        <com.pos.priory.coustomViews.DisableReclyerView
             android:id="@+id/spar_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"></android.support.v7.widget.RecyclerView>
+            android:layout_marginRight="20dp"></com.pos.priory.coustomViews.DisableReclyerView>
 
     </LinearLayout>
 </ScrollView>

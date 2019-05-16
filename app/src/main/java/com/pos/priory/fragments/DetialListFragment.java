@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
@@ -29,6 +30,8 @@ import com.pos.priory.activitys.MainActivity;
 import com.pos.priory.adapters.DetialListAdapter;
 import com.pos.priory.beans.PurchasingItemBean;
 import com.pos.priory.coustomViews.CustomDialog;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
@@ -57,6 +60,9 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/29.
@@ -71,8 +77,6 @@ public class DetialListFragment extends BaseFragment {
 
     DetialListAdapter detialListAdapter;
     List<PurchasingItemBean> dataList = new ArrayList<>();
-    @Bind(R.id.btn_summit)
-    CardView btnCommit;
 
     @Nullable
     @Override
@@ -84,14 +88,6 @@ public class DetialListFragment extends BaseFragment {
     }
 
     private void initViews() {
-        btnCommit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (dataList != null && dataList.size() != 0)
-                    showIsComfirmDialog(dataList.get(0));
-            }
-        });
-
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -130,6 +126,12 @@ public class DetialListFragment extends BaseFragment {
             }
         });
         detialListAdapter = new DetialListAdapter(getActivity(), R.layout.detial_list_item, dataList);
+        detialListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                  sureOneDetialItem(position);
+            }
+        });
         //设置侧滑菜单的点击事件
         recyclerView.setSwipeMenuItemClickListener(new SwipeMenuItemClickListener() {
             @Override
@@ -141,7 +143,7 @@ public class DetialListFragment extends BaseFragment {
                 if (menuPosition == 0) {
                     showEditDialog(adapterPosition);
                 } else {
-                    deletePurshing(dataList.get(adapterPosition), adapterPosition);
+                    deletePurshing(adapterPosition);
                 }
             }
         });
@@ -153,16 +155,14 @@ public class DetialListFragment extends BaseFragment {
         refreshLayout.autoRefresh();
     }
 
-    AlertDialog isComfirmDialog;
-
-    private void showIsComfirmDialog(final PurchasingItemBean purchasingItemBean) {
+    private void sureOneDetialItem(final int position) {
         if (isComfirmDialog == null) {
             isComfirmDialog = new AlertDialog.Builder(getActivity()).setTitle("提示")
-                    .setMessage("確認送出訂退貨單到系統？")
+                    .setMessage("確認送出訂貨單到系統？")
                     .setPositiveButton("確定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            comfirmPurshing(purchasingItemBean);
+                            comfirmPurshing(dataList.get(position).getId());
                         }
                     })
                     .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -182,6 +182,8 @@ public class DetialListFragment extends BaseFragment {
         isComfirmDialog.show();
     }
 
+    AlertDialog isComfirmDialog;
+
     AlertDialog actionDialog;
 
     private void showEditDialog(int position) {
@@ -196,11 +198,11 @@ public class DetialListFragment extends BaseFragment {
             TextView code_tv = view.findViewById(R.id.code_tv);
             TextView name_tv = view.findViewById(R.id.name_tv);
             final EditText edt_count = view.findViewById(R.id.edt_count);
-            Glide.with(getActivity()).load(Constants.BASE_URL + purchasingBean.getStock().getBatch().getProduct().getImage())
+            Glide.with(getActivity()).load(Constants.BASE_URL + purchasingBean.getProduct().getImage())
                     .error(android.R.drawable.ic_menu_gallery)
                     .into(icon_good);
-            code_tv.setText(purchasingBean.getStock().getBatch().getProduct().getProductcode() + "");
-            name_tv.setText(purchasingBean.getStock().getBatch().getProduct().getName());
+            code_tv.setText(purchasingBean.getProduct().getProductcode() + "");
+            name_tv.setText(purchasingBean.getProduct().getName());
             view.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -248,26 +250,24 @@ public class DetialListFragment extends BaseFragment {
             }
         });
         customDialog.show();
-        Map<String, Object> map = new HashMap<>();
-        map.put("quantity", count);
-        OkHttp3Util.doPatchWithToken(Constants.PURCHASING_ITEM_URL + "/" + bean.getId() + "/update/", gson.toJson(map),
-                new Okhttp3StringCallback(getActivity(), "editPurshing") {
+        RetrofitManager.createString(ApiService.class).editPurchasingitem(bean.getId(),count).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
+                    public void accept(String s) throws Exception {
                         customDialog.dismiss();
                         Toast.makeText(getActivity(), "編輯成功", Toast.LENGTH_SHORT).show();
-                        refreshLayout.autoRefresh();
+                        refreshLayout.autoRefresh();;
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
                         Toast.makeText(getActivity(), "編輯失敗", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void comfirmPurshing(PurchasingItemBean bean) {
+    private void comfirmPurshing(int id) {
         if (customDialog == null)
             customDialog = new CustomDialog(getActivity(), "確認中..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -277,26 +277,24 @@ public class DetialListFragment extends BaseFragment {
             }
         });
         customDialog.show();
-        Map<String, Object> map = new HashMap<>();
-        map.put("confirmed", "true");
-        OkHttp3Util.doPutWithToken(Constants.PURCHASING_URL + "/" + bean.getPurchasing().getId() + "/update/", gson.toJson(map),
-                new Okhttp3StringCallback(getActivity(), "comfirmPurshing") {
+        RetrofitManager.createString(ApiService.class).comfirmPurchasingitem(id,true).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
+                    public void accept(String s) throws Exception {
                         customDialog.dismiss();
                         Toast.makeText(getActivity(), "確認成功", Toast.LENGTH_SHORT).show();
                         refreshLayout.autoRefresh();
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
                         Toast.makeText(getActivity(), "確認失敗", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void deletePurshing(PurchasingItemBean bean, final int position) {
+    private void deletePurshing(final int position) {
         if (customDialog == null)
             customDialog = new CustomDialog(getActivity(), "删除中..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -306,19 +304,19 @@ public class DetialListFragment extends BaseFragment {
             }
         });
         customDialog.show();
-        OkHttp3Util.doDeleteWithToken(Constants.PURCHASING_URL + "/" + bean.getPurchasing().getId() + "/update/",
-                new Okhttp3StringCallback(getActivity(), "comfirmPurshing") {
+        RetrofitManager.createString(ApiService.class).deletePurchasingitem(dataList.get(position).getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
+                    public void accept(String s) throws Exception {
                         customDialog.dismiss();
                         Toast.makeText(getActivity(), "删除成功", Toast.LENGTH_SHORT).show();
                         dataList.remove(position);
                         detialListAdapter.notifyItemRangeChanged(0, dataList.size());
                         detialListAdapter.notifyItemRemoved(position);
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
                         Toast.makeText(getActivity(), "删除失敗", Toast.LENGTH_SHORT).show();
                     }
@@ -331,41 +329,29 @@ public class DetialListFragment extends BaseFragment {
             dataList.clear();
             detialListAdapter.notifyDataSetChanged();
         }
-        final String location = MyApplication.staffInfoBean.getStore();
-        OkHttp3Util.doGetWithToken(Constants.PURCHASING_URL + "?location=" + location,
-                new Okhttp3StringCallback(getActivity(), "createPurshing") {
+        RetrofitManager.createString(ApiService.class)
+                .getPurchasingitems()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
-                        OkHttp3Util.doGetWithToken(Constants.PURCHASING_ITEM_URL + "/?purchasing=" + new JSONArray(results).getJSONObject(0).getInt("id"),
-                           new Okhttp3StringCallback(getActivity(), "getPurchasings") {
-                                    @Override
-                                    public void onSuccess(String results) throws Exception {
-                                        final List<PurchasingItemBean> orderBeanList = gson.fromJson(results, new TypeToken<List<PurchasingItemBean>>() {
-                                        }.getType());
-                                        if (orderBeanList != null) {
-                                            for (PurchasingItemBean bean : orderBeanList) {
-                                                if (!bean.getPurchasing().isConfirmed()) {
-                                                    dataList.add(bean);
-                                                }
-                                            }
-                                            detialListAdapter.notifyDataSetChanged();
-                                        }
-                                        btnCommit.setVisibility(dataList.size() == 0 ? View.GONE : View.VISIBLE);
-                                        refreshLayout.finishLoadMore();
-                                        refreshLayout.finishRefresh();
-                                    }
-
-                                    @Override
-                                    public void onFailed(String erromsg) {
-                                        refreshLayout.finishLoadMore();
-                                        refreshLayout.finishRefresh();
-                                    }
-                                });
-
+                    public void accept(String s) throws Exception {
+                        final List<PurchasingItemBean> orderBeanList = gson.fromJson(s, new TypeToken<List<PurchasingItemBean>>() {
+                        }.getType());
+                        if (orderBeanList != null) {
+                            for (PurchasingItemBean bean : orderBeanList) {
+                                if (!bean.isStatus()) {
+                                    dataList.add(bean);
+                                }
+                            }
+                            detialListAdapter.notifyDataSetChanged();
+                        }
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
                     }

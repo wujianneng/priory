@@ -2,8 +2,8 @@ package com.pos.priory.activitys;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -14,27 +14,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
-import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.ChangeGoodsAdapter;
-import com.pos.priory.beans.CreateRefundOrderResultBean;
-import com.pos.priory.beans.OrderItemBean;
+import com.pos.priory.beans.OrderBean;
 import com.pos.priory.coustomViews.CustomDialog;
-import com.pos.priory.utils.Constants;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.LogicUtils;
-import com.pos.priory.utils.OkHttp3Util;
-import com.pos.priory.utils.Okhttp3StringCallback;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/31.
@@ -51,16 +49,11 @@ public class ReturnGoodsActivity extends BaseActivity {
     TextView moneyTv;
     @Bind(R.id.good_recycler_view)
     RecyclerView goodRecyclerView;
-    @Bind(R.id.icon)
-    ImageView icon;
-    @Bind(R.id.text)
-    TextView text;
     @Bind(R.id.btn_next)
-    CardView btnNext;
+    MaterialButton btnNext;
     double sumMoney = 0;
 
-    List<OrderItemBean> goodList = new ArrayList<>();
-    List<OrderItemBean> tempgoodList = new ArrayList<>();
+    List<OrderBean.ItemsBean> goodList = new ArrayList<>();
     ChangeGoodsAdapter goodsAdapter;
     String currentGoldPrice = "";
     @Bind(R.id.gold_price_tv)
@@ -78,8 +71,8 @@ public class ReturnGoodsActivity extends BaseActivity {
     protected void initViews() {
         titleTv.setText("回收單");
         rightImg.setVisibility(View.GONE);
-        tempgoodList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
-                new TypeToken<List<OrderItemBean>>() {
+        goodList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
+                new TypeToken<List<OrderBean.ItemsBean>>() {
                 }.getType());
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
@@ -97,175 +90,40 @@ public class ReturnGoodsActivity extends BaseActivity {
             }
         });
         customDialog.show();
-        OkHttp3Util.doGetWithToken(Constants.GOLD_PRICE_URL,new Okhttp3StringCallback(this, "getCurrentGoldPrice") {
-            @Override
-            public void onSuccess(String results) throws Exception {
-                currentGoldPrice = new JSONObject(results).getString("price");
-                goldPriceTv.setText("當前金價(MOP)：" + currentGoldPrice + "/g" + "  " + LogicUtils.
-                        getKeepLastTwoNumberAfterLittlePoint(Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
-                goodsAdapter = new ChangeGoodsAdapter(ReturnGoodsActivity.this, R.layout.change_good_list_item, goodList);
-                goodRecyclerView.setAdapter(goodsAdapter);
-                createReturnGoodsOrder();
-            }
-
-            @Override
-            public void onFailed(String erromsg) {
-                if (customDialog != null) {
-                    customDialog.dismiss();
-                    Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
-                    onBackPressed();
-                }
-            }
-        });
+        RetrofitManager.createString(ApiService.class)
+                .getCurrentGoldPrice()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        customDialog.dismiss();
+                        currentGoldPrice = new JSONObject(s).getString("price");
+                        goldPriceTv.setText("當前金價(MOP)：" + currentGoldPrice + "/g" + "  " + LogicUtils.
+                                getKeepLastTwoNumberAfterLittlePoint(Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
+                        goodsAdapter = new ChangeGoodsAdapter(ReturnGoodsActivity.this, R.layout.change_good_list_item, goodList);
+                        goodRecyclerView.setAdapter(goodsAdapter);
+                        resetSumMoney(true);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (customDialog != null) {
+                            customDialog.dismiss();
+                            Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                        }
+                    }
+                });
     }
 
 
     CustomDialog customDialog;
-    CreateRefundOrderResultBean createRefundOrderResultBean;
 
-    private void createReturnGoodsOrder() {
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("ordernumber", getIntent().getStringExtra("ordernumber"));
-        paramMap.put("type", "return");
-        OkHttp3Util.doPostWithToken(Constants.CHANGE_OR_RETURN_GOOD_URL + "/", gson.toJson(paramMap),
-                new Okhttp3StringCallback(this, "createChangeGoodsOrder") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        createRefundOrderResultBean = gson.fromJson(results, CreateRefundOrderResultBean.class);
-                        editReturnGoodOrder();
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-                        customDialog.dismiss();
-                        Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
-                        onBackPressed();
-                    }
-                });
-    }
-
-    int accessCount = 0, tempAccessCount = 0;
-
-    private void editReturnGoodOrder() {
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("staff", MyApplication.staffInfoBean.getUser());
-        OkHttp3Util.doPatchWithToken(Constants.CHANGE_OR_RETURN_GOOD_URL + "/" + createRefundOrderResultBean.getId() + "/update/",
-                gson.toJson(paramMap),
-                new Okhttp3StringCallback(this, "editReturnGoodOrder") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        accessCount = tempgoodList.size();
-                        for (OrderItemBean bean : tempgoodList) {
-                            createReurnOrderItem(bean);
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-                        if (customDialog != null) {
-                            customDialog.dismiss();
-                            Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
-                            onBackPressed();
-                        }
-                    }
-                });
-    }
-
-    private void createReurnOrderItem(final OrderItemBean orderitem) {
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("rmanumber", createRefundOrderResultBean.getRmanumber());
-        paramMap.put("orderitemid", orderitem.getId());
-        OkHttp3Util.doPostWithToken(Constants.CHANGE_OR_RETURN_GOOD_ITEM_URL + "/", gson.toJson(paramMap),
-               new Okhttp3StringCallback(this, "createReurnOrderItem") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        createReurnStockItem(orderitem);
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-                        if (customDialog != null) {
-                            customDialog.dismiss();
-                            Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
-                            onBackPressed();
-                        }
-                    }
-                });
-    }
-
-    private void createReurnStockItem(final OrderItemBean orderitem) {
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("rmanumber", createRefundOrderResultBean.getRmanumber());
-        paramMap.put("name", orderitem.getStock().getBatch().getProduct().getName());
-        paramMap.put("quantity", orderitem.getOprateCount());
-        paramMap.put("weight", 0);
-        paramMap.put("location", MyApplication.staffInfoBean.getStore());
-        OkHttp3Util.doPostWithToken(Constants.RETURN_STOCKS_URL + "/", gson.toJson(paramMap),
-               new Okhttp3StringCallback(this, "createReurnStockItem") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        tempAccessCount += 1;
-                        orderitem.setReturnStockId(new JSONObject(results).getInt("id"));
-                        goodList.add(orderitem);
-                        if (tempAccessCount == accessCount) {
-                            customDialog.dismiss();
-                            resetSumMoney(true);
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-                        if (customDialog != null) {
-                            customDialog.dismiss();
-                            Toast.makeText(ReturnGoodsActivity.this, "创建回收单失败", Toast.LENGTH_SHORT).show();
-                            onBackPressed();
-                        }
-                    }
-                });
-    }
-
-
-    @Override
-    public void onBackPressed() {
-        deleteReturnOrder();
-    }
-
-    CustomDialog deleteDialog;
-
-    private void deleteReturnOrder() {
-        if (createRefundOrderResultBean == null) {
-            finish();
-            return;
-        }
-        if (deleteDialog == null)
-            deleteDialog = new CustomDialog(this, "正在删除退货订单..");
-        deleteDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                deleteDialog = null;
-            }
-        });
-        deleteDialog.show();
-        OkHttp3Util.doDeleteWithToken(Constants.CHANGE_OR_RETURN_GOOD_URL + "/" + createRefundOrderResultBean.getId() + "/update/",
-                new Okhttp3StringCallback(this, "deleteReturnOrder") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        deleteDialog.dismiss();
-                        finish();
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-                        deleteDialog.dismiss();
-                        Toast.makeText(ReturnGoodsActivity.this, "删除退货单失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-    }
 
 
     private boolean isAllWeightEdtHasInput() {
-        for (OrderItemBean bean : goodList) {
+        for (OrderBean.ItemsBean bean : goodList) {
             if (bean.getWeight().equals("")) {
                 return false;
             }
@@ -283,7 +141,13 @@ public class ReturnGoodsActivity extends BaseActivity {
                             .LENGTH_SHORT).show();
                     return;
                 }
-                createVoices();
+                Intent intent = new Intent(ReturnGoodsActivity.this, ReturnBalanceActivity.class);
+                intent.putExtra("goodlist", gson.toJson(goodList));
+                intent.putExtra("sumMoney", sumMoney);
+                intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
+                intent.putExtra("ordernumber", getIntent().getStringExtra("ordernumber"));
+                intent.putExtra("checkedGoodList",gson.toJson(goodList));
+                startActivity(intent);
                 break;
             case R.id.back_btn:
                 onBackPressed();
@@ -291,47 +155,11 @@ public class ReturnGoodsActivity extends BaseActivity {
         }
     }
 
-    private void createVoices() {
-        if (customDialog == null)
-            customDialog = new CustomDialog(this, "正在生成回收單發票..");
-        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                customDialog = null;
-            }
-        });
-        customDialog.show();
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("rmaorder", createRefundOrderResultBean.getId());
-        paramMap.put("type", "refund");
-        paramMap.put("amount", sumMoney * -1);
-        OkHttp3Util.doPostWithToken(Constants.CHANGE_OR_RETURN_GOOD_VOICES_URL + "/", gson.toJson(paramMap),
-                new Okhttp3StringCallback(this, "createVoices") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        Intent intent = new Intent(ReturnGoodsActivity.this, ReturnBalanceActivity.class);
-                        intent.putExtra("goodlist", gson.toJson(goodList));
-                        intent.putExtra("sumMoney", sumMoney);
-                        intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
-                        intent.putExtra("ordernumber", getIntent().getStringExtra("ordernumber"));
-                        startActivity(intent);
-                        customDialog.dismiss();
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-                        customDialog.dismiss();
-                        Toast.makeText(ReturnGoodsActivity.this, "生成回收單發票失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
     public void resetSumMoney(boolean isNotify) {
         sumMoney = 0;
-        for (OrderItemBean item : goodList) {
-            item.getStock().getBatch().getProduct().setPrice(item.getPrice() + "");
+        for (OrderBean.ItemsBean item : goodList) {
             setReturnOrderItemRealPrice(item);
-            sumMoney += Double.parseDouble(item.getStock().getBatch().getProduct().getRealPrice()) * item.getOprateCount();
+            sumMoney += Double.parseDouble(item.getStock().getProduct().getRealPrice()) * item.getOprateCount();
         }
         sumMoney = -1 * sumMoney;
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
@@ -339,16 +167,16 @@ public class ReturnGoodsActivity extends BaseActivity {
             goodsAdapter.notifyDataSetChanged();
     }
 
-    private void setReturnOrderItemRealPrice(OrderItemBean item) {
-        if (item.getStock().getBatch().getProduct().getCatalog().equals("黃金")) {
+    private void setReturnOrderItemRealPrice(OrderBean.ItemsBean item) {
+        if (item.getStock().getProduct().getCatalog().equals("黃金")) {
             if (item.getWeight().equals("")) {
-                item.getStock().getBatch().getProduct().setRealPrice("0");
+                item.getStock().getProduct().setRealPrice("0");
             } else {
-                item.getStock().getBatch().getProduct().setRealPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint(
+                item.getStock().getProduct().setRealPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint(
                         Double.parseDouble(currentGoldPrice) * Double.parseDouble(item.getWeight()) * 0.95));
             }
         } else {
-            item.getStock().getBatch().getProduct().setRealPrice(item.getStock().getBatch().getProduct().getPrice());
+            item.getStock().getProduct().setRealPrice(item.getStock().getProduct().getPrice());
         }
     }
 

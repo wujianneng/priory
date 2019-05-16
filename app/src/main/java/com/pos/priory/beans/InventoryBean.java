@@ -1,22 +1,31 @@
 package com.pos.priory.beans;
 
+import java.util.List;
+
 /**
  * Created by Lenovo on 2019/1/4.
  */
 
 public class InventoryBean {
 
+
     /**
-     * id : 1
-     * check : false
-     * stock : {"id":1,"batch":{"id":1,"product":{"id":1,"name":"千足小福珠","productcode":1001,"price":"1000.00","image":"static/img/products/flower_j6q4NpE.jpg","discountcontrol":true},"batchno":"20190113","weight":"0.50"},"quantity":9,"location":{"name":"高士德"}}
-     * systemcheck : false
+     * id : 80
+     * golditemcount : 1
+     * golditemweight : 1.1
+     * cystalitemcount : 0
+     * status : 未完成
+     * inventoryitem : [{"id":70,"check":false,"productname":"測試2","stockno":"100211111","stockweight":1.1}]
+     * created : 2019-05-07T08:27:16.249586Z
      */
 
     private int id;
-    private boolean check;
-    private StockBean stock;
-    private boolean systemcheck;
+    private String golditemcount;
+    private double golditemweight;
+    private String cystalitemcount;
+    private String status;
+    private String created;
+    private List<InventoryitemBean> inventoryitem;
 
     public int getId() {
         return id;
@@ -26,42 +35,68 @@ public class InventoryBean {
         this.id = id;
     }
 
-    public boolean isCheck() {
-        return check;
+    public String getGolditemcount() {
+        return golditemcount;
     }
 
-    public void setCheck(boolean check) {
-        this.check = check;
+    public void setGolditemcount(String golditemcount) {
+        this.golditemcount = golditemcount;
     }
 
-    public StockBean getStock() {
-        return stock;
+    public double getGolditemweight() {
+        return golditemweight;
     }
 
-    public void setStock(StockBean stock) {
-        this.stock = stock;
+    public void setGolditemweight(double golditemweight) {
+        this.golditemweight = golditemweight;
     }
 
-    public boolean isSystemcheck() {
-        return systemcheck;
+    public String getCystalitemcount() {
+        return cystalitemcount;
     }
 
-    public void setSystemcheck(boolean systemcheck) {
-        this.systemcheck = systemcheck;
+    public void setCystalitemcount(String cystalitemcount) {
+        this.cystalitemcount = cystalitemcount;
     }
 
-    public static class StockBean {
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public List<InventoryitemBean> getInventoryitem() {
+        return inventoryitem;
+    }
+
+    public void setInventoryitem(List<InventoryitemBean> inventoryitem) {
+        this.inventoryitem = inventoryitem;
+    }
+
+    public static class InventoryitemBean {
         /**
-         * id : 1
-         * batch : {"id":1,"product":{"id":1,"name":"千足小福珠","productcode":1001,"price":"1000.00","image":"static/img/products/flower_j6q4NpE.jpg","discountcontrol":true},"batchno":"20190113","weight":"0.50"}
-         * quantity : 9
-         * location : {"name":"高士德"}
+         * id : 70
+         * check : false
+         * productname : 測試2
+         * stockno : 100211111
+         * stockweight : 1.1
          */
 
         private int id;
-        private BatchBean batch;
-        private int quantity;
-        private LocationBean location;
+        private boolean check;
+        private String productname;
+        private String stockno;
+        private double stockweight;
 
         public int getId() {
             return id;
@@ -71,165 +106,36 @@ public class InventoryBean {
             this.id = id;
         }
 
-        public BatchBean getBatch() {
-            return batch;
+        public boolean isCheck() {
+            return check;
         }
 
-        public void setBatch(BatchBean batch) {
-            this.batch = batch;
+        public void setCheck(boolean check) {
+            this.check = check;
         }
 
-        public int getQuantity() {
-            return quantity;
+        public String getProductname() {
+            return productname;
         }
 
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
+        public void setProductname(String productname) {
+            this.productname = productname;
         }
 
-        public LocationBean getLocation() {
-            return location;
+        public String getStockno() {
+            return stockno;
         }
 
-        public void setLocation(LocationBean location) {
-            this.location = location;
+        public void setStockno(String stockno) {
+            this.stockno = stockno;
         }
 
-        public static class BatchBean {
-            /**
-             * id : 1
-             * product : {"id":1,"name":"千足小福珠","productcode":1001,"price":"1000.00","image":"static/img/products/flower_j6q4NpE.jpg","discountcontrol":true}
-             * batchno : 20190113
-             * weight : 0.50
-             */
-
-            private int id;
-            private ProductBean product;
-            private String batchno;
-            private String weight;
-
-            public int getId() {
-                return id;
-            }
-
-            public void setId(int id) {
-                this.id = id;
-            }
-
-            public ProductBean getProduct() {
-                return product;
-            }
-
-            public void setProduct(ProductBean product) {
-                this.product = product;
-            }
-
-            public String getBatchno() {
-                return batchno;
-            }
-
-            public void setBatchno(String batchno) {
-                this.batchno = batchno;
-            }
-
-            public String getWeight() {
-                return weight;
-            }
-
-            public void setWeight(String weight) {
-                this.weight = weight;
-            }
-
-            public static class ProductBean {
-                /**
-                 * id : 1
-                 * name : 千足小福珠
-                 * productcode : 1001
-                 * price : 1000.00
-                 * image : static/img/products/flower_j6q4NpE.jpg
-                 * discountcontrol : true
-                 */
-
-                private int id;
-                private String name;
-                private int productcode;
-                private String price;
-                private String image;
-                private boolean discountcontrol;
-                private String catalog;
-
-                public String getCatalog() {
-                    return catalog;
-                }
-
-                public void setCatalog(String catalog) {
-                    this.catalog = catalog;
-                }
-
-                public int getId() {
-                    return id;
-                }
-
-                public void setId(int id) {
-                    this.id = id;
-                }
-
-                public String getName() {
-                    return name;
-                }
-
-                public void setName(String name) {
-                    this.name = name;
-                }
-
-                public int getProductcode() {
-                    return productcode;
-                }
-
-                public void setProductcode(int productcode) {
-                    this.productcode = productcode;
-                }
-
-                public String getPrice() {
-                    return price;
-                }
-
-                public void setPrice(String price) {
-                    this.price = price;
-                }
-
-                public String getImage() {
-                    return image;
-                }
-
-                public void setImage(String image) {
-                    this.image = image;
-                }
-
-                public boolean isDiscountcontrol() {
-                    return discountcontrol;
-                }
-
-                public void setDiscountcontrol(boolean discountcontrol) {
-                    this.discountcontrol = discountcontrol;
-                }
-            }
+        public double getStockweight() {
+            return stockweight;
         }
 
-        public static class LocationBean {
-            /**
-             * name : 高士德
-             */
-
-            private String name;
-
-            public String getName() {
-                return name;
-            }
-
-            public void setName(String name) {
-                this.name = name;
-            }
+        public void setStockweight(double stockweight) {
+            this.stockweight = stockweight;
         }
     }
 }

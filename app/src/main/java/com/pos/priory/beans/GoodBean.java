@@ -1,32 +1,34 @@
 package com.pos.priory.beans;
 
+import java.util.List;
+
 /**
  * Created by Lenovo on 2019/1/6.
  */
 
 public class GoodBean {
-
-
     /**
-     * id : 1
-     * batch : {"id":1,"product":{"id":1,"name":"千足小福珠","productcode":1001,"price":"1000.00","image":"static/img/products/flower_j6q4NpE.jpg","discountcontrol":true},"batchno":"20190113","weight":"0.50"}
-     * quantity : 10
-     * location : {"name":"高士德"}
+     * id : 3
+     * stockno : 12345678
+     * location : 测试
+     * product : {"id":1,"name":"測試1","productcode":1001,"price":"1000.00","image":"static/img/products/test123.jpg","catalog":{"name":"黃金","discounts":[{"name":"95折","value":"0.950000"}]}}
+     * weight : 1.3
      */
 
     private int id;
-    private BatchBean batch;
-    private int quantity;
-    private int saleCount = 1;
-    private double discountRate = 1;
-    private LocationBean location;
+    private String stockno;
+    private String location;
+    private ProductBean product;
+    private double weight;
+    private int discountId = 1;
+    private double discountRate;
 
-    public int getSaleCount() {
-        return saleCount;
+    public int getDiscountId() {
+        return discountId;
     }
 
-    public void setSaleCount(int saleCount) {
-        this.saleCount = saleCount;
+    public void setDiscountId(int discountId) {
+        this.discountId = discountId;
     }
 
     public double getDiscountRate() {
@@ -45,42 +47,62 @@ public class GoodBean {
         this.id = id;
     }
 
-    public BatchBean getBatch() {
-        return batch;
+    public String getStockno() {
+        return stockno;
     }
 
-    public void setBatch(BatchBean batch) {
-        this.batch = batch;
+    public void setStockno(String stockno) {
+        this.stockno = stockno;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public LocationBean getLocation() {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(LocationBean location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
-    public static class BatchBean {
+    public ProductBean getProduct() {
+        return product;
+    }
+
+    public void setProduct(ProductBean product) {
+        this.product = product;
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public static class ProductBean {
         /**
          * id : 1
-         * product : {"id":1,"name":"千足小福珠","productcode":1001,"price":"1000.00","image":"static/img/products/flower_j6q4NpE.jpg","discountcontrol":true}
-         * batchno : 20190113
-         * weight : 0.50
+         * name : 測試1
+         * productcode : 1001
+         * price : 1000.00
+         * image : static/img/products/test123.jpg
+         * catalog : {"name":"黃金","discounts":[{"name":"95折","value":"0.950000"}]}
          */
 
         private int id;
-        private ProductBean product;
-        private String batchno;
-        private String weight;
+        private String name;
+        private int productcode;
+        private String price, prePrice;
+        private String image;
+        private CatalogBean catalog;
+
+        public String getPrePrice() {
+            return prePrice;
+        }
+
+        public void setPrePrice(String prePrice) {
+            this.prePrice = prePrice;
+        }
 
         public int getId() {
             return id;
@@ -90,72 +112,54 @@ public class GoodBean {
             this.id = id;
         }
 
-        public ProductBean getProduct() {
-            return product;
+        public String getName() {
+            return name;
         }
 
-        public void setProduct(ProductBean product) {
-            this.product = product;
+        public void setName(String name) {
+            this.name = name;
         }
 
-        public String getBatchno() {
-            return batchno;
+        public int getProductcode() {
+            return productcode;
         }
 
-        public void setBatchno(String batchno) {
-            this.batchno = batchno;
+        public void setProductcode(int productcode) {
+            this.productcode = productcode;
         }
 
-        public String getWeight() {
-            return weight;
+        public String getPrice() {
+            return price;
         }
 
-        public void setWeight(String weight) {
-            this.weight = weight;
+        public void setPrice(String price) {
+            this.price = price;
         }
 
-        public static class ProductBean {
+        public String getImage() {
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
+
+        public CatalogBean getCatalog() {
+            return catalog;
+        }
+
+        public void setCatalog(CatalogBean catalog) {
+            this.catalog = catalog;
+        }
+
+        public static class CatalogBean {
             /**
-             * id : 1
-             * name : 千足小福珠
-             * productcode : 1001
-             * price : 1000.00
-             * image : static/img/products/flower_j6q4NpE.jpg
-             * discountcontrol : true
+             * name : 黃金
+             * discounts : [{"name":"95折","value":"0.950000"}]
              */
 
-            private int id;
             private String name;
-            private int productcode;
-            private String price;
-            private String prePrice;
-            private String image;
-            private boolean discountcontrol;
-            private String catalog;
-
-            public String getPrePrice() {
-                return prePrice;
-            }
-
-            public void setPrePrice(String prePrice) {
-                this.prePrice = prePrice;
-            }
-
-            public String getCatalog() {
-                return catalog;
-            }
-
-            public void setCatalog(String catalog) {
-                this.catalog = catalog;
-            }
-
-            public int getId() {
-                return id;
-            }
-
-            public void setId(int id) {
-                this.id = id;
-            }
+            private List<DiscountsBean> discounts;
 
             public String getName() {
                 return name;
@@ -165,53 +169,49 @@ public class GoodBean {
                 this.name = name;
             }
 
-            public int getProductcode() {
-                return productcode;
+            public List<DiscountsBean> getDiscounts() {
+                return discounts;
             }
 
-            public void setProductcode(int productcode) {
-                this.productcode = productcode;
+            public void setDiscounts(List<DiscountsBean> discounts) {
+                this.discounts = discounts;
             }
 
-            public String getPrice() {
-                return price;
-            }
+            public static class DiscountsBean {
+                /**
+                 * name : 95折
+                 * value : 0.950000
+                 */
+                private int id;
+                private String name;
+                private String value;
 
-            public void setPrice(String price) {
-                this.price = price;
-            }
+                public int getId() {
+                    return id;
+                }
 
-            public String getImage() {
-                return image;
-            }
+                public void setId(int id) {
+                    this.id = id;
+                }
 
-            public void setImage(String image) {
-                this.image = image;
-            }
+                public String getName() {
+                    return name;
+                }
 
-            public boolean isDiscountcontrol() {
-                return discountcontrol;
-            }
+                public void setName(String name) {
+                    this.name = name;
+                }
 
-            public void setDiscountcontrol(boolean discountcontrol) {
-                this.discountcontrol = discountcontrol;
+                public String getValue() {
+                    return value;
+                }
+
+                public void setValue(String value) {
+                    this.value = value;
+                }
             }
         }
     }
 
-    public static class LocationBean {
-        /**
-         * name : 高士德
-         */
 
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
 }

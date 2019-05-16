@@ -4,7 +4,12 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.SpannedString;
+import android.text.style.AbsoluteSizeSpan;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -44,14 +49,10 @@ public class EditPasswordActivity extends BaseActivity {
     EditText edtNewPassword;
     @Bind(R.id.edt_repeat_new_password)
     EditText edtRepeatNewPassword;
-    @Bind(R.id.icon)
-    ImageView icon;
-    @Bind(R.id.text)
-    TextView text;
     @Bind(R.id.right_img)
     ImageView rightImg;
     @Bind(R.id.btn_commit)
-    CardView btnCommit;
+    MaterialButton btnCommit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,6 +69,15 @@ public class EditPasswordActivity extends BaseActivity {
     protected void initViews() {
         rightImg.setVisibility(View.GONE);
         titleTv.setText("修改密碼");
+        setEditTextHintTextSize(edtNewPassword,12,"請輸入新密碼(長度大於8位，并且必須包含數字和字母)");
+        setEditTextHintTextSize(edtRepeatNewPassword,12,"請再次輸入新密碼(長度大於8位，并且必須包含數字和字母)");
+    }
+
+    private void setEditTextHintTextSize(EditText editText,int spSize,String hintContent){
+        SpannableString ss = new SpannableString(hintContent);
+        AbsoluteSizeSpan ass = new AbsoluteSizeSpan(spSize, true);
+        ss.setSpan(ass, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        editText.setHint(new SpannedString(ss)); // 一定要进行转换,否则属性会消失
     }
 
     CustomDialog customDialog;

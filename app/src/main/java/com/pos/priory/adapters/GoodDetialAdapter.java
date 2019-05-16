@@ -29,6 +29,6 @@ public class GoodDetialAdapter extends BaseQuickAdapter<GoodBean, BaseViewHolder
 
     @Override
     protected void convert(BaseViewHolder helper, GoodBean item) {
-        helper.setText(R.id.code_tv, item.getBatch().getProduct().getProductcode() + item.getBatch().getBatchno());
+        helper.setText(R.id.code_tv,item.getProduct().getProductcode() + item.getStockno());
     }
 }

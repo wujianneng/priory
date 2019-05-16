@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -50,12 +51,8 @@ public class RegisterMemberActivity extends BaseActivity {
     TextView btnSex;
     @Bind(R.id.edt_phone)
     EditText edtPhone;
-    @Bind(R.id.icon)
-    ImageView icon;
-    @Bind(R.id.text)
-    TextView text;
     @Bind(R.id.btn_commit)
-    CardView btnCommit;
+    MaterialButton btnCommit;
     @Bind(R.id.right_img)
     ImageView rightImg;
 

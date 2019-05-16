@@ -31,6 +31,8 @@ import com.pos.priory.beans.CreateOrderResultBean;
 import com.pos.priory.beans.DiscountBean;
 import com.pos.priory.beans.GoodBean;
 import com.pos.priory.coustomViews.CustomDialog;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.DateUtils;
 import com.pos.priory.utils.LogicUtils;
@@ -45,6 +47,8 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import org.greenrobot.eventbus.Subscribe;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +58,9 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/31.
@@ -78,7 +85,6 @@ public class AddNewOrderActivity extends BaseActivity {
     String memberName, memberMobile;
 
     double sumMoney = 0, changeGoodsMoeny = 0;
-    CreateOrderResultBean createOrderResultBean;
     @Bind(R.id.right_img)
     ImageView rightImg;
     @Bind(R.id.title_layout)
@@ -114,6 +120,7 @@ public class AddNewOrderActivity extends BaseActivity {
     @Bind(R.id.btn_next)
     CardView btnNext;
 
+
     @Override
     protected void beForeInitViews() {
         setContentView(R.layout.activity_add_new_order);
@@ -126,6 +133,7 @@ public class AddNewOrderActivity extends BaseActivity {
         titleTv.setText("添加商品");
         rightImg.setVisibility(View.GONE);
         changeGoodsMoeny = getIntent().getDoubleExtra("sumMoney", 0);
+
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
 
         goodsAdapter = new AddNewOrderGoodsAdapter(this, R.layout.add_new_order_good_list_item, goodList);
@@ -161,7 +169,7 @@ public class AddNewOrderActivity extends BaseActivity {
                 if (menuPosition == 0) {
                     showChoiceDiscountDialog(adapterPosition);
                 } else {
-                    deleteOrderItem(adapterPosition, goodList.get(adapterPosition).getId());
+                    deleteOrderItem(adapterPosition);
                 }
             }
         });
@@ -176,43 +184,18 @@ public class AddNewOrderActivity extends BaseActivity {
         memberNameTv.setText("會員：" + memberName);
         memberPhoneTv.setText("聯係電話：" + memberMobile);
         memberRewardTv.setText("積分：" + memberReward);
-        getStoreDiscountList();
     }
 
     List<DiscountBean> discountBeanList;
     List<String> discountNames = new ArrayList<>();
 
-    private void getStoreDiscountList() {
-        OkHttp3Util.doGetWithToken(Constants.GET_DISCOUNT_LIST_URL + "?location=" + MyApplication.staffInfoBean.getStore(),
-                new Okhttp3StringCallback(this, "getStoreDiscountList") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        discountBeanList = gson.fromJson(results, new TypeToken<List<DiscountBean>>() {
-                        }.getType());
-                        if (discountBeanList != null) {
-                            for (DiscountBean bean : discountBeanList) {
-                                discountNames.add(bean.getName());
-                            }
-                        }
-                        if (discountNames.size() == 0) {
-                            discountNames.add("無折扣");
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-
-                    }
-                });
-    }
 
     CustomDialog customDialog;
 
     private void refreshSumMoney() {
         sumMoney = 0;
         for (GoodBean bean : goodList) {
-            sumMoney += new BigDecimal(bean.getBatch().getProduct().getPrice()).doubleValue() * bean.getSaleCount();
+            sumMoney += new BigDecimal(bean.getProduct().getPrice()).doubleValue();
         }
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
     }
@@ -223,11 +206,17 @@ public class AddNewOrderActivity extends BaseActivity {
 
     private void showChoiceDiscountDialog(final int position) {
         if (choiceSexDialog == null) {
+            for (GoodBean.ProductBean.CatalogBean.DiscountsBean bean : goodList.get(position).getProduct().getCatalog().getDiscounts()) {
+                discountNames.add(bean.getName());
+            }
+            if (discountNames.size() == 0) {
+                discountNames.add("無折扣");
+            }
             if (discountNames.size() == 1 && discountNames.get(0).equals("無折扣")) {
                 yourChoice = 0;
             } else {
-                for (int i = 0; i < discountBeanList.size(); i++) {
-                    if (goodList.get(position).getDiscountRate() == new BigDecimal(discountBeanList.get(i).getValue()).doubleValue()) {
+                for (int i = 0; i < goodList.get(position).getProduct().getCatalog().getDiscounts().size(); i++) {
+                    if (goodList.get(position).getDiscountRate() == new BigDecimal(goodList.get(position).getProduct().getCatalog().getDiscounts().get(i).getValue()).doubleValue()) {
                         yourChoice = i;
                     }
                 }
@@ -252,11 +241,10 @@ public class AddNewOrderActivity extends BaseActivity {
                         public void onClick(DialogInterface dialog, int which) {
                             if (yourChoice != -1) {
                                 if (discountNames.size() == 1 && discountNames.get(0).equals("無折扣")) {
-                                    editOrderItemOnOperate(position, goodList.get(position).getId(),
-                                            goodList.get(position).getSaleCount(), 1, "调折扣");
+                                    editOrderItemOnOperate(position, 1,1, "调折扣");
                                 } else {
-                                    editOrderItemOnOperate(position, goodList.get(position).getId(),
-                                            goodList.get(position).getSaleCount(), new BigDecimal(discountBeanList.get(yourChoice).getValue()).doubleValue(), "调折扣");
+                                    editOrderItemOnOperate(position, new BigDecimal(goodList.get(position).getProduct().getCatalog().getDiscounts().get(yourChoice).getValue()).doubleValue(),
+                                            goodList.get(position).getProduct().getCatalog().getDiscounts().get(yourChoice).getId(), "调折扣");
                                 }
                             }
                             choiceSexDialog.dismiss();
@@ -291,8 +279,9 @@ public class AddNewOrderActivity extends BaseActivity {
                 intent.putExtra("goodlist", gson.toJson(goodList));
                 intent.putExtra("sumMoney", sumMoney + changeGoodsMoeny);
                 intent.putExtra("newOrderSumMoney", sumMoney);
+                intent.putExtra("memberId", memberid);
                 intent.putExtra("memberName", memberName);
-                intent.putExtra("ordernumber", createOrderResultBean.getOrdernumber());
+                intent.putExtra("checkedGoodList",getIntent().getStringExtra("checkedGoodList"));
                 startActivity(intent);
                 break;
             case R.id.back_btn:
@@ -362,151 +351,52 @@ public class AddNewOrderActivity extends BaseActivity {
             }
         });
         customDialog.show();
-        OkHttp3Util.doGetWithToken(Constants.GET_STOCK_URL + "?productcode=" + productcode + "&location="
-                        + MyApplication.staffInfoBean.getStore(),
-                new Okhttp3StringCallback(this, "getStockList") {
+        RetrofitManager.createString(ApiService.class)
+                .getStockListByQrCode(productcode)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
-                        List<GoodBean> goodBeanList = gson.fromJson(results, new TypeToken<List<GoodBean>>() {
+                    public void accept(String s) throws Exception {
+                        List<GoodBean> goodBeanList = gson.fromJson(s, new TypeToken<List<GoodBean>>() {
                         }.getType());
                         if (goodBeanList != null && goodBeanList.size() != 0) {
-                            if (goodBeanList.get(0).getQuantity() >= 1) {
-                                createOrderItem(goodBeanList.get(0));
-                            } else {
-                                customDialog.dismiss();
-                                Toast.makeText(AddNewOrderActivity.this, "此商品庫存不足", Toast.LENGTH_SHORT).show();
-                            }
+                            customDialog.dismiss();
+                            goodBeanList.get(0).getProduct().setPrePrice(goodBeanList.get(0).getProduct().getPrice());
+                            goodList.add(goodBeanList.get(0));
+                            goodsAdapter.notifyItemInserted(goodList.size() - 1);
+                            refreshSumMoney();
                         } else {
                             customDialog.dismiss();
                             Toast.makeText(AddNewOrderActivity.this, "添加商品失败", Toast.LENGTH_SHORT).show();
                         }
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
                         Toast.makeText(AddNewOrderActivity.this, "添加商品失败", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void createOrderItem(final GoodBean goodBean) {
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("ordernumber", createOrderResultBean.getOrdernumber());
-        paramMap.put("stockid", goodBean.getId());
-        OkHttp3Util.doPostWithToken(Constants.GET_ORDER_ITEM_URL + "/", gson.toJson(paramMap),
-                new Okhttp3StringCallback(this, "createOrderItem") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        CreateOrderItemResultBean createOrderItemResultBean = gson.fromJson(results,
-                                CreateOrderItemResultBean.class);
-                        goodBean.setId(createOrderItemResultBean.getId());
-                        editOrderItem(goodBean);
-                    }
 
-                    @Override
-                    public void onFailed(String erromsg) {
-                        customDialog.dismiss();
-                        Toast.makeText(AddNewOrderActivity.this, "添加商品失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
+    private void editOrderItemOnOperate(int position, double discount,int discountId, String oprateName) {
+        GoodBean goodBean = goodList.get(position);
+        goodBean.setDiscountRate(discount);
+        goodBean.setDiscountId(discountId);
+        goodBean.getProduct().setPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint(
+                Double.parseDouble(goodBean.getProduct().getPrePrice()) * discount));
+        goodsAdapter.notifyItemChanged(position);
+        refreshSumMoney();
+
     }
 
-    private void editOrderItem(final GoodBean goodBean) {
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("quantity", goodBean.getSaleCount());
-        paramMap.put("discount", goodBean.getDiscountRate());
-        OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + goodBean.getId()
-                + "/update/", gson.toJson(paramMap), new Okhttp3StringCallback(this, "editOrderItem") {
-            @Override
-            public void onSuccess(String results) throws Exception {
-                customDialog.dismiss();
-                goodBean.getBatch().getProduct().setPrePrice(goodBean.getBatch().getProduct().getPrice());
-                goodList.add(goodBean);
-                goodsAdapter.notifyItemInserted(goodList.size() - 1);
-                refreshSumMoney();
-            }
-
-            @Override
-            public void onFailed(String erromsg) {
-                customDialog.dismiss();
-                Toast.makeText(AddNewOrderActivity.this, "添加商品失败", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void editOrderItemOnOperate(final int position, int orderitemId, int quantity, final double discount,
-                                        final String oprateName) {
-        if (customDialog == null)
-            customDialog = new CustomDialog(this, "正在修改商品信息..");
-        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                customDialog = null;
-            }
-        });
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("quantity", quantity);
-        paramMap.put("discount", discount);
-        OkHttp3Util.doPatchWithToken(Constants.GET_ORDER_ITEM_URL + "/" + orderitemId
-                + "/update/", gson.toJson(paramMap), new Okhttp3StringCallback(this, "editOrderItemOnOperate") {
-            @Override
-            public void onSuccess(String results) throws Exception {
-                customDialog.dismiss();
-                GoodBean goodBean = goodList.get(position);
-                if (oprateName.equals("加数量")) {
-                    goodBean.setSaleCount(goodBean.getSaleCount() + 1);
-                    goodsAdapter.notifyItemChanged(position);
-                    refreshSumMoney();
-                } else if (oprateName.equals("减数量")) {
-                    goodBean.setSaleCount(goodBean.getSaleCount() - 1);
-                    goodsAdapter.notifyItemChanged(position);
-                    refreshSumMoney();
-                } else if (oprateName.equals("调折扣")) {
-                    goodBean.setDiscountRate(discount);
-                    goodBean.getBatch().getProduct().setPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint(
-                            Double.parseDouble(goodBean.getBatch().getProduct().getPrePrice()) * discount));
-                    goodsAdapter.notifyItemChanged(position);
-                    refreshSumMoney();
-                }
-
-            }
-
-            @Override
-            public void onFailed(String erromsg) {
-                customDialog.dismiss();
-                Toast.makeText(AddNewOrderActivity.this, "修改商品信息失败", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void deleteOrderItem(final int position, int orderitemid) {
-        if (customDialog == null)
-            customDialog = new CustomDialog(this, "正在删除该商品..");
-        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                customDialog = null;
-            }
-        });
-        customDialog.show();
-        OkHttp3Util.doDeleteWithToken(Constants.GET_ORDER_ITEM_URL + "/" + orderitemid + "/update/",
-                new Okhttp3StringCallback(this, "deleteOrderItem") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        customDialog.dismiss();
-                        goodList.remove(position);
-                        goodsAdapter.notifyItemRangeChanged(0, goodList.size());
-                        goodsAdapter.notifyItemRemoved(position);
-                        refreshSumMoney();
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-                        customDialog.dismiss();
-                        Toast.makeText(AddNewOrderActivity.this, "删除商品失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
+    private void deleteOrderItem(final int position) {
+        goodList.remove(position);
+        goodsAdapter.notifyItemRangeChanged(0, goodList.size());
+        goodsAdapter.notifyItemRemoved(position);
+        refreshSumMoney();
     }
 
     @Override

@@ -3,9 +3,7 @@ package com.pos.priory.activitys;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.button.MaterialButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -22,17 +20,9 @@ import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.OrderDetailPrintGoodsAdapter;
 import com.pos.priory.adapters.OrderDetialGoodsAdapter;
-import com.pos.priory.beans.GoodBean;
 import com.pos.priory.beans.OrderBean;
-import com.pos.priory.beans.OrderItemBean;
-import com.pos.priory.beans.TransactionBean;
-import com.pos.priory.coustomViews.CustomDialog;
-import com.pos.priory.networks.ApiService;
-import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.DateUtils;
 import com.pos.priory.utils.LogicUtils;
-
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,19 +30,14 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/31.
  */
 
 public class OrderDetialActivity extends BaseActivity {
-    List<OrderItemBean> goodList = new ArrayList<>();
-    List<OrderItemBean> checkedGoodList = new ArrayList<>();
+    List<OrderBean.ItemsBean> goodList = new ArrayList<>();
+    List<OrderBean.ItemsBean> checkedGoodList = new ArrayList<>();
     OrderDetialGoodsAdapter goodsAdapter;
     @Bind(R.id.back_btn)
     ImageView backBtn;
@@ -103,19 +88,36 @@ public class OrderDetialActivity extends BaseActivity {
     @Override
     protected void initViews() {
         orderBean = gson.fromJson(getIntent().getStringExtra("order"), OrderBean.class);
-        if (orderBean.getStatus().equals("已取消")) {
+        if (orderBean.getStatus().equals("取消")) {
             btnChange.setEnabled(false);
             btnChange.setAlpha(0.5f);
             btnReturn.setEnabled(false);
             btnReturn.setAlpha(0.5f);
-        } else if (orderBean.getStatus().equals("已完成")) {
+        } else {
             btnPrint.setVisibility(View.VISIBLE);
+            btnPrint.setImageResource(R.drawable.dayin);
         }
-        orderNumberTv.setText(orderBean.getOrdernumber());
+        orderNumberTv.setText("訂單號：" + orderBean.getOrdernumber());
         dateTv.setText(DateUtils.covertIso8601ToDate(orderBean.getCreated()));
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(orderBean.getTotalprice()));
-        memberNameTv.setText(orderBean.getMember().getLast_name() + orderBean.getMember().getFirst_name());
-
+        memberPhoneTv.setText("聯係電話：" + orderBean.getMember().getMobile());
+        memberNameTv.setText("會員：" + orderBean.getMember().getLast_name() + orderBean.getMember().getFirst_name());
+        if (orderBean.getInvoiceitem().size() != 0)
+            for (OrderBean.InvoiceitemBean.TransactionitemBean bean : orderBean.getInvoiceitem().get(0).getTransactionitem()) {
+                if (bean.getPaymentmethod().equals("信用卡")) {
+                    cardMoneyTv.setText(bean.getAmount());
+                } else if (bean.getPaymentmethod().equals("現金")) {
+                    cashMoneyTv.setText(bean.getAmount());
+                } else if (bean.getPaymentmethod().equals("現金劵")) {
+                    cashCouponTv.setText(bean.getAmount());
+                } else if (bean.getPaymentmethod().equals("支付寶")) {
+                    alipayTv.setText(bean.getAmount());
+                } else if (bean.getPaymentmethod().equals("微信支付")) {
+                    wechatpayTv.setText(bean.getAmount());
+                }
+            }
+        goodList = orderBean.getItems();
+        countTv.setText(goodList.size() + "件|" + orderBean.getItemsweight() + "克");
         goodsAdapter = new OrderDetialGoodsAdapter(R.layout.order_detial_good_list_item, goodList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
@@ -124,13 +126,11 @@ public class OrderDetialActivity extends BaseActivity {
 
     }
 
-    public static void printViews(final Activity activity, List<OrderItemBean> goodList, String orderNumber,
+    public static void printViews(final Activity activity, List<OrderBean.ItemsBean> goodList, String orderNumber,
                                   String memberName, String createDate, double sumMoney, int storeId) {
         List<View> views = new ArrayList<>();
-        List<OrderItemBean> templist = new ArrayList<>();
-        for (int i = 0; i < 70; i++) {
-            templist.add(goodList.get(0));
-        }
+        List<OrderBean.ItemsBean> templist = new ArrayList<>();
+        templist.addAll(goodList);
         int perPageSize = 8;
         int size = templist.size() / perPageSize;
         int a = templist.size() % perPageSize;
@@ -139,7 +139,7 @@ public class OrderDetialActivity extends BaseActivity {
         }
         Log.e("test", "size:" + size + " a:" + a);
         for (int i = 0; i < size; i++) {
-            List<OrderItemBean> extraList = new ArrayList<>();
+            List<OrderBean.ItemsBean> extraList = new ArrayList<>();
             if (i == (size - 1)) {
                 for (int t = 0; t < a; t++) {
                     extraList.add(templist.get(t + perPageSize * i));
@@ -212,9 +212,9 @@ public class OrderDetialActivity extends BaseActivity {
 
     private void resetCheckedGoodList(boolean isReturn) {
         checkedGoodList.clear();
-        for (OrderItemBean bean : goodList) {
+        for (OrderBean.ItemsBean bean : goodList) {
             if (bean.isSelected()) {
-                if (bean.getStock().getBatch().getProduct().getCatalog().equals("其他") && isReturn) {
+                if (bean.getStock().getProduct().getCatalog().equals("其他") && isReturn) {
                     Toast.makeText(OrderDetialActivity.this, "只有黃金類型商品才能進行回收", Toast.LENGTH_SHORT).show();
                     return;
                 }

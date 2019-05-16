@@ -28,7 +28,7 @@
             android:id="@+id/code_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
             android:layout_toRightOf="@+id/icon_good"
             android:text="DAFUZHU"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="20dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="3dp"
             android:layout_toRightOf="@+id/icon_good"
             android:text="大福珠"
@@ -49,20 +49,10 @@
             android:textSize="20sp" />
 
 
-        <View
-            android:id="@+id/line"
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="30dp"
-            android:layout_marginRight="80dp"
-            android:layout_marginTop="30dp"
-            android:background="#cccccc" />
 
         <FrameLayout
             android:layout_width="60dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="30dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true">
 
@@ -71,22 +61,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="15dp"
                 android:text="1"
-                android:textColor="@color/blue_text"
+                android:textColor="@color/drag_btn_green"
                 android:textSize="25sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/status_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <android.support.design.button.MaterialButton
+                android:id="@+id/btn_sure"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="5dp"
                 android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginBottom="20dp"
-                android:text="訂貨"
-                android:textColor="#cccccc"
+                android:background="@color/colorAccent"
+                android:text="确认"
+                android:textColor="#ffffff"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                app:cornerRadius="20dp"
+                />
 
         </FrameLayout>
 
