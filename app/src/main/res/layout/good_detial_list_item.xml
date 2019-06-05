@@ -36,7 +36,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="15dp"
             android:layout_toRightOf="@+id/icon_good"
-            android:text="1.02克"
+            android:text="1.02g"
             android:textColor="#333333"
             android:textSize="20sp" />
 

@@ -31,7 +31,7 @@
             android:gravity="center"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:textSize="18sp"
-            android:textColor="#cccccc"
+            android:textColor="@color/blue_text"
             android:text="訂單號"
             android:layout_width="60dp"
             android:layout_height="match_parent" />
@@ -42,7 +42,7 @@
             android:gravity="center"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:textSize="18sp"
-            android:textColor="#cccccc"
+            android:textColor="@color/blue_text"
             android:text="日期"
             android:layout_width="60dp"
             android:layout_height="match_parent" />
@@ -91,7 +91,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
                     android:text="電話"
-                    android:textColor="#cccccc"
+                    android:textColor="@color/blue_text"
                     android:textSize="13sp" />
 
                 <EditText

@@ -3,6 +3,7 @@ package com.pos.priory.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -10,16 +11,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.blankj.utilcode.util.ToastUtils;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
 import com.pos.priory.adapters.InventoryDetialAdapter;
-import com.pos.priory.adapters.InventoryStoreAdapter;
 import com.pos.priory.beans.InventoryBean;
-import com.pos.priory.beans.InventoryDetialBean;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.networks.RetrofitManager;
 import com.pos.zxinglib.MipcaActivityCapture;
@@ -57,6 +54,9 @@ public class BigInventoryDetialActivity extends BaseActivity {
     InventoryDetialAdapter adapter;
     List<InventoryBean.InventoryitemBean> dataList = new ArrayList<>();
     int inventoryId = 0;
+    String status = "未完成";
+    @Bind(R.id.btn_finish)
+    MaterialButton btnFinish;
 
     @Override
     protected void beForeInitViews() {
@@ -66,7 +66,10 @@ public class BigInventoryDetialActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        inventoryId = getIntent().getIntExtra("inventoryId",0);
+        inventoryId = getIntent().getIntExtra("inventoryId", 0);
+        status = getIntent().getStringExtra("status");
+        scanBtn.setVisibility(status.equals("未完成") ? View.VISIBLE : View.GONE);
+        btnFinish.setVisibility(status.equals("未完成") ? View.VISIBLE : View.GONE);
         titleTv.setText("大盤點");
         scanBtn.setImageResource(R.drawable.scan);
         refreshLayout.setEnableLoadMore(false);
@@ -91,14 +94,15 @@ public class BigInventoryDetialActivity extends BaseActivity {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
-                        List<InventoryBean>  inventoryBean = gson.fromJson(s,new TypeToken<List<InventoryBean>>(){}.getType());
+                        List<InventoryBean> inventoryBean = gson.fromJson(s, new TypeToken<List<InventoryBean>>() {
+                        }.getType());
                         dataList.clear();
                         dataList.addAll(inventoryBean.get(0).getInventoryitem());
                         adapter.notifyDataSetChanged();
                         refreshLayout.finishRefresh();
-                        leftTv.setText("黃金：" + inventoryBean.get(0).getGolditemcount()+ "件 | " + inventoryBean.get(0).getGolditemweight() + "克");
+                        leftTv.setText("黃金：" + inventoryBean.get(0).getGolditemcount() + "件 | " + inventoryBean.get(0).getGolditemweight() + "g");
                         rightTv.setText("晶石：" + inventoryBean.get(0).getCystalitemcount() + "件");
-                        Log.e("test","size:" + dataList.size());
+                        Log.e("test", "size:" + dataList.size());
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -109,23 +113,23 @@ public class BigInventoryDetialActivity extends BaseActivity {
     }
 
     @OnClick({R.id.back_btn})
-    public void onClickBack(){
+    public void onClickBack() {
         finish();
     }
 
     @OnClick({R.id.right_img})
-    public void onClickScan(){
+    public void onClickScan() {
         startActivityForResult(new Intent(BigInventoryDetialActivity.this, MipcaActivityCapture.class), 1000);
     }
 
     @OnClick({R.id.btn_finish})
-    public void onClickFinish(){
+    public void onClickFinish() {
         finishInventory();
     }
 
     private void finishInventory() {
         RetrofitManager.createString(ApiService.class)
-                .updateBigInventoryById(inventoryId,"已完成")
+                .updateBigInventoryById(inventoryId, "已完成")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
@@ -145,14 +149,15 @@ public class BigInventoryDetialActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("result", "result:" + data.getStringExtra("resultString"));
         switch (resultCode) {
             case 1:
-                String str = data.getStringExtra("resultString");
-                Log.e("result", "result:" + str);
-                for(InventoryBean.InventoryitemBean bean : dataList){
-                    if(bean.getStockno().equals(str)){
-                        doInventry(bean.getId());
+                if(data != null) {
+                    String str = data.getStringExtra("resultString");
+                    Log.e("result", "result:" + str);
+                    for (InventoryBean.InventoryitemBean bean : dataList) {
+                        if (bean.getStockno().equals(str)) {
+                            doInventry(bean.getId());
+                        }
                     }
                 }
                 break;
@@ -160,21 +165,27 @@ public class BigInventoryDetialActivity extends BaseActivity {
     }
 
     private void doInventry(int id) {
-       RetrofitManager.createString(ApiService.class)
-               .updateOnBigInventoryItemById(id,true)
-               .subscribeOn(Schedulers.io())
-               .observeOn(AndroidSchedulers.mainThread())
-               .subscribe(new Consumer<String>() {
-                   @Override
-                   public void accept(String s) throws Exception {
-                       refreshLayout.autoRefresh();
-                   }
-               }, new Consumer<Throwable>() {
-                   @Override
-                   public void accept(Throwable throwable) throws Exception {
+        RetrofitManager.createString(ApiService.class)
+                .updateOnBigInventoryItemById(id, true)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        refreshLayout.autoRefresh();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
 
-                   }
-               });
+                    }
+                });
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

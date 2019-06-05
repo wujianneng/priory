@@ -24,7 +24,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:text="Willim Long"
-            android:textColor="#cccccc"
+            android:textColor="#4a4a4a"
             android:textSize="13sp" />
 
         <ImageView
@@ -35,6 +35,17 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:src="@drawable/icon_boy" />
+
+        <TextView
+            android:id="@+id/phone_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/sex_img"
+            android:layout_marginLeft="20dp"
+            android:text="13498769987"
+            android:textColor="#4a4a4a"
+            android:textSize="13sp" />
 
         <ImageView
             android:layout_width="10dp"

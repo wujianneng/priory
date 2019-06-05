@@ -59,8 +59,8 @@ public class ReturnBalanceActivity extends BaseActivity {
     FrameLayout tipLayout;
     @Bind(R.id.edt_cas_money)
     TextView edtCasMoney;
-    @Bind(R.id.btn_finish)
-    MaterialButton btnFinish;
+    @Bind(R.id.btn_next)
+    MaterialButton btnNext;
     double sumMoney = 0;
     @Bind(R.id.right_img)
     ImageView rightImg;
@@ -83,10 +83,10 @@ public class ReturnBalanceActivity extends BaseActivity {
         moneyTv.setText((int) sumMoney + "");
     }
 
-    @OnClick({R.id.btn_finish, R.id.back_btn})
+    @OnClick({R.id.btn_next, R.id.back_btn})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_finish:
+            case R.id.btn_next:
                 doReturnGoods();
                 break;
             case R.id.back_btn:

@@ -1,5 +1,7 @@
 package com.pos.priory.utils;
 
+import com.pos.priory.networks.RetrofitManager;
+
 /**
  * Created by Lenovo on 2019/1/4.
  */
@@ -32,7 +34,7 @@ public class Constants {
     public static final String RETURN_STOCKS_URL = "https://pos.annabellaip.com/api/returnstocks";
     public static final String PURCHASING_URL = "https://pos.annabellaip.com/api/purchasing";
     public static final String PURCHASING_ITEM_URL = "https://pos.annabellaip.com/api/purchasingitems";
-    public static final String BASE_URL_HTTP = "http://pos.annabellaip.com/";
+    public static final String BASE_URL_HTTP = RetrofitManager.BASE_URL;
     public static final String GOLD_PRICE_URL = "https://pos.annabellaip.com/api/goldprice/";
     public static final String GET_DISCOUNT_LIST_URL = "https://pos.annabellaip.com/api/discount/";
     public static final String CHANGE_OR_RETURN_GOOD_VOICES_URL = "https://pos.annabellaip.com/api/rmainvoices";

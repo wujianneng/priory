@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="请输入商品条码"
+            android:text="商品条码"
             android:textColor="#cccccc"
             android:textSize="18sp" />
 
@@ -39,7 +39,7 @@
         android:layout_marginRight="40dp"
         android:layout_marginTop="5dp"
         android:background="@null"
-        android:hint="請輸入条码"
+        android:hint=""
         android:textColor="#333333" />
 
     <View

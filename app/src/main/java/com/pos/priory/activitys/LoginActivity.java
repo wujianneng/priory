@@ -130,6 +130,7 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             customDialog.dismiss();
+                            Log.e("test","請與總部相關人員聯絡及查詢1");
                             Toast.makeText(LoginActivity.this, "請與總部相關人員聯絡及查詢！", Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -170,6 +171,7 @@ public class LoginActivity extends BaseActivity {
                             } else {
                                 if (customDialog != null)
                                     customDialog.dismiss();
+                                Log.e("test","請與總部相關人員聯絡及查詢2");
                                 Toast.makeText(LoginActivity.this, "請與總部相關人員聯絡及查詢！", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -178,6 +180,7 @@ public class LoginActivity extends BaseActivity {
                         public void accept(Throwable throwable) throws Exception {
                             if (customDialog != null)
                                 customDialog.dismiss();
+                            Log.e("test","請與總部相關人員聯絡及查詢3");
                             Toast.makeText(LoginActivity.this, "請與總部相關人員聯絡及查詢！", Toast.LENGTH_SHORT).show();
                         }
                     });

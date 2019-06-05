@@ -71,7 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="16dp"
-                        android:text="12件|15克"
+                        android:text="0件|0g"
                         android:textColor="#000000"
                         android:textSize="12sp" />
 
@@ -140,7 +140,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:text="新购买项目"
+        android:text="新購買項目"
         android:textColor="#cccccc"
         android:textSize="15sp" />
 

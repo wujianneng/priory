@@ -42,10 +42,13 @@ public interface ApiService {
     Observable<String> getDayReport();//獲取日报表
 
     @GET("/api/orders")
-    Observable<String> getTodayOrders();//獲取當天所有訂單
+    Observable<String> getTodayOrders(@Query("today") boolean isToday);//獲取當天所有訂單
 
     @POST("/api/orders/create")
     Observable<String> createOrder(@Body RequestBody requestBody);//新建訂單
+
+    @DELETE("/api/orders/{id}")
+    Observable<String> deleteOrder(@Path("id") int id);//删除一個訂單
 
     @POST("/api/orders/return/create")
     Observable<String> returnGoods(@Body RequestBody requestBody);//新建回收單
@@ -58,7 +61,7 @@ public interface ApiService {
     Observable<String> registerMember(@FieldMap Map<String,Object> map);//注冊會員接口
 
     @GET("/api/orders")
-    Observable<String> getOrdersByOrdernumber(@Query("ordernumber") String ordernumber);//通过订单号码查询订单
+    Observable<String> getOrdersByOrdernumber(@Query("search") String ordernumber);//通过订单号码查询订单
 
     @GET("/api/orders")
     Observable<String> getOrdersByDate(@Query("date") String date);//通过日期查询订单

@@ -86,7 +86,9 @@ public class ChangeGoodsActivity extends BaseActivity {
                 }
                 Intent intent = new Intent(ChangeGoodsActivity.this, AddNewOrderActivity.class);
                 intent.putExtra("memberId", getIntent().getIntExtra("memberId", 0));
-                intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
+                intent.putExtra("memberMobile", getIntent().getStringExtra("memberMobile"));
+                intent.putExtra("memberReward",getIntent().getIntExtra("memberReward", 0));
+                intent.putExtra("memberName",  getIntent().getStringExtra("memberName"));
                 intent.putExtra("sumMoney", sumMoney);
                 intent.putExtra("checkedGoodList",gson.toJson(goodList));
                 startActivity(intent);
@@ -109,7 +111,7 @@ public class ChangeGoodsActivity extends BaseActivity {
 
     private void resetSumMoney() {
         for (OrderBean.ItemsBean bean : goodList) {
-            sumMoney += bean.getPrice() * bean.getOprateCount();
+            sumMoney += bean.getPrice() * 0.8 * bean.getOprateCount();
         }
         sumMoney = -1 * sumMoney;
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));

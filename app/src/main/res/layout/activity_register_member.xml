@@ -52,7 +52,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="10dp"
                         android:text="填寫資料"
-                        android:textColor="#cccccc"
+                        android:textColor="@color/blue_text"
                         android:textSize="18sp" />
 
                 </LinearLayout>
@@ -75,7 +75,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="30dp"
                             android:text="姓(必填)"
-                            android:textColor="#cccccc"
+                            android:textColor="@color/blue_text"
                             android:textSize="12sp" />
 
                         <EditText
@@ -114,7 +114,7 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="30dp"
                             android:text="名(選填)"
-                            android:textColor="#cccccc"
+                            android:textColor="@color/blue_text"
                             android:textSize="12sp" />
 
                         <EditText
@@ -155,7 +155,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="30dp"
                         android:text="性別(必填)"
-                        android:textColor="#cccccc"
+                        android:textColor="@color/blue_text"
                         android:textSize="12sp" />
 
                     <TextView
@@ -191,7 +191,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="30dp"
                         android:text="電話(必填)"
-                        android:textColor="#cccccc"
+                        android:textColor="@color/blue_text"
                         android:textSize="12sp" />
 
                     <EditText

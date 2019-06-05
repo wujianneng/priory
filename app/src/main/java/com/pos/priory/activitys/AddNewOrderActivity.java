@@ -48,6 +48,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -120,6 +121,8 @@ public class AddNewOrderActivity extends BaseActivity {
     @Bind(R.id.btn_next)
     CardView btnNext;
 
+    double sumWeight = 0;
+
 
     @Override
     protected void beForeInitViews() {
@@ -130,7 +133,7 @@ public class AddNewOrderActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        titleTv.setText("添加商品");
+        titleTv.setText("增加商品");
         rightImg.setVisibility(View.GONE);
         changeGoodsMoeny = getIntent().getDoubleExtra("sumMoney", 0);
 
@@ -182,22 +185,23 @@ public class AddNewOrderActivity extends BaseActivity {
         memberReward = getIntent().getIntExtra("memberReward", 0);
         memberName = getIntent().getStringExtra("memberName");
         memberNameTv.setText("會員：" + memberName);
-        memberPhoneTv.setText("聯係電話：" + memberMobile);
+        memberPhoneTv.setText("聯繫電話：" + memberMobile);
         memberRewardTv.setText("積分：" + memberReward);
     }
 
-    List<DiscountBean> discountBeanList;
     List<String> discountNames = new ArrayList<>();
 
 
     CustomDialog customDialog;
-
     private void refreshSumMoney() {
         sumMoney = 0;
+        sumWeight = 0;
         for (GoodBean bean : goodList) {
             sumMoney += new BigDecimal(bean.getProduct().getPrice()).doubleValue();
+            sumWeight += bean.getWeight();
         }
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
+        countTv.setText(goodList.size() + "件|" + sumWeight + "g");
     }
 
     int yourChoice;
@@ -206,6 +210,7 @@ public class AddNewOrderActivity extends BaseActivity {
 
     private void showChoiceDiscountDialog(final int position) {
         if (choiceSexDialog == null) {
+            discountNames.clear();
             for (GoodBean.ProductBean.CatalogBean.DiscountsBean bean : goodList.get(position).getProduct().getCatalog().getDiscounts()) {
                 discountNames.add(bean.getName());
             }
@@ -271,9 +276,16 @@ public class AddNewOrderActivity extends BaseActivity {
                 showInputCodeDialog();
                 break;
             case R.id.btn_next:
-                if ((sumMoney + changeGoodsMoeny) < 0) {
-                    Toast.makeText(AddNewOrderActivity.this, "新商品总额要大于换货商品总额", Toast.LENGTH_SHORT).show();
-                    return;
+                if(changeGoodsMoeny == 0){
+                    if (sumMoney <= 0) {
+                        Toast.makeText(AddNewOrderActivity.this, "請先增加購買商品", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }else {
+                    if ((sumMoney + changeGoodsMoeny) <= 0) {
+                        Toast.makeText(AddNewOrderActivity.this, "新商品总额要大于换货商品总额", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
                 Intent intent = new Intent(AddNewOrderActivity.this, BalanceActivity.class);
                 intent.putExtra("goodlist", gson.toJson(goodList));
@@ -281,6 +293,10 @@ public class AddNewOrderActivity extends BaseActivity {
                 intent.putExtra("newOrderSumMoney", sumMoney);
                 intent.putExtra("memberId", memberid);
                 intent.putExtra("memberName", memberName);
+                intent.putExtra("memberMobile", memberMobile);
+                intent.putExtra("memberReward", memberReward);
+                intent.putExtra("sumCount", goodList.size());
+                intent.putExtra("sumWeight", sumWeight);
                 intent.putExtra("checkedGoodList",getIntent().getStringExtra("checkedGoodList"));
                 startActivity(intent);
                 break;
@@ -342,8 +358,12 @@ public class AddNewOrderActivity extends BaseActivity {
 
 
     private void getGoodBeanByCode(String productcode) {
+        if(productExitInList(productcode)){
+            Toast.makeText(AddNewOrderActivity.this, "已增加該商品", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (customDialog == null)
-            customDialog = new CustomDialog(this, "正在添加商品..");
+            customDialog = new CustomDialog(this, "正在增加商品..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
@@ -358,9 +378,10 @@ public class AddNewOrderActivity extends BaseActivity {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
-                        List<GoodBean> goodBeanList = gson.fromJson(s, new TypeToken<List<GoodBean>>() {
+                        JSONObject jsonObject = new JSONObject(s);
+                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("stockitem").toString(), new TypeToken<List<GoodBean>>() {
                         }.getType());
-                        if (goodBeanList != null && goodBeanList.size() != 0) {
+                        if (goodBeanList != null && goodBeanList.size() != 0 && goodBeanList.get(0).getQuantity() > 0) {
                             customDialog.dismiss();
                             goodBeanList.get(0).getProduct().setPrePrice(goodBeanList.get(0).getProduct().getPrice());
                             goodList.add(goodBeanList.get(0));
@@ -368,16 +389,28 @@ public class AddNewOrderActivity extends BaseActivity {
                             refreshSumMoney();
                         } else {
                             customDialog.dismiss();
-                            Toast.makeText(AddNewOrderActivity.this, "添加商品失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddNewOrderActivity.this, "增加商品失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(AddNewOrderActivity.this, "添加商品失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddNewOrderActivity.this, "增加商品失败", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private boolean productExitInList(String productcode) {
+        boolean result = false;
+        Log.e("test","productcode:" + productcode);
+        for(GoodBean goodBean : goodList){
+            Log.e("test","code:" + goodBean.getProduct().getProductcode() + goodBean.getStockno());
+            if((goodBean.getProduct().getProductcode() + goodBean.getStockno()).equals(productcode)){
+                return true;
+            }
+        }
+        return result;
     }
 
 

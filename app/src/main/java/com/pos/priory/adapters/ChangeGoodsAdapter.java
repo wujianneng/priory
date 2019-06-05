@@ -22,6 +22,7 @@ import com.pos.priory.activitys.ReturnGoodsActivity;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.coustomViews.LastInputEditText;
 import com.pos.priory.utils.Constants;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 
@@ -47,14 +48,21 @@ public class ChangeGoodsAdapter extends BaseQuickAdapter<OrderBean.ItemsBean, Ba
     protected void convert(final BaseViewHolder helper, final OrderBean.ItemsBean item) {
         helper.setText(R.id.code_tv, item.getStock().getProduct().getProductcode() + item.getStock().getStockno());
         helper.setText(R.id.name_tv, item.getStock().getProduct().getName());
-        helper.setText(R.id.price_tv, "$" + item.getStock().getProduct().getPrice());
-        helper.setGone(R.id.price_tv, item.getStock().getProduct().getCatalog().getName().equals("黃金") ? true : false);
-        helper.setText(R.id.retial_price_tv, "$" + item.getPrice());
+        if (context instanceof ReturnGoodsActivity) {
+            helper.setText(R.id.price_tv, "$" + item.getPrice());
+            helper.setText(R.id.retial_price_tv, "$" + item.getStock().getProduct().getRealPrice());
+            ((TextView) helper.getView(R.id.price_tv)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        }else {
+            helper.setText(R.id.price_tv, "$" + item.getPrice());
+            helper.setText(R.id.retial_price_tv, "$" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(item.getPrice() * 0.8));
+            ((TextView) helper.getView(R.id.price_tv)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+
         Glide.with(context).load(Constants.BASE_URL_HTTP + item.getStock().getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));
-        ((TextView) helper.getView(R.id.price_tv)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+
         final LastInputEditText edtWeight = helper.getView(R.id.edt_weight);
         edtWeight.removeTextChangedListener((TextWatcher) edtWeight.getTag());
         edtWeight.setText(item.getWeight());

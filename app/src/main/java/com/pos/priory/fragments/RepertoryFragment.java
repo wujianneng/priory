@@ -70,7 +70,7 @@ import okhttp3.RequestBody;
 public class RepertoryFragment extends BaseFragment {
     View view;
     List<GoodBean> dataList = new ArrayList<>();
-    List<ReturnGoodBean> returnGoodBeanList = new ArrayList<>();
+    List<ReturnGoodBean.ReturnstockitemBean> returnGoodBeanList = new ArrayList<>();
     RepertoryAdapter repertoryAdapter;
     RepertoryReturnAdapter repertoryReturnAdapter;
     @Bind(R.id.recycler_view)
@@ -351,7 +351,11 @@ public class RepertoryFragment extends BaseFragment {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String results) throws Exception {
-                        List<GoodBean> goodBeanList = gson.fromJson(results, new TypeToken<List<GoodBean>>() {
+                        JSONObject jsonObject = new JSONObject(results);
+                        leftTv.setText("黃金：" + jsonObject.getInt("goldcount") + "件 | " + jsonObject.getDouble("goldweight") +"g");
+                        rightTv.setVisibility(View.VISIBLE);
+                        rightTv.setText("晶石：" + jsonObject.getInt("cystalcount") + "件");
+                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("stockitem").toString(), new TypeToken<List<GoodBean>>() {
                         }.getType());
                         if (goodBeanList != null) {
                             dataList.addAll(goodBeanList);
@@ -379,12 +383,13 @@ public class RepertoryFragment extends BaseFragment {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String results) throws Exception {
-                        List<ReturnGoodBean> goodBeanList = gson.fromJson(results, new TypeToken<List<ReturnGoodBean>>() {
-                        }.getType());
-                        if (goodBeanList != null) {
-                            returnGoodBeanList.addAll(goodBeanList);
+                        ReturnGoodBean returnGoodBean = gson.fromJson(results,ReturnGoodBean.class);
+                        if (returnGoodBean != null) {
+                            returnGoodBeanList.addAll(returnGoodBean.getReturnstockitem());
                             repertoryReturnAdapter.notifyDataSetChanged();
                         }
+                        leftTv.setText("黃金：" + returnGoodBean.getGoldcount() + "件 | " + returnGoodBean.getGoldweight() +"g");
+                        rightTv.setVisibility(View.GONE);
                         refreshLayout.finishRefresh();
                     }
                 }, new Consumer<Throwable>() {

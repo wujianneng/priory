@@ -99,7 +99,7 @@ public class MemberActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    refreshMemberRecyclerView(charSequence.toString());
+                refreshMemberRecyclerView(charSequence.toString());
             }
 
             @Override
@@ -107,6 +107,7 @@ public class MemberActivity extends BaseActivity {
 
             }
         });
+        refreshMemberRecyclerView("");
     }
 
     Disposable memberCall;
@@ -116,33 +117,31 @@ public class MemberActivity extends BaseActivity {
             memberCall.dispose();
         memberList.clear();
         memberAdapter.notifyDataSetChanged();
-        if(str.equals(""))
-            return;
-        memberCall = RetrofitManager.createString(ApiService.class)
-                .getMembers(str)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        final List<MemberBean> memberBeanList = gson.fromJson(s, new TypeToken<List<MemberBean>>() {
-                        }.getType());
-                        if (memberBeanList != null) {
-                            new RunOnUiThreadSafe(MemberActivity.this) {
-                                @Override
-                                public void runOnUiThread() {
-                                    memberList.addAll(memberBeanList);
-                                    memberAdapter.notifyDataSetChanged();
-                                }
-                            };
+            memberCall = RetrofitManager.createString(ApiService.class)
+                    .getMembers(str)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String s) throws Exception {
+                            final List<MemberBean> memberBeanList = gson.fromJson(s, new TypeToken<List<MemberBean>>() {
+                            }.getType());
+                            if (memberBeanList != null) {
+                                new RunOnUiThreadSafe(MemberActivity.this) {
+                                    @Override
+                                    public void runOnUiThread() {
+                                        memberList.addAll(memberBeanList);
+                                        memberAdapter.notifyDataSetChanged();
+                                    }
+                                };
+                            }
                         }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
 
-                    }
-                });
+                        }
+                    });
     }
 
     @OnClick({R.id.register_tv, R.id.back_btn})

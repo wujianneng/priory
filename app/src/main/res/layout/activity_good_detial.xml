@@ -90,7 +90,7 @@
                 android:id="@+id/price_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="售價：599"
+                android:text=""
                 android:textColor="#fff"
                 android:textSize="23sp"
                 android:textStyle="bold" />
@@ -100,7 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/price_tv"
-                android:text="庫存：10件"
+                android:text=""
                 android:textColor="#fff"
                 android:textSize="23sp"
                 android:textStyle="bold" />
@@ -110,7 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/repertory_tv"
-                android:text="庫存重量：20.3克"
+                android:text=""
                 android:textColor="#fff"
                 android:textSize="23sp" />
 

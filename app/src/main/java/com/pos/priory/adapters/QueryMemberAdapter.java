@@ -24,5 +24,6 @@ public class QueryMemberAdapter extends BaseQuickAdapter<MemberBean, BaseViewHol
     protected void convert(BaseViewHolder helper, MemberBean item) {
         helper.setText(R.id.name_tv, item.getLast_name() + item.getFirst_name());
         helper.setImageResource(R.id.sex_img, item.getSex().equals("男") ? R.drawable.icon_boy : R.drawable.icon_girl);
+        helper.setText(R.id.phone_tv,item.getMobile());
     }
 }

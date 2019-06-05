@@ -71,7 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="16dp"
-                        android:text="12件|15克"
+                        android:text="12件|15g"
                         android:textColor="#000000"
                         android:textSize="12sp" />
 
@@ -388,6 +388,7 @@
 
 
             <android.support.v7.widget.CardView
+                android:id="@+id/reward_layout"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:layout_marginLeft="20px"

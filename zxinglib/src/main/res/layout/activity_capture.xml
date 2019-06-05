@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="扫描条码"
+            android:text="掃描條碼"
             android:textColor="#fff"
             android:textSize="20sp" />
 

@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="90dp"
     android:layout_gravity="center_horizontal"
-    android:layout_marginBottom="8dp"
     android:layout_marginLeft="1dp"
-    android:layout_marginRight="1dp"
     android:layout_marginTop="0.5dp"
+    android:layout_marginRight="1dp"
+    android:layout_marginBottom="8dp"
     android:clickable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardBackgroundColor="#fff"
@@ -32,12 +32,23 @@
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/status_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name_tv"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/icon_good"
+            android:text="1023"
+            android:textColor="#333333"
+            android:textSize="20sp" />
+
+        <TextView
             android:id="@+id/code_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:layout_below="@+id/name_tv"
-            android:layout_toRightOf="@+id/icon_good"
+            android:layout_toRightOf="@+id/name_tv"
             android:text="1023"
             android:textColor="#333333"
             android:textSize="20sp" />
@@ -46,10 +57,22 @@
             android:id="@+id/count_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="50dp"
             android:layout_alignParentRight="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:text="10"
+            android:textColor="@color/drag_btn_green"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/price_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/count_tv"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="20dp"
             android:text="10"
             android:textColor="@color/drag_btn_green"
             android:textSize="24sp" />

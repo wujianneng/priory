@@ -99,8 +99,7 @@ public class ReturnGoodsActivity extends BaseActivity {
                     public void accept(String s) throws Exception {
                         customDialog.dismiss();
                         currentGoldPrice = new JSONObject(s).getString("price");
-                        goldPriceTv.setText("當前金價(MOP)：" + currentGoldPrice + "/g" + "  " + LogicUtils.
-                                getKeepLastTwoNumberAfterLittlePoint(Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
+                        goldPriceTv.setText("當前金價(MOP)：" + (int)(Double.parseDouble(currentGoldPrice)) + "/g" + "  " + (int)(Double.parseDouble(currentGoldPrice) * 37.5) + "/两");
                         goodsAdapter = new ChangeGoodsAdapter(ReturnGoodsActivity.this, R.layout.change_good_list_item, goodList);
                         goodRecyclerView.setAdapter(goodsAdapter);
                         resetSumMoney(true);
@@ -119,7 +118,6 @@ public class ReturnGoodsActivity extends BaseActivity {
 
 
     CustomDialog customDialog;
-
 
 
     private boolean isAllWeightEdtHasInput() {
@@ -146,7 +144,7 @@ public class ReturnGoodsActivity extends BaseActivity {
                 intent.putExtra("sumMoney", sumMoney);
                 intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
                 intent.putExtra("ordernumber", getIntent().getStringExtra("ordernumber"));
-                intent.putExtra("checkedGoodList",gson.toJson(goodList));
+                intent.putExtra("checkedGoodList", gson.toJson(goodList));
                 startActivity(intent);
                 break;
             case R.id.back_btn:
@@ -168,15 +166,11 @@ public class ReturnGoodsActivity extends BaseActivity {
     }
 
     private void setReturnOrderItemRealPrice(OrderBean.ItemsBean item) {
-        if (item.getStock().getProduct().getCatalog().equals("黃金")) {
-            if (item.getWeight().equals("")) {
-                item.getStock().getProduct().setRealPrice("0");
-            } else {
-                item.getStock().getProduct().setRealPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint(
-                        Double.parseDouble(currentGoldPrice) * Double.parseDouble(item.getWeight()) * 0.95));
-            }
+        if (item.getWeight().equals("")) {
+            item.getStock().getProduct().setRealPrice("0");
         } else {
-            item.getStock().getProduct().setRealPrice(item.getStock().getProduct().getPrice());
+            item.getStock().getProduct().setRealPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint(
+                    Double.parseDouble(currentGoldPrice) * Double.parseDouble(item.getWeight()) * 0.95));
         }
     }
 

@@ -332,11 +332,18 @@ public class GoodDetialActivity extends BaseActivity {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
-                        List<GoodBean> goodBeanList = gson.fromJson(s, new TypeToken<List<GoodBean>>() {
+                        JSONObject jsonObject = new JSONObject(s);
+                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("stockitem").toString(), new TypeToken<List<GoodBean>>() {
                         }.getType());
                         if (goodBeanList != null) {
                             orderList.addAll(goodBeanList);
                             goodDetialAdapter.notifyDataSetChanged();
+                            repertoryTv.setText("庫存：" + orderList.size());
+                            priceTv.setText("售價：" + goodBeanList.get(0).getProduct().getPrice());
+                            weightTv.setText("庫存重量：" + jsonObject.getDouble("productweight") + "g");
+                            if(jsonObject.getDouble("productweight") == 0){
+                                weightTv.setVisibility(View.GONE);
+                            }
                         }
                         smartRefreshLayout.finishLoadMore();
                         smartRefreshLayout.finishRefresh();

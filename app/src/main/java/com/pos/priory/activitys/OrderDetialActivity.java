@@ -100,15 +100,16 @@ public class OrderDetialActivity extends BaseActivity {
         orderNumberTv.setText("訂單號：" + orderBean.getOrdernumber());
         dateTv.setText(DateUtils.covertIso8601ToDate(orderBean.getCreated()));
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(orderBean.getTotalprice()));
-        memberPhoneTv.setText("聯係電話：" + orderBean.getMember().getMobile());
+        memberPhoneTv.setText("聯繫電話：" + orderBean.getMember().getMobile());
         memberNameTv.setText("會員：" + orderBean.getMember().getLast_name() + orderBean.getMember().getFirst_name());
         if (orderBean.getInvoiceitem().size() != 0)
             for (OrderBean.InvoiceitemBean.TransactionitemBean bean : orderBean.getInvoiceitem().get(0).getTransactionitem()) {
+                Log.e("test","getPaymentmethod:" + bean.getPaymentmethod());
                 if (bean.getPaymentmethod().equals("信用卡")) {
                     cardMoneyTv.setText(bean.getAmount());
                 } else if (bean.getPaymentmethod().equals("現金")) {
                     cashMoneyTv.setText(bean.getAmount());
-                } else if (bean.getPaymentmethod().equals("現金劵")) {
+                } else if (bean.getPaymentmethod().equals("現金券")) {
                     cashCouponTv.setText(bean.getAmount());
                 } else if (bean.getPaymentmethod().equals("支付寶")) {
                     alipayTv.setText(bean.getAmount());
@@ -117,7 +118,7 @@ public class OrderDetialActivity extends BaseActivity {
                 }
             }
         goodList = orderBean.getItems();
-        countTv.setText(goodList.size() + "件|" + orderBean.getItemsweight() + "克");
+        countTv.setText(goodList.size() + "件|" + orderBean.getItemsweight() + "g");
         goodsAdapter = new OrderDetialGoodsAdapter(R.layout.order_detial_good_list_item, goodList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
@@ -185,8 +186,10 @@ public class OrderDetialActivity extends BaseActivity {
                 Intent intent = new Intent(OrderDetialActivity.this, ChangeGoodsActivity.class);
                 intent.putExtra("checkedGoodList", gson.toJson(checkedGoodList));
                 intent.putExtra("memberId", orderBean.getMember().getId());
-                intent.putExtra("memberName", orderBean.getMember().getLast_name() +
-                        orderBean.getMember().getLast_name());
+                intent.putExtra("memberMobile",orderBean.getMember().getMobile());
+                intent.putExtra("memberReward",orderBean.getMember().getReward());
+                intent.putExtra("memberName",orderBean.getMember().getLast_name() +
+                        orderBean.getMember().getFirst_name());
                 intent.putExtra("ordernumber", orderBean.getOrdernumber());
                 startActivity(intent);
                 break;

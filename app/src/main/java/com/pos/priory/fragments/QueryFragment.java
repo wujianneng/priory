@@ -131,32 +131,6 @@ public class QueryFragment extends BaseFragment {
         });
 
         orderAdapter = new QueryOrderAdapter(R.layout.order_list_item, orderList);
-        //设置侧滑菜单
-        orderRecyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
-            @Override
-            public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-                SwipeMenuItem cancelItem = new SwipeMenuItem(getActivity())
-                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
-                        .setImage(R.drawable.edit)
-                        .setText("撤回")
-                        .setTextColor(Color.WHITE)
-                        .setHeight(DeviceUtil.dip2px(getContext(), 91))//设置高，这里使用match_parent，就是与item的高相同
-                        .setWidth(DeviceUtil.dip2px(getContext(), 100));//设置宽
-                swipeRightMenu.addMenuItem(cancelItem);//设置右边的侧滑
-            }
-        });
-        //设置侧滑菜单的点击事件
-        orderRecyclerView.setSwipeMenuItemClickListener(new SwipeMenuItemClickListener() {
-            @Override
-            public void onItemClick(SwipeMenuBridge menuBridge) {
-                menuBridge.closeMenu();
-                int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
-                int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
-                if (menuPosition == 0) {
-
-                }
-            }
-        });
         LinearLayoutManager mLayoutManager2 = new LinearLayoutManager(getActivity());
         mLayoutManager2.setOrientation(OrientationHelper.VERTICAL);
         orderRecyclerView.setLayoutManager(mLayoutManager2);
@@ -204,6 +178,7 @@ public class QueryFragment extends BaseFragment {
 
             }
         });
+        refreshMemberRecyclerView("");
 //        showKeyBord();
     }
 
@@ -215,31 +190,29 @@ public class QueryFragment extends BaseFragment {
             memberCall.dispose();
         memberList.clear();
         memberAdapter.notifyDataSetChanged();
-        if (str.equals(""))
-            return;
-        memberCall = RetrofitManager.createString(ApiService.class).getMembers(str)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String results) throws Exception {
-                        final List<MemberBean> memberBeanList = gson.fromJson(results, new TypeToken<List<MemberBean>>() {
-                        }.getType());
-                        if (memberBeanList != null) {
-                            new RunOnUiThreadSafe(getActivity()) {
-                                @Override
-                                public void runOnUiThread() {
-                                    memberList.addAll(memberBeanList);
-                                    memberAdapter.notifyDataSetChanged();
-                                }
-                            };
+            memberCall = RetrofitManager.createString(ApiService.class).getMembers(str)
+                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String results) throws Exception {
+                            final List<MemberBean> memberBeanList = gson.fromJson(results, new TypeToken<List<MemberBean>>() {
+                            }.getType());
+                            if (memberBeanList != null) {
+                                new RunOnUiThreadSafe(getActivity()) {
+                                    @Override
+                                    public void runOnUiThread() {
+                                        memberList.addAll(memberBeanList);
+                                        memberAdapter.notifyDataSetChanged();
+                                    }
+                                };
+                            }
                         }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
 
-                    }
-                });
+                        }
+                    });
     }
 
     Disposable dateCall;
@@ -313,8 +286,8 @@ public class QueryFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.btn_member:
                 btnMember.setTextColor(getResources().getColor(R.color.colorAccent));
-                btnOrderNumber.setTextColor(Color.parseColor("#cccccc"));
-                btnDate.setTextColor(Color.parseColor("#cccccc"));
+                btnOrderNumber.setTextColor(Color.parseColor("#000000"));
+                btnDate.setTextColor(Color.parseColor("#000000"));
                 icon.setImageResource(R.drawable.icon_detail);
                 titleTv.setText("電話");
                 edtMemberInput.setVisibility(View.VISIBLE);
@@ -325,8 +298,8 @@ public class QueryFragment extends BaseFragment {
                 dateLayout.setVisibility(View.GONE);
                 break;
             case R.id.btn_date:
-                btnMember.setTextColor(Color.parseColor("#cccccc"));
-                btnOrderNumber.setTextColor(Color.parseColor("#cccccc"));
+                btnMember.setTextColor(Color.parseColor("#000000"));
+                btnOrderNumber.setTextColor(Color.parseColor("#000000"));
                 btnDate.setTextColor(getResources().getColor(R.color.colorAccent));
                 icon.setImageResource(R.drawable.icon_detail);
                 titleTv.setText("訂單號");
@@ -340,8 +313,8 @@ public class QueryFragment extends BaseFragment {
                     refreshDateRecyclerView(dateTv.getText().toString());
                 break;
             case R.id.btn_order_number:
-                btnMember.setTextColor(Color.parseColor("#cccccc"));
-                btnDate.setTextColor(Color.parseColor("#cccccc"));
+                btnMember.setTextColor(Color.parseColor("#000000"));
+                btnDate.setTextColor(Color.parseColor("#000000"));
                 btnOrderNumber.setTextColor(getResources().getColor(R.color.colorAccent));
                 icon.setImageResource(R.drawable.icon_detail);
                 titleTv.setText("訂單號");

@@ -1,6 +1,7 @@
 package com.pos.priory.activitys;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
@@ -142,7 +143,7 @@ public class MainActivity extends BaseActivity {
 
         navigation.setMode(BottomNavigationBar.MODE_FIXED);
         navigation.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
-
+        navigation.setInActiveColor(R.color.blue_text);
         navigation.addItem(new BottomNavigationItem(R.drawable.tab_order, "訂單"))
                 .addItem(new BottomNavigationItem(R.drawable.tab_query, "查單"))
                 .addItem(new BottomNavigationItem(R.drawable.tab_repertory, "倉庫"))

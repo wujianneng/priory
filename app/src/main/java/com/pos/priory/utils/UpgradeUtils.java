@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
@@ -67,6 +68,17 @@ public class UpgradeUtils {
         return url.substring(url.lastIndexOf("/") + 1);
     }
 
+    public static String getSDPath(){
+        File sdDir = null;
+        boolean sdCardExist = Environment.getExternalStorageState()
+                .equals(android.os.Environment.MEDIA_MOUNTED);//判断sd卡是否存在
+        if(sdCardExist)
+        {
+            sdDir = Environment.getExternalStorageDirectory();//获取跟目录
+        }
+        return sdDir.toString();
+    }
+
 
     public static void checkToUpdate(final Context context, int serverVersionCode, final String apkurl) {
         try {
@@ -79,6 +91,7 @@ public class UpgradeUtils {
                 if (!TextUtils.isEmpty(apkurl)) {
                     Log.e(TAG, "a1");
                     File parentFile = new File(context.getFilesDir().getAbsolutePath() + File.separator + "priory");
+//                    File parentFile = new File(getSDPath() + File.separator + "priory");
                     if (!parentFile.exists())
                         parentFile.mkdirs();
                     final File launcherFile = new File(parentFile.getAbsolutePath() + "/" + getFileNameFromUrl(apkurl));
@@ -91,12 +104,6 @@ public class UpgradeUtils {
                     }
                     if (!launcherFile.exists()) {
                         Log.e(TAG, "a2:" + apkurl + " parent:" + tempLauncherFile.getParent() + " file:" + tempLauncherFile.getName());
-//                        new Thread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                downLoadFromUrl(apkurl,tempLauncherFile.getName(),tempLauncherFile.getParent(),context);
-//                            }
-//                        }).start();
                         PRDownloader.download(apkurl, tempLauncherFile.getParent(), tempLauncherFile.getName())
                                 .build()
                                 .setOnProgressListener(new OnProgressListener() {

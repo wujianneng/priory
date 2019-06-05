@@ -87,6 +87,7 @@ public class BigInventoryActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(BigInventoryActivity.this, BigInventoryDetialActivity.class);
                 intent.putExtra("inventoryId", dataList.get(position).getId());
+                intent.putExtra("status",dataList.get(position).getStatus());
                 startActivity(intent);
             }
         });

@@ -18,18 +18,23 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
+import com.pos.priory.activitys.BalanceActivity;
+import com.pos.priory.activitys.BillActivity;
 import com.pos.priory.activitys.MainActivity;
 import com.pos.priory.activitys.MemberActivity;
 import com.pos.priory.activitys.OrderDetialActivity;
 import com.pos.priory.adapters.OrderAdapter;
 import com.pos.priory.beans.OrderBean;
+import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.networks.RetrofitManager;
+import com.pos.priory.utils.ColseActivityUtils;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
@@ -65,6 +70,8 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * Created by Lenovo on 2018/12/29.
@@ -190,7 +197,7 @@ public class OrderFragment extends BaseFragment {
         smartRefreshLayout.autoRefresh();
     }
 
-    private void showIsCancelOrderDialog(int adapterPosition) {
+    private void showIsCancelOrderDialog(final int adapterPosition) {
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle("提示")
                 .setMessage("是否確定要撤回該訂單？")
@@ -204,10 +211,47 @@ public class OrderFragment extends BaseFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        cancelOrder(adapterPosition);
                     }
                 })
                 .create();
         dialog.show();
+    }
+
+    CustomDialog customDialog;
+    private void cancelOrder(final int pos) {
+        if (customDialog == null) {
+            customDialog = new CustomDialog(getActivity(), "正在撤回訂單..");
+            customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    customDialog = null;
+                }
+            });
+            customDialog.show();
+            RetrofitManager.createString(ApiService.class)
+                    .deleteOrder(orderList.get(pos).getId())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String s) throws Exception {
+                            Log.e("test", "結算成功");
+                            customDialog.dismiss();
+                            orderList.remove(pos);
+                            orderAdapter.notifyItemRangeChanged(0,orderList.size());
+                            orderAdapter.notifyItemRemoved(pos);
+                            Toast.makeText(getActivity(), "撤回訂單成功", Toast.LENGTH_SHORT).show();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            customDialog.dismiss();
+                            Log.e("test", "結算失败:" + throwable.getMessage());
+                            Toast.makeText(getActivity(), "撤回訂單失败", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
 
@@ -219,11 +263,11 @@ public class OrderFragment extends BaseFragment {
                 .doOnNext(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
-                        Log.e("okhttp", "result:" + s);
+                        Log.e("okhttp", "getCurrentGoldPriceresult:" + s);
                         String currentGoldPrice = new JSONObject(s).getString("price");
                         goldPriceLayout.setVisibility(View.VISIBLE);
                         row1Tv2.setText("金價：" + (int) Double.parseDouble(currentGoldPrice) + "/g");
-                        row2Tv2.setText("金價：" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/兩");
+                        row2Tv2.setText("金價：" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/两");
                     }
                 })
                 .observeOn(Schedulers.io())
@@ -238,12 +282,13 @@ public class OrderFragment extends BaseFragment {
                     @Override
                     public void accept(String s) throws Exception {
                         JSONObject jsonObject = new JSONObject(s);
+                        Log.e("okhttp", "getDashboardresult:" + s);
                         row1Tv1.setText("營業額：" + jsonObject.getDouble("turnover"));
-                        row2Tv1.setText("現金：" + jsonObject.getDouble("cash") + " | " + " 現金卷：" + jsonObject.getDouble("voucher"));
+                        row2Tv1.setText("現金：" + jsonObject.getDouble("cash") + " | " + " 現金券：" + jsonObject.getDouble("voucher"));
                         row3Tv1.setText("信用卡：" + jsonObject.getDouble("credit"));
-                        row3Tv2.setText("總數：" + jsonObject.getDouble("orderitem") + "件");
+                        row3Tv2.setText("總數：" + (int)jsonObject.getDouble("orderitem") + "件");
                         row4Tv1.setText("支付寶：" + jsonObject.getDouble("alipay") + " | " + " 微信支付：" + jsonObject.getDouble("wechatpay"));
-                        row4Tv2.setText("縂重：" + jsonObject.getDouble("weight") + "g");
+                        row4Tv2.setText("總重：" + jsonObject.getDouble("weight") + "g");
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -261,7 +306,7 @@ public class OrderFragment extends BaseFragment {
             orderAdapter.notifyDataSetChanged();
             getCurrentGoldPrice();
         }
-        RetrofitManager.createString(ApiService.class).getTodayOrders()
+        RetrofitManager.createString(ApiService.class).getTodayOrders(true)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

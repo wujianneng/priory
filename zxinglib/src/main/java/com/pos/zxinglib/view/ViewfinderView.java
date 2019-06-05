@@ -187,7 +187,7 @@ public final class ViewfinderView extends View {
 			paint.setColor(Color.WHITE);
 			paint.setTextSize(TEXT_SIZE * density);
 			paint.setTypeface(Typeface.create("System", Typeface.BOLD));
-			canvas.drawText("请将产品条码放进扫码区域内进行扫描", frame.left + 40, (float) (frame.bottom + (float)TEXT_PADDING_TOP *density), paint);
+//			canvas.drawText("请将产品条码放进扫码区域内进行扫描", frame.left + 40, (float) (frame.bottom + (float)TEXT_PADDING_TOP *density), paint);
 			
 			
 

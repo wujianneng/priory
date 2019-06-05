@@ -16,6 +16,12 @@ import java.util.List;
  */
 
 public class DateUtils {
+    public static int getCurrentMonth(){
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+        return month;
+    }
+
     private static boolean isC(String startTime, String endTime) {
         List<String> start_list = Arrays.asList(startTime.split(":"));
         List<String> end_list = Arrays.asList(endTime.split(":"));

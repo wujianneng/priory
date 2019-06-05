@@ -19,6 +19,8 @@ import com.pos.priory.R;
 import com.pos.priory.adapters.OrderAdapter;
 import com.pos.priory.beans.MemberBean;
 import com.pos.priory.beans.OrderBean;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
@@ -37,6 +39,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/31.
@@ -141,34 +146,25 @@ public class MemberInfoActivity extends BaseActivity {
             orderList.clear();
             orderAdapter.notifyDataSetChanged();
         }
-        OkHttp3Util.doGetWithToken(Constants.GET_ORDERS_URL + "?member=" + memberBean.getMobile(),
-             new Okhttp3StringCallback("getOrders") {
+        RetrofitManager.createString(ApiService.class).getOrdersByOrdernumber(memberBean.getMobile())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
+                    public void accept(String results) throws Exception {
                         final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {
                         }.getType());
-                        new RunOnUiThreadSafe(MemberInfoActivity.this) {
-                            @Override
-                            public void runOnUiThread() {
-                                if (orderBeanList != null) {
-                                    orderList.addAll(orderBeanList);
-                                    orderAdapter.notifyDataSetChanged();
-                                }
-                                smartRefreshLayout.finishLoadMore();
-                                smartRefreshLayout.finishRefresh();
-                            }
-                        };
+                        if (orderBeanList != null) {
+                            orderList.addAll(orderBeanList);
+                            orderAdapter.notifyDataSetChanged();
+                        }
+                        smartRefreshLayout.finishLoadMore();
+                        smartRefreshLayout.finishRefresh();
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
-                        new RunOnUiThreadSafe(MemberInfoActivity.this) {
-                            @Override
-                            public void runOnUiThread() {
-                                smartRefreshLayout.finishLoadMore();
-                                smartRefreshLayout.finishRefresh();
-                            }
-                        };
+                    public void accept(Throwable throwable) throws Exception {
+                        smartRefreshLayout.finishLoadMore();
+                        smartRefreshLayout.finishRefresh();
                     }
                 });
     }

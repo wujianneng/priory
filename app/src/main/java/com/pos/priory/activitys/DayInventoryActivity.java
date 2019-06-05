@@ -107,6 +107,7 @@ public class DayInventoryActivity extends BaseActivity {
                                 if(jsonObject.getInt("quantity") != 0){
                                     goldLayout.setAlpha(0.5f);
                                     goldCountEdt.setEnabled(false);
+                                    goldCountEdt.setText(jsonObject.getInt("sysquantity") + "");
                                     goldSummitBtn.setEnabled(false);
                                 }
                                 goldObj = jsonObject;
@@ -116,6 +117,7 @@ public class DayInventoryActivity extends BaseActivity {
                                 if(jsonObject.getInt("quantity") != 0){
                                     sparLayout.setAlpha(0.5f);
                                     sparCountEdt.setEnabled(false);
+                                    sparCountEdt.setText(jsonObject.getInt("sysquantity") + "");
                                     sparSummitBtn.setEnabled(false);
                                 }
                                 sparObj = jsonObject;
@@ -125,6 +127,7 @@ public class DayInventoryActivity extends BaseActivity {
                                 if(jsonObject.getInt("quantity") != 0){
                                     handLayout.setAlpha(0.5f);
                                     handCountEdt.setEnabled(false);
+                                    handCountEdt.setText(jsonObject.getInt("sysquantity") + "");
                                     handSummitBtn.setEnabled(false);
                                 }
                                 handObj = jsonObject;
@@ -134,6 +137,7 @@ public class DayInventoryActivity extends BaseActivity {
                                 if(jsonObject.getInt("quantity") != 0){
                                     elseLayout.setAlpha(0.5f);
                                     elseCountEdt.setEnabled(false);
+                                    elseCountEdt.setText(jsonObject.getInt("sysquantity") + "");
                                     elseSummitBtn.setEnabled(false);
                                 }
                                 elseObj = jsonObject;

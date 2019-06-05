@@ -92,7 +92,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginRight="16dp"
-                                    android:text="12件|15克"
+                                    android:text="12件|15g"
                                     android:textColor="#000000"
                                     android:textSize="12sp" />
 
@@ -161,7 +161,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_marginLeft="15dp"
-                                    android:text="现金:  "
+                                    android:text="現金:  "
                                     android:textColor="#000000"
                                     android:textSize="14sp" />
 
@@ -178,7 +178,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
-                                    android:text="元 | 现金劵："
+                                    android:text="元 | 現金劵："
                                     android:textColor="#000000"
                                     android:textSize="14sp" />
 
@@ -213,7 +213,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_marginLeft="15dp"
-                                    android:text="支付宝:  "
+                                    android:text="支付寶:  "
                                     android:textColor="#000000"
                                     android:textSize="14sp" />
 

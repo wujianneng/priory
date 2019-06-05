@@ -2,7 +2,6 @@ package com.pos.priory.activitys;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
@@ -17,19 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
-import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.beans.GoodBean;
-import com.pos.priory.beans.InvoicesResultBean;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.ColseActivityUtils;
-import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.LogicUtils;
-import com.pos.priory.utils.OkHttp3Util;
-import com.pos.priory.utils.Okhttp3StringCallback;
 
 import org.json.JSONObject;
 
@@ -103,6 +97,8 @@ public class BalanceActivity extends BaseActivity {
     ImageView rightImg;
 
     String checkedGoodListString;
+    @Bind(R.id.reward_layout)
+    CardView rewardLayout;
 
 
     @Override
@@ -119,8 +115,16 @@ public class BalanceActivity extends BaseActivity {
         checkedGoodListString = getIntent().getStringExtra("checkedGoodList");
         sumMoney = new BigDecimal(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney)).doubleValue();
         moneyTv.setText(sumMoney + "");
+        memberNameTv.setText("會員:  " + getIntent().getStringExtra("memberName"));
+        memberPhoneTv.setText("聯係電話:  " + getIntent().getStringExtra("memberMobile"));
+        int reward = getIntent().getIntExtra("memberReward", 0);
+        orderNumberTv.setText("積分:  " + reward + "分");
+        if (reward < 10000) {
+            rewardLayout.setVisibility(View.GONE);
+        }
         needPayMoney = sumMoney;
-        needMoneyTv.setText("餘額 $" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+        needMoneyTv.setText("餘額: " + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+        countTv.setText(getIntent().getIntExtra("sumCount", 0) + "件|" + getIntent().getDoubleExtra("sumWeight", 0) + "g");
         radioBtnCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -351,81 +355,83 @@ public class BalanceActivity extends BaseActivity {
     CustomDialog customDialog;
 
     private void createOrder() {
-        if (customDialog == null)
+        if (customDialog == null) {
             customDialog = new CustomDialog(this, "正在结算..");
-        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                customDialog = null;
+            customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    customDialog = null;
+                }
+            });
+            customDialog.show();
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("member", getIntent().getIntExtra("memberId", 0));
+            List<Map<String, Object>> items = new ArrayList<>();
+            List<GoodBean> goodlist = gson.fromJson(getIntent().getStringExtra("goodlist"), new TypeToken<List<GoodBean>>() {
+            }.getType());
+            for (GoodBean goodBean : goodlist) {
+                Map<String, Object> item = new HashMap<>();
+                item.put("stock", goodBean.getId());
+                item.put("discount", goodBean.getDiscountId());
+                items.add(item);
             }
-        });
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("member", getIntent().getIntExtra("memberId", 0));
-        List<Map<String, Object>> items = new ArrayList<>();
-        List<GoodBean> goodlist = gson.fromJson(getIntent().getStringExtra("goodlist"), new TypeToken<List<GoodBean>>() {
-        }.getType());
-        for (GoodBean goodBean : goodlist) {
-            Map<String, Object> item = new HashMap<>();
-            item.put("stock", goodBean.getId());
-            item.put("discount", goodBean.getDiscountId());
-            items.add(item);
-        }
-        paramMap.put("items", items);
-        if (hasPayedCashMoney != 0 && radioBtnCash.isChecked())
-            paramMap.put("cash", hasPayedCashMoney);
-        if (hasPayedAlipayMoney != 0 && radioBtnAlipay.isChecked())
-            paramMap.put("alipay", hasPayedAlipayMoney);
-        if (hasPayedWechatMoney != 0 && radioBtnWechat.isChecked())
-            paramMap.put("wechatpay", hasPayedWechatMoney);
-        if (hasPayedCardMoney != 0 && radioBtnCard.isChecked())
-            paramMap.put("creditcard", hasPayedCardMoney);
-        if (hasPayedCouponMoney != 0 && radioBtnCoupon.isChecked())
-            paramMap.put("voucher", hasPayedCouponMoney);
-        if (radioBtnIntegral.isChecked())
-            paramMap.put("reward", hasPayedIntegralMoney);
-        if(checkedGoodListString != null){
-            List<OrderBean.ItemsBean> itemsBeanList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
-                    new TypeToken<List<OrderBean.ItemsBean>>() {
-                    }.getType());
-            List<Map<String, Object>> returnorderitems = new ArrayList<>();
-            for(OrderBean.ItemsBean itemsBean : itemsBeanList){
-                Map<String, Object> returnorderitemMap = new HashMap<>();
-                returnorderitemMap.put("orderitemid",itemsBean.getId());
-                returnorderitemMap.put("weight",itemsBean.getWeight());
-                returnorderitems.add(returnorderitemMap);
+            paramMap.put("items", items);
+            if (hasPayedCashMoney != 0 && radioBtnCash.isChecked())
+                paramMap.put("cash", hasPayedCashMoney);
+            if (hasPayedAlipayMoney != 0 && radioBtnAlipay.isChecked())
+                paramMap.put("alipay", hasPayedAlipayMoney);
+            if (hasPayedWechatMoney != 0 && radioBtnWechat.isChecked())
+                paramMap.put("wechatpay", hasPayedWechatMoney);
+            if (hasPayedCardMoney != 0 && radioBtnCard.isChecked())
+                paramMap.put("creditcard", hasPayedCardMoney);
+            if (hasPayedCouponMoney != 0 && radioBtnCoupon.isChecked())
+                paramMap.put("voucher", hasPayedCouponMoney);
+            if (radioBtnIntegral.isChecked())
+                paramMap.put("reward", hasPayedIntegralMoney);
+            if (checkedGoodListString != null) {
+                List<OrderBean.ItemsBean> itemsBeanList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
+                        new TypeToken<List<OrderBean.ItemsBean>>() {
+                        }.getType());
+                List<Map<String, Object>> returnorderitems = new ArrayList<>();
+                for (OrderBean.ItemsBean itemsBean : itemsBeanList) {
+                    Map<String, Object> returnorderitemMap = new HashMap<>();
+                    returnorderitemMap.put("orderitemid", itemsBean.getId());
+                    returnorderitemMap.put("weight", itemsBean.getWeight());
+                    returnorderitems.add(returnorderitemMap);
+                }
+                paramMap.put("returnorderitems", returnorderitems);
             }
-            paramMap.put("returnorderitems",returnorderitems);
+            Log.e("test", "paramMap:" + gson.toJson(paramMap));
+            RetrofitManager.createString(ApiService.class)
+                    .createOrder(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String s) throws Exception {
+                            Log.e("test", "結算成功");
+                            JSONObject jsonObject = new JSONObject(s);
+                            customDialog.dismiss();
+                            Intent intent = new Intent(BalanceActivity.this, BillActivity.class);
+                            intent.putExtra("goodlist", getIntent().getStringExtra("goodlist"));
+                            intent.putExtra("sumMoney", getIntent().getDoubleExtra("newOrderSumMoney", 0));
+                            intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
+                            intent.putExtra("receiveMoney", sumMoney);
+                            intent.putExtra("returnMoney", needPayMoney * -1);
+                            intent.putExtra("ordernumber", jsonObject.getString("ordernumber"));
+                            startActivity(intent);
+                            ColseActivityUtils.finishWholeFuntionActivitys();
+                            finish();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            customDialog.dismiss();
+                            Log.e("test", "throwable:" + throwable.getMessage());
+                            Toast.makeText(BalanceActivity.this, "结算失败", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         }
-        Log.e("test", "paramMap:" + gson.toJson(paramMap));
-        RetrofitManager.createString(ApiService.class)
-                .createOrder(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        Log.e("test", "結算成功");
-                        JSONObject jsonObject = new JSONObject(s);
-                        customDialog.dismiss();
-                        Intent intent = new Intent(BalanceActivity.this, BillActivity.class);
-                        intent.putExtra("goodlist", getIntent().getStringExtra("goodlist"));
-                        intent.putExtra("sumMoney", getIntent().getDoubleExtra("newOrderSumMoney", 0));
-                        intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
-                        intent.putExtra("receiveMoney", sumMoney);
-                        intent.putExtra("returnMoney", needPayMoney * -1);
-                        intent.putExtra("ordernumber", jsonObject.getString("ordernumber"));
-                        startActivity(intent);
-                        ColseActivityUtils.finishWholeFuntionActivitys();
-                        finish();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        customDialog.dismiss();
-                        Log.e("test", "throwable:" + throwable.getMessage());
-                        Toast.makeText(BalanceActivity.this, "结算失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
     @Override

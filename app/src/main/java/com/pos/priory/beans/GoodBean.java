@@ -20,8 +20,17 @@ public class GoodBean {
     private String location;
     private ProductBean product;
     private double weight;
+    private int quantity;
     private int discountId = 1;
     private double discountRate;
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
     public int getDiscountId() {
         return discountId;

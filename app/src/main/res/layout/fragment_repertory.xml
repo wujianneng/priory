@@ -28,7 +28,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="16dp"
                     android:textStyle="bold"
-                    android:text="黃金：1000件 | 3206.7克"
+                    android:text="黃金：1000件 | 3206.7g"
                     android:textColor="@color/blue_text"
                     android:textSize="15sp" />
 
