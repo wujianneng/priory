@@ -23,21 +23,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
-import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.AddNewOrderGoodsAdapter;
-import com.pos.priory.beans.CreateOrderItemResultBean;
-import com.pos.priory.beans.CreateOrderResultBean;
-import com.pos.priory.beans.DiscountBean;
 import com.pos.priory.beans.GoodBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.networks.RetrofitManager;
-import com.pos.priory.utils.Constants;
-import com.pos.priory.utils.DateUtils;
 import com.pos.priory.utils.LogicUtils;
-import com.pos.priory.utils.OkHttp3Util;
-import com.pos.priory.utils.Okhttp3StringCallback;
 import com.pos.zxinglib.MipcaActivityCapture;
 import com.pos.zxinglib.utils.DeviceUtil;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -47,14 +39,11 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
-import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

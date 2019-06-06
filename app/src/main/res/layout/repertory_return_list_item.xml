@@ -29,10 +29,11 @@
             android:layout_toRightOf="@+id/icon_good"
             android:text="大福珠"
             android:textColor="#333333"
+            android:textStyle="bold"
             android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/status_tv"
+            android:id="@+id/code_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/name_tv"
@@ -42,16 +43,6 @@
             android:textColor="#333333"
             android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/code_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/name_tv"
-            android:text="1023"
-            android:textColor="#333333"
-            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/count_tv"
@@ -63,7 +54,8 @@
             android:layout_marginRight="20dp"
             android:text="10"
             android:textColor="@color/drag_btn_green"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/price_tv"
@@ -75,7 +67,7 @@
             android:layout_marginRight="20dp"
             android:text="10"
             android:textColor="@color/drag_btn_green"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
 
     </RelativeLayout>

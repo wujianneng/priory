@@ -181,6 +181,7 @@ public class DayInventoryActivity extends BaseActivity {
                     customDialog = null;
                 }
             });
+            customDialog.show();
             int id = 0, count = 0;
             if (i == 0) {
                 id = goldObj.getInt("id");

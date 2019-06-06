@@ -1,5 +1,6 @@
 package com.pos.priory.activitys;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,13 +18,19 @@ import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
 import com.pos.priory.adapters.InventoryDetialAdapter;
 import com.pos.priory.beans.InventoryBean;
+import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.networks.RetrofitManager;
+import com.pos.zxinglib.InventryScanBean;
 import com.pos.zxinglib.MipcaActivityCapture;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +119,25 @@ public class BigInventoryDetialActivity extends BaseActivity {
                 });
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onScanedCode(InventryScanBean inventryScanBean){
+        Log.e("result", "result:" + inventryScanBean.getScanResult());
+        for (InventoryBean.InventoryitemBean bean : dataList) {
+            if (bean.getStockno().equals(inventryScanBean.getScanResult())) {
+                doInventry(bean.getId());
+            }
+        }
+        final ProgressDialog customDialog = ProgressDialog.show(this,"","正在准备下一次扫码",true);
+        customDialog.show();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                customDialog.dismiss();
+                onClickScan();
+            }
+        },1100);
+    }
+
     @OnClick({R.id.back_btn})
     public void onClickBack() {
         finish();
@@ -119,7 +145,9 @@ public class BigInventoryDetialActivity extends BaseActivity {
 
     @OnClick({R.id.right_img})
     public void onClickScan() {
-        startActivityForResult(new Intent(BigInventoryDetialActivity.this, MipcaActivityCapture.class), 1000);
+        Intent intent = new Intent(BigInventoryDetialActivity.this, MipcaActivityCapture.class);
+        intent.putExtra("preferences_bulk_mode",true);
+        startActivityForResult(intent, 1000);
     }
 
     @OnClick({R.id.btn_finish})
@@ -152,13 +180,13 @@ public class BigInventoryDetialActivity extends BaseActivity {
         switch (resultCode) {
             case 1:
                 if(data != null) {
-                    String str = data.getStringExtra("resultString");
-                    Log.e("result", "result:" + str);
-                    for (InventoryBean.InventoryitemBean bean : dataList) {
-                        if (bean.getStockno().equals(str)) {
-                            doInventry(bean.getId());
-                        }
-                    }
+//                    String str = data.getStringExtra("resultString");
+//                    Log.e("result", "result:" + str);
+//                    for (InventoryBean.InventoryitemBean bean : dataList) {
+//                        if (bean.getStockno().equals(str)) {
+//                            doInventry(bean.getId());
+//                        }
+//                    }
                 }
                 break;
         }
@@ -188,4 +216,5 @@ public class BigInventoryDetialActivity extends BaseActivity {
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
     }
+
 }

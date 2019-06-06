@@ -37,6 +37,8 @@ import com.pos.zxinglib.utils.ResultHandlerFactory;
 import com.pos.zxinglib.view.ViewfinderView;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -142,7 +144,7 @@ public class MipcaActivityCapture extends AppCompatActivity implements
         canVibrate = sharedPreferences.getBoolean("preferences_vibrate", true);
         canLight = sharedPreferences
                 .getBoolean("preferences_front_light", true);
-        canSeriesScan = sharedPreferences.getBoolean("preferences_bulk_mode",
+        canSeriesScan = getIntent().getBooleanExtra("preferences_bulk_mode",
                 false);
 
     }
@@ -299,9 +301,7 @@ public class MipcaActivityCapture extends AppCompatActivity implements
                 setResult(1, intent);
                 MipcaActivityCapture.this.finish();
             } else {
-                Intent intent = new Intent(MipcaActivityCapture.this,
-                        MipcaActivityCapture.class);
-                this.startActivity(intent);
+                EventBus.getDefault().post(new InventryScanBean(resultString));
                 MipcaActivityCapture.this.finish();
             }
         } catch (Exception e) {

@@ -136,7 +136,7 @@ public class BalanceActivity extends BaseActivity {
                     edtCardMoney.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + needPayMoney);
+                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
         radioBtnCash.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +150,7 @@ public class BalanceActivity extends BaseActivity {
                     edtCashMoney.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + needPayMoney);
+                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
         radioBtnCoupon.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +164,7 @@ public class BalanceActivity extends BaseActivity {
                     edtCouponMoney.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + needPayMoney);
+                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
         radioBtnAlipay.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +178,7 @@ public class BalanceActivity extends BaseActivity {
                     edtAlipayMoney.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + needPayMoney);
+                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
         radioBtnWechat.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +192,7 @@ public class BalanceActivity extends BaseActivity {
                     edtWechatMoney.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + needPayMoney);
+                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
         radioBtnIntegral.setOnClickListener(new View.OnClickListener() {
@@ -206,7 +206,7 @@ public class BalanceActivity extends BaseActivity {
                     integralTv.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + needPayMoney);
+                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
 
@@ -307,7 +307,7 @@ public class BalanceActivity extends BaseActivity {
                 else
                     hasPayedWechatMoney = Double.parseDouble(charSequence.toString());
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + needPayMoney);
+                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
 
             @Override

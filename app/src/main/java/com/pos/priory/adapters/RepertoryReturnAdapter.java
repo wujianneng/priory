@@ -29,7 +29,6 @@ public class RepertoryReturnAdapter extends BaseQuickAdapter<ReturnGoodBean.Retu
         helper.setText(R.id.name_tv,item.getName());
         helper.setText(R.id.count_tv, item.getWeight() + "g");
         helper.setText(R.id.code_tv, DateUtils.covertIso8601ToDate2(item.getCreated()));
-        helper.setText(R.id.status_tv,"待辦中");
         helper.setText(R.id.price_tv,item.getReturnprice() + "");
     }
 }
