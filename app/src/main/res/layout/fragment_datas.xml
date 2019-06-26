@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:text="3月營業額： 2345678元"
+            android:text="3月营业额： 2345678元"
             android:textColor="#333333"
             android:textSize="18sp" />
 
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:text="黃金月銷售數量"
+            android:text="黄金月销售数量"
             android:textColor="#333333"
             android:textSize="18sp" />
 
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:text="晶石月銷售數量"
+            android:text="晶石月销售数量"
             android:textColor="#333333"
             android:textSize="18sp" />
 

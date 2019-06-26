@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="掃描條碼"
+            android:text="扫描条码"
             android:textColor="#fff"
             android:textSize="20sp" />
 
@@ -55,16 +55,16 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-            <SurfaceView
-                android:id="@+id/preview_view"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_gravity="center" />
+        <SurfaceView
+            android:id="@+id/preview_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center" />
 
-            <com.pos.zxinglib.view.ViewfinderView
-                android:id="@+id/viewfinder_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+        <com.pos.zxinglib.view.ViewfinderView
+            android:id="@+id/viewfinder_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </FrameLayout>
 
 

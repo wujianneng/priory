@@ -77,7 +77,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
         status = getIntent().getStringExtra("status");
         scanBtn.setVisibility(status.equals("未完成") ? View.VISIBLE : View.GONE);
         btnFinish.setVisibility(status.equals("未完成") ? View.VISIBLE : View.GONE);
-        titleTv.setText("大盤點");
+        titleTv.setText("大盘点");
         scanBtn.setImageResource(R.drawable.scan);
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -107,7 +107,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
                         dataList.addAll(inventoryBean.get(0).getInventoryitem());
                         adapter.notifyDataSetChanged();
                         refreshLayout.finishRefresh();
-                        leftTv.setText("黃金：" + inventoryBean.get(0).getGolditemcount() + "件 | " + inventoryBean.get(0).getGolditemweight() + "g");
+                        leftTv.setText("黄金：" + inventoryBean.get(0).getGolditemcount() + "件 | " + inventoryBean.get(0).getGolditemweight() + "g");
                         rightTv.setText("晶石：" + inventoryBean.get(0).getCystalitemcount() + "件");
                         Log.e("test", "size:" + dataList.size());
                     }

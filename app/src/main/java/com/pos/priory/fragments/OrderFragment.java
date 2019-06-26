@@ -157,7 +157,7 @@ public class OrderFragment extends BaseFragment {
             @Override
             public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
                 Log.e("viewtype", "viewtype:" + viewType);
-                if (viewType == 0 && MyApplication.staffInfoBean.getPermission().equals("店長")) {
+                if (viewType == 0 && MyApplication.staffInfoBean.getPermission().equals("店长")) {
                     SwipeMenuItem cancelItem = new SwipeMenuItem(getActivity())
                             .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
                             .setImage(R.drawable.edit)
@@ -190,7 +190,7 @@ public class OrderFragment extends BaseFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getActivity(), OrderDetialActivity.class);
-                intent.putExtra("order", gson.toJson(orderList.get(position)));
+                intent.putExtra("orderId", orderList.get(position).getId());
                 startActivity(intent);
             }
         });
@@ -200,14 +200,14 @@ public class OrderFragment extends BaseFragment {
     private void showIsCancelOrderDialog(final int adapterPosition) {
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle("提示")
-                .setMessage("是否確定要撤回該訂單？")
+                .setMessage("是否确定要撤回该订单？")
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -221,7 +221,7 @@ public class OrderFragment extends BaseFragment {
     CustomDialog customDialog;
     private void cancelOrder(final int pos) {
         if (customDialog == null) {
-            customDialog = new CustomDialog(getActivity(), "正在撤回訂單..");
+            customDialog = new CustomDialog(getActivity(), "正在撤回订单..");
             customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialogInterface) {
@@ -236,19 +236,19 @@ public class OrderFragment extends BaseFragment {
                     .subscribe(new Consumer<String>() {
                         @Override
                         public void accept(String s) throws Exception {
-                            Log.e("test", "結算成功");
+                            Log.e("test", "结算成功");
                             customDialog.dismiss();
                             orderList.remove(pos);
                             orderAdapter.notifyItemRangeChanged(0,orderList.size());
                             orderAdapter.notifyItemRemoved(pos);
-                            Toast.makeText(getActivity(), "撤回訂單成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "撤回订单成功", Toast.LENGTH_SHORT).show();
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             customDialog.dismiss();
-                            Log.e("test", "結算失败:" + throwable.getMessage());
-                            Toast.makeText(getActivity(), "撤回訂單失败", Toast.LENGTH_SHORT).show();
+                            Log.e("test", "结算失败:" + throwable.getMessage());
+                            Toast.makeText(getActivity(), "撤回订单失败", Toast.LENGTH_SHORT).show();
                         }
                     });
         }
@@ -266,8 +266,8 @@ public class OrderFragment extends BaseFragment {
                         Log.e("okhttp", "getCurrentGoldPriceresult:" + s);
                         String currentGoldPrice = new JSONObject(s).getString("price");
                         goldPriceLayout.setVisibility(View.VISIBLE);
-                        row1Tv2.setText("金價：" + (int) Double.parseDouble(currentGoldPrice) + "/g");
-                        row2Tv2.setText("金價：" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/两");
+                        row1Tv2.setText("金价：" + (int) Double.parseDouble(currentGoldPrice) + "/g");
+                        row2Tv2.setText("金价：" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/两");
                     }
                 })
                 .observeOn(Schedulers.io())
@@ -283,12 +283,12 @@ public class OrderFragment extends BaseFragment {
                     public void accept(String s) throws Exception {
                         JSONObject jsonObject = new JSONObject(s);
                         Log.e("okhttp", "getDashboardresult:" + s);
-                        row1Tv1.setText("營業額：" + jsonObject.getDouble("turnover"));
-                        row2Tv1.setText("現金：" + jsonObject.getDouble("cash") + " | " + " 現金券：" + jsonObject.getDouble("voucher"));
+                        row1Tv1.setText("营业额：" + jsonObject.getDouble("turnover"));
+                        row2Tv1.setText("现金：" + jsonObject.getDouble("cash") + " | " + " 现金券：" + jsonObject.getDouble("voucher"));
                         row3Tv1.setText("信用卡：" + jsonObject.getDouble("credit"));
-                        row3Tv2.setText("總數：" + (int)jsonObject.getDouble("orderitem") + "件");
-                        row4Tv1.setText("支付寶：" + jsonObject.getDouble("alipay") + " | " + " 微信支付：" + jsonObject.getDouble("wechatpay"));
-                        row4Tv2.setText("總重：" + jsonObject.getDouble("weight") + "g");
+                        row3Tv2.setText("总数：" + (int)jsonObject.getDouble("orderitem") + "件");
+                        row4Tv1.setText("支付宝：" + jsonObject.getDouble("alipay") + " | " + " 微信支付：" + jsonObject.getDouble("wechatpay"));
+                        row4Tv2.setText("总重：" + jsonObject.getDouble("weight") + "g");
                     }
                 }, new Consumer<Throwable>() {
                     @Override

@@ -4,35 +4,36 @@ import java.util.List;
 
 public class DayReportBean {
 
+
     /**
-     * date : 2019-05-14
-     * turnovertotal : 5000
-     * credit : 7000
-     * cash : 0
+     * date : 2019-06-18
+     * turnovertotal : 1074.5
+     * credit : 299.0
+     * cash : 675.5
      * alipay : 0
      * wechatpay : 0
-     * voucher : 0
-     * refund : 4850
-     * goldturnover : 10950
-     * golditemcount : 11
-     * golditemweight : 12.1
+     * voucher : 100.0
+     * refund : 670.7
+     * goldturnover : 328.1
+     * golditemcount : 2
+     * golditemweight : 2.15
      * cystalturnover : 0
      * cystalitemcount : 0
      * braceletturnover : 0
      * braceletitemcount : 0
-     * items : [{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"95折","discountprice":950},{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000},{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000},{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000},{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000},{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000},{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000},{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000},{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000},{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000},{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000}]
-     * refunditem : [{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000},{"stock":"10013333","productname":"測試1","quantity":1,"catalog":"黃金","weight":1.1,"price":1000,"discount":"沒折扣","discountprice":1000}]
+     * items : [{"stock":"2001061819421503","productname":"測試產品B","quantity":1,"catalog":"黃金","weight":1.15,"price":193,"discount":"9折","discountprice":173.7},{"stock":"2001061819421501","productname":"測試產品B","quantity":1,"catalog":"黃金","weight":1,"price":193,"discount":"8折","discountprice":154.4}]
+     * refunditem : [{"stock":"2001061819421504","productname":"測試產品B","quantity":1,"catalog":"黃金","weight":1.16,"price":193,"discount":"9折","discountprice":173.7},{"stock":"2001061819421502","productname":"測試產品B","quantity":1,"catalog":"黃金","weight":1.1,"price":193,"discount":"9折","discountprice":173.7},{"stock":"1001061719162401","productname":"光面圓珠A","quantity":1,"catalog":"黃金","weight":1,"price":399,"discount":"原價","discountprice":399}]
      */
 
     private String date;
-    private int turnovertotal;
-    private int credit;
-    private int cash;
+    private double turnovertotal;
+    private double credit;
+    private double cash;
     private int alipay;
     private int wechatpay;
-    private int voucher;
-    private int refund;
-    private int goldturnover;
+    private double voucher;
+    private double refund;
+    private double goldturnover;
     private int golditemcount;
     private double golditemweight;
     private int cystalturnover;
@@ -50,27 +51,27 @@ public class DayReportBean {
         this.date = date;
     }
 
-    public int getTurnovertotal() {
+    public double getTurnovertotal() {
         return turnovertotal;
     }
 
-    public void setTurnovertotal(int turnovertotal) {
+    public void setTurnovertotal(double turnovertotal) {
         this.turnovertotal = turnovertotal;
     }
 
-    public int getCredit() {
+    public double getCredit() {
         return credit;
     }
 
-    public void setCredit(int credit) {
+    public void setCredit(double credit) {
         this.credit = credit;
     }
 
-    public int getCash() {
+    public double getCash() {
         return cash;
     }
 
-    public void setCash(int cash) {
+    public void setCash(double cash) {
         this.cash = cash;
     }
 
@@ -90,27 +91,27 @@ public class DayReportBean {
         this.wechatpay = wechatpay;
     }
 
-    public int getVoucher() {
+    public double getVoucher() {
         return voucher;
     }
 
-    public void setVoucher(int voucher) {
+    public void setVoucher(double voucher) {
         this.voucher = voucher;
     }
 
-    public int getRefund() {
+    public double getRefund() {
         return refund;
     }
 
-    public void setRefund(int refund) {
+    public void setRefund(double refund) {
         this.refund = refund;
     }
 
-    public int getGoldturnover() {
+    public double getGoldturnover() {
         return goldturnover;
     }
 
-    public void setGoldturnover(int goldturnover) {
+    public void setGoldturnover(double goldturnover) {
         this.goldturnover = goldturnover;
     }
 
@@ -180,14 +181,14 @@ public class DayReportBean {
 
     public static class ItemsBean {
         /**
-         * stock : 10013333
-         * productname : 測試1
+         * stock : 2001061819421503
+         * productname : 測試產品B
          * quantity : 1
          * catalog : 黃金
-         * weight : 1.1
-         * price : 1000
-         * discount : 95折
-         * discountprice : 950
+         * weight : 1.15
+         * price : 193.0
+         * discount : 9折
+         * discountprice : 173.7
          */
 
         private String stock;
@@ -195,10 +196,10 @@ public class DayReportBean {
         private int quantity;
         private String catalog;
         private double weight;
-        private int price;
+        private double price;
         private String discount;
-        private int discountprice;
-        private boolean isReturnItem = false;
+        private double discountprice;
+        boolean isReturnItem = false;
 
         public boolean isReturnItem() {
             return isReturnItem;
@@ -248,11 +249,11 @@ public class DayReportBean {
             this.weight = weight;
         }
 
-        public int getPrice() {
+        public double getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(double price) {
             this.price = price;
         }
 
@@ -264,25 +265,25 @@ public class DayReportBean {
             this.discount = discount;
         }
 
-        public int getDiscountprice() {
+        public double getDiscountprice() {
             return discountprice;
         }
 
-        public void setDiscountprice(int discountprice) {
+        public void setDiscountprice(double discountprice) {
             this.discountprice = discountprice;
         }
     }
 
     public static class RefunditemBean {
         /**
-         * stock : 10013333
-         * productname : 測試1
+         * stock : 2001061819421504
+         * productname : 測試產品B
          * quantity : 1
          * catalog : 黃金
-         * weight : 1.1
-         * price : 1000
-         * discount : 沒折扣
-         * discountprice : 1000
+         * weight : 1.16
+         * price : 193.0
+         * discount : 9折
+         * discountprice : 173.7
          */
 
         private String stock;
@@ -290,9 +291,9 @@ public class DayReportBean {
         private int quantity;
         private String catalog;
         private double weight;
-        private int price;
+        private double price;
         private String discount;
-        private int discountprice;
+        private double discountprice;
 
         public String getStock() {
             return stock;
@@ -334,11 +335,11 @@ public class DayReportBean {
             this.weight = weight;
         }
 
-        public int getPrice() {
+        public double getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(double price) {
             this.price = price;
         }
 
@@ -350,11 +351,11 @@ public class DayReportBean {
             this.discount = discount;
         }
 
-        public int getDiscountprice() {
+        public double getDiscountprice() {
             return discountprice;
         }
 
-        public void setDiscountprice(int discountprice) {
+        public void setDiscountprice(double discountprice) {
             this.discountprice = discountprice;
         }
     }

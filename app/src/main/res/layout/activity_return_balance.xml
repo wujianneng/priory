@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:background="#5f333333"
             android:textColor="#fff"
-            android:text="扣取原價積分"
+            android:text="扣取原价积分"
             android:paddingLeft="30dp"
             android:paddingRight="10dp"></TextView>
 
@@ -82,7 +82,7 @@
         android:layout_marginTop="10dp"
         android:drawableLeft="@drawable/icon_money"
         android:drawablePadding="5dp"
-        android:text="現金"
+        android:text="现金"
         android:textColor="#cccccc"
         android:textSize="15sp" />
 
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="20dp"
-                android:text="找續"
+                android:text="找续"
                 android:textColor="#cccccc"
                 android:textSize="16sp" />
 

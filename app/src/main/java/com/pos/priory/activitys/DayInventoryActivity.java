@@ -26,7 +26,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * 日盤點
+ * 日盘点
  */
 public class DayInventoryActivity extends BaseActivity {
 
@@ -81,7 +81,7 @@ public class DayInventoryActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        titleTv.setText("日盤點");
+        titleTv.setText("日盘点");
         rightImg.setVisibility(View.GONE);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +101,7 @@ public class DayInventoryActivity extends BaseActivity {
                         JSONArray jsonArray = new JSONArray(s);
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            if (jsonObject.getString("catalog").equals("黃金")) {
+                            if (jsonObject.getString("catalog").equals("黄金")) {
                                 goldLayout.setVisibility(View.VISIBLE);
                                 goldCountTv.setText(jsonObject.getInt("sysquantity") + "件");
                                 if(jsonObject.getInt("quantity") != 0){
@@ -121,7 +121,7 @@ public class DayInventoryActivity extends BaseActivity {
                                     sparSummitBtn.setEnabled(false);
                                 }
                                 sparObj = jsonObject;
-                            } else if (jsonObject.getString("catalog").equals("手繩")) {
+                            } else if (jsonObject.getString("catalog").equals("手绳")) {
                                 handLayout.setVisibility(View.VISIBLE);
                                 handCountTv.setText(jsonObject.getInt("sysquantity") + "件");
                                 if(jsonObject.getInt("quantity") != 0){
@@ -187,40 +187,40 @@ public class DayInventoryActivity extends BaseActivity {
                 id = goldObj.getInt("id");
                 count = Integer.parseInt(goldCountEdt.getText().toString());
                 if (goldCountEdt.getText().toString().equals("") || goldCountEdt.getText().toString().equals(".")) {
-                    Toast.makeText(DayInventoryActivity.this, "請先輸入數量", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DayInventoryActivity.this, "请先输入数量", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (Integer.parseInt(goldCountEdt.getText().toString()) > goldObj.getInt("sysquantity")){
-                    Toast.makeText(DayInventoryActivity.this, "盤點數量不能大於系統數量", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DayInventoryActivity.this, "盘点数量不能大于系统数量", Toast.LENGTH_SHORT).show();
                     return;
                 }
             } else if (i == 1) {
                 id = sparObj.getInt("id");
                 count = Integer.parseInt(sparCountEdt.getText().toString());
                 if (sparCountEdt.getText().toString().equals("") || sparCountEdt.getText().toString().equals(".")) {
-                    Toast.makeText(DayInventoryActivity.this, "請先輸入數量", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DayInventoryActivity.this, "请先输入数量", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (Integer.parseInt(sparCountEdt.getText().toString()) > sparObj.getInt("sysquantity")){
-                    Toast.makeText(DayInventoryActivity.this, "盤點數量不能大於系統數量", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DayInventoryActivity.this, "盘点数量不能大于系统数量", Toast.LENGTH_SHORT).show();
                     return;
                 }
             } else if (i == 2) {
                 id = handObj.getInt("id");
                 count = Integer.parseInt(handCountEdt.getText().toString());
                 if (handCountEdt.getText().toString().equals("") || handCountEdt.getText().toString().equals(".")) {
-                    Toast.makeText(DayInventoryActivity.this, "請先輸入數量", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DayInventoryActivity.this, "请先输入数量", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (Integer.parseInt(handCountEdt.getText().toString()) > handObj.getInt("sysquantity")){
-                    Toast.makeText(DayInventoryActivity.this, "盤點數量不能大於系統數量", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DayInventoryActivity.this, "盘点数量不能大于系统数量", Toast.LENGTH_SHORT).show();
                     return;
                 }
             } else if (i == 3) {
                 id = elseObj.getInt("id");
                 count = Integer.parseInt(elseCountEdt.getText().toString());
                 if (elseCountEdt.getText().toString().equals("") || elseCountEdt.getText().toString().equals(".")) {
-                    Toast.makeText(DayInventoryActivity.this, "請先輸入數量", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DayInventoryActivity.this, "请先输入数量", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (Integer.parseInt(elseCountEdt.getText().toString()) > elseObj.getInt("sysquantity")){
-                    Toast.makeText(DayInventoryActivity.this, "盤點數量不能大於系統數量", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DayInventoryActivity.this, "盘点数量不能大于系统数量", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -238,7 +238,7 @@ public class DayInventoryActivity extends BaseActivity {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             customDialog.dismiss();
-                            Toast.makeText(DayInventoryActivity.this, "提交失敗", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(DayInventoryActivity.this, "提交失败", Toast.LENGTH_SHORT).show();
                         }
                     });
         }catch (Exception e){

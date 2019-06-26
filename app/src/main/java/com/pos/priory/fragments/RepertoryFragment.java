@@ -103,6 +103,7 @@ public class RepertoryFragment extends BaseFragment {
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 if (isStoreRepertory) {
                     refreshRecyclerView(currentStr);
+                    refreshMainRepertorySumDatas();
                 } else {
                     refreshReturnRecyclerView();
                 }
@@ -117,7 +118,7 @@ public class RepertoryFragment extends BaseFragment {
                 SwipeMenuItem tuihuoItem = new SwipeMenuItem(getActivity())
                         .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
                         .setImage(R.drawable.icon_dinghuo)
-                        .setText("退貨")
+                        .setText("退货")
                         .setTextColor(Color.WHITE)
                         .setHeight(DeviceUtil.dip2px(getActivity(), 91))//设置高，这里使用match_parent，就是与item的高相同
                         .setWidth(DeviceUtil.dip2px(getActivity(), 100));//设置宽
@@ -125,7 +126,7 @@ public class RepertoryFragment extends BaseFragment {
                 SwipeMenuItem diaohuoItem = new SwipeMenuItem(getActivity())
                         .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_red))
                         .setImage(R.drawable.icon_dinghuo)
-                        .setText("調貨")
+                        .setText("调货")
                         .setTextColor(Color.WHITE)
                         .setHeight(DeviceUtil.dip2px(getActivity(), 91))//设置高，这里使用match_parent，就是与item的高相同
                         .setWidth(DeviceUtil.dip2px(getActivity(), 100));//设置宽
@@ -171,6 +172,25 @@ public class RepertoryFragment extends BaseFragment {
         refreshLayout.autoRefresh();
     }
 
+    private void refreshMainRepertorySumDatas() {
+        RetrofitManager.createString(ApiService.class).getStockSumDatas()
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        JSONObject jsonObject = new JSONObject(s);
+                        leftTv.setText("黄金：" + jsonObject.getInt("goldcount") + "件 | " + jsonObject.getDouble("goldweight") +"g");
+                        rightTv.setVisibility(View.VISIBLE);
+                        rightTv.setText("晶石：" + jsonObject.getInt("cystalcount") + "件");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                });
+    }
+
     public void onChangeRepertoryListener(boolean isStore) {
         isStoreRepertory = isStore;
         if (isStore) {
@@ -186,14 +206,14 @@ public class RepertoryFragment extends BaseFragment {
     private void showIsReturnDialog(final int adapterPosition) {
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle("提示")
-                .setMessage("是否確定要退貨該商品？")
+                .setMessage("是否确定要退货该商品？")
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -268,7 +288,7 @@ public class RepertoryFragment extends BaseFragment {
     private void showChoiceDiscountDialog(final int position) {
         AlertDialog.Builder singleChoiceDialog =
                 new AlertDialog.Builder(getActivity());
-        singleChoiceDialog.setTitle("請選擇調撥店鋪");
+        singleChoiceDialog.setTitle("请选择调拨店铺");
         // 第二个参数是默认选项，此处设置为0
         ListAdapter adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_single_choice, stores);
@@ -279,7 +299,7 @@ public class RepertoryFragment extends BaseFragment {
                         yourChoice = which;
                     }
                 });
-        singleChoiceDialog.setPositiveButton("確定",
+        singleChoiceDialog.setPositiveButton("确定",
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -304,13 +324,13 @@ public class RepertoryFragment extends BaseFragment {
         });
         customDialog.show();
         Map<String, Object> paramMap = new HashMap<>();
-        List<Map<String, Object>> stocktransfer  = new ArrayList<>();
+        List<Map<String, Object>> stocktransfer = new ArrayList<>();
         Map<String, Object> stocktransferMap = new HashMap<>();
         stocktransferMap.put("storeid", storeid);
         stocktransferMap.put("stockid", stockid);
         stocktransfer.add(stocktransferMap);
         paramMap.put("stocktransfer", stocktransfer);
-        Log.e("test","params:" + gson.toJson(paramMap));
+        Log.e("test", "params:" + gson.toJson(paramMap));
         RetrofitManager.createString(ApiService.class).tranferGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
@@ -342,20 +362,16 @@ public class RepertoryFragment extends BaseFragment {
         if (str.equals("")) {
             observable = RetrofitManager.createString(ApiService.class).getStockLists();
         } else {
-            if (LogicUtils.isNumeric(str))
-                observable = RetrofitManager.createString(ApiService.class).getStockListByQrCode(str);
-            else
-                observable = RetrofitManager.createString(ApiService.class).getStockListByName(str);
+            observable = RetrofitManager.createString(ApiService.class).getStockListByParam(str);
         }
-        call = observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        call = observable
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String results) throws Exception {
                         JSONObject jsonObject = new JSONObject(results);
-                        leftTv.setText("黃金：" + jsonObject.getInt("goldcount") + "件 | " + jsonObject.getDouble("goldweight") +"g");
-                        rightTv.setVisibility(View.VISIBLE);
-                        rightTv.setText("晶石：" + jsonObject.getInt("cystalcount") + "件");
-                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("stockitem").toString(), new TypeToken<List<GoodBean>>() {
+                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<GoodBean>>() {
                         }.getType());
                         if (goodBeanList != null) {
                             dataList.addAll(goodBeanList);
@@ -383,12 +399,12 @@ public class RepertoryFragment extends BaseFragment {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String results) throws Exception {
-                        ReturnGoodBean returnGoodBean = gson.fromJson(results,ReturnGoodBean.class);
+                        ReturnGoodBean returnGoodBean = gson.fromJson(results, ReturnGoodBean.class);
                         if (returnGoodBean != null) {
                             returnGoodBeanList.addAll(returnGoodBean.getReturnstockitem());
                             repertoryReturnAdapter.notifyDataSetChanged();
                         }
-                        leftTv.setText("黃金：" + returnGoodBean.getGoldcount() + "件 | " + returnGoodBean.getGoldweight() +"g");
+                        leftTv.setText("黄金：" + returnGoodBean.getGoldcount() + "件 | " + returnGoodBean.getGoldweight() + "g");
                         rightTv.setVisibility(View.GONE);
                         refreshLayout.finishRefresh();
                     }

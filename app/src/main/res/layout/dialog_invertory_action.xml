@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="訂貨"
+            android:text="订货"
             android:textColor="#cccccc"
             android:textSize="18sp" />
 
@@ -65,7 +65,7 @@
         android:layout_marginRight="40dp"
         android:layout_marginTop="5dp"
         android:background="@null"
-        android:hint="請輸入數量"
+        android:hint="请输入数量"
         android:textColor="#333333" />
 
     <View

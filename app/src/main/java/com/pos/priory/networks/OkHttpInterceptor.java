@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.NetworkUtils;
 import com.google.gson.Gson;
 import com.pos.priory.MyApplication;
 import com.pos.priory.utils.Constants;
+import com.pos.priory.utils.SentryLog;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -14,6 +15,8 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.sentry.Sentry;
+import io.sentry.SentryClient;
 import okhttp3.CacheControl;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -44,7 +47,6 @@ public class OkHttpInterceptor implements Interceptor {
                 .method(original.method(), original.body())
                 .build();
         Response response = chain.proceed(request);
-
         ////
         //打印response
         ResponseBody responseBody = response.body();
@@ -53,8 +55,16 @@ public class OkHttpInterceptor implements Interceptor {
         //if (!HttpEngine.hasBody(response)) {
         if (!HttpHeaders.hasBody(response)) { //HttpHeader -> 改成了 HttpHeaders，看版本进行选择
             //END HTTP
+            Log.e(TAG, "HttpHeaders.hasBody(response)");
+            if(!response.isSuccessful()){
+                SentryLog.sentryLogError(MyApplication.getContext().staffInfoBean != null ? MyApplication.getContext().staffInfoBean.getUser() : "nouser",0,"",response.message(),"");
+            }
         } else if (bodyEncoded(response.headers())) {
             //HTTP (encoded body omitted)
+            Log.e(TAG, "bodyEncoded(response.headers())");
+            if(!response.isSuccessful()){
+                SentryLog.sentryLogError(MyApplication.getContext().staffInfoBean != null ? MyApplication.getContext().staffInfoBean.getUser() : "nouser",0,"",response.message(),"");
+            }
         } else {
             BufferedSource source = responseBody.source();
             source.request(Long.MAX_VALUE); // Buffer the entire body.
@@ -73,12 +83,20 @@ public class OkHttpInterceptor implements Interceptor {
             if (!isPlaintext(buffer)) {
                 return response;
             }
+            String result = "";
             if (contentLength != 0) {
-                String result = buffer.clone().readString(charset);
+                result = buffer.clone().readString(charset);
                 Log.e(TAG, request.url() + "  respone:" + result);
                 //获取到response的body的string字符串
                 //do something .... <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             }
+            Log.e(TAG, "else" + response.code());
+            if(!response.isSuccessful()){
+                Log.e(TAG, "else!response.isSuccessful()" + response.code());
+                SentryLog.sentryLogError(MyApplication.getContext().staffInfoBean != null ? MyApplication.getContext().staffInfoBean.getUser() : "nouser",0,request.url().toString(),response.message(),result);
+                Log.e(TAG, "sentryLogErrorSuccessful");
+            }
+
         }
         //打印response
         ////

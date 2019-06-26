@@ -130,8 +130,8 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             customDialog.dismiss();
-                            Log.e("test","請與總部相關人員聯絡及查詢1");
-                            Toast.makeText(LoginActivity.this, "請與總部相關人員聯絡及查詢！", Toast.LENGTH_SHORT).show();
+                            Log.e("test", "请与总部相关人员联络及查询1");
+                            Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .observeOn(Schedulers.io())
@@ -150,29 +150,30 @@ public class LoginActivity extends BaseActivity {
                                     }.getType());
 
                             if (staffInfoBeanList != null && staffInfoBeanList.size() != 0) {
-                                for(StaffInfoBean staffInfoBean : staffInfoBeanList){
-                                    if(staffInfoBean.getUser().equals(edtUsename.getText().toString())){
-                                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
-                                        if (checkbox.isChecked()) {
-                                            editor.putString(Constants.LAST_USERNAME_KEY,
-                                                    edtUsename.getText().toString());
-                                            editor.putString(Constants.LAST_PASSWORD_KEY,
-                                                    edtPasswrod.getText().toString());
-                                        }
-                                        editor.putString(Constants.CURRENT_STAFF_INFO_KEY, s);
-                                        editor.commit();
-                                        if (customDialog != null)
-                                            customDialog.dismiss();
-                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                        finish();
+                                StaffInfoBean staffInfoBean = staffInfoBeanList.get(0);
+                                MyApplication.staffInfoBean = staffInfoBean;
+                                if (staffInfoBean.getUser().equals(edtUsename.getText().toString())) {
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
+                                    if (checkbox.isChecked()) {
+                                        editor.putString(Constants.LAST_USERNAME_KEY,
+                                                edtUsename.getText().toString());
+                                        editor.putString(Constants.LAST_PASSWORD_KEY,
+                                                edtPasswrod.getText().toString());
                                     }
+                                    editor.putString(Constants.CURRENT_STAFF_INFO_KEY, s);
+                                    editor.commit();
+                                    if (customDialog != null)
+                                        customDialog.dismiss();
+
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    finish();
                                 }
                             } else {
                                 if (customDialog != null)
                                     customDialog.dismiss();
-                                Log.e("test","請與總部相關人員聯絡及查詢2");
-                                Toast.makeText(LoginActivity.this, "請與總部相關人員聯絡及查詢！", Toast.LENGTH_SHORT).show();
+                                Log.e("test", "请与总部相关人员联络及查询2");
+                                Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }, new Consumer<Throwable>() {
@@ -180,8 +181,8 @@ public class LoginActivity extends BaseActivity {
                         public void accept(Throwable throwable) throws Exception {
                             if (customDialog != null)
                                 customDialog.dismiss();
-                            Log.e("test","請與總部相關人員聯絡及查詢3");
-                            Toast.makeText(LoginActivity.this, "請與總部相關人員聯絡及查詢！", Toast.LENGTH_SHORT).show();
+                            Log.e("test", "请与总部相关人员联络及查询3");
+                            Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
                         }
                     });
 

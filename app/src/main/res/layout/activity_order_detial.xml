@@ -68,7 +68,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="15dp"
-                                    android:text="價格: "
+                                    android:text="价格: "
                                     android:textColor="@color/blue_text"
                                     android:textSize="18sp" />
 
@@ -110,7 +110,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_vertical"
                                     android:layout_marginLeft="15dp"
-                                    android:text="會員:  李先生"
+                                    android:text="会员:  李先生"
                                     android:textColor="#000000"
                                     android:textSize="14sp" />
 
@@ -161,7 +161,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_marginLeft="15dp"
-                                    android:text="現金:  "
+                                    android:text="现金:  "
                                     android:textColor="#000000"
                                     android:textSize="14sp" />
 
@@ -178,7 +178,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
-                                    android:text="元 | 現金劵："
+                                    android:text="元 | 现金劵："
                                     android:textColor="#000000"
                                     android:textSize="14sp" />
 
@@ -213,7 +213,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center_horizontal"
                                     android:layout_marginLeft="15dp"
-                                    android:text="支付寶:  "
+                                    android:text="支付宝:  "
                                     android:textColor="#000000"
                                     android:textSize="14sp" />
 
@@ -342,7 +342,7 @@
             android:layout_height="52dp"
             android:layout_marginRight="50dp"
             android:background="@color/colorAccent"
-            android:text="換貨"
+            android:text="换货"
             android:textColor="#ffffff"
             android:textSize="16sp"
             app:cornerRadius="26dp"

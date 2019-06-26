@@ -68,9 +68,9 @@ public class EditPasswordActivity extends BaseActivity {
     @Override
     protected void initViews() {
         rightImg.setVisibility(View.GONE);
-        titleTv.setText("修改密碼");
-        setEditTextHintTextSize(edtNewPassword,12,"請輸入新密碼(長度大於8位，并且必須包含數字和字母)");
-        setEditTextHintTextSize(edtRepeatNewPassword,12,"請再次輸入新密碼(長度大於8位，并且必須包含數字和字母)");
+        titleTv.setText("修改密码");
+        setEditTextHintTextSize(edtNewPassword,12,"请输入新密码(长度大于8位，并且必须包含数字和字母)");
+        setEditTextHintTextSize(edtRepeatNewPassword,12,"请再次输入新密码(长度大于8位，并且必须包含数字和字母)");
     }
 
     private void setEditTextHintTextSize(EditText editText,int spSize,String hintContent){
@@ -84,7 +84,7 @@ public class EditPasswordActivity extends BaseActivity {
 
     private void editPassword() {
         if (customDialog == null) {
-            customDialog = new CustomDialog(this, "正在修改密碼..");
+            customDialog = new CustomDialog(this, "正在修改密码..");
         }
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -103,14 +103,14 @@ public class EditPasswordActivity extends BaseActivity {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
-                        Toast.makeText(EditPasswordActivity.this, "修改密碼成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditPasswordActivity.this, "修改密码成功", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(EditPasswordActivity.this, "修改密碼失敗", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditPasswordActivity.this, "修改密码失败", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -121,17 +121,17 @@ public class EditPasswordActivity extends BaseActivity {
             case R.id.btn_commit:
                 if (edtNewPassword.getText().toString().equals("") ||
                         edtRepeatNewPassword.getText().toString().equals("")) {
-                    Toast.makeText(EditPasswordActivity.this, "新密碼和確認密碼輸入框不能爲空", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPasswordActivity.this, "新密码和确认密码输入框不能爲空", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (edtNewPassword.getText().toString().length() < 8 ||
                         edtRepeatNewPassword.getText().length() < 8) {
-                    Toast.makeText(EditPasswordActivity.this, "新密碼和確認密碼長度必須大於8位", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPasswordActivity.this, "新密码和确认密码长度必须大于8位", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (LogicUtils.isNumeric(edtNewPassword.getText().toString()) ||
                         LogicUtils.isNumeric(edtRepeatNewPassword.getText().toString())) {
-                    Toast.makeText(EditPasswordActivity.this, "新密碼和確認密碼都不能為純數字", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditPasswordActivity.this, "新密码和确认密码都不能为纯数字", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 editPassword();

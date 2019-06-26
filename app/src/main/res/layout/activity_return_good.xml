@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/money_tv"
                 android:layout_centerHorizontal="true"
-                android:text="總價格"
+                android:text="总价格"
                 android:textColor="#fff"
                 android:textSize="15sp" />
 
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="10dp"
-        android:text="退貨商品"
+        android:text="退货商品"
         android:textColor="#cccccc"
         android:textSize="15sp" />
 

@@ -76,7 +76,7 @@ public class ReturnBalanceActivity extends BaseActivity {
     @Override
     protected void initViews() {
         rightImg.setVisibility(View.GONE);
-        titleTv.setText("結算");
+        titleTv.setText("结算");
         sumMoney = -1 * getIntent().getDoubleExtra("sumMoney", 0);
         checkedGoodListString = getIntent().getStringExtra("checkedGoodList");
         edtCasMoney.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));

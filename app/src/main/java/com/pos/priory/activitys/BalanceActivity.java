@@ -109,22 +109,22 @@ public class BalanceActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        titleTv.setText("結算");
+        titleTv.setText("结算");
         rightImg.setVisibility(View.GONE);
         sumMoney = getIntent().getDoubleExtra("sumMoney", 0);
         checkedGoodListString = getIntent().getStringExtra("checkedGoodList");
         sumMoney = new BigDecimal(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney)).doubleValue();
         moneyTv.setText(sumMoney + "");
-        memberNameTv.setText("會員:  " + getIntent().getStringExtra("memberName"));
-        memberPhoneTv.setText("聯係電話:  " + getIntent().getStringExtra("memberMobile"));
+        memberNameTv.setText("会员:  " + getIntent().getStringExtra("memberName"));
+        memberPhoneTv.setText("联係电话:  " + getIntent().getStringExtra("memberMobile"));
         int reward = getIntent().getIntExtra("memberReward", 0);
-        orderNumberTv.setText("積分:  " + reward + "分");
+        orderNumberTv.setText("积分:  " + reward + "分");
         if (reward < 10000) {
             rewardLayout.setVisibility(View.GONE);
         }
         needPayMoney = sumMoney;
-        needMoneyTv.setText("餘額: " + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
-        countTv.setText(getIntent().getIntExtra("sumCount", 0) + "件|" + getIntent().getDoubleExtra("sumWeight", 0) + "g");
+        needMoneyTv.setText("馀额: " + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+        countTv.setText(getIntent().getIntExtra("sumCount", 0) + "件|" + LogicUtils.getKeepLastTwoNumberAfterLittlePoint(getIntent().getDoubleExtra("sumWeight", 0)) + "g");
         radioBtnCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -136,7 +136,7 @@ public class BalanceActivity extends BaseActivity {
                     edtCardMoney.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+                needMoneyTv.setText("剩馀：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
         radioBtnCash.setOnClickListener(new View.OnClickListener() {
@@ -150,7 +150,7 @@ public class BalanceActivity extends BaseActivity {
                     edtCashMoney.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+                needMoneyTv.setText("剩馀：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
         radioBtnCoupon.setOnClickListener(new View.OnClickListener() {
@@ -164,7 +164,7 @@ public class BalanceActivity extends BaseActivity {
                     edtCouponMoney.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+                needMoneyTv.setText("剩馀：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
         radioBtnAlipay.setOnClickListener(new View.OnClickListener() {
@@ -178,7 +178,7 @@ public class BalanceActivity extends BaseActivity {
                     edtAlipayMoney.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+                needMoneyTv.setText("剩馀：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
         radioBtnWechat.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +192,7 @@ public class BalanceActivity extends BaseActivity {
                     edtWechatMoney.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+                needMoneyTv.setText("剩馀：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
         radioBtnIntegral.setOnClickListener(new View.OnClickListener() {
@@ -206,7 +206,7 @@ public class BalanceActivity extends BaseActivity {
                     integralTv.setVisibility(View.GONE);
                 }
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+                needMoneyTv.setText("剩馀：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
         });
 
@@ -223,7 +223,7 @@ public class BalanceActivity extends BaseActivity {
                 else
                     hasPayedCardMoney = Double.parseDouble(charSequence.toString());
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+                needMoneyTv.setText("剩馀：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
 
             @Override
@@ -244,7 +244,7 @@ public class BalanceActivity extends BaseActivity {
                 else
                     hasPayedCashMoney = Double.parseDouble(charSequence.toString());
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+                needMoneyTv.setText("剩馀：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
 
             @Override
@@ -265,7 +265,7 @@ public class BalanceActivity extends BaseActivity {
                 else
                     hasPayedCouponMoney = Double.parseDouble(charSequence.toString());
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+                needMoneyTv.setText("剩馀：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
 
             @Override
@@ -286,7 +286,7 @@ public class BalanceActivity extends BaseActivity {
                 else
                     hasPayedAlipayMoney = Double.parseDouble(charSequence.toString());
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+                needMoneyTv.setText("剩馀：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
 
             @Override
@@ -307,7 +307,7 @@ public class BalanceActivity extends BaseActivity {
                 else
                     hasPayedWechatMoney = Double.parseDouble(charSequence.toString());
                 needPayMoney = sumMoney - getSumHasPayMoney();
-                needMoneyTv.setText("剩餘：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
+                needMoneyTv.setText("剩馀：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
             }
 
             @Override
@@ -409,7 +409,7 @@ public class BalanceActivity extends BaseActivity {
                     .subscribe(new Consumer<String>() {
                         @Override
                         public void accept(String s) throws Exception {
-                            Log.e("test", "結算成功");
+                            Log.e("test", "结算成功");
                             JSONObject jsonObject = new JSONObject(s);
                             customDialog.dismiss();
                             Intent intent = new Intent(BalanceActivity.this, BillActivity.class);

@@ -110,7 +110,7 @@ public class DetialListFragment extends BaseFragment {
                 SwipeMenuItem dinghuoItem = new SwipeMenuItem(getActivity())
                         .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
                         .setImage(R.drawable.edit)
-                        .setText("編輯")
+                        .setText("编辑")
                         .setTextColor(Color.WHITE)
                         .setHeight(DeviceUtil.dip2px(getContext(), 91))//设置高，这里使用match_parent，就是与item的高相同
                         .setWidth(DeviceUtil.dip2px(getContext(), 100));//设置宽
@@ -118,7 +118,7 @@ public class DetialListFragment extends BaseFragment {
                 SwipeMenuItem tuihuoItem = new SwipeMenuItem(getActivity())
                         .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_red))
                         .setImage(R.drawable.icon_delete)
-                        .setText("刪除")
+                        .setText("删除")
                         .setTextColor(Color.WHITE)
                         .setHeight(DeviceUtil.dip2px(getContext(), 91))//设置高，这里使用match_parent，就是与item的高相同
                         .setWidth(DeviceUtil.dip2px(getContext(), 100));//设置宽
@@ -129,7 +129,7 @@ public class DetialListFragment extends BaseFragment {
         detialListAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                  sureOneDetialItem(position);
+                sureOneDetialItem(position);
             }
         });
         //设置侧滑菜单的点击事件
@@ -158,8 +158,8 @@ public class DetialListFragment extends BaseFragment {
     private void sureOneDetialItem(final int position) {
         if (isComfirmDialog == null) {
             isComfirmDialog = new AlertDialog.Builder(getActivity()).setTitle("提示")
-                    .setMessage("確認送出訂貨單到系統？")
-                    .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                    .setMessage("确认送出订货单到系统？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             comfirmPurshing(dataList.get(position).getId());
@@ -193,12 +193,12 @@ public class DetialListFragment extends BaseFragment {
             actionDialog = new AlertDialog.Builder(getActivity()).setView(view)
                     .create();
             TextView title = (TextView) view.findViewById(R.id.title);
-            title.setText("編輯");
+            title.setText("编辑");
             ImageView icon_good = view.findViewById(R.id.icon_good);
             TextView code_tv = view.findViewById(R.id.code_tv);
             TextView name_tv = view.findViewById(R.id.name_tv);
             final EditText edt_count = view.findViewById(R.id.edt_count);
-            Glide.with(getActivity()).load(Constants.BASE_URL + purchasingBean.getProduct().getImage())
+            Glide.with(getActivity()).load(RetrofitManager.BASE_URL + purchasingBean.getProduct().getImage())
                     .error(android.R.drawable.ic_menu_gallery)
                     .into(icon_good);
             code_tv.setText(purchasingBean.getProduct().getProductcode() + "");
@@ -213,7 +213,7 @@ public class DetialListFragment extends BaseFragment {
                 @Override
                 public void onClick(View view) {
                     if (edt_count.getText().toString().equals("")) {
-                        Toast.makeText(getActivity(), "請輸入數量", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "请输入数量", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     int count = Integer.parseInt(edt_count.getText().toString());
@@ -242,7 +242,7 @@ public class DetialListFragment extends BaseFragment {
 
     private void editPurshing(PurchasingItemBean bean, int count) {
         if (customDialog == null)
-            customDialog = new CustomDialog(getActivity(), "編輯中..");
+            customDialog = new CustomDialog(getActivity(), "编辑中..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
@@ -255,21 +255,21 @@ public class DetialListFragment extends BaseFragment {
                     @Override
                     public void accept(String s) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(getActivity(), "編輯成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "编辑成功", Toast.LENGTH_SHORT).show();
                         refreshLayout.autoRefresh();;
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(getActivity(), "編輯失敗", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "编辑失败", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void comfirmPurshing(int id) {
         if (customDialog == null)
-            customDialog = new CustomDialog(getActivity(), "確認中..");
+            customDialog = new CustomDialog(getActivity(), "确认中..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
@@ -282,14 +282,14 @@ public class DetialListFragment extends BaseFragment {
                     @Override
                     public void accept(String s) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(getActivity(), "確認成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "确认成功", Toast.LENGTH_SHORT).show();
                         refreshLayout.autoRefresh();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(getActivity(), "確認失敗", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "确认失败", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -318,7 +318,7 @@ public class DetialListFragment extends BaseFragment {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(getActivity(), "删除失敗", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "删除失败", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

@@ -139,7 +139,7 @@ public class QueryFragment extends BaseFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getActivity(), OrderDetialActivity.class);
-                intent.putExtra("order", gson.toJson(orderList.get(position)));
+                intent.putExtra("orderId", orderList.get(position).getId());
                 startActivity(intent);
                 edtOrderInput.setText("");
             }
@@ -190,29 +190,29 @@ public class QueryFragment extends BaseFragment {
             memberCall.dispose();
         memberList.clear();
         memberAdapter.notifyDataSetChanged();
-            memberCall = RetrofitManager.createString(ApiService.class).getMembers(str)
-                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<String>() {
-                        @Override
-                        public void accept(String results) throws Exception {
-                            final List<MemberBean> memberBeanList = gson.fromJson(results, new TypeToken<List<MemberBean>>() {
-                            }.getType());
-                            if (memberBeanList != null) {
-                                new RunOnUiThreadSafe(getActivity()) {
-                                    @Override
-                                    public void runOnUiThread() {
-                                        memberList.addAll(memberBeanList);
-                                        memberAdapter.notifyDataSetChanged();
-                                    }
-                                };
-                            }
+        memberCall = RetrofitManager.createString(ApiService.class).getMembers(str)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String results) throws Exception {
+                        final List<MemberBean> memberBeanList = gson.fromJson(results, new TypeToken<List<MemberBean>>() {
+                        }.getType());
+                        if (memberBeanList != null) {
+                            new RunOnUiThreadSafe(getActivity()) {
+                                @Override
+                                public void runOnUiThread() {
+                                    memberList.addAll(memberBeanList);
+                                    memberAdapter.notifyDataSetChanged();
+                                }
+                            };
                         }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
 
-                        }
-                    });
+                    }
+                });
     }
 
     Disposable dateCall;
@@ -289,7 +289,7 @@ public class QueryFragment extends BaseFragment {
                 btnOrderNumber.setTextColor(Color.parseColor("#000000"));
                 btnDate.setTextColor(Color.parseColor("#000000"));
                 icon.setImageResource(R.drawable.icon_detail);
-                titleTv.setText("電話");
+                titleTv.setText("电话");
                 edtMemberInput.setVisibility(View.VISIBLE);
                 edtOrderInput.setVisibility(View.GONE);
                 memberRecyclerView.setVisibility(View.VISIBLE);
@@ -302,14 +302,14 @@ public class QueryFragment extends BaseFragment {
                 btnOrderNumber.setTextColor(Color.parseColor("#000000"));
                 btnDate.setTextColor(getResources().getColor(R.color.colorAccent));
                 icon.setImageResource(R.drawable.icon_detail);
-                titleTv.setText("訂單號");
+                titleTv.setText("订单号");
                 edtMemberInput.setVisibility(View.GONE);
                 edtOrderInput.setVisibility(View.VISIBLE);
                 memberRecyclerView.setVisibility(View.GONE);
                 orderRecyclerView.setVisibility(View.VISIBLE);
                 inputLayout.setVisibility(View.GONE);
                 dateLayout.setVisibility(View.VISIBLE);
-                if (!dateTv.getText().toString().equals("請選擇日期"))
+                if (!dateTv.getText().toString().equals("请选择日期"))
                     refreshDateRecyclerView(dateTv.getText().toString());
                 break;
             case R.id.btn_order_number:
@@ -317,7 +317,7 @@ public class QueryFragment extends BaseFragment {
                 btnDate.setTextColor(Color.parseColor("#000000"));
                 btnOrderNumber.setTextColor(getResources().getColor(R.color.colorAccent));
                 icon.setImageResource(R.drawable.icon_detail);
-                titleTv.setText("訂單號");
+                titleTv.setText("订单号");
                 edtMemberInput.setVisibility(View.GONE);
                 edtOrderInput.setVisibility(View.VISIBLE);
                 memberRecyclerView.setVisibility(View.GONE);

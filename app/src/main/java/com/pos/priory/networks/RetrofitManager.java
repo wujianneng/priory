@@ -19,8 +19,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 
 public class RetrofitManager {
-    public static final String BASE_URL = "http://annabella.infitack.net";
-//    public static final String BASE_URL = "https://pos.annabellaip.com";
+        public static final String BASE_URL = "http://api.annabellaip.com";
+//    public static final String BASE_URL = "http://annabella.infitack.net";
     private static volatile OkHttpClient mOkHttpClient;
     private static Cache cache = new Cache(MyApplication.getContext().getCacheDir(), 1024 * 1024 * 10);//缓存10mib
 

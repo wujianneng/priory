@@ -75,7 +75,7 @@ public class DatasFragment extends BaseFragment {
                     @Override
                     public void accept(String s) throws Exception {
                         JSONObject jsonObject = new JSONObject(s);
-                        monthMoneyTv.setText(DateUtils.getCurrentMonth() + "月營業額： " + jsonObject.getInt("turnover") + "元");
+                        monthMoneyTv.setText(DateUtils.getCurrentMonth() + "月营业额： " + jsonObject.getInt("turnover") + "元");
                         JSONArray itemcountgold = jsonObject.getJSONArray("itemcountgold");
                         JSONArray itemscountcrystal = jsonObject.getJSONArray("itemscountcrystal");
                         for(int i = 0 ; i < itemcountgold.length() ;i++){

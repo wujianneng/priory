@@ -33,14 +33,14 @@ public class TablePrintGoodsAdapter extends BaseQuickAdapter<DayReportBean.Items
         if(item.getProductname().equals("退货标题")){
             helper.setBackgroundColor(R.id.layout, Color.parseColor("#cccccc"));
             helper.setText(R.id.index_tv,"No.");
-            helper.setText(R.id.good_code_tv,"編號");
-            helper.setText(R.id.good_name_tv,"名稱");
-            helper.setText(R.id.good_count_tv,"數量");
-            helper.setText(R.id.type_tv,"類別");
+            helper.setText(R.id.good_code_tv,"编号");
+            helper.setText(R.id.good_name_tv,"名称");
+            helper.setText(R.id.good_count_tv,"数量");
+            helper.setText(R.id.type_tv,"类别");
             helper.setText(R.id.weight_tv,"金重");
-            helper.setText(R.id.reatil_price_tv,"售價");
+            helper.setText(R.id.reatil_price_tv,"售价");
             helper.setText(R.id.discount_tv,"折扣");
-            helper.setText(R.id.price_tv,"退換價");
+            helper.setText(R.id.price_tv,"退换价");
         }else {
             helper.setBackgroundColor(R.id.layout, Color.parseColor("#ffffff"));
             if(!item.isReturnItem()){

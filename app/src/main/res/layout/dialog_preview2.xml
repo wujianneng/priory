@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
-                android:text="收据编号   S181123012"
+                android:text="收據編號   S181123012"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
-                android:text="客户姓名   罗小姐"
+                android:text="客戶姓名   羅小姐"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
-                android:text="购买日期   2018-10-10 10:10:10"
+                android:text="購買日期   2018-10-10 10:10:10"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="40dp"
-                    android:text="澳门安娜贝拉有限公司"
+                    android:text="澳門安娜貝拉有限公司"
                     android:textColor="#333"
                     android:textSize="8sp" />
 
@@ -109,7 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    android:text="白马行店"
+                    android:text="白馬行店"
                     android:textColor="#333"
                     android:textSize="8sp" />
 
@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="10dp"
-                    android:text="澳门多禄长街(白马行)20-A号雅明阁地下C座"
+                    android:text="澳門多祿長街(白馬行)20-A號雅明閣地下C座"
                     android:textColor="#333"
                     android:textSize="8sp" />
 
@@ -153,7 +153,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="页数"
+                            android:text="頁數"
                             android:textColor="#333"
                             android:textSize="10sp" />
 
@@ -177,7 +177,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="总数量(件)"
+                            android:text="總數量(件)"
                             android:textColor="#333"
                             android:textSize="10sp" />
 
@@ -201,7 +201,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="总金额"
+                            android:text="總金額"
                             android:textColor="#333"
                             android:textSize="10sp" />
 
@@ -243,7 +243,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="货品（名称/条码）"
+                android:text="貨品（名稱/條碼）"
                 android:textColor="#333"
                 android:textSize="10sp" />
 
@@ -252,7 +252,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="数量"
+                android:text="數量"
                 android:textColor="#333"
                 android:textSize="10sp" />
 
@@ -261,7 +261,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="原价"
+                android:text="原價"
                 android:textColor="#333"
                 android:textSize="10sp" />
 
@@ -279,7 +279,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="售价"
+                android:text="售價"
                 android:textColor="#333"
                 android:textSize="10sp" />
         </LinearLayout>
@@ -311,7 +311,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:text="客户注意事项"
+                android:text="客戶註意事項"
                 android:textColor="#333"
                 android:textSize="10sp" />
 
@@ -321,7 +321,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text0"
                 android:layout_marginLeft="20dp"
-                android:text="1.黄金货品可凭公司收据售回本公司,回售计算方式:重量 x 购入金价 x 0.95;"
+                android:text="1.黃金貨品可憑公司收據售回本公司,回售計算方式:重量 x 購入金價 x 0.95;"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -331,7 +331,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text1"
                 android:layout_marginLeft="20dp"
-                android:text="2.黄金货品可凭公司收据可享有8折换货服务(不包括手绳製作,水晶,k金);"
+                android:text="2.黃金貨品可憑公司收據可享有8折換貨服務(不包括手繩製作,水晶,k金);"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -341,7 +341,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text2"
                 android:layout_marginLeft="20dp"
-                android:text="3.更换皮绳或编制手绳本公司收取材料费手工费$50;"
+                android:text="3.更換皮繩或編制手繩本公司收取材料費手工費$50;"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -351,7 +351,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text3"
                 android:layout_marginLeft="20dp"
-                android:text="*本公司保留最终解释权"
+                android:text="*本公司保留最終解釋權"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -371,7 +371,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/img_barcode"
                 android:layout_marginRight="25dp"
-                android:text="保养小Tips"
+                android:text="保養小Tips"
                 android:textColor="#333"
                 android:textSize="8sp" />
 

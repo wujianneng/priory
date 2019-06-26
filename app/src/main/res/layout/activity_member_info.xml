@@ -137,7 +137,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="30dp"
-                            android:text="性別"
+                            android:text="性别"
                             android:textColor="#cccccc"
                             android:textSize="12sp" />
 
@@ -175,7 +175,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="30dp"
-                            android:text="電話"
+                            android:text="电话"
                             android:textColor="#cccccc"
                             android:textSize="12sp" />
 
@@ -216,7 +216,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="30dp"
-                        android:text="積分"
+                        android:text="积分"
                         android:textColor="#cccccc"
                         android:textSize="12sp" />
 
@@ -247,7 +247,7 @@
             android:layout_marginLeft="15dp"
             android:textSize="15sp"
             android:textColor="#cccccc"
-            android:text="新購買項目"
+            android:text="新购买项目"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

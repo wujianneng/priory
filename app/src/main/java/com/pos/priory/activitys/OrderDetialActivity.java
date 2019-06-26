@@ -1,6 +1,7 @@
 package com.pos.priory.activitys;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
@@ -16,11 +17,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.reflect.TypeToken;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.OrderDetailPrintGoodsAdapter;
 import com.pos.priory.adapters.OrderDetialGoodsAdapter;
 import com.pos.priory.beans.OrderBean;
+import com.pos.priory.coustomViews.CustomDialog;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.DateUtils;
 import com.pos.priory.utils.LogicUtils;
 
@@ -30,6 +35,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/31.
@@ -87,44 +95,74 @@ public class OrderDetialActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        orderBean = gson.fromJson(getIntent().getStringExtra("order"), OrderBean.class);
-        if (orderBean.getStatus().equals("取消")) {
-            btnChange.setEnabled(false);
-            btnChange.setAlpha(0.5f);
-            btnReturn.setEnabled(false);
-            btnReturn.setAlpha(0.5f);
-        } else {
-            btnPrint.setVisibility(View.VISIBLE);
-            btnPrint.setImageResource(R.drawable.dayin);
-        }
-        orderNumberTv.setText("訂單號：" + orderBean.getOrdernumber());
-        dateTv.setText(DateUtils.covertIso8601ToDate(orderBean.getCreated()));
-        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(orderBean.getTotalprice()));
-        memberPhoneTv.setText("聯繫電話：" + orderBean.getMember().getMobile());
-        memberNameTv.setText("會員：" + orderBean.getMember().getLast_name() + orderBean.getMember().getFirst_name());
-        if (orderBean.getInvoiceitem().size() != 0)
-            for (OrderBean.InvoiceitemBean.TransactionitemBean bean : orderBean.getInvoiceitem().get(0).getTransactionitem()) {
-                Log.e("test","getPaymentmethod:" + bean.getPaymentmethod());
-                if (bean.getPaymentmethod().equals("信用卡")) {
-                    cardMoneyTv.setText(bean.getAmount());
-                } else if (bean.getPaymentmethod().equals("現金")) {
-                    cashMoneyTv.setText(bean.getAmount());
-                } else if (bean.getPaymentmethod().equals("現金券")) {
-                    cashCouponTv.setText(bean.getAmount());
-                } else if (bean.getPaymentmethod().equals("支付寶")) {
-                    alipayTv.setText(bean.getAmount());
-                } else if (bean.getPaymentmethod().equals("微信支付")) {
-                    wechatpayTv.setText(bean.getAmount());
-                }
-            }
-        goodList = orderBean.getItems();
-        countTv.setText(goodList.size() + "件|" + orderBean.getItemsweight() + "g");
         goodsAdapter = new OrderDetialGoodsAdapter(R.layout.order_detial_good_list_item, goodList);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(OrderDetialActivity.this);
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         goodRecyclerView.setLayoutManager(mLayoutManager);
         goodRecyclerView.setAdapter(goodsAdapter);
+        int orderid = getIntent().getIntExtra("orderId",0);
+        getOrderBean(orderid);
+    }
 
+    CustomDialog customDialog;
+    private void getOrderBean(int orderid) {
+        if (customDialog == null) {
+            customDialog = new CustomDialog(this, "正在查询订单信息..");
+            customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    customDialog = null;
+                }
+            });
+            customDialog.show();
+            RetrofitManager.createString(ApiService.class).getOrderByOrderId(orderid)
+                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String results) throws Exception {
+                            customDialog.dismiss();
+                            orderBean = gson.fromJson(results, OrderBean.class);
+                            Log.e("test","results:" + gson.toJson(orderBean));
+                            if (orderBean.getStatus().equals("取消")) {
+                                btnChange.setEnabled(false);
+                                btnChange.setAlpha(0.5f);
+                                btnReturn.setEnabled(false);
+                                btnReturn.setAlpha(0.5f);
+                            } else {
+                                btnPrint.setVisibility(View.VISIBLE);
+                                btnPrint.setImageResource(R.drawable.dayin);
+                            }
+                            orderNumberTv.setText("订单号：" + orderBean.getOrdernumber());
+                            dateTv.setText(DateUtils.covertIso8601ToDate(orderBean.getCreated()));
+                            moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(orderBean.getTotalprice()));
+                            memberPhoneTv.setText("联繫电话：" + orderBean.getMember().getMobile());
+                            memberNameTv.setText("会员：" + orderBean.getMember().getLast_name() + orderBean.getMember().getFirst_name());
+                            if (orderBean.getInvoiceitem() != null)
+                                for (OrderBean.InvoiceitemBean.TransactionitemBean bean : orderBean.getInvoiceitem().getTransactionitem()) {
+                                    Log.e("test","getPaymentmethod:" + bean.getPaymentmethod());
+                                    if (bean.getPaymentmethod().equals("信用卡")) {
+                                        cardMoneyTv.setText(bean.getAmount());
+                                    } else if (bean.getPaymentmethod().equals("现金")) {
+                                        cashMoneyTv.setText(bean.getAmount());
+                                    } else if (bean.getPaymentmethod().equals("现金券")) {
+                                        cashCouponTv.setText(bean.getAmount());
+                                    } else if (bean.getPaymentmethod().equals("支付宝")) {
+                                        alipayTv.setText(bean.getAmount());
+                                    } else if (bean.getPaymentmethod().equals("微信支付")) {
+                                        wechatpayTv.setText(bean.getAmount());
+                                    }
+                                }
+                            goodList.addAll(orderBean.getItems());
+                            countTv.setText(goodList.size() + "件|" + orderBean.getItemsweight() + "g");
+                            goodsAdapter.notifyDataSetChanged();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            customDialog.dismiss();
+                        }
+                    });
+        }
     }
 
     public static void printViews(final Activity activity, List<OrderBean.ItemsBean> goodList, String orderNumber,
@@ -150,7 +188,16 @@ public class OrderDetialActivity extends BaseActivity {
                     extraList.add(templist.get(t + perPageSize * i));
                 }
             }
-            final View printView = LayoutInflater.from(activity).inflate(R.layout.dialog_preview, null);
+            int layoutid = 0;
+            if (MyApplication.getContext().region.equals("中国大陆")) {
+                layoutid = R.layout.dialog_preview;
+            } else {
+                layoutid = R.layout.dialog_preview2;
+            }
+            final View printView = LayoutInflater.from(activity).inflate(layoutid, null);
+            ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.getContext().storeName);
+            ((TextView) printView.findViewById(R.id.address_tv)).setText(MyApplication.getContext().storeAddress);
+            ((TextView) printView.findViewById(R.id.tel_tv)).setText(MyApplication.getContext().storeTel);
             ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
             ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
             ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
@@ -218,7 +265,7 @@ public class OrderDetialActivity extends BaseActivity {
         for (OrderBean.ItemsBean bean : goodList) {
             if (bean.isSelected()) {
                 if (bean.getStock().getProduct().getCatalog().equals("其他") && isReturn) {
-                    Toast.makeText(OrderDetialActivity.this, "只有黃金類型商品才能進行回收", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(OrderDetialActivity.this, "只有黄金类型商品才能进行回收", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 checkedGoodList.add(bean);

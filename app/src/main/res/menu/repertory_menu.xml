@@ -2,10 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu0"
-        android:title="店鋪倉"/>
+        android:title="主仓库"/>
 
     <item
         android:id="@+id/menu1"
-        android:title="回收倉"/>
+        android:title="回收仓"/>
 
 </menu>

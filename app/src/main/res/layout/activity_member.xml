@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="會員"
+            android:text="会员"
             android:textColor="#fff"
             android:textSize="20sp" />
 
@@ -46,7 +46,7 @@
             android:layout_marginRight="16dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_gravity="center_vertical|right"
-            android:text="註冊"
+            android:text="注册"
             android:textColor="#fff"
             android:textSize="18sp" />
 
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:text="電話"
+                android:text="电话"
                 android:textColor="@color/blue_text"
                 android:textSize="13sp" />
 
@@ -92,7 +92,7 @@
                 android:background="@null"
                 android:inputType="number"
                 android:imeOptions="actionDone"
-                android:hint="請輸入手機號碼"
+                android:hint="请输入手机号码"
                 android:textSize="15sp"
                 android:layout_width="0dp"
                 android:layout_weight="1"
@@ -105,7 +105,7 @@
     <TextView
         android:textSize="13sp"
         android:textColor="@color/blue_text"
-        android:text="請選擇"
+        android:text="请选择"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_width="wrap_content"

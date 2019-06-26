@@ -95,7 +95,7 @@
                     android:focusableInTouchMode="true"
                     android:imeOptions="actionDone"
                     android:inputType="text"
-                    android:hint="商品條碼或名稱"
+                    android:hint="商品条码或名称"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent" />
@@ -120,7 +120,7 @@
             android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:backgroundTint="#ffffff"
-            android:text="主倉庫"
+            android:text="主仓库"
             app:iconTint="#333"
             app:icon="@drawable/go_bottom"
             android:textColor="#333333"

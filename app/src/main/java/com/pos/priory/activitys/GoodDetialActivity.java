@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.priory.utils.OkHttp3Util;
 import com.pos.priory.utils.Okhttp3StringCallback;
 import com.pos.zxinglib.utils.DeviceUtil;
@@ -50,6 +52,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -63,6 +66,8 @@ import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * Created by Lenovo on 2018/12/31.
@@ -114,12 +119,12 @@ public class GoodDetialActivity extends BaseActivity {
         slefCount = 1;
         productcode = goodBean.getProduct().getProductcode() + "";
         titleTv.setText(goodname);
-        priceTv.setText("售價：" + goodBean.getProduct().getPrice());
+        priceTv.setText("售价：" + goodBean.getProduct().getPrice());
         Glide.with(this).load(Constants.BASE_URL_HTTP + goodBean.getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into(goodImg);
-        repertoryTv.setText("庫存：" + slefCount);
+        repertoryTv.setText("库存：" + slefCount);
 
         smartRefreshLayout.setEnableLoadMore(false);
         smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -143,7 +148,7 @@ public class GoodDetialActivity extends BaseActivity {
                 SwipeMenuItem tuihuoItem = new SwipeMenuItem(GoodDetialActivity.this)
                         .setBackgroundColor(ContextCompat.getColor(GoodDetialActivity.this, R.color.drag_btn_green))
                         .setImage(R.drawable.icon_dinghuo)
-                        .setText("退貨")
+                        .setText("退货")
                         .setTextColor(Color.WHITE)
                         .setHeight(DeviceUtil.dip2px(GoodDetialActivity.this, 91))//设置高，这里使用match_parent，就是与item的高相同
                         .setWidth(DeviceUtil.dip2px(GoodDetialActivity.this, 100));//设置宽
@@ -151,7 +156,7 @@ public class GoodDetialActivity extends BaseActivity {
                 SwipeMenuItem diaohuoItem = new SwipeMenuItem(GoodDetialActivity.this)
                         .setBackgroundColor(ContextCompat.getColor(GoodDetialActivity.this, R.color.drag_btn_red))
                         .setImage(R.drawable.icon_dinghuo)
-                        .setText("調貨")
+                        .setText("调货")
                         .setTextColor(Color.WHITE)
                         .setHeight(DeviceUtil.dip2px(GoodDetialActivity.this, 91))//设置高，这里使用match_parent，就是与item的高相同
                         .setWidth(DeviceUtil.dip2px(GoodDetialActivity.this, 100));//设置宽
@@ -184,14 +189,14 @@ public class GoodDetialActivity extends BaseActivity {
     private void showIsReturnDialog(final int adapterPosition) {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle("提示")
-                .setMessage("是否確定要退貨該商品？")
+                .setMessage("是否确定要退货该商品？")
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 })
-                .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -203,9 +208,10 @@ public class GoodDetialActivity extends BaseActivity {
     }
 
     CustomDialog customDialog;
+
     private void doReturnStock(int pos) {
         if (customDialog == null)
-            customDialog = new CustomDialog(this, "提货中..");
+            customDialog = new CustomDialog(this, "退货中..");
         customDialog.show();
         GoodBean goodBean = orderList.get(pos);
         RetrofitManager.createString(ApiService.class).returnStockById(goodBean.getId())
@@ -226,122 +232,110 @@ public class GoodDetialActivity extends BaseActivity {
                 });
     }
 
-    int yourChoice = 0;
-    String[] stores = new String[]{"高士德店", "揚名廣場店", "拱北萬家店"};
+    int yourChoice = -1;
+    List<String> stores = new ArrayList<>();
+    List<Integer> storeIds = new ArrayList<>();
 
     private void showChoiceDiscountDialog(final int position) {
-        AlertDialog.Builder singleChoiceDialog =
-                new AlertDialog.Builder(this);
-        singleChoiceDialog.setTitle("請選擇調撥店鋪");
-        // 第二个参数是默认选项，此处设置为0
-        ListAdapter adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_single_choice, stores);
-        singleChoiceDialog.setSingleChoiceItems(adapter, yourChoice,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        yourChoice = which;
-                    }
-                });
-        singleChoiceDialog.setPositiveButton("確定",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (yourChoice != -1) {
-
+        try {
+            JSONArray jsonArray = new JSONArray(MyApplication.getContext().storeListJsonString);
+            stores.clear();
+            storeIds.clear();
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                stores.add(jsonObject.getString("name"));
+                storeIds.add(jsonObject.getInt("id"));
+            }
+            AlertDialog.Builder singleChoiceDialog =
+                    new AlertDialog.Builder(this);
+            singleChoiceDialog.setTitle("请选择调拨店铺");
+            // 第二个参数是默认选项，此处设置为0
+            ListAdapter adapter = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_list_item_single_choice, stores);
+            singleChoiceDialog.setSingleChoiceItems(adapter, yourChoice,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            yourChoice = which;
                         }
-                        dialog.dismiss();
-                    }
-                });
-        singleChoiceDialog.create().show();
+                    });
+            singleChoiceDialog.setPositiveButton("确定",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (yourChoice != -1) {
+                                doExchange(storeIds.get(yourChoice), orderList.get(position).getId());
+                            }
+                            dialog.dismiss();
+                        }
+                    });
+            singleChoiceDialog.create().show();
+        } catch (Exception e) {
+
+        }
     }
 
-
-
-    private void allocateElseStock(final int stockid, int elseStoreCount, final int changeCount) {
+    private void doExchange(int storeid, int stockid) {
         if (customDialog == null)
-            customDialog = new CustomDialog(this, "訂貨中..");
+            customDialog = new CustomDialog(this, "调货中..");
+        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                customDialog = null;
+            }
+        });
         customDialog.show();
-        Map<String, Object> map = new HashMap<>();
-        map.put("quantity", elseStoreCount - changeCount);
-        OkHttp3Util.doPatchWithToken(Constants.GET_STOCK_URL + "/" + stockid + "/update/", gson.toJson(map),
-                new Okhttp3StringCallback(this, "allocateElseStock") {
+        Map<String, Object> paramMap = new HashMap<>();
+        List<Map<String, Object>> stocktransfer  = new ArrayList<>();
+        Map<String, Object> stocktransferMap = new HashMap<>();
+        stocktransferMap.put("storeid", storeid);
+        stocktransferMap.put("stockid", stockid);
+        stocktransfer.add(stocktransferMap);
+        paramMap.put("stocktransfer", stocktransfer);
+        Log.e("test","params:" + gson.toJson(paramMap));
+        RetrofitManager.createString(ApiService.class).tranferGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
                     @Override
-                    public void onSuccess(String results) throws Exception {
-                        allocateSelfStock(goodBean.getId(), stockid, changeCount);
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(String s) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(GoodDetialActivity.this, "調撥失敗", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void allocateSelfStock(final int stockid, final int elseStockid, final int changeCount) {
-        Map<String, Object> map = new HashMap<>();
-        slefCount += changeCount;
-        map.put("quantity", slefCount);
-        OkHttp3Util.doPatchWithToken(Constants.GET_STOCK_URL + "/" + stockid + "/update/", gson.toJson(map),
-                new Okhttp3StringCallback(this, "allocateSelfStock") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        customDialog.dismiss();
-                        repertoryTv.setText(slefCount + "");
-                        Toast.makeText(GoodDetialActivity.this, "調撥成功", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showShort("调货成功");
                         smartRefreshLayout.autoRefresh();
-                        createStockTransaction(changeCount, stockid, elseStockid);
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onFailed(String erromsg) {
+                    public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
-                        slefCount -= changeCount;
-                        Toast.makeText(GoodDetialActivity.this, "調撥失敗", Toast.LENGTH_SHORT).show();
+                        ToastUtils.showShort("调货失败");
                     }
                 });
     }
 
-    private void createStockTransaction(final int changeCount, int selfId, int elseid) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("stockout", selfId);
-        map.put("stockin", elseid);
-        map.put("quantity", changeCount);
-        OkHttp3Util.doPostWithToken(Constants.GET_STOCK_TRANSACTIONS_URL + "/", gson.toJson(map),
-                new Okhttp3StringCallback(this, "createStockTransaction") {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-
-                    }
-                });
-    }
 
     private void refreshRecyclerView(boolean isLoadMore) {
         if (!isLoadMore) {
             orderList.clear();
             goodDetialAdapter.notifyDataSetChanged();
         }
-        RetrofitManager.createString(ApiService.class).getStockListByProductCode(productcode)
+        RetrofitManager.createString(ApiService.class).getStockListByParam(productcode)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
                         JSONObject jsonObject = new JSONObject(s);
-                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("stockitem").toString(), new TypeToken<List<GoodBean>>() {
+                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<GoodBean>>() {
                         }.getType());
                         if (goodBeanList != null) {
                             orderList.addAll(goodBeanList);
                             goodDetialAdapter.notifyDataSetChanged();
-                            repertoryTv.setText("庫存：" + orderList.size());
-                            priceTv.setText("售價：" + goodBeanList.get(0).getProduct().getPrice());
-                            weightTv.setText("庫存重量：" + jsonObject.getDouble("productweight") + "g");
-                            if(jsonObject.getDouble("productweight") == 0){
+                            repertoryTv.setText("库存：" + orderList.size());
+                            priceTv.setText("售价：" + goodBeanList.get(0).getProduct().getPrice());
+                            double sumweight = 0;
+                            for(GoodBean goodBean : goodBeanList){
+                                sumweight += goodBean.getWeight();
+                            }
+                            weightTv.setText("库存重量：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumweight) + "g");
+                            if (sumweight == 0) {
                                 weightTv.setVisibility(View.GONE);
                             }
                         }
@@ -360,7 +354,7 @@ public class GoodDetialActivity extends BaseActivity {
 
     private void doDingHuo(final GoodBean bean, final int count) {
         if (customDialog == null)
-            customDialog = new CustomDialog(this, "訂貨中..");
+            customDialog = new CustomDialog(this, "订货中..");
         customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
@@ -368,26 +362,25 @@ public class GoodDetialActivity extends BaseActivity {
             }
         });
         customDialog.show();
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("product", bean.getProduct().getId());
-        map.put("quantity",count);
+        map.put("quantity", count);
         RetrofitManager.createString(ApiService.class).createPurchasingitem(map)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(GoodDetialActivity.this, "訂貨成功", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GoodDetialActivity.this, "订货成功", Toast.LENGTH_SHORT).show();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(GoodDetialActivity.this, "訂貨失敗", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GoodDetialActivity.this, "订货失败", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-
 
 
     @OnClick({R.id.back_btn, R.id.btn_dinghuo})
@@ -428,11 +421,11 @@ public class GoodDetialActivity extends BaseActivity {
                 @Override
                 public void onClick(View view) {
                     if (edt_count.getText().toString().equals("")) {
-                        Toast.makeText(GoodDetialActivity.this, "請輸入數量", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GoodDetialActivity.this, "请输入数量", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     int count = Integer.parseInt(edt_count.getText().toString());
-                    doDingHuo(goodBean,count);
+                    doDingHuo(goodBean, count);
                     actionDialog.dismiss();
                 }
             });

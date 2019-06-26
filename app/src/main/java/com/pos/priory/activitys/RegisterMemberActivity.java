@@ -69,7 +69,7 @@ public class RegisterMemberActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        titleTv.setText("註冊會員");
+        titleTv.setText("注册会员");
         rightImg.setVisibility(View.GONE);
     }
 
@@ -82,7 +82,7 @@ public class RegisterMemberActivity extends BaseActivity {
             yourChoice = 0;
             AlertDialog.Builder singleChoiceDialog =
                     new AlertDialog.Builder(this);
-            singleChoiceDialog.setTitle("請選擇性別");
+            singleChoiceDialog.setTitle("请选择性别");
             // 第二个参数是默认选项，此处设置为0
             singleChoiceDialog.setSingleChoiceItems(items, yourChoice,
                     new DialogInterface.OnClickListener() {
@@ -91,7 +91,7 @@ public class RegisterMemberActivity extends BaseActivity {
                             yourChoice = which;
                         }
                     });
-            singleChoiceDialog.setPositiveButton("確定",
+            singleChoiceDialog.setPositiveButton("确定",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -127,8 +127,8 @@ public class RegisterMemberActivity extends BaseActivity {
                     Toast.makeText(RegisterMemberActivity.this, "姓和电话都不可为空", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (btnSex.getText().toString().equals("請點擊選擇性別")) {
-                    Toast.makeText(RegisterMemberActivity.this, "請選擇性別", Toast.LENGTH_SHORT).show();
+                if (btnSex.getText().toString().equals("请点击选择性别")) {
+                    Toast.makeText(RegisterMemberActivity.this, "请选择性别", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -178,7 +178,7 @@ public class RegisterMemberActivity extends BaseActivity {
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
                         if (throwable.getMessage().contains("400")) {
-                            Toast.makeText(RegisterMemberActivity.this, "該手機號已經注冊", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterMemberActivity.this, "该手机号已经注册", Toast.LENGTH_SHORT).show();
                         } else
                             Toast.makeText(RegisterMemberActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
                     }

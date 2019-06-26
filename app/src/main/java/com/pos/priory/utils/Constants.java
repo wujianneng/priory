@@ -17,7 +17,6 @@ public class Constants {
     public static final Double RETURN_GOOD_RAGE = 1D;
 
     //Api
-    public static final String BASE_URL = "https://pos.annabellaip.com/";
     public static final String LOGIN_URL = "https://pos.annabellaip.com/api/rest-auth/login/";
     public static final String STAFF_INFO_URL = "https://pos.annabellaip.com/api/staff";
     public static final String GET_ORDERS_URL = "https://pos.annabellaip.com/api/orders";

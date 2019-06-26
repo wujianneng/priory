@@ -103,7 +103,7 @@ public class BillActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        titleTv.setText("賬單");
+        titleTv.setText("账单");
         rightImg.setVisibility(View.GONE);
         orderNumberTv.setText(getIntent().getStringExtra("ordernumber"));
         createDateTv.setText(DateUtils.getCurrentTime());
@@ -136,7 +136,7 @@ public class BillActivity extends BaseActivity {
 
 
     public static void printViews(final Activity activity, List<GoodBean> goodList, String orderNumber,
-                                                String memberName, String createDate, double sumMoney, int storeid) {
+                                  String memberName, String createDate, double sumMoney, int storeid) {
         List<View> views = new ArrayList<>();
         List<GoodBean> templist = new ArrayList<>();
         templist.addAll(goodList);
@@ -158,7 +158,16 @@ public class BillActivity extends BaseActivity {
                     extraList.add(templist.get(t + perPageSize * i));
                 }
             }
-            final View printView = LayoutInflater.from(activity).inflate(R.layout.dialog_preview, null);
+            int layoutid = 0;
+            if (MyApplication.getContext().region.equals("中国大陆")) {
+                layoutid = R.layout.dialog_preview;
+            } else {
+                layoutid = R.layout.dialog_preview2;
+            }
+            final View printView = LayoutInflater.from(activity).inflate(layoutid, null);
+            ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.getContext().storeName);
+            ((TextView) printView.findViewById(R.id.address_tv)).setText(MyApplication.getContext().storeAddress);
+            ((TextView) printView.findViewById(R.id.tel_tv)).setText(MyApplication.getContext().storeTel);
             ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
             ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
             ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
@@ -174,7 +183,7 @@ public class BillActivity extends BaseActivity {
             views.add(printView);
         }
         Log.e("test", "viewsize:" + views.size());
-       print(activity, views);
+        print(activity, views);
     }
 
 
@@ -194,15 +203,15 @@ public class BillActivity extends BaseActivity {
 //        A5 - 148x210
         List<Bitmap> bitmaps = new ArrayList<>();
         MyPrintHelper myPrintHelper = new MyPrintHelper(activity);
-        for(int i = 0 ; i < views.size() ; i++){
+        for (int i = 0; i < views.size(); i++) {
             View view = views.get(i);
-            Log.e("test", "bitmapsfor:" + i );
+            Log.e("test", "bitmapsfor:" + i);
             Bitmap bitmap = BitmapUtils.loadBitmapFromViewBySystem(view, DeviceUtil.dip2px(activity, 444), DeviceUtil.dip2px(activity, 630));
-            Log.e("test", "bitmapsfora:" + i );
+            Log.e("test", "bitmapsfora:" + i);
             bitmaps.add(bitmap);
         }
         Log.e("test", "bitmaps:" + bitmaps.size());
-        myPrintHelper.printBitmap("jpgTestPrint",bitmaps);
+        myPrintHelper.printBitmap("jpgTestPrint", bitmaps);
 
     }
 

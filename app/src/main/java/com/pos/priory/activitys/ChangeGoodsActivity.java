@@ -60,7 +60,7 @@ public class ChangeGoodsActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        titleTv.setText("換貨單");
+        titleTv.setText("换货单");
         rightImg.setVisibility(View.GONE);
         goodList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
                 new TypeToken<List<OrderBean.ItemsBean>>() {

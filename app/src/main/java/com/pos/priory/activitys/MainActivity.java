@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
@@ -43,6 +44,7 @@ import com.pos.priory.utils.DateUtils;
 import com.pos.priory.utils.UpgradeUtils;
 import com.pos.zxinglib.MipcaActivityCapture;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -91,6 +93,32 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getAppVersionFromServer();
+        getStoreList();
+    }
+
+    private void getStoreList() {
+        RetrofitManager.createString(ApiService.class).getAppStoreList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        JSONArray jsonArray = new JSONArray(s);
+                        if(jsonArray.length() != 0){
+                            MyApplication.getContext().storeListJsonString = s;
+                            for(int i = 0 ; i < jsonArray.length() ;i++){
+                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                                if(jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getStore())){
+                                    MyApplication.getContext().storeName = jsonObject.getString("name");
+                                    MyApplication.getContext().storeAddress = jsonObject.getString("address");
+                                    MyApplication.getContext().storeTel = jsonObject.getString("tel");
+                                    MyApplication.getContext().region = jsonObject.getString("region");
+                                }
+                            }
+                        }
+
+                    }
+                });
     }
 
     private void getAppVersionFromServer() {
@@ -117,11 +145,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        List<StaffInfoBean> staffInfoBeanList = gson.fromJson(sharedPreferences.getString(Constants.CURRENT_STAFF_INFO_KEY, ""),
-                new TypeToken<List<StaffInfoBean>>() {
-                }.getType());
-        MyApplication.staffInfoBean = staffInfoBeanList.get(0);
-
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -144,11 +167,11 @@ public class MainActivity extends BaseActivity {
         navigation.setMode(BottomNavigationBar.MODE_FIXED);
         navigation.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
         navigation.setInActiveColor(R.color.blue_text);
-        navigation.addItem(new BottomNavigationItem(R.drawable.tab_order, "訂單"))
-                .addItem(new BottomNavigationItem(R.drawable.tab_query, "查單"))
-                .addItem(new BottomNavigationItem(R.drawable.tab_repertory, "倉庫"))
-                .addItem(new BottomNavigationItem(R.drawable.tab_inventory, "盤點"))
-                .addItem(new BottomNavigationItem(R.drawable.data, "數據"))
+        navigation.addItem(new BottomNavigationItem(R.drawable.tab_order, "订单"))
+                .addItem(new BottomNavigationItem(R.drawable.tab_query, "查单"))
+                .addItem(new BottomNavigationItem(R.drawable.tab_repertory, "仓库"))
+                .addItem(new BottomNavigationItem(R.drawable.tab_inventory, "盘点"))
+                .addItem(new BottomNavigationItem(R.drawable.data, "数据"))
                 .setFirstSelectedPosition(0)
                 .initialise();
         navigation.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
@@ -156,7 +179,7 @@ public class MainActivity extends BaseActivity {
             public void onTabSelected(int position) {
                 switch (position) {
                     case 0:
-                        titleTv.setText("訂 單");
+                        titleTv.setText("订 单");
                         settingImg.setVisibility(View.VISIBLE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
@@ -176,7 +199,7 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(datasFragment).commit();
                         break;
                     case 1:
-                        titleTv.setText("查 單");
+                        titleTv.setText("查 单");
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
@@ -197,7 +220,7 @@ public class MainActivity extends BaseActivity {
 //                        queryFragment.showKeyBord();
                         break;
                     case 2:
-                        titleTv.setText("倉 庫");
+                        titleTv.setText("仓 库");
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.VISIBLE);
                         repertorySearchLayout.setVisibility(View.VISIBLE);
@@ -217,7 +240,7 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(datasFragment).commit();
                         break;
                     case 3:
-                        titleTv.setText("盤 點");
+                        titleTv.setText("盘 点");
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
@@ -237,7 +260,7 @@ public class MainActivity extends BaseActivity {
                             getSupportFragmentManager().beginTransaction().hide(datasFragment).commit();
                         break;
                     case 4:
-                        titleTv.setText("數 據");
+                        titleTv.setText("数 据");
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
@@ -357,10 +380,13 @@ public class MainActivity extends BaseActivity {
     }
 
     public void getDayReport(){
-        RetrofitManager.createString(ApiService.class).getDayReport().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        RetrofitManager.createString(ApiService.class).getDayReport()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
+                        Log.e("test","result:" + s);
                         DayReportBean dayReportBean = gson.fromJson(s,DayReportBean.class);
                         printGoldTable(dayReportBean);
                     }
@@ -373,6 +399,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void printGoldTable(DayReportBean dayReportBean) {
+        Log.e("test", "printGoldTable");
         List<View> views = new ArrayList<>();
         List<DayReportBean.ItemsBean> templist = new ArrayList<>();
         templist.addAll(dayReportBean.getItems());
@@ -410,7 +437,13 @@ public class MainActivity extends BaseActivity {
                     extraList.add(templist.get(t + perPageSize * i));
                 }
             }
-            final View printView = LayoutInflater.from(MainActivity.this).inflate(R.layout.gold_daliy_table, null);
+            int layoutid = 0;
+            if (MyApplication.getContext().region.equals("中国大陆")) {
+                layoutid = R.layout.gold_daliy_table;
+            } else {
+                layoutid = R.layout.gold_daliy_table2;
+            }
+            final View printView = LayoutInflater.from(MainActivity.this).inflate(layoutid, null);
             if(!extraList.get(0).isReturnItem()){
                 printView.findViewById(R.id.list_title_layout0).setVisibility(View.VISIBLE);
                 printView.findViewById(R.id.list_title_layout1).setVisibility(View.GONE);

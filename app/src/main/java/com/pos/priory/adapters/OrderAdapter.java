@@ -28,7 +28,7 @@ public class OrderAdapter extends BaseQuickAdapter<OrderBean, BaseViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        if(DateUtils.covertIso8601ToDate2(data.get(position).getCreated()).equals(DateUtils.getToday()))
+        if(MyApplication.staffInfoBean.getPermission().equals("店长") ? true : false)
             return 0;
         else
             return 1;
@@ -36,10 +36,9 @@ public class OrderAdapter extends BaseQuickAdapter<OrderBean, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, OrderBean item) {
-        helper.setVisible(R.id.right_line,DateUtils.covertIso8601ToDate2(item.getCreated()).equals(DateUtils.getToday())
-                && MyApplication.staffInfoBean.getPermission().equals("店長") ? true : false);
+        helper.setVisible(R.id.right_line,MyApplication.staffInfoBean.getPermission().equals("店长") ? true : false);
         helper.setText(R.id.detial_tv, item.getMember().getMobile());
-        helper.setText(R.id.date_tv,DateUtils.covertIso8601ToDate(item.getCreated()));
+        helper.setText(R.id.date_tv,item.getCreated());
         helper.setText(R.id.money_tv, "" + item.getTotalprice());
         helper.setText(R.id.name_tv,item.getMember().getLast_name() + item.getMember().getFirst_name());
         helper.setImageResource(R.id.sex_img,item.getMember().getSex().equals("男") ? R.drawable.icon_boy : R.drawable.icon_girl);

@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:text="訂貨"
+                android:text="订货"
                 android:gravity="center"
                 android:textColor="@color/colorAccent"
                 android:textSize="11sp" />

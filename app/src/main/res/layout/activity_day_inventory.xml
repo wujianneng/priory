@@ -34,7 +34,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_toRightOf="@+id/icon_good"
-                android:text="黃金"
+                android:text="黄金"
                 android:textColor="#000000"
                 android:textSize="20sp" />
 
@@ -58,7 +58,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="30dp"
                 android:background="@drawable/input_bg"
-                android:hint="請輸入數量"
+                android:hint="请输入数量"
                 android:textColor="@color/drag_btn_green"
                 android:inputType="numberDecimal"
                 android:paddingLeft="10dp"
@@ -129,7 +129,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="30dp"
                 android:background="@drawable/input_bg"
-                android:hint="請輸入數量"
+                android:hint="请输入数量"
                 android:textColor="@color/drag_btn_green"
                 android:inputType="numberDecimal"
                 android:paddingLeft="10dp"
@@ -176,7 +176,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
                 android:layout_toRightOf="@+id/icon_good"
-                android:text="手繩"
+                android:text="手绳"
                 android:textColor="#000000"
                 android:textSize="20sp" />
 
@@ -200,7 +200,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="30dp"
                 android:background="@drawable/input_bg"
-                android:hint="請輸入數量"
+                android:hint="请输入数量"
                 android:textColor="@color/drag_btn_green"
                 android:inputType="numberDecimal"
                 android:paddingLeft="10dp"
@@ -273,7 +273,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="30dp"
                 android:background="@drawable/input_bg"
-                android:hint="請輸入數量"
+                android:hint="请输入数量"
                 android:textColor="@color/drag_btn_green"
                 android:inputType="numberDecimal"
                 android:paddingLeft="10dp"

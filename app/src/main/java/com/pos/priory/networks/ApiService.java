@@ -33,7 +33,7 @@ public interface ApiService {
     Observable<String> resetPassword(@FieldMap Map<String,Object> map);//修改密碼接口
 
     @GET("/api/app/staff")
-    Observable<String> getStaffInfo(@Query("user") String username);//獲取員工信息
+    Observable<String> getStaffInfo(@Query("user__username") String username);//獲取員工信息
 
     @GET("/api/data/goldprice")
     Observable<String> getCurrentGoldPrice();//獲取當前金價
@@ -63,6 +63,9 @@ public interface ApiService {
     @GET("/api/orders")
     Observable<String> getOrdersByOrdernumber(@Query("search") String ordernumber);//通过订单号码查询订单
 
+    @GET("/api/orders/{id}")
+    Observable<String> getOrderByOrderId(@Path("id") int id);//通过订单id查询订单
+
     @GET("/api/orders")
     Observable<String> getOrdersByDate(@Query("date") String date);//通过日期查询订单
 
@@ -75,17 +78,14 @@ public interface ApiService {
     @GET("/api/warehouse/stocks")
     Observable<String> getStockLists();//获取所有商品
 
+    @GET("/api/warehouse/stocks/count")
+    Observable<String> getStockSumDatas();//获取倉庫的統計數據
+
     @GET("/api/warehouse/returnstock")
     Observable<String> getReturnStockLists();//获取回收艙所有商品
 
     @GET("/api/warehouse/stocks")
-    Observable<String> getStockListByQrCode(@Query("qrcode") String productcode);//通过商品二维码查询商品
-
-    @GET("/api/warehouse/stocks")
-    Observable<String> getStockListByProductCode(@Query("productcode") String productcode);//通过商品条码查询商品
-
-    @GET("/api/warehouse/stocks")
-    Observable<String> getStockListByName(@Query("productname") String name);//通过商品名查询商品
+    Observable<String> getStockListByParam(@Query("search") String param);//通过商品二维码/商品条码/商品名 查询商品
 
     @GET("/api/app/store/list")
     Observable<String> getTranStores();//可调货店铺列表
@@ -141,4 +141,6 @@ public interface ApiService {
     @GET("/api/app/version/list")
     Observable<String> getAppVersionCode();//獲取應用版本號
 
+    @GET("/api/app/store/list")
+    Observable<String> getAppStoreList();//獲取店鋪列表
 }

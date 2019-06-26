@@ -173,9 +173,9 @@ public class AddNewOrderActivity extends BaseActivity {
         memberMobile = getIntent().getStringExtra("memberMobile");
         memberReward = getIntent().getIntExtra("memberReward", 0);
         memberName = getIntent().getStringExtra("memberName");
-        memberNameTv.setText("會員：" + memberName);
-        memberPhoneTv.setText("聯繫電話：" + memberMobile);
-        memberRewardTv.setText("積分：" + memberReward);
+        memberNameTv.setText("会员：" + memberName);
+        memberPhoneTv.setText("联繫电话：" + memberMobile);
+        memberRewardTv.setText("积分：" + memberReward);
     }
 
     List<String> discountNames = new ArrayList<>();
@@ -190,7 +190,7 @@ public class AddNewOrderActivity extends BaseActivity {
             sumWeight += bean.getWeight();
         }
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
-        countTv.setText(goodList.size() + "件|" + sumWeight + "g");
+        countTv.setText(goodList.size() + "件|" + LogicUtils.getKeepLastTwoNumberAfterLittlePoint(sumWeight) + "g");
     }
 
     int yourChoice;
@@ -204,9 +204,9 @@ public class AddNewOrderActivity extends BaseActivity {
                 discountNames.add(bean.getName());
             }
             if (discountNames.size() == 0) {
-                discountNames.add("無折扣");
+                discountNames.add("无折扣");
             }
-            if (discountNames.size() == 1 && discountNames.get(0).equals("無折扣")) {
+            if (discountNames.size() == 1 && discountNames.get(0).equals("无折扣")) {
                 yourChoice = 0;
             } else {
                 for (int i = 0; i < goodList.get(position).getProduct().getCatalog().getDiscounts().size(); i++) {
@@ -218,7 +218,7 @@ public class AddNewOrderActivity extends BaseActivity {
             Log.e("yourChoice", "yourChoice:" + yourChoice);
             AlertDialog.Builder singleChoiceDialog =
                     new AlertDialog.Builder(this);
-            singleChoiceDialog.setTitle("請選擇折扣");
+            singleChoiceDialog.setTitle("请选择折扣");
             // 第二个参数是默认选项，此处设置为0
             ListAdapter adapter = new ArrayAdapter<String>(AddNewOrderActivity.this,
                     android.R.layout.simple_list_item_single_choice, discountNames);
@@ -229,12 +229,12 @@ public class AddNewOrderActivity extends BaseActivity {
                             yourChoice = which;
                         }
                     });
-            singleChoiceDialog.setPositiveButton("確定",
+            singleChoiceDialog.setPositiveButton("确定",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (yourChoice != -1) {
-                                if (discountNames.size() == 1 && discountNames.get(0).equals("無折扣")) {
+                                if (discountNames.size() == 1 && discountNames.get(0).equals("无折扣")) {
                                     editOrderItemOnOperate(position, 1,1, "调折扣");
                                 } else {
                                     editOrderItemOnOperate(position, new BigDecimal(goodList.get(position).getProduct().getCatalog().getDiscounts().get(yourChoice).getValue()).doubleValue(),
@@ -267,7 +267,7 @@ public class AddNewOrderActivity extends BaseActivity {
             case R.id.btn_next:
                 if(changeGoodsMoeny == 0){
                     if (sumMoney <= 0) {
-                        Toast.makeText(AddNewOrderActivity.this, "請先增加購買商品", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddNewOrderActivity.this, "请先增加购买商品", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }else {
@@ -348,7 +348,7 @@ public class AddNewOrderActivity extends BaseActivity {
 
     private void getGoodBeanByCode(String productcode) {
         if(productExitInList(productcode)){
-            Toast.makeText(AddNewOrderActivity.this, "已增加該商品", Toast.LENGTH_SHORT).show();
+            Toast.makeText(AddNewOrderActivity.this, "已增加该商品", Toast.LENGTH_SHORT).show();
             return;
         }
         if (customDialog == null)
@@ -361,14 +361,14 @@ public class AddNewOrderActivity extends BaseActivity {
         });
         customDialog.show();
         RetrofitManager.createString(ApiService.class)
-                .getStockListByQrCode(productcode)
+                .getStockListByParam(productcode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
                         JSONObject jsonObject = new JSONObject(s);
-                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("stockitem").toString(), new TypeToken<List<GoodBean>>() {
+                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<GoodBean>>() {
                         }.getType());
                         if (goodBeanList != null && goodBeanList.size() != 0 && goodBeanList.get(0).getQuantity() > 0) {
                             customDialog.dismiss();

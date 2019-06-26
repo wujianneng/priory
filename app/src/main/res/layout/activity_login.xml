@@ -22,7 +22,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:text="賬號："
+                android:text="账号："
                 android:textColor="#4A4A4A"
                 android:textSize="18sp"
                 android:layout_width="60dp"
@@ -35,7 +35,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
                 android:background="@null"
-                android:hint="請輸入賬號"
+                android:hint="请输入账号"
                 android:inputType="text"
                 android:textColor="#4A4A4A"
                 android:textSize="18sp" />
@@ -57,12 +57,12 @@
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
-          <TextView
-              android:text="密碼："
-              android:textColor="#4A4A4A"
-              android:textSize="18sp"
-              android:layout_width="60dp"
-              android:layout_height="wrap_content" />
+            <TextView
+                android:text="密码："
+                android:textColor="#4A4A4A"
+                android:textSize="18sp"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content" />
 
             <EditText
                 android:id="@+id/edt_passwrod"
@@ -71,7 +71,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="20dp"
                 android:background="@null"
-                android:hint="請輸入密碼"
+                android:hint="请输入密码"
                 android:inputType="textPassword"
                 android:textColor="#4A4A4A"
                 android:textSize="18sp" />
@@ -93,11 +93,11 @@
         android:layout_marginTop="40dp"
         android:layout_gravity="center_horizontal"
         android:background="@color/colorAccent"
-        android:text="登  錄"
+        android:text="登  录"
         android:textColor="#ffffff"
         android:textSize="20sp"
         app:cornerRadius="28dp"
-         />
+        />
 
     <LinearLayout
         android:layout_width="230dp"
@@ -120,7 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="記住密碼"
+            android:text="记住密码"
             android:textColor="@color/colorAccent"
             android:textSize="15sp" />
     </LinearLayout>

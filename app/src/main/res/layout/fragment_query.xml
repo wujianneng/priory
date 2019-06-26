@@ -20,7 +20,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:textSize="18sp"
             android:textColor="@color/colorAccent"
-            android:text="會員"
+            android:text="会员"
             android:layout_width="60dp"
             android:layout_height="match_parent" />
 
@@ -32,7 +32,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:textSize="18sp"
             android:textColor="@color/blue_text"
-            android:text="訂單號"
+            android:text="订单号"
             android:layout_width="60dp"
             android:layout_height="match_parent" />
 
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="電話"
+                    android:text="电话"
                     android:textColor="@color/blue_text"
                     android:textSize="13sp" />
 
@@ -99,7 +99,7 @@
                     android:layout_marginLeft="16dp"
                     android:background="@null"
                     android:inputType="phone"
-                    android:hint="請輸入手機號碼"
+                    android:hint="请输入手机号码"
                     android:imeOptions="actionDone"
                     android:textSize="15sp"
                     android:layout_width="0dp"
@@ -112,7 +112,7 @@
                     android:background="@null"
                     android:inputType="number"
                     android:visibility="gone"
-                    android:hint="請輸入訂單號"
+                    android:hint="请输入订单号"
                     android:imeOptions="actionDone"
                     android:textSize="15sp"
                     android:layout_width="0dp"
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
-                    android:text="請選擇日期"
+                    android:text="请选择日期"
                     android:textColor="#4a4a4a"
                     android:textSize="15sp" />
 
@@ -180,7 +180,7 @@
         <TextView
             android:textSize="13sp"
             android:textColor="#ccc"
-            android:text="請選擇"
+            android:text="请选择"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"

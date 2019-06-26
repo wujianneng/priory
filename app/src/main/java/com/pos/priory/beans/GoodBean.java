@@ -1,5 +1,7 @@
 package com.pos.priory.beans;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -7,6 +9,8 @@ import java.util.List;
  */
 
 public class GoodBean {
+
+
     /**
      * id : 3
      * stockno : 12345678
@@ -23,6 +27,9 @@ public class GoodBean {
     private int quantity;
     private int discountId = 1;
     private double discountRate;
+    /**
+     * weight : 1.2
+     */
 
     public int getQuantity() {
         return quantity;
@@ -87,6 +94,7 @@ public class GoodBean {
     public void setWeight(double weight) {
         this.weight = weight;
     }
+
 
     public static class ProductBean {
         /**

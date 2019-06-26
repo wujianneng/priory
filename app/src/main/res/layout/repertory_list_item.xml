@@ -47,7 +47,7 @@
             android:layout_toRightOf="@+id/icon_good"
             android:text="1023"
             android:textColor="#333333"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/count_tv"

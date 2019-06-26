@@ -28,7 +28,7 @@ public class DetialListActivity extends BaseActivity {
     @Override
     protected void initViews() {
         rightImg.setVisibility(View.GONE);
-        titleTv.setText("訂貨清單");
+        titleTv.setText("订货清单");
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

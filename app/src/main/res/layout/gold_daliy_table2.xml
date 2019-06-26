@@ -45,7 +45,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="门店日结表" />
+                    android:text="門店日結表" />
 
                 <View
                     android:layout_width="1dp"
@@ -100,7 +100,7 @@
                     android:textSize="10sp"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="白马行店" />
+                    android:text="白馬行店" />
 
                 <View
                     android:layout_width="1dp"
@@ -203,7 +203,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="总销售额" />
+                    android:text="總銷售額" />
 
                 <View
                     android:layout_width="1dp"
@@ -219,7 +219,7 @@
                     android:textSize="10sp"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="现金" />
+                    android:text="現金" />
 
                 <View
                     android:layout_width="1dp"
@@ -235,7 +235,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="现金券" />
+                    android:text="現金券" />
 
                 <View
                     android:layout_width="1dp"
@@ -267,7 +267,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="支付宝" />
+                    android:text="支付寶" />
 
                 <View
                     android:layout_width="1dp"
@@ -299,7 +299,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="退还" />
+                    android:text="退還" />
 
                 <View
                     android:layout_width="1dp"
@@ -517,7 +517,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="黄金" />
+                    android:text="黃金" />
 
                 <View
                     android:layout_width="1dp"
@@ -549,7 +549,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="手绳" />
+                    android:text="手繩" />
 
             </LinearLayout>
 
@@ -573,7 +573,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="销售额" />
+                    android:text="銷售額" />
 
                 <View
                     android:layout_width="1dp"
@@ -589,7 +589,7 @@
                     android:textSize="10sp"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="数量" />
+                    android:text="數量" />
 
                 <View
                     android:layout_width="1dp"
@@ -621,7 +621,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="销售额" />
+                    android:text="銷售額" />
 
                 <View
                     android:layout_width="1dp"
@@ -637,7 +637,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="数量" />
+                    android:text="數量" />
 
                 <View
                     android:layout_width="1dp"
@@ -653,7 +653,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="销售额" />
+                    android:text="銷售額" />
 
                 <View
                     android:layout_width="1dp"
@@ -669,7 +669,7 @@
                     android:textColor="#333"
                     android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="数量" />
+                    android:text="數量" />
             </LinearLayout>
 
             <View
@@ -848,7 +848,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="编号" />
+            android:text="編號" />
 
         <TextView
             android:layout_width="0dp"
@@ -859,7 +859,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="名称" />
+            android:text="名稱" />
 
         <TextView
             android:layout_width="0dp"
@@ -870,7 +870,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="数量" />
+            android:text="數量" />
 
         <TextView
             android:layout_width="0dp"
@@ -881,7 +881,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="类别" />
+            android:text="類別" />
 
         <TextView
             android:layout_width="0dp"
@@ -903,7 +903,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="原价" />
+            android:text="原價" />
 
         <TextView
             android:layout_width="0dp"
@@ -925,7 +925,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="售价" />
+            android:text="售價" />
     </LinearLayout>
 
     <LinearLayout
@@ -960,7 +960,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="编号" />
+            android:text="編號" />
 
         <TextView
             android:layout_width="0dp"
@@ -971,7 +971,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="名称" />
+            android:text="名稱" />
 
         <TextView
             android:layout_width="0dp"
@@ -982,7 +982,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="数量" />
+            android:text="數量" />
 
         <TextView
             android:layout_width="0dp"
@@ -993,7 +993,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="类别" />
+            android:text="類別" />
 
         <TextView
             android:layout_width="0dp"
@@ -1015,7 +1015,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="售价" />
+            android:text="售價" />
 
         <TextView
             android:layout_width="0dp"
@@ -1037,7 +1037,7 @@
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="退换价" />
+            android:text="退換價" />
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/menu0"
-        android:title="日結表"/>
+        android:title="日结表"/>
 
     <item
         android:id="@+id/menu1"
-        android:title="修改密碼"/>
+        android:title="修改密码"/>
 
     <item
         android:id="@+id/menu2"

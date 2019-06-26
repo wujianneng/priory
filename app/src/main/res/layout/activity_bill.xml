@@ -110,7 +110,7 @@
                         android:layout_below="@+id/money_tv"
                         android:layout_centerHorizontal="true"
                         android:layout_marginBottom="10dp"
-                        android:text="總價格"
+                        android:text="总价格"
                         android:textColor="@color/colorAccent"
                         android:textSize="15sp" />
 
@@ -154,7 +154,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:text="收到金額"
+                    android:text="收到金额"
                     android:textColor="#cccccc"
                     android:textSize="16sp" />
 
@@ -199,7 +199,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="20dp"
-                    android:text="找續金額"
+                    android:text="找续金额"
                     android:textColor="#cccccc"
                     android:textSize="16sp" />
 
@@ -231,7 +231,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             app:icon="@drawable/icon_print"
-            android:text="打印賬單"
+            android:text="打印账单"
             android:textColor="#ffffff"
             android:textSize="20sp"
             app:cornerRadius="28dp"

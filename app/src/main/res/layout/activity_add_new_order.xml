@@ -47,7 +47,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
-                        android:text="價格: "
+                        android:text="价格: "
                         android:textColor="@color/blue_text"
                         android:textSize="18sp" />
 
@@ -89,7 +89,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="15dp"
-                        android:text="會員:  李先生"
+                        android:text="会员:  李先生"
                         android:textColor="#000000"
                         android:textSize="14sp" />
 
@@ -140,7 +140,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
-        android:text="新購買項目"
+        android:text="新购买项目"
         android:textColor="#cccccc"
         android:textSize="15sp" />
 
@@ -195,7 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="掃碼"
+                    android:text="扫码"
                     android:textColor="#fff"
                     android:textSize="16sp" />
 
@@ -247,7 +247,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:text="手輸"
+                    android:text="手输"
                     android:textColor="#fff"
                     android:textSize="16sp" />
 

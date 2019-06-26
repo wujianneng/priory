@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="商品條碼"
+            android:text="商品条码"
             android:textColor="#cccccc"
             android:textSize="18sp" />
 

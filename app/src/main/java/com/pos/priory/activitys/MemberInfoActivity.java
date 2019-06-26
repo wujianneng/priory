@@ -100,7 +100,7 @@ public class MemberInfoActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        titleTv.setText("會員信息");
+        titleTv.setText("会员信息");
         rightImg.setVisibility(View.GONE);
         memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.class);
         edtFirstName.setText(memberBean.getLast_name());
@@ -133,7 +133,7 @@ public class MemberInfoActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(MemberInfoActivity.this, OrderDetialActivity.class);
-                intent.putExtra("order", gson.toJson(orderList.get(position)));
+                intent.putExtra("orderId", orderList.get(position).getId());
                 startActivity(intent);
             }
         });

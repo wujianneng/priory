@@ -69,7 +69,7 @@ public class ReturnGoodsActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        titleTv.setText("回收單");
+        titleTv.setText("回收单");
         rightImg.setVisibility(View.GONE);
         goodList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
                 new TypeToken<List<OrderBean.ItemsBean>>() {
@@ -99,7 +99,7 @@ public class ReturnGoodsActivity extends BaseActivity {
                     public void accept(String s) throws Exception {
                         customDialog.dismiss();
                         currentGoldPrice = new JSONObject(s).getString("price");
-                        goldPriceTv.setText("當前金價(MOP)：" + (int)(Double.parseDouble(currentGoldPrice)) + "/g" + "  " + (int)(Double.parseDouble(currentGoldPrice) * 37.5) + "/两");
+                        goldPriceTv.setText("当前金价(MOP)：" + (int)(Double.parseDouble(currentGoldPrice)) + "/g" + "  " + (int)(Double.parseDouble(currentGoldPrice) * 37.5) + "/两");
                         goodsAdapter = new ChangeGoodsAdapter(ReturnGoodsActivity.this, R.layout.change_good_list_item, goodList);
                         goodRecyclerView.setAdapter(goodsAdapter);
                         resetSumMoney(true);

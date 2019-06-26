@@ -67,7 +67,7 @@ public class BigInventoryActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        titleTv.setText("大盤點");
+        titleTv.setText("大盘点");
         addBtn.setImageResource(R.drawable.add_new);
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -136,7 +136,7 @@ public class BigInventoryActivity extends BaseActivity {
     private void createBigInventory() {
         Log.e("test", "createBigInventory（）");
         if (customDialog == null)
-            customDialog = new CustomDialog(this, "創建中..");
+            customDialog = new CustomDialog(this, "创建中..");
         customDialog.show();
         RetrofitManager.createString(ApiService.class).createBigInventory()
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -151,7 +151,7 @@ public class BigInventoryActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(BigInventoryActivity.this, "創建大盤點失敗", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BigInventoryActivity.this, "创建大盘点失败", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
