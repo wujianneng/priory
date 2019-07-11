@@ -136,6 +136,7 @@
                             android:layout_marginRight="16dp"
                             android:textColor="@color/blue_text"
                             android:textSize="15sp"
+                            android:typeface="monospace"
                             android:textStyle="bold" />
 
                     </FrameLayout>

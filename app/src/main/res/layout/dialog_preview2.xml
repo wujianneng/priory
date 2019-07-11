@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="40dp"
-                    android:text="澳門安娜貝拉有限公司"
+                    android:text="澳門安娜貝拉珠寶有限公司"
                     android:textColor="#333"
                     android:textSize="8sp" />
 
@@ -331,7 +331,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text1"
                 android:layout_marginLeft="20dp"
-                android:text="2.黃金貨品可憑公司收據可享有8折換貨服務(不包括手繩製作,水晶,k金);"
+                android:text="2.黃金貨品可憑公司收據可享有8折換貨服務(不包括手繩製作,水晶,k金和玉器類產品);"
                 android:textColor="#333"
                 android:textSize="8sp" />
 

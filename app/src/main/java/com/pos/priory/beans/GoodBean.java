@@ -26,7 +26,7 @@ public class GoodBean {
     private double weight;
     private int quantity;
     private int discountId = 1;
-    private double discountRate;
+    private double discountRate = 1;
     /**
      * weight : 1.2
      */

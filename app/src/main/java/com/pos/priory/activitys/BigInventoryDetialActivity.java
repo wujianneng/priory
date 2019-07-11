@@ -18,19 +18,23 @@ import com.google.gson.reflect.TypeToken;
 import com.pos.priory.R;
 import com.pos.priory.adapters.InventoryDetialAdapter;
 import com.pos.priory.beans.InventoryBean;
+import com.pos.priory.beans.InventoryDetialBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.networks.RetrofitManager;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.zxinglib.InventryScanBean;
 import com.pos.zxinglib.MipcaActivityCapture;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,11 +63,13 @@ public class BigInventoryDetialActivity extends BaseActivity {
     @Bind(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
     InventoryDetialAdapter adapter;
-    List<InventoryBean.InventoryitemBean> dataList = new ArrayList<>();
+    List<InventoryDetialBean> dataList = new ArrayList<>();
     int inventoryId = 0;
     String status = "未完成";
     @Bind(R.id.btn_finish)
     MaterialButton btnFinish;
+
+    int page = 1;
 
     @Override
     protected void beForeInitViews() {
@@ -79,11 +85,18 @@ public class BigInventoryDetialActivity extends BaseActivity {
         btnFinish.setVisibility(status.equals("未完成") ? View.VISIBLE : View.GONE);
         titleTv.setText("大盘点");
         scanBtn.setImageResource(R.drawable.scan);
-        refreshLayout.setEnableLoadMore(false);
+        refreshLayout.setEnableLoadMore(true);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                refreshRecyclerView();
+                page = 1;
+                refreshRecyclerView(true);
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                refreshRecyclerView(false);
             }
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(this));
@@ -95,26 +108,35 @@ public class BigInventoryDetialActivity extends BaseActivity {
         refreshLayout.autoRefresh();
     }
 
-    private void refreshRecyclerView() {
-        RetrofitManager.createString(ApiService.class).getBigInventoryById(inventoryId)
+    private void refreshRecyclerView(final boolean isRefresh) {
+        RetrofitManager.createString(ApiService.class).getBigInventoryById(inventoryId,page)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
-                        List<InventoryBean> inventoryBean = gson.fromJson(s, new TypeToken<List<InventoryBean>>() {
+                        JSONObject jsonObject = new JSONObject(s);
+                        List<InventoryDetialBean> inventoryBean = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<InventoryDetialBean>>() {
                         }.getType());
-                        dataList.clear();
-                        dataList.addAll(inventoryBean.get(0).getInventoryitem());
+                        if(isRefresh) {
+                            dataList.clear();
+                        }
+                        dataList.addAll(inventoryBean);
                         adapter.notifyDataSetChanged();
                         refreshLayout.finishRefresh();
-                        leftTv.setText("黄金：" + inventoryBean.get(0).getGolditemcount() + "件 | " + inventoryBean.get(0).getGolditemweight() + "g");
-                        rightTv.setText("晶石：" + inventoryBean.get(0).getCystalitemcount() + "件");
+                        refreshLayout.finishLoadMore();
+                        double sumweight = 0;
+                        for(InventoryDetialBean inventoryDetialBean : dataList){
+                            sumweight += inventoryDetialBean.getStockweight();
+                        }
+                        leftTv.setText("黄金：" + dataList.size() + "件 | " + LogicUtils.getKeepLastTwoNumberAfterLittlePoint(sumweight) + "g");
                         Log.e("test", "size:" + dataList.size());
+                        page++;
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
                     }
                 });
     }
@@ -122,7 +144,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onScanedCode(InventryScanBean inventryScanBean){
         Log.e("result", "result:" + inventryScanBean.getScanResult());
-        for (InventoryBean.InventoryitemBean bean : dataList) {
+        for (InventoryDetialBean bean : dataList) {
             if (bean.getStockno().equals(inventryScanBean.getScanResult())) {
                 doInventry(bean.getId());
             }
@@ -135,7 +157,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
                 customDialog.dismiss();
                 onClickScan();
             }
-        },1100);
+        },1500);
     }
 
     @OnClick({R.id.back_btn})

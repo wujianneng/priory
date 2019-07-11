@@ -6,32 +6,32 @@ public class DayReportBean {
 
 
     /**
-     * date : 2019-06-18
-     * turnovertotal : 1074.5
-     * credit : 299.0
-     * cash : 675.5
-     * alipay : 0
+     * date : 2019-07-01
+     * turnovertotal : 1737.1
+     * credit : 2277.0
+     * cash : 0
+     * alipay : 119.8
      * wechatpay : 0
-     * voucher : 100.0
-     * refund : 670.7
-     * goldturnover : 328.1
-     * golditemcount : 2
-     * golditemweight : 2.15
+     * voucher : 0
+     * refund : -1138.1
+     * goldturnover : 1737.1
+     * golditemcount : 3
+     * golditemweight : 6.04
      * cystalturnover : 0
      * cystalitemcount : 0
      * braceletturnover : 0
      * braceletitemcount : 0
-     * items : [{"stock":"2001061819421503","productname":"測試產品B","quantity":1,"catalog":"黃金","weight":1.15,"price":193,"discount":"9折","discountprice":173.7},{"stock":"2001061819421501","productname":"測試產品B","quantity":1,"catalog":"黃金","weight":1,"price":193,"discount":"8折","discountprice":154.4}]
-     * refunditem : [{"stock":"2001061819421504","productname":"測試產品B","quantity":1,"catalog":"黃金","weight":1.16,"price":193,"discount":"9折","discountprice":173.7},{"stock":"2001061819421502","productname":"測試產品B","quantity":1,"catalog":"黃金","weight":1.1,"price":193,"discount":"9折","discountprice":173.7},{"stock":"1001061719162401","productname":"光面圓珠A","quantity":1,"catalog":"黃金","weight":1,"price":399,"discount":"原價","discountprice":399}]
+     * items : [{"stock":"2001070110321601","productname":"測試產品","quantity":1,"catalog":"黄金","weight":1.01,"price":599,"discount":"原价","discountprice":599},{"stock":"2001070110355901","productname":"測試產品","quantity":1,"catalog":"黄金","weight":2.01,"price":599,"discount":"9折","discountprice":539.1},{"stock":"2001070110371402","productname":"測試產品","quantity":1,"catalog":"黄金","weight":3.02,"price":599,"discount":"原价","discountprice":599}]
+     * refunditem : [{"stock":"2001070110321694","productname":"測試產品","quantity":1,"catalog":"黄金","weight":1.02,"price":599,"discount":"9折","discountprice":539.1},{"stock":"2001070110371401","productname":"測試產品","quantity":1,"catalog":"黄金","weight":3.01,"price":599,"discount":"原价","discountprice":599}]
      */
 
     private String date;
     private double turnovertotal;
     private double credit;
-    private double cash;
-    private int alipay;
+    private int cash;
+    private double alipay;
     private int wechatpay;
-    private double voucher;
+    private int voucher;
     private double refund;
     private double goldturnover;
     private int golditemcount;
@@ -67,19 +67,19 @@ public class DayReportBean {
         this.credit = credit;
     }
 
-    public double getCash() {
+    public int getCash() {
         return cash;
     }
 
-    public void setCash(double cash) {
+    public void setCash(int cash) {
         this.cash = cash;
     }
 
-    public int getAlipay() {
+    public double getAlipay() {
         return alipay;
     }
 
-    public void setAlipay(int alipay) {
+    public void setAlipay(double alipay) {
         this.alipay = alipay;
     }
 
@@ -91,11 +91,11 @@ public class DayReportBean {
         this.wechatpay = wechatpay;
     }
 
-    public double getVoucher() {
+    public int getVoucher() {
         return voucher;
     }
 
-    public void setVoucher(double voucher) {
+    public void setVoucher(int voucher) {
         this.voucher = voucher;
     }
 
@@ -181,14 +181,14 @@ public class DayReportBean {
 
     public static class ItemsBean {
         /**
-         * stock : 2001061819421503
-         * productname : 測試產品B
+         * stock : 2001070110321601
+         * productname : 測試產品
          * quantity : 1
-         * catalog : 黃金
-         * weight : 1.15
-         * price : 193.0
-         * discount : 9折
-         * discountprice : 173.7
+         * catalog : 黄金
+         * weight : 1.01
+         * price : 599.0
+         * discount : 原价
+         * discountprice : 599.0
          */
 
         private String stock;
@@ -199,7 +199,7 @@ public class DayReportBean {
         private double price;
         private String discount;
         private double discountprice;
-        boolean isReturnItem = false;
+        private boolean isReturnItem = false;
 
         public boolean isReturnItem() {
             return isReturnItem;
@@ -276,14 +276,14 @@ public class DayReportBean {
 
     public static class RefunditemBean {
         /**
-         * stock : 2001061819421504
-         * productname : 測試產品B
+         * stock : 2001070110321694
+         * productname : 測試產品
          * quantity : 1
-         * catalog : 黃金
-         * weight : 1.16
-         * price : 193.0
+         * catalog : 黄金
+         * weight : 1.02
+         * price : 599.0
          * discount : 9折
-         * discountprice : 173.7
+         * discountprice : 539.1
          */
 
         private String stock;

@@ -100,6 +100,7 @@ public class MipcaActivityCapture extends AppCompatActivity implements
     public void onCreate(Bundle savedInstanceState) {
         if (!DeviceUtil.isScreenOriatationPortrait(this))
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
         SAVE_BITMAP_DIR = getExternalFilesDir("barcode").getPath();
         isHigherThan4_4 = Build.VERSION.SDK_INT >= 19;

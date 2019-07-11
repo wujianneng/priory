@@ -30,10 +30,10 @@ public class RetrofitManager {
                 if (mOkHttpClient == null) {
                     mOkHttpClient = new OkHttpClient.Builder()
                             .addInterceptor(new OkHttpInterceptor())
-                            .connectionPool(new ConnectionPool(4, 60, TimeUnit.SECONDS))
-                            .connectTimeout(60, TimeUnit.SECONDS)//连接超时时间
-                            .readTimeout(10, TimeUnit.SECONDS)//读取超时时间
-                            .writeTimeout(10, TimeUnit.SECONDS)//写入超时时间
+                            .connectionPool(new ConnectionPool(4, 600, TimeUnit.SECONDS))
+                            .connectTimeout(600, TimeUnit.SECONDS)//连接超时时间
+                            .readTimeout(600, TimeUnit.SECONDS)//读取超时时间
+                            .writeTimeout(600, TimeUnit.SECONDS)//写入超时时间
                             .sslSocketFactory(SSLSocketClient.getSSLSocketFactory())
                             .hostnameVerifier(SSLSocketClient.getHostnameVerifier())
                             .cache(cache)

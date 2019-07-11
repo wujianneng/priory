@@ -27,7 +27,7 @@ public class BillPrintGoodsAdapter extends BaseQuickAdapter<GoodBean,BaseViewHol
         helper.setText(R.id.good_name_tv,item.getProduct().getName());
         helper.setText(R.id.good_count_tv,1 + "");
         if(item.getDiscountRate() == 1){
-            helper.setText(R.id.discount_tv, "-");
+            helper.setText(R.id.discount_tv, "原價");
         }else if(item.getDiscountRate() == 0){
             helper.setText(R.id.discount_tv, "赠送");
         } else {

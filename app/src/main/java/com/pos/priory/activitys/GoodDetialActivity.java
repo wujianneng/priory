@@ -406,7 +406,8 @@ public class GoodDetialActivity extends BaseActivity {
             TextView code_tv = view.findViewById(R.id.code_tv);
             TextView name_tv = view.findViewById(R.id.name_tv);
             final EditText edt_count = view.findViewById(R.id.edt_count);
-            Glide.with(this).load(goodBean.getProduct().getImage())
+            Glide.with(this).load(Constants.BASE_URL_HTTP + goodBean.getProduct().getImage())
+                    .placeholder(android.R.drawable.ic_menu_gallery)
                     .error(android.R.drawable.ic_menu_gallery)
                     .into(icon_good);
             code_tv.setText(goodBean.getProduct().getProductcode() + "");

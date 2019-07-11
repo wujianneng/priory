@@ -102,8 +102,8 @@ public interface ApiService {
     @GET("/api/warehouse/inventory")
     Observable<String> getBigInventorys();//獲取所有大盤點清單
 
-    @GET("/api/warehouse/inventory")
-    Observable<String> getBigInventoryById(@Query("id") int id);//獲取所有大盤點清單
+    @GET("/api/warehouse/inventory/detail")
+    Observable<String> getBigInventoryById(@Query("id") int id,@Query("page") int page);//獲取所有大盤點清單
 
     @GET("/api/warehouse/inventory/daily")
     Observable<String> getDailyInventorys();//獲取所有日盤點數據

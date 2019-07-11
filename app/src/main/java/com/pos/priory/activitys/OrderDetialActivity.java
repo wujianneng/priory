@@ -221,7 +221,7 @@ public class OrderDetialActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.right_img:
-                printViews(this, goodList, orderBean.getOrdernumber(), memberNameTv.getText().toString(),
+                printViews(this, goodList, orderBean.getOrdernumber(), orderBean.getMember().getLast_name() + orderBean.getMember().getFirst_name(),
                         dateTv.getText().toString(), orderBean.getTotalprice(), MyApplication.staffInfoBean.getStoreid());
                 break;
             case R.id.btn_change:

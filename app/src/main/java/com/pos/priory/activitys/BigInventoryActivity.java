@@ -113,6 +113,7 @@ public class BigInventoryActivity extends BaseActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        Log.e("test", "throwable:" + throwable.getMessage());
                         refreshLayout.finishRefresh();
                     }
                 });
@@ -151,6 +152,7 @@ public class BigInventoryActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
+                        Log.e("test", "throwable:" + throwable.getMessage());
                         Toast.makeText(BigInventoryActivity.this, "创建大盘点失败", Toast.LENGTH_SHORT).show();
                     }
                 });

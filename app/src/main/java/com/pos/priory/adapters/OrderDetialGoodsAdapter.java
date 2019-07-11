@@ -38,10 +38,10 @@ public class OrderDetialGoodsAdapter extends BaseQuickAdapter<OrderBean.ItemsBea
         helper.setText(R.id.name_tv,item.getStock().getProduct().getName());
         helper.setText(R.id.weight_tv,item.getStock().getWeight() + "g");
         Log.e("glide","item.getWeight():" + item.getStock().getWeight());
-        helper.setText(R.id.origin_price_tv,"原價： " + item.getStock().getProduct().getPrice() + "元");
+        helper.setText(R.id.origin_price_tv,"原价： " + item.getStock().getProduct().getPrice() + "元");
         String discountName = item.getDiscount();
         helper.setText(R.id.discount_tv,"折扣： " + discountName);
-        helper.setText(R.id.discount_price_tv,"折後價： "+ item.getPrice() + "元");
+        helper.setText(R.id.discount_price_tv,"折后价： "+ item.getPrice() + "元");
         RadioButton radioButton = helper.getView(R.id.radio);
         radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +60,6 @@ public class OrderDetialGoodsAdapter extends BaseQuickAdapter<OrderBean.ItemsBea
             radioButton.setChecked(false);
         }
 
-        helper.setVisible(R.id.radio,!item.isReturned() && item.getStock().getProduct().getCatalog().getName().equals("黃金") ? true : false);
+        helper.setVisible(R.id.radio,!item.isReturned() && item.getStock().getProduct().getCatalog().getName().equals("黄金") ? true : false);
     }
 }
