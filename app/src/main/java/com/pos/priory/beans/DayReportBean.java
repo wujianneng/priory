@@ -28,18 +28,18 @@ public class DayReportBean {
     private String date;
     private double turnovertotal;
     private double credit;
-    private int cash;
+    private double cash;
     private double alipay;
-    private int wechatpay;
-    private int voucher;
+    private double wechatpay;
+    private double voucher;
     private double refund;
     private double goldturnover;
-    private int golditemcount;
+    private double golditemcount;
     private double golditemweight;
-    private int cystalturnover;
-    private int cystalitemcount;
-    private int braceletturnover;
-    private int braceletitemcount;
+    private double cystalturnover;
+    private double cystalitemcount;
+    private double braceletturnover;
+    private double braceletitemcount;
     private List<ItemsBean> items;
     private List<RefunditemBean> refunditem;
 
@@ -67,7 +67,7 @@ public class DayReportBean {
         this.credit = credit;
     }
 
-    public int getCash() {
+    public double getCash() {
         return cash;
     }
 
@@ -83,7 +83,7 @@ public class DayReportBean {
         this.alipay = alipay;
     }
 
-    public int getWechatpay() {
+    public double getWechatpay() {
         return wechatpay;
     }
 
@@ -91,7 +91,7 @@ public class DayReportBean {
         this.wechatpay = wechatpay;
     }
 
-    public int getVoucher() {
+    public double getVoucher() {
         return voucher;
     }
 
@@ -115,7 +115,7 @@ public class DayReportBean {
         this.goldturnover = goldturnover;
     }
 
-    public int getGolditemcount() {
+    public double getGolditemcount() {
         return golditemcount;
     }
 
@@ -131,7 +131,7 @@ public class DayReportBean {
         this.golditemweight = golditemweight;
     }
 
-    public int getCystalturnover() {
+    public double getCystalturnover() {
         return cystalturnover;
     }
 
@@ -139,7 +139,7 @@ public class DayReportBean {
         this.cystalturnover = cystalturnover;
     }
 
-    public int getCystalitemcount() {
+    public double getCystalitemcount() {
         return cystalitemcount;
     }
 
@@ -147,7 +147,7 @@ public class DayReportBean {
         this.cystalitemcount = cystalitemcount;
     }
 
-    public int getBraceletturnover() {
+    public double getBraceletturnover() {
         return braceletturnover;
     }
 
@@ -155,7 +155,7 @@ public class DayReportBean {
         this.braceletturnover = braceletturnover;
     }
 
-    public int getBraceletitemcount() {
+    public double getBraceletitemcount() {
         return braceletitemcount;
     }
 

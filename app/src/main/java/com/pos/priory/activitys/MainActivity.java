@@ -393,6 +393,7 @@ public class MainActivity extends BaseActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        Log.e("test","throwable:" + gson.toJson(throwable));
                         Toast.makeText(MainActivity.this,"查不到日报表数据",Toast.LENGTH_SHORT).show();
                     }
                 });
