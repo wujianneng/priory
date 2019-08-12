@@ -19,8 +19,8 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 
 public class RetrofitManager {
-        public static final String BASE_URL = "http://api.annabellaip.com";
-//    public static final String BASE_URL = "http://annabella.infitack.net";
+    public static final String BASE_URL = "http://api.annabellaip.com";
+    public static final String MACAL_BASE_URL = "http://mo.api.annabellaip.com";
     private static volatile OkHttpClient mOkHttpClient;
     private static Cache cache = new Cache(MyApplication.getContext().getCacheDir(), 1024 * 1024 * 10);//缓存10mib
 
@@ -48,7 +48,7 @@ public class RetrofitManager {
     public static <T> T createGson(Class<T> clazz) {
         Retrofit retrofit = new Retrofit.Builder()
                 .client(getOkHttpClient())
-                .baseUrl(RetrofitManager.BASE_URL)
+                .baseUrl(MyApplication.hostName)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -60,7 +60,7 @@ public class RetrofitManager {
     public static <T> T createString(Class<T> clazz) {
         Retrofit retrofit = new Retrofit.Builder()
                 .client(getOkHttpClient())
-                .baseUrl(RetrofitManager.BASE_URL)
+                .baseUrl(MyApplication.hostName)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build();

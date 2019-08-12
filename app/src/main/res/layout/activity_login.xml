@@ -6,12 +6,49 @@
     android:background="@drawable/login_bg"
     android:orientation="vertical">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="37dp">
+
+        <LinearLayout
+            android:id="@+id/select_location_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginRight="-2dp"
+            android:background="@drawable/location_bg"
+            android:layout_gravity="right"
+            android:foreground="?attr/selectableItemBackground">
+
+            <TextView
+                android:id="@+id/location_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="14dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:text="中国大陆"
+                android:textColor="#FF3A3939"
+                android:textSize="13sp" />
+
+            <ImageView
+                android:src="@drawable/go_bottom"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </FrameLayout>
+
 
     <LinearLayout
-        android:layout_marginTop="290dp"
         android:layout_width="260dp"
         android:layout_height="116dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="200dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -22,11 +59,11 @@
             android:orientation="horizontal">
 
             <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
                 android:text="账号："
                 android:textColor="#4A4A4A"
-                android:textSize="18sp"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content" />
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/edt_usename"
@@ -58,11 +95,11 @@
             android:orientation="horizontal">
 
             <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
                 android:text="密码："
                 android:textColor="#4A4A4A"
-                android:textSize="18sp"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content" />
+                android:textSize="18sp" />
 
             <EditText
                 android:id="@+id/edt_passwrod"
@@ -90,14 +127,13 @@
         android:id="@+id/btn_cardview"
         android:layout_width="230dp"
         android:layout_height="56dp"
-        android:layout_marginTop="40dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
         android:background="@color/colorAccent"
         android:text="登  录"
         android:textColor="#ffffff"
         android:textSize="20sp"
-        app:cornerRadius="28dp"
-        />
+        app:cornerRadius="28dp" />
 
     <LinearLayout
         android:layout_width="230dp"
@@ -108,13 +144,13 @@
 
         <CheckBox
             android:id="@+id/checkbox"
+            style="@style/LoginCheckbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
-            android:padding="10dp"
             android:layout_gravity="center_vertical"
-            style="@style/LoginCheckbox" />
+            android:padding="10dp"
+            android:scaleX="0.7"
+            android:scaleY="0.7" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -127,10 +163,10 @@
 
 
     <TextView
-        android:layout_marginTop="80dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="80dp"
         android:text="copyright(c)2015-2018 AnnaBella ip"
         android:textColor="@color/colorAccent"
         android:textSize="13sp" />

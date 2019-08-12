@@ -6,6 +6,7 @@ import com.blankj.utilcode.util.Utils;
 import com.downloader.PRDownloader;
 import com.downloader.PRDownloaderConfig;
 import com.pos.priory.beans.StaffInfoBean;
+import com.pos.priory.networks.RetrofitManager;
 
 import io.sentry.Sentry;
 import io.sentry.android.AndroidSentryClientFactory;
@@ -23,6 +24,7 @@ public class MyApplication extends Application {
     public static String storeTel = "";
     public static String region = "";
     public static String storeListJsonString = "";
+    public static String hostName = RetrofitManager.BASE_URL;
 
     @Override
     public void onCreate() {

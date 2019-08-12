@@ -7,16 +7,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blankj.utilcode.util.Utils;
 import com.google.gson.reflect.TypeToken;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
@@ -26,9 +26,6 @@ import com.pos.priory.networks.ApiService;
 import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.LogicUtils;
-import com.pos.priory.utils.OkHttp3Util;
-import com.pos.priory.utils.Okhttp3StringCallback;
-import com.pos.priory.utils.RunOnUiThreadSafe;
 
 import org.json.JSONObject;
 
@@ -40,8 +37,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
@@ -61,6 +56,10 @@ public class LoginActivity extends BaseActivity {
     MaterialButton btnCardview;
     @Bind(R.id.checkbox)
     CheckBox checkbox;
+    @Bind(R.id.location_tv)
+    TextView locationTv;
+    @Bind(R.id.select_location_btn)
+    LinearLayout selectLocationBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,13 +88,42 @@ public class LoginActivity extends BaseActivity {
         checkbox.setChecked(sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false));
     }
 
-    @OnClick({R.id.btn_cardview})
+    @OnClick({R.id.btn_cardview, R.id.select_location_btn})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_cardview:
                 login();
                 break;
+            case R.id.select_location_btn:
+                showSelectLocationPop(v);
+                break;
         }
+    }
+
+    private void showSelectLocationPop(View view) {
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(LoginActivity.this, view);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.location_menu, popupMenu.getMenu());
+        popupMenu.show();
+        // 通过上面这几行代码，就可以把控件显示出来了
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // 控件每一个item的点击事件
+                switch (item.getItemId()) {
+                    case R.id.menu0:
+                        locationTv.setText(item.getTitle());
+                        MyApplication.hostName = RetrofitManager.BASE_URL;
+                        break;
+                    case R.id.menu1:
+                        locationTv.setText(item.getTitle());
+                        MyApplication.hostName = RetrofitManager.MACAL_BASE_URL;
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
 

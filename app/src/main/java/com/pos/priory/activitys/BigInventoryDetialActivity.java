@@ -109,7 +109,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
     }
 
     private void refreshRecyclerView(final boolean isRefresh) {
-        RetrofitManager.createString(ApiService.class).getBigInventoryById(inventoryId,page)
+        RetrofitManager.createString(ApiService.class).getBigInventoryById(inventoryId, page)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -117,7 +117,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
                         JSONObject jsonObject = new JSONObject(s);
                         List<InventoryDetialBean> inventoryBean = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<InventoryDetialBean>>() {
                         }.getType());
-                        if(isRefresh) {
+                        if (isRefresh) {
                             dataList.clear();
                         }
                         dataList.addAll(inventoryBean);
@@ -125,7 +125,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
                         refreshLayout.finishRefresh();
                         refreshLayout.finishLoadMore();
                         double sumweight = 0;
-                        for(InventoryDetialBean inventoryDetialBean : dataList){
+                        for (InventoryDetialBean inventoryDetialBean : dataList) {
                             sumweight += inventoryDetialBean.getStockweight();
                         }
                         leftTv.setText("黄金：" + dataList.size() + "件 | " + LogicUtils.getKeepLastTwoNumberAfterLittlePoint(sumweight) + "g");
@@ -142,14 +142,10 @@ public class BigInventoryDetialActivity extends BaseActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onScanedCode(InventryScanBean inventryScanBean){
+    public void onScanedCode(InventryScanBean inventryScanBean) {
         Log.e("result", "result:" + inventryScanBean.getScanResult());
-        for (InventoryDetialBean bean : dataList) {
-            if (bean.getStockno().equals(inventryScanBean.getScanResult())) {
-                doInventry(bean.getId());
-            }
-        }
-        final ProgressDialog customDialog = ProgressDialog.show(this,"","正在准备下一次扫码",true);
+        doInventry(inventryScanBean.getScanResult());
+        final ProgressDialog customDialog = ProgressDialog.show(this, "", "正在准备下一次扫码", true);
         customDialog.show();
         handler.postDelayed(new Runnable() {
             @Override
@@ -157,7 +153,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
                 customDialog.dismiss();
                 onClickScan();
             }
-        },1500);
+        }, 1500);
     }
 
     @OnClick({R.id.back_btn})
@@ -168,7 +164,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
     @OnClick({R.id.right_img})
     public void onClickScan() {
         Intent intent = new Intent(BigInventoryDetialActivity.this, MipcaActivityCapture.class);
-        intent.putExtra("preferences_bulk_mode",true);
+        intent.putExtra("preferences_bulk_mode", true);
         startActivityForResult(intent, 1000);
     }
 
@@ -201,7 +197,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
             case 1:
-                if(data != null) {
+                if (data != null) {
 //                    String str = data.getStringExtra("resultString");
 //                    Log.e("result", "result:" + str);
 //                    for (InventoryBean.InventoryitemBean bean : dataList) {
@@ -214,9 +210,9 @@ public class BigInventoryDetialActivity extends BaseActivity {
         }
     }
 
-    private void doInventry(int id) {
+    private void doInventry(String code) {
         RetrofitManager.createString(ApiService.class)
-                .updateOnBigInventoryItemById(id, true)
+                .updateOnBigInventoryItemById(inventoryId, code)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

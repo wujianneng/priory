@@ -113,8 +113,8 @@ public interface ApiService {
     Observable<String> updateDailyInventoryById(@Path("id") int id, @Field("quantity") int quantity);//提交日盤點
 
     @FormUrlEncoded
-    @PUT("/api/warehouse/inventory/item/{id}/update")
-    Observable<String> updateOnBigInventoryItemById(@Path("id") int id,@Field("check") boolean check);//提交单个大盘点盤點
+    @POST("/api/warehouse/inventory/item/update")
+    Observable<String> updateOnBigInventoryItemById(@Field("inventoryid") int id,@Field("qrcode") String code);//提交单个大盘点盤點
 
     @FormUrlEncoded
     @PUT("/api/warehouse/inventory/{id}/update")
