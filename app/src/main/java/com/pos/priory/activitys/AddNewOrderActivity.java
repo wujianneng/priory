@@ -124,7 +124,8 @@ public class AddNewOrderActivity extends BaseActivity {
     protected void initViews() {
         titleTv.setText("增加商品");
         rightImg.setVisibility(View.GONE);
-        changeGoodsMoeny = getIntent().getDoubleExtra("sumMoney", 0);
+        changeGoodsMoeny = getIntent().getIntExtra("sumMoney", 0);
+        Log.e("test","changegm:" + changeGoodsMoeny);
 
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
 

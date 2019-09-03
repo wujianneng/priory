@@ -15,79 +15,83 @@
         android:text="1"
         android:gravity="center"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="7sp" />
 
     <TextView
         android:id="@+id/good_code_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1.5"
+        android:layout_weight="1.8"
         android:text="343454554"
+        android:maxLines="1"
+        android:ellipsize="middle"
         android:gravity="center"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="6sp" />
 
 
     <TextView
         android:id="@+id/good_name_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="2.2"
         android:text="手繩222"
+        android:maxLines="1"
+        android:ellipsize="middle"
         android:gravity="center"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="6sp" />
 
 
     <TextView
         android:id="@+id/good_count_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:gravity="center"
         android:text="3"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="7sp" />
 
     <TextView
         android:id="@+id/type_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.8"
         android:gravity="center"
         android:text="手繩"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="7sp" />
 
     <TextView
         android:id="@+id/weight_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.8"
         android:gravity="center"
         android:text="3g"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="7sp" />
 
     <TextView
         android:id="@+id/reatil_price_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.9"
         android:gravity="center"
         android:text="250"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="7sp" />
 
     <TextView
         android:id="@+id/discount_tv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:gravity="center"
         android:text="40%"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="7sp" />
 
     <TextView
         android:id="@+id/price_tv"
@@ -97,6 +101,6 @@
         android:gravity="center"
         android:text="250"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="7sp" />
 
 </LinearLayout>

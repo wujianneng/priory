@@ -824,7 +824,6 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
-        android:weightSum="9"
         android:background="#cccccc"
         android:orientation="horizontal">
 
@@ -842,7 +841,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.5"
+            android:layout_weight="1.8"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -853,7 +852,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2.2"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -864,7 +863,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -875,7 +874,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.8"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -886,7 +885,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.8"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -897,7 +896,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.9"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -908,13 +907,13 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
             android:textSize="10sp"
             android:paddingBottom="5dp"
-            android:text="折扣率" />
+            android:text="折扣" />
 
         <TextView
             android:layout_width="0dp"
@@ -936,7 +935,6 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
-        android:weightSum="9"
         android:background="#cccccc"
         android:orientation="horizontal">
 
@@ -954,7 +952,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.5"
+            android:layout_weight="1.8"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -965,7 +963,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2.2"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -976,7 +974,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -987,7 +985,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.8"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -998,7 +996,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.8"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -1009,7 +1007,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.9"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"
@@ -1020,7 +1018,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:gravity="center"
             android:paddingTop="5dp"
             android:textColor="#333"

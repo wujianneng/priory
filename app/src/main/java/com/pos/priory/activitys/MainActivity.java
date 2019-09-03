@@ -404,40 +404,48 @@ public class MainActivity extends BaseActivity {
         List<View> views = new ArrayList<>();
         List<DayReportBean.ItemsBean> templist = new ArrayList<>();
         templist.addAll(dayReportBean.getItems());
-        DayReportBean.ItemsBean returnTitleBean = new DayReportBean.ItemsBean();
-        returnTitleBean.setProductname("退货标题");
-        templist.add(returnTitleBean);
-        for(DayReportBean.RefunditemBean refunditemBean : dayReportBean.getRefunditem()){
-            DayReportBean.ItemsBean itemsBean = new DayReportBean.ItemsBean();
-            itemsBean.setProductname(refunditemBean.getProductname());
-            itemsBean.setCatalog(refunditemBean.getCatalog());
-            itemsBean.setDiscount(refunditemBean.getDiscount());
-            itemsBean.setDiscountprice(refunditemBean.getDiscountprice());
-            itemsBean.setQuantity(refunditemBean.getQuantity());
-            itemsBean.setPrice(refunditemBean.getPrice());
-            itemsBean.setStock(refunditemBean.getStock());
-            itemsBean.setWeight(refunditemBean.getWeight());
-            itemsBean.setReturnItem(true);
-            templist.add(itemsBean);
+        if(dayReportBean.getRefunditem().size() != 0){
+            DayReportBean.ItemsBean returnTitleBean = new DayReportBean.ItemsBean();
+            returnTitleBean.setProductname("退货标题");
+            templist.add(returnTitleBean);
+            for(DayReportBean.RefunditemBean refunditemBean : dayReportBean.getRefunditem()){
+                DayReportBean.ItemsBean itemsBean = new DayReportBean.ItemsBean();
+                itemsBean.setProductname(refunditemBean.getProductname());
+                itemsBean.setCatalog(refunditemBean.getCatalog());
+                itemsBean.setDiscount(refunditemBean.getDiscount());
+                itemsBean.setDiscountprice(refunditemBean.getDiscountprice());
+                itemsBean.setQuantity(refunditemBean.getQuantity());
+                itemsBean.setPrice(refunditemBean.getPrice());
+                itemsBean.setStock(refunditemBean.getStock());
+                itemsBean.setWeight(refunditemBean.getWeight());
+                itemsBean.setReturnItem(true);
+                templist.add(itemsBean);
+            }
         }
-        int perPageSize = 15;
+
+        int perPageSize = 18;
         int size = templist.size() / perPageSize;
         int a = templist.size() % perPageSize;
         if (a != 0) {
             size++;
         }
-        Log.e("test", "size:" + size + " a:" + a);
+        Log.e("test", "size:" + size + " a:" + a + "templist.size():" + templist.size());
         for (int i = 0; i < size; i++) {
             List<DayReportBean.ItemsBean> extraList = new ArrayList<>();
             if (i == (size - 1)) {
+                if(a == 0){
+                    a = perPageSize;
+                }
                 for (int t = 0; t < a; t++) {
                     extraList.add(templist.get(t + perPageSize * i));
                 }
+
             } else {
                 for (int t = 0; t < perPageSize; t++) {
                     extraList.add(templist.get(t + perPageSize * i));
                 }
             }
+            Log.e("test", "MyApplication.getContext().region:" + MyApplication.getContext().region);
             int layoutid = 0;
             if (MyApplication.getContext().region.equals("中国大陆")) {
                 layoutid = R.layout.gold_daliy_table;
@@ -445,7 +453,7 @@ public class MainActivity extends BaseActivity {
                 layoutid = R.layout.gold_daliy_table2;
             }
             final View printView = LayoutInflater.from(MainActivity.this).inflate(layoutid, null);
-            if(!extraList.get(0).isReturnItem()){
+            if(extraList.size() != 0 && !extraList.get(0).isReturnItem()){
                 printView.findViewById(R.id.list_title_layout0).setVisibility(View.VISIBLE);
                 printView.findViewById(R.id.list_title_layout1).setVisibility(View.GONE);
             }else {
@@ -471,7 +479,8 @@ public class MainActivity extends BaseActivity {
             ((TextView) printView.findViewById(R.id.hand_count_tv)).setText(dayReportBean.getBraceletitemcount() + "");
 
             RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
-            TablePrintGoodsAdapter adapter = new TablePrintGoodsAdapter(R.layout.gold_table_print_good_list_item, extraList, i,dayReportBean.getItems().size(),dayReportBean.getRefunditem().size());
+            TablePrintGoodsAdapter adapter = new TablePrintGoodsAdapter(R.layout.gold_table_print_good_list_item, extraList,
+                    i,dayReportBean.getItems().size(),dayReportBean.getRefunditem().size(),perPageSize);
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
             mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
             listview.setLayoutManager(mLayoutManager);

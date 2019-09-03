@@ -33,7 +33,7 @@ public class BillPrintGoodsAdapter extends BaseQuickAdapter<GoodBean,BaseViewHol
         } else {
             helper.setText(R.id.discount_tv, LogicUtils.getKeepLastOneNumberAfterLittlePoint(item.getDiscountRate() * 10) + "折");
         }
-        helper.setText(R.id.reatial_price_tv,item.getProduct().getPrice());
+        helper.setText(R.id.reatial_price_tv,LogicUtils.getKeepLastOneNumberAfterLittlePoint(Double.parseDouble(item.getProduct().getPrePrice())));
         helper.setText(R.id.price_tv,item.getProduct().getPrice());
     }
 }

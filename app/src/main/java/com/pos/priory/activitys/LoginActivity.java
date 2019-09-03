@@ -86,6 +86,9 @@ public class LoginActivity extends BaseActivity {
             }, 300);
         }
         checkbox.setChecked(sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false));
+        MyApplication.hostName = sharedPreferences.getString(Constants.LAST_BASE_URL_KEY, RetrofitManager.BASE_URL);
+        Log.e("test","MyApplication.hostName:" + MyApplication.hostName);
+        locationTv.setText(MyApplication.hostName.equals(RetrofitManager.BASE_URL) ? "中国大陆" : "澳门");
     }
 
     @OnClick({R.id.btn_cardview, R.id.select_location_btn})
@@ -142,6 +145,7 @@ public class LoginActivity extends BaseActivity {
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("username", edtUsename.getText().toString());
             paramMap.put("password", edtPasswrod.getText().toString());
+            Log.e("test", "username:" + edtUsename.getText().toString() + " password:" + edtPasswrod.getText().toString());
             RetrofitManager
                     .createString(ApiService.class)
                     .login(paramMap)
@@ -188,6 +192,8 @@ public class LoginActivity extends BaseActivity {
                                                 edtUsename.getText().toString());
                                         editor.putString(Constants.LAST_PASSWORD_KEY,
                                                 edtPasswrod.getText().toString());
+                                        editor.putString(Constants.LAST_BASE_URL_KEY,
+                                                MyApplication.hostName);
                                     }
                                     editor.putString(Constants.CURRENT_STAFF_INFO_KEY, s);
                                     editor.commit();

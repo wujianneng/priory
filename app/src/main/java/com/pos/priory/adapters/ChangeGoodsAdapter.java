@@ -54,7 +54,7 @@ public class ChangeGoodsAdapter extends BaseQuickAdapter<OrderBean.ItemsBean, Ba
             ((TextView) helper.getView(R.id.price_tv)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         }else {
             helper.setText(R.id.price_tv, "$" + item.getPrice());
-            helper.setText(R.id.retial_price_tv, "$" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(item.getPrice() * 0.8));
+            helper.setText(R.id.retial_price_tv, "$" + (int)(item.getPrice() * 0.8));
             ((TextView) helper.getView(R.id.price_tv)).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         }
 

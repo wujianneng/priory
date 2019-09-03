@@ -18,13 +18,14 @@ import java.util.List;
  */
 
 public class TablePrintGoodsAdapter extends BaseQuickAdapter<DayReportBean.ItemsBean,BaseViewHolder> {
-    public int page = 0,saleCount = 0,returnCount = 0;
+    public int page = 0,saleCount = 0,returnCount = 0,perPageSize;
 
-    public TablePrintGoodsAdapter(@LayoutRes int layoutResId, @Nullable List<DayReportBean.ItemsBean> data,int page,int saleCount,int returnCount) {
+    public TablePrintGoodsAdapter(@LayoutRes int layoutResId, @Nullable List<DayReportBean.ItemsBean> data,int page,int saleCount,int returnCount,int perPageSize) {
         super(layoutResId, data);
         this.page = page;
         this.saleCount = saleCount;
         this.returnCount = returnCount;
+        this.perPageSize = perPageSize;
 
     }
 
@@ -44,9 +45,9 @@ public class TablePrintGoodsAdapter extends BaseQuickAdapter<DayReportBean.Items
         }else {
             helper.setBackgroundColor(R.id.layout, Color.parseColor("#ffffff"));
             if(!item.isReturnItem()){
-                helper.setText(R.id.index_tv, helper.getAdapterPosition() + 1 + page * 15 + "");
+                helper.setText(R.id.index_tv, helper.getAdapterPosition() + 1 + page * perPageSize + "");
             }else {
-                helper.setText(R.id.index_tv, helper.getAdapterPosition()  + page * 15 - saleCount + "");
+                helper.setText(R.id.index_tv, helper.getAdapterPosition()  + page * perPageSize - saleCount + "");
             }
             helper.setText(R.id.good_code_tv,item.getStock());
             helper.setText(R.id.good_name_tv,item.getProductname());

@@ -7,6 +7,7 @@ import com.pos.priory.networks.RetrofitManager;
  */
 
 public class Constants {
+    public static final String LAST_BASE_URL_KEY = "lastBaseUrlKey";
     public static final String LAST_USERNAME_KEY = "lastUsernameKey";
     public static final String LAST_PASSWORD_KEY = "lastPasswordKey";
     public static final String CURRENT_STAFF_INFO_KEY = "currentStaffInfoKey";

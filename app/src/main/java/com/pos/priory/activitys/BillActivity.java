@@ -145,7 +145,12 @@ public class BillActivity extends BaseActivity {
         int a = templist.size() % perPageSize;
         if (a != 0) {
             size++;
+        }else {
+            if(size == 1){
+                a = perPageSize;
+            }
         }
+
         Log.e("test", "size:" + size + " a:" + a);
         for (int i = 0; i < size; i++) {
             List<GoodBean> extraList = new ArrayList<>();

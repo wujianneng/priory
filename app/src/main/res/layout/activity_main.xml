@@ -129,7 +129,7 @@
             />
 
 
-    </LinearLayout>
+    </LinearLayout>sm
 
     <FrameLayout
         android:id="@+id/container_layout"

@@ -7,6 +7,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -89,7 +90,9 @@ public class ChangeGoodsActivity extends BaseActivity {
                 intent.putExtra("memberMobile", getIntent().getStringExtra("memberMobile"));
                 intent.putExtra("memberReward",getIntent().getIntExtra("memberReward", 0));
                 intent.putExtra("memberName",  getIntent().getStringExtra("memberName"));
-                intent.putExtra("sumMoney", sumMoney);
+                intent.putExtra("sumMoney", (int)sumMoney);
+                Log.e("test","changegm:" + (int)sumMoney);
+
                 intent.putExtra("checkedGoodList",gson.toJson(goodList));
                 startActivity(intent);
                 break;
@@ -111,10 +114,10 @@ public class ChangeGoodsActivity extends BaseActivity {
 
     private void resetSumMoney() {
         for (OrderBean.ItemsBean bean : goodList) {
-            sumMoney += bean.getPrice() * 0.8 * bean.getOprateCount();
+            sumMoney += (int)(bean.getPrice() * 0.8) * bean.getOprateCount();
         }
         sumMoney = -1 * sumMoney;
-        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
+        moneyTv.setText((int)sumMoney + "");
         goodsAdapter.notifyDataSetChanged();
     }
 
