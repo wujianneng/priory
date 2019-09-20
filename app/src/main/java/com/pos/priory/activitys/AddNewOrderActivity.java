@@ -272,8 +272,8 @@ public class AddNewOrderActivity extends BaseActivity {
                         return;
                     }
                 }else {
-                    if ((sumMoney + changeGoodsMoeny) <= 0) {
-                        Toast.makeText(AddNewOrderActivity.this, "新商品总额要大于换货商品总额", Toast.LENGTH_SHORT).show();
+                    if ((sumMoney + changeGoodsMoeny) < 0) {
+                        Toast.makeText(AddNewOrderActivity.this, "新商品总额要大于等于换货商品总额", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }

@@ -99,7 +99,7 @@ public class ReturnGoodsActivity extends BaseActivity {
                     public void accept(String s) throws Exception {
                         customDialog.dismiss();
                         currentGoldPrice = new JSONObject(s).getString("price");
-                        goldPriceTv.setText("当前金价(MOP)：" + (int)(Double.parseDouble(currentGoldPrice)) + "/g" + "  " + (int)(Double.parseDouble(currentGoldPrice) * 37.5) + "/两");
+                        goldPriceTv.setText("当前金价(MOP)：" + (int) (Double.parseDouble(currentGoldPrice)) + "/g" + "  " + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/两");
                         goodsAdapter = new ChangeGoodsAdapter(ReturnGoodsActivity.this, R.layout.change_good_list_item, goodList);
                         goodRecyclerView.setAdapter(goodsAdapter);
                         resetSumMoney(true);
@@ -160,7 +160,7 @@ public class ReturnGoodsActivity extends BaseActivity {
             sumMoney += Double.parseDouble(item.getStock().getProduct().getRealPrice()) * item.getOprateCount();
         }
         sumMoney = -1 * sumMoney;
-        moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
+        moneyTv.setText((int) sumMoney + "");
         if (isNotify)
             goodsAdapter.notifyDataSetChanged();
     }
@@ -169,8 +169,8 @@ public class ReturnGoodsActivity extends BaseActivity {
         if (item.getWeight().equals("")) {
             item.getStock().getProduct().setRealPrice("0");
         } else {
-            item.getStock().getProduct().setRealPrice(LogicUtils.getKeepLastOneNumberAfterLittlePoint(
-                    Double.parseDouble(currentGoldPrice) * Double.parseDouble(item.getWeight()) * 0.95));
+            item.getStock().getProduct().setRealPrice((int) (
+                    Double.parseDouble(currentGoldPrice) * Double.parseDouble(item.getWeight()) * 1) + "");
         }
     }
 

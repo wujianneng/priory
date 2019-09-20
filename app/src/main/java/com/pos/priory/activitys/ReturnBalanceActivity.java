@@ -79,7 +79,7 @@ public class ReturnBalanceActivity extends BaseActivity {
         titleTv.setText("结算");
         sumMoney = -1 * getIntent().getDoubleExtra("sumMoney", 0);
         checkedGoodListString = getIntent().getStringExtra("checkedGoodList");
-        edtCasMoney.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
+        edtCasMoney.setText((int) sumMoney + "");
         moneyTv.setText((int) sumMoney + "");
     }
 
