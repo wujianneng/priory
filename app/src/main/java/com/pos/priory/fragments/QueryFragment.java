@@ -190,7 +190,7 @@ public class QueryFragment extends BaseFragment {
             memberCall.dispose();
         memberList.clear();
         memberAdapter.notifyDataSetChanged();
-        memberCall = RetrofitManager.createString(ApiService.class).getMembers(str)
+        memberCall = RetrofitManager.createString(ApiService.class).getMembers(str).compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -224,7 +224,9 @@ public class QueryFragment extends BaseFragment {
         orderAdapter.notifyDataSetChanged();
         if (date.equals(""))
             return;
-        dateCall = RetrofitManager.createString(ApiService.class).getOrdersByDate(date)
+        dateCall = RetrofitManager.createString(ApiService.class)
+                .getOrdersByDate(date)
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -255,7 +257,9 @@ public class QueryFragment extends BaseFragment {
         orderAdapter.notifyDataSetChanged();
         if (orderNum.equals(""))
             return;
-        orderCall = RetrofitManager.createString(ApiService.class).getOrdersByOrdernumber(orderNum)
+        orderCall = RetrofitManager.createString(ApiService.class)
+                .getOrdersByOrdernumber(orderNum)
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override

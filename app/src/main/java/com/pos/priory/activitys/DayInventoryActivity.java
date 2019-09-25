@@ -94,7 +94,9 @@ public class DayInventoryActivity extends BaseActivity {
 
     private void getDatas() {
         RetrofitManager.createString(ApiService.class)
-                .getDailyInventorys().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .getDailyInventorys()
+                .compose(this.<String>bindToLifecycle())
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
@@ -226,6 +228,7 @@ public class DayInventoryActivity extends BaseActivity {
             }
             RetrofitManager.createString(ApiService.class)
                     .updateDailyInventoryById(id, count)
+                    .compose(this.<String>bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<String>() {

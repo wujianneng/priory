@@ -98,6 +98,7 @@ public class EditPasswordActivity extends BaseActivity {
         map.put("new_password2", edtRepeatNewPassword.getText().toString());
         RetrofitManager.createString(ApiService.class)
                 .resetPassword(map)
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

@@ -404,6 +404,7 @@ public class BalanceActivity extends BaseActivity {
             Log.e("test", "paramMap:" + gson.toJson(paramMap));
             RetrofitManager.createString(ApiService.class)
                     .createOrder(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
+                    .compose(this.<String>bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<String>() {

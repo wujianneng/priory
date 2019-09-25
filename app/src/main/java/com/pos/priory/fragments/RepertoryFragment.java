@@ -174,6 +174,7 @@ public class RepertoryFragment extends BaseFragment {
 
     private void refreshMainRepertorySumDatas() {
         RetrofitManager.createString(ApiService.class).getStockSumDatas()
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -237,7 +238,9 @@ public class RepertoryFragment extends BaseFragment {
         });
         customDialog.show();
         GoodBean goodBean = dataList.get(pos);
-        RetrofitManager.createString(ApiService.class).returnStockById(goodBean.getId())
+        RetrofitManager.createString(ApiService.class)
+                .returnStockById(goodBean.getId())
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -260,6 +263,7 @@ public class RepertoryFragment extends BaseFragment {
 
     private void getExchangeableStores(final int adapterPosition) {
         RetrofitManager.createString(ApiService.class).getTranStores()
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -331,7 +335,9 @@ public class RepertoryFragment extends BaseFragment {
         stocktransfer.add(stocktransferMap);
         paramMap.put("stocktransfer", stocktransfer);
         Log.e("test", "params:" + gson.toJson(paramMap));
-        RetrofitManager.createString(ApiService.class).tranferGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
+        RetrofitManager.createString(ApiService.class)
+                .tranferGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -365,6 +371,7 @@ public class RepertoryFragment extends BaseFragment {
             observable = RetrofitManager.createString(ApiService.class).getStockListByParam(str);
         }
         call = observable
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
@@ -395,7 +402,7 @@ public class RepertoryFragment extends BaseFragment {
         repertoryReturnAdapter.notifyDataSetChanged();
         Observable<String> observable;
         observable = RetrofitManager.createString(ApiService.class).getReturnStockLists();
-        call = observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        call = observable.compose(this.<String>bindToLifecycle()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String results) throws Exception {

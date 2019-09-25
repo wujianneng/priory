@@ -4,12 +4,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.gson.Gson;
+import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -19,7 +16,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * Created by Lenovo on 2018/12/29.
  */
 
-public class BaseFragment extends Fragment {
+public class BaseFragment extends RxFragment {
     SharedPreferences sharedPreferences;
     Gson gson = new Gson();
 

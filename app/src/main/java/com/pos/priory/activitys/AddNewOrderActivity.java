@@ -363,6 +363,7 @@ public class AddNewOrderActivity extends BaseActivity {
         customDialog.show();
         RetrofitManager.createString(ApiService.class)
                 .getStockListByParam(productcode)
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

@@ -149,6 +149,7 @@ public class LoginActivity extends BaseActivity {
             RetrofitManager
                     .createString(ApiService.class)
                     .login(paramMap)
+                    .compose(this.<String>bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .doOnNext(new Consumer<String>() {
@@ -170,7 +171,8 @@ public class LoginActivity extends BaseActivity {
                     .flatMap(new Function<String, Observable<String>>() {
                         @Override
                         public Observable<String> apply(String s) throws Exception {
-                            return RetrofitManager.createString(ApiService.class).getStaffInfo(edtUsename.getText().toString());
+                            return RetrofitManager.createString(ApiService.class).
+                                    getStaffInfo(edtUsename.getText().toString()).compose(LoginActivity.this.<String>bindToLifecycle());
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread())

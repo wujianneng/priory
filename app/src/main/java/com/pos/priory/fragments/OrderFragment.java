@@ -218,6 +218,7 @@ public class OrderFragment extends BaseFragment {
             customDialog.show();
             RetrofitManager.createString(ApiService.class)
                     .deleteOrder(orderList.get(pos).getId())
+                    .compose(this.<String>bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<String>() {
@@ -245,6 +246,7 @@ public class OrderFragment extends BaseFragment {
     private void getCurrentGoldPrice() {
         RetrofitManager.createString(ApiService.class)
                 .getCurrentGoldPrice()
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnNext(new Consumer<String>() {
@@ -294,6 +296,7 @@ public class OrderFragment extends BaseFragment {
             getCurrentGoldPrice();
         }
         RetrofitManager.createString(ApiService.class).getTodayOrders(true)
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

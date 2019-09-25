@@ -98,6 +98,7 @@ public class MainActivity extends BaseActivity {
 
     private void getStoreList() {
         RetrofitManager.createString(ApiService.class).getAppStoreList()
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
@@ -123,6 +124,7 @@ public class MainActivity extends BaseActivity {
 
     private void getAppVersionFromServer() {
         RetrofitManager.createString(ApiService.class).getAppVersionCode()
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
@@ -381,6 +383,7 @@ public class MainActivity extends BaseActivity {
 
     public void getDayReport(){
         RetrofitManager.createString(ApiService.class).getDayReport()
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

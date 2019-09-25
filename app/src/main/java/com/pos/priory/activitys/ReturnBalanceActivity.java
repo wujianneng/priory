@@ -121,7 +121,9 @@ public class ReturnBalanceActivity extends BaseActivity {
             paramMap.put("returnorderitems",returnorderitems);
         }
         Log.e("test","params:" + gson.toJson(paramMap));
-        RetrofitManager.createString(ApiService.class).returnGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
+        RetrofitManager.createString(ApiService.class)
+                .returnGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

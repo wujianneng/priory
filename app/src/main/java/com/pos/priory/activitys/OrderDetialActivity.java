@@ -116,6 +116,7 @@ public class OrderDetialActivity extends BaseActivity {
             });
             customDialog.show();
             RetrofitManager.createString(ApiService.class).getOrderByOrderId(orderid)
+                    .compose(this.<String>bindToLifecycle())
                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<String>() {
                         @Override

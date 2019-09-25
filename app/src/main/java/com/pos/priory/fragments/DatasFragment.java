@@ -69,6 +69,7 @@ public class DatasFragment extends BaseFragment {
     private void getDatas() {
         RetrofitManager.createString(ApiService.class)
                 .getDatas()
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

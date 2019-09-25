@@ -96,6 +96,7 @@ public class BigInventoryActivity extends BaseActivity {
 
     private void refreshRecyclerView() {
         RetrofitManager.createString(ApiService.class).getBigInventorys()
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -140,6 +141,7 @@ public class BigInventoryActivity extends BaseActivity {
             customDialog = new CustomDialog(this, "创建中..");
         customDialog.show();
         RetrofitManager.createString(ApiService.class).createBigInventory()
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override

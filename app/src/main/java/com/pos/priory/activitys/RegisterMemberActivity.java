@@ -156,6 +156,7 @@ public class RegisterMemberActivity extends BaseActivity {
         paramMap.put("sex", btnSex.getText().toString());
         RetrofitManager.createString(ApiService.class)
                 .registerMember(paramMap)
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

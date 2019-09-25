@@ -6,8 +6,8 @@ android {
         applicationId "com.pos.priory"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 13
-        versionName "4.0.10"
+        versionCode 14
+        versionName "4.0.11"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -37,6 +37,9 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.2.0"
     implementation "io.reactivex.rxjava2:rxjava:2.0.6"
     implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
+    //rxlifecycle
+    compile"com.trello.rxlifecycle2:rxlifecycle:2.1.0"//rxlifecycle-components已经引入了，这个可以去掉
+    compile"com.trello.rxlifecycle2:rxlifecycle-components:2.1.0"
     implementation "com.blankj:utilcode:1.9.6"
 
     implementation 'com.yanzhenjie:recyclerview-swipe:1.1.4'

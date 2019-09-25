@@ -109,7 +109,9 @@ public class BigInventoryDetialActivity extends BaseActivity {
     }
 
     private void refreshRecyclerView(final boolean isRefresh) {
-        RetrofitManager.createString(ApiService.class).getBigInventoryById(inventoryId, page)
+        RetrofitManager.createString(ApiService.class)
+                .getBigInventoryById(inventoryId, page)
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -176,6 +178,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
     private void finishInventory() {
         RetrofitManager.createString(ApiService.class)
                 .updateBigInventoryById(inventoryId, "已完成")
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
@@ -213,6 +216,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
     private void doInventry(String code) {
         RetrofitManager.createString(ApiService.class)
                 .updateOnBigInventoryItemById(inventoryId, code)
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

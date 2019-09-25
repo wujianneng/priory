@@ -6,13 +6,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.google.gson.Gson;
 import com.pos.priory.utils.ColseActivityUtils;
 import com.pos.zxinglib.utils.SystemBarTintManager;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,7 +22,7 @@ import org.greenrobot.eventbus.ThreadMode;
  * Created by Lenovo on 2018/12/29.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends RxAppCompatActivity {
     SharedPreferences sharedPreferences;
     Gson gson = new Gson();
     Handler handler = new Handler();

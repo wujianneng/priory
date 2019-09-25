@@ -250,7 +250,7 @@ public class DetialListFragment extends BaseFragment {
             }
         });
         customDialog.show();
-        RetrofitManager.createString(ApiService.class).editPurchasingitem(bean.getId(),count).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        RetrofitManager.createString(ApiService.class).editPurchasingitem(bean.getId(),count).compose(this.<String>bindToLifecycle()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
@@ -277,7 +277,7 @@ public class DetialListFragment extends BaseFragment {
             }
         });
         customDialog.show();
-        RetrofitManager.createString(ApiService.class).comfirmPurchasingitem(id,true).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        RetrofitManager.createString(ApiService.class).comfirmPurchasingitem(id,true).compose(this.<String>bindToLifecycle()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
@@ -304,7 +304,7 @@ public class DetialListFragment extends BaseFragment {
             }
         });
         customDialog.show();
-        RetrofitManager.createString(ApiService.class).deletePurchasingitem(dataList.get(position).getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        RetrofitManager.createString(ApiService.class).deletePurchasingitem(dataList.get(position).getId()).compose(this.<String>bindToLifecycle()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
@@ -331,6 +331,7 @@ public class DetialListFragment extends BaseFragment {
         }
         RetrofitManager.createString(ApiService.class)
                 .getPurchasingitems()
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

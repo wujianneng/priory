@@ -214,7 +214,9 @@ public class GoodDetialActivity extends BaseActivity {
             customDialog = new CustomDialog(this, "退货中..");
         customDialog.show();
         GoodBean goodBean = orderList.get(pos);
-        RetrofitManager.createString(ApiService.class).returnStockById(goodBean.getId())
+        RetrofitManager.createString(ApiService.class)
+                .returnStockById(goodBean.getId())
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -293,7 +295,9 @@ public class GoodDetialActivity extends BaseActivity {
         stocktransfer.add(stocktransferMap);
         paramMap.put("stocktransfer", stocktransfer);
         Log.e("test","params:" + gson.toJson(paramMap));
-        RetrofitManager.createString(ApiService.class).tranferGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
+        RetrofitManager.createString(ApiService.class)
+                .tranferGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -317,7 +321,9 @@ public class GoodDetialActivity extends BaseActivity {
             orderList.clear();
             goodDetialAdapter.notifyDataSetChanged();
         }
-        RetrofitManager.createString(ApiService.class).getStockListByParam(productcode)
+        RetrofitManager.createString(ApiService.class)
+                .getStockListByParam(productcode)
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
@@ -366,6 +372,7 @@ public class GoodDetialActivity extends BaseActivity {
         map.put("product", bean.getProduct().getId());
         map.put("quantity", count);
         RetrofitManager.createString(ApiService.class).createPurchasingitem(map)
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override

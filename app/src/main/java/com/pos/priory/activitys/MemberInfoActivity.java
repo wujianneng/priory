@@ -146,7 +146,9 @@ public class MemberInfoActivity extends BaseActivity {
             orderList.clear();
             orderAdapter.notifyDataSetChanged();
         }
-        RetrofitManager.createString(ApiService.class).getOrdersByOrdernumber(memberBean.getMobile())
+        RetrofitManager.createString(ApiService.class)
+                .getOrdersByOrdernumber(memberBean.getMobile())
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override

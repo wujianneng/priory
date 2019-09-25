@@ -92,6 +92,7 @@ public class ReturnGoodsActivity extends BaseActivity {
         customDialog.show();
         RetrofitManager.createString(ApiService.class)
                 .getCurrentGoldPrice()
+                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {

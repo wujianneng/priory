@@ -312,6 +312,7 @@ public class OrderBean {
         private StockBean stock;
         private String discount;
         private double price;
+        private double originprice;
         private boolean returned;
 
         private String weight = "";
@@ -319,6 +320,14 @@ public class OrderBean {
         boolean isSelected = false;
         private int returnStockId = -1;
         private int oprateCount = 1;
+
+        public double getOriginprice() {
+            return originprice;
+        }
+
+        public void setOriginprice(double originprice) {
+            this.originprice = originprice;
+        }
 
         public String getWeight() {
             return weight;
