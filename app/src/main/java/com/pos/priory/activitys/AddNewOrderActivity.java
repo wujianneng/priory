@@ -23,12 +23,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.adapters.AddNewOrderGoodsAdapter;
 import com.pos.priory.beans.GoodBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
-import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.LogicUtils;
 import com.pos.zxinglib.MipcaActivityCapture;
 import com.pos.zxinglib.utils.DeviceUtil;

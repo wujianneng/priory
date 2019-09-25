@@ -1,28 +1,17 @@
-package com.pos.priory.networks;
+package com.infitack.rxretorfit2library;
 
 import android.util.Log;
 
-import com.blankj.utilcode.util.NetworkUtils;
-import com.google.gson.Gson;
-import com.pos.priory.MyApplication;
-import com.pos.priory.utils.Constants;
-import com.pos.priory.utils.SentryLog;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
-import java.util.HashMap;
-import java.util.Map;
 
-import io.sentry.Sentry;
-import io.sentry.SentryClient;
-import okhttp3.CacheControl;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.internal.http.HttpHeaders;
@@ -38,14 +27,23 @@ public class OkHttpInterceptor implements Interceptor {
     private static final String TAG = "okHttp";
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
+
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
+        Request request = null;
+        Log.e(TAG, "headerKey：" + RetrofitManager.headerKey + " headerValue:" + RetrofitManager.headerValue);
+        if (RetrofitManager.headerKey.equals("")) {
+            request = original.newBuilder()
+                    .method(original.method(), original.body())
+                    .build();
+        } else {
+            request = original.newBuilder()
+                    .header(RetrofitManager.headerKey, RetrofitManager.headerValue)
+                    .method(original.method(), original.body())
+                    .build();
+        }
 
-        Request request = original.newBuilder()
-                .header(Constants.Authorization_KEY, MyApplication.authorization)
-                .method(original.method(), original.body())
-                .build();
         Response response = chain.proceed(request);
         ////
         //打印response
@@ -56,14 +54,14 @@ public class OkHttpInterceptor implements Interceptor {
         if (!HttpHeaders.hasBody(response)) { //HttpHeader -> 改成了 HttpHeaders，看版本进行选择
             //END HTTP
             Log.e(TAG, "HttpHeaders.hasBody(response)");
-            if(!response.isSuccessful()){
-                SentryLog.sentryLogError(MyApplication.getContext().staffInfoBean != null ? MyApplication.getContext().staffInfoBean.getUser() : "nouser",0,"",response.message(),"");
+            if (!response.isSuccessful()) {
+                SentryLog.sentryLogError(!RetrofitManager.sentryUsername.equals("") ? RetrofitManager.sentryUsername : "nouser", 0, "", response.message(), "");
             }
         } else if (bodyEncoded(response.headers())) {
             //HTTP (encoded body omitted)
             Log.e(TAG, "bodyEncoded(response.headers())");
-            if(!response.isSuccessful()){
-                SentryLog.sentryLogError(MyApplication.getContext().staffInfoBean != null ? MyApplication.getContext().staffInfoBean.getUser() : "nouser",0,"",response.message(),"");
+            if (!response.isSuccessful()) {
+                SentryLog.sentryLogError(!RetrofitManager.sentryUsername.equals("") ? RetrofitManager.sentryUsername : "nouser", 0, "", response.message(), "");
             }
         } else {
             BufferedSource source = responseBody.source();
@@ -91,9 +89,9 @@ public class OkHttpInterceptor implements Interceptor {
                 //do something .... <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
             }
             Log.e(TAG, "else" + response.code());
-            if(!response.isSuccessful()){
+            if (!response.isSuccessful()) {
                 Log.e(TAG, "else!response.isSuccessful()" + response.code());
-                SentryLog.sentryLogError(MyApplication.getContext().staffInfoBean != null ? MyApplication.getContext().staffInfoBean.getUser() : "nouser",0,request.url().toString(),response.message(),result);
+                SentryLog.sentryLogError(!RetrofitManager.sentryUsername.equals("") ? RetrofitManager.sentryUsername : "nouser", 0, request.url().toString(), response.message(), result);
                 Log.e(TAG, "sentryLogErrorSuccessful");
             }
 

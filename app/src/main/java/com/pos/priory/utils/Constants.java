@@ -1,12 +1,16 @@
 package com.pos.priory.utils;
 
-import com.pos.priory.networks.RetrofitManager;
-
 /**
  * Created by Lenovo on 2019/1/4.
  */
 
 public class Constants {
+    public static final String BASE_URL = "http://api.annabellaip.com";
+    public static final String MACAL_BASE_URL = "http://mo.api.annabellaip.com";
+    public static final String BASE_URL_HTTP = BASE_URL;
+
+    public static final String SENTRY_DNS = "https://16fbe74588aa409eafdb10e6a94bc827:39bbbc909aec4afba24523c286bbc926@sentry.io/1481689";
+
     public static final String LAST_BASE_URL_KEY = "lastBaseUrlKey";
     public static final String LAST_USERNAME_KEY = "lastUsernameKey";
     public static final String LAST_PASSWORD_KEY = "lastPasswordKey";
@@ -34,7 +38,7 @@ public class Constants {
     public static final String RETURN_STOCKS_URL = "https://pos.annabellaip.com/api/returnstocks";
     public static final String PURCHASING_URL = "https://pos.annabellaip.com/api/purchasing";
     public static final String PURCHASING_ITEM_URL = "https://pos.annabellaip.com/api/purchasingitems";
-    public static final String BASE_URL_HTTP = RetrofitManager.BASE_URL;
+
     public static final String GOLD_PRICE_URL = "https://pos.annabellaip.com/api/goldprice/";
     public static final String GET_DISCOUNT_LIST_URL = "https://pos.annabellaip.com/api/discount/";
     public static final String CHANGE_OR_RETURN_GOOD_VOICES_URL = "https://pos.annabellaip.com/api/rmainvoices";

@@ -10,10 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
-import com.pos.priory.networks.RetrofitManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

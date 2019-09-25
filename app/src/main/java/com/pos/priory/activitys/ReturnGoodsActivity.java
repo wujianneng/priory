@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -14,13 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.adapters.ChangeGoodsAdapter;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
-import com.pos.priory.networks.RetrofitManager;
-import com.pos.priory.utils.LogicUtils;
 
 import org.json.JSONObject;
 

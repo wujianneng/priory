@@ -18,12 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
-import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.LogicUtils;
 
@@ -86,9 +86,9 @@ public class LoginActivity extends BaseActivity {
             }, 300);
         }
         checkbox.setChecked(sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false));
-        MyApplication.hostName = sharedPreferences.getString(Constants.LAST_BASE_URL_KEY, RetrofitManager.BASE_URL);
-        Log.e("test","MyApplication.hostName:" + MyApplication.hostName);
-        locationTv.setText(MyApplication.hostName.equals(RetrofitManager.BASE_URL) ? "中国大陆" : "澳门");
+        MyApplication.hostName = sharedPreferences.getString(Constants.LAST_BASE_URL_KEY, Constants.BASE_URL);
+        Log.e("test", "MyApplication.hostName:" + MyApplication.hostName);
+        locationTv.setText(MyApplication.hostName.equals(Constants.BASE_URL) ? "中国大陆" : "澳门");
     }
 
     @OnClick({R.id.btn_cardview, R.id.select_location_btn})
@@ -103,30 +103,40 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+    PopupMenu popupMenu;
+
     private void showSelectLocationPop(View view) {
         // 这里的view代表popupMenu需要依附的view
-        PopupMenu popupMenu = new PopupMenu(LoginActivity.this, view);
-        // 获取布局文件
-        popupMenu.getMenuInflater().inflate(R.menu.location_menu, popupMenu.getMenu());
-        popupMenu.show();
-        // 通过上面这几行代码，就可以把控件显示出来了
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                // 控件每一个item的点击事件
-                switch (item.getItemId()) {
-                    case R.id.menu0:
-                        locationTv.setText(item.getTitle());
-                        MyApplication.hostName = RetrofitManager.BASE_URL;
-                        break;
-                    case R.id.menu1:
-                        locationTv.setText(item.getTitle());
-                        MyApplication.hostName = RetrofitManager.MACAL_BASE_URL;
-                        break;
+        if (popupMenu == null) {
+            popupMenu = new PopupMenu(LoginActivity.this, view);
+            // 获取布局文件
+            popupMenu.getMenuInflater().inflate(R.menu.location_menu, popupMenu.getMenu());
+            popupMenu.show();
+            popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                @Override
+                public void onDismiss(PopupMenu popupMenu) {
+                    popupMenu = null;
                 }
-                return true;
-            }
-        });
+            });
+            // 通过上面这几行代码，就可以把控件显示出来了
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    // 控件每一个item的点击事件
+                    switch (item.getItemId()) {
+                        case R.id.menu0:
+                            locationTv.setText(item.getTitle());
+                            MyApplication.hostName = Constants.BASE_URL;
+                            break;
+                        case R.id.menu1:
+                            locationTv.setText(item.getTitle());
+                            MyApplication.hostName = Constants.MACAL_BASE_URL;
+                            break;
+                    }
+                    return true;
+                }
+            });
+        }
     }
 
 
@@ -157,6 +167,7 @@ public class LoginActivity extends BaseActivity {
                         public void accept(String s) throws Exception {
                             String token = new JSONObject(s).getString("key");
                             MyApplication.authorization = "Token " + token;
+                            RetrofitManager.initHeader(Constants.Authorization_KEY, MyApplication.authorization);
                         }
                     })
                     .doOnError(new Consumer<Throwable>() {
@@ -201,7 +212,7 @@ public class LoginActivity extends BaseActivity {
                                     editor.commit();
                                     if (customDialog != null)
                                         customDialog.dismiss();
-
+                                    RetrofitManager.initSentry(edtUsename.getText().toString());
                                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                     finish();
                                 }

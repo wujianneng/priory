@@ -1,7 +1,6 @@
 package com.pos.priory.activitys;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
@@ -24,22 +23,18 @@ import android.widget.Toast;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.TablePrintGoodsAdapter;
 import com.pos.priory.beans.DayReportBean;
-import com.pos.priory.beans.StaffInfoBean;
 import com.pos.priory.fragments.DatasFragment;
 import com.pos.priory.fragments.InventoryFragment;
 import com.pos.priory.fragments.OrderFragment;
 import com.pos.priory.fragments.QueryFragment;
 import com.pos.priory.fragments.RepertoryFragment;
 import com.pos.priory.networks.ApiService;
-import com.pos.priory.networks.RetrofitManager;
 import com.pos.priory.utils.ColseActivityUtils;
-import com.pos.priory.utils.Constants;
 import com.pos.priory.utils.DateUtils;
 import com.pos.priory.utils.UpgradeUtils;
 import com.pos.zxinglib.MipcaActivityCapture;

@@ -1,0 +1,41 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 28
+
+
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    api "com.squareup.retrofit2:retrofit:2.1.0"
+    api "com.squareup.retrofit2:converter-scalars:2.1.0"
+    api "com.squareup.retrofit2:converter-gson:2.1.0"
+    api "com.squareup.retrofit2:adapter-rxjava2:2.2.0"
+    api "io.reactivex.rxjava2:rxjava:2.0.6"
+    api "io.reactivex.rxjava2:rxandroid:2.0.1"
+    //rxlifecycle
+    api"com.trello.rxlifecycle2:rxlifecycle:2.1.0"//rxlifecycle-components已经引入了，这个可以去掉
+    api"com.trello.rxlifecycle2:rxlifecycle-components:2.1.0"
+
+    api 'io.sentry:sentry-android:1.6.3'
+}
