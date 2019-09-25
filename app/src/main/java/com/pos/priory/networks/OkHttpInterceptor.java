@@ -41,7 +41,7 @@ public class OkHttpInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request original = chain.request();
-
+        Log.e(TAG, "authorization:" + MyApplication.authorization);
         Request request = original.newBuilder()
                 .header(Constants.Authorization_KEY, MyApplication.authorization)
                 .method(original.method(), original.body())
