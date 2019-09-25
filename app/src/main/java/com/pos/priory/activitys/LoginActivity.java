@@ -86,9 +86,9 @@ public class LoginActivity extends BaseActivity {
             }, 300);
         }
         checkbox.setChecked(sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false));
-        MyApplication.hostName = sharedPreferences.getString(Constants.LAST_BASE_URL_KEY, Constants.BASE_URL);
-        Log.e("test", "MyApplication.hostName:" + MyApplication.hostName);
-        locationTv.setText(MyApplication.hostName.equals(Constants.BASE_URL) ? "中国大陆" : "澳门");
+        RetrofitManager.changeBaseUrl(sharedPreferences.getString(Constants.LAST_BASE_URL_KEY, Constants.BASE_URL));
+        Log.e("test", "MyApplication.hostName:" + RetrofitManager.hostname);
+        locationTv.setText(RetrofitManager.hostname.equals(Constants.BASE_URL) ? "中国大陆" : "澳门");
     }
 
     @OnClick({R.id.btn_cardview, R.id.select_location_btn})
@@ -114,7 +114,7 @@ public class LoginActivity extends BaseActivity {
             popupMenu.show();
             popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
                 @Override
-                public void onDismiss(PopupMenu popupMenu) {
+                public void onDismiss(PopupMenu popupMenu1) {
                     popupMenu = null;
                 }
             });
@@ -126,11 +126,11 @@ public class LoginActivity extends BaseActivity {
                     switch (item.getItemId()) {
                         case R.id.menu0:
                             locationTv.setText(item.getTitle());
-                            MyApplication.hostName = Constants.BASE_URL;
+                            RetrofitManager.changeBaseUrl(Constants.BASE_URL);
                             break;
                         case R.id.menu1:
                             locationTv.setText(item.getTitle());
-                            MyApplication.hostName = Constants.MACAL_BASE_URL;
+                            RetrofitManager.changeBaseUrl(Constants.MACAL_BASE_URL);
                             break;
                     }
                     return true;
@@ -206,7 +206,7 @@ public class LoginActivity extends BaseActivity {
                                         editor.putString(Constants.LAST_PASSWORD_KEY,
                                                 edtPasswrod.getText().toString());
                                         editor.putString(Constants.LAST_BASE_URL_KEY,
-                                                MyApplication.hostName);
+                                                RetrofitManager.hostname);
                                     }
                                     editor.putString(Constants.CURRENT_STAFF_INFO_KEY, s);
                                     editor.commit();

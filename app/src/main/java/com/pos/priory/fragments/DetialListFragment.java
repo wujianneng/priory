@@ -188,7 +188,7 @@ public class DetialListFragment extends BaseFragment {
             TextView code_tv = view.findViewById(R.id.code_tv);
             TextView name_tv = view.findViewById(R.id.name_tv);
             final EditText edt_count = view.findViewById(R.id.edt_count);
-            Glide.with(getActivity()).load(MyApplication.hostName + purchasingBean.getProduct().getImage())
+            Glide.with(getActivity()).load(RetrofitManager.hostname + purchasingBean.getProduct().getImage())
                     .error(android.R.drawable.ic_menu_gallery)
                     .into(icon_good);
             code_tv.setText(purchasingBean.getProduct().getProductcode() + "");

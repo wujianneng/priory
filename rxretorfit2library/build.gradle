@@ -1,8 +1,14 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'//添加
+
+
 
 android {
     compileSdkVersion 28
 
+    lintOptions {
+        abortOnError false
+    }
 
 
     defaultConfig {
@@ -38,4 +44,18 @@ dependencies {
     api"com.trello.rxlifecycle2:rxlifecycle-components:2.1.0"
 
     api 'io.sentry:sentry-android:1.6.3'
+}
+//gradlew clean build bintrayUpload -PbintrayUser=tom798192335 -PbintrayKey=c701e69e3dd7e1c7ca0581caa48847162a775b7b -PdryRun=false
+//apikey:c701e69e3dd7e1c7ca0581caa48847162a775b7b
+
+//gradlew clean build bintrayUpload -PbintrayUser=wujianneng -PbintrayKey=f5fd8f029f42e1cde2935cacb7831f602eeacc20 -PdryRun=false
+//f5fd8f029f42e1cde2935cacb7831f602eeacc20
+//添加
+publish {
+    userOrg = 'wujianneng'//bintray.com用户名
+    groupId = 'com.wujianneng'//jcenter上的路径
+    artifactId = 'rxRetorfit2AndSentry'//项目名称
+    publishVersion = '1.0.0'//版本号
+    desc = 'Oh hi, this is a nice description for a project, right?'//描述，不重要
+    website = 'https://github.com/hyman/basetools'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
 }

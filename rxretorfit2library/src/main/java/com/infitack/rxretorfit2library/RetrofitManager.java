@@ -35,6 +35,10 @@ public class RetrofitManager {
         cache = okhttp3Cache;
     }
 
+    public static void changeBaseUrl(String baseUrl){
+        hostname = baseUrl;
+    }
+
     public static void initHeader(String headerkey,String headervalue) {
         headerKey = headerkey;
         headerValue = headervalue;

@@ -27,7 +27,6 @@ public class MyApplication extends Application {
     public static String storeTel = "";
     public static String region = "";
     public static String storeListJsonString = "";
-    public static String hostName = Constants.BASE_URL;
 
     @Override
     public void onCreate() {
@@ -40,8 +39,8 @@ public class MyApplication extends Application {
                 .setConnectTimeout(30_000)
                 .build());
 
-        RetrofitManager.init(this,Constants.SENTRY_DNS,hostName,new Cache(getCacheDir(),
-                1024 * 1024 * 10),"",Constants.Authorization_KEY,MyApplication.authorization);
+        RetrofitManager.init(this,Constants.SENTRY_DNS,Constants.MACAL_BASE_URL,new Cache(getCacheDir(),
+                1024 * 1024 * 10),"",Constants.Authorization_KEY,authorization);
     }
 
 
