@@ -30,7 +30,6 @@ public class OrderDetialGoodsAdapter extends BaseQuickAdapter<OrderBean.ItemsBea
     protected void convert(final BaseViewHolder helper, final OrderBean.ItemsBean item) {
         Log.e("glide","url:" + Constants.BASE_URL_HTTP + item.getStock().getProduct().getImage());
         Glide.with(mContext).load(Constants.BASE_URL_HTTP + item.getStock().getProduct().getImage())
-                .asBitmap()
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));

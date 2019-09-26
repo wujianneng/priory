@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'//添加
+//apply plugin: 'com.novoda.bintray-release'//添加
 
 
 
@@ -51,11 +51,11 @@ dependencies {
 //gradlew clean build bintrayUpload -PbintrayUser=wujianneng -PbintrayKey=f5fd8f029f42e1cde2935cacb7831f602eeacc20 -PdryRun=false
 //f5fd8f029f42e1cde2935cacb7831f602eeacc20
 //添加
-publish {
-    userOrg = 'wujianneng'//bintray.com用户名
-    groupId = 'com.wujianneng'//jcenter上的路径
-    artifactId = 'rxRetorfit2AndSentry'//项目名称
-    publishVersion = '1.0.0'//版本号
-    desc = 'Oh hi, this is a nice description for a project, right?'//描述，不重要
-    website = 'https://github.com/hyman/basetools'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
-}
+//publish {
+//    userOrg = 'wujianneng'//bintray.com用户名
+//    groupId = 'com.wujianneng'//jcenter上的路径
+//    artifactId = 'rxRetorfit2AndSentry'//项目名称
+//    publishVersion = '1.0.0'//版本号
+//    desc = 'Oh hi, this is a nice description for a project, right?'//描述，不重要
+//    website = 'https://github.com/wujianneng/priory'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
+//}
