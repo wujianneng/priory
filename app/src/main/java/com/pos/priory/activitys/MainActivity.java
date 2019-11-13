@@ -3,6 +3,7 @@ package com.pos.priory.activitys;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -100,11 +101,11 @@ public class MainActivity extends BaseActivity {
                     @Override
                     public void accept(String s) throws Exception {
                         JSONArray jsonArray = new JSONArray(s);
-                        if(jsonArray.length() != 0){
+                        if (jsonArray.length() != 0) {
                             MyApplication.getContext().storeListJsonString = s;
-                            for(int i = 0 ; i < jsonArray.length() ;i++){
+                            for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                if(jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getStore())){
+                                if (jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getStore())) {
                                     MyApplication.getContext().storeName = jsonObject.getString("name");
                                     MyApplication.getContext().storeAddress = jsonObject.getString("address");
                                     MyApplication.getContext().storeTel = jsonObject.getString("tel");
@@ -128,7 +129,7 @@ public class MainActivity extends BaseActivity {
                         JSONObject jsonObject = new JSONObject(s);
                         int code = jsonObject.getInt("version");
                         String url = jsonObject.getString("url");
-                        UpgradeUtils.checkToUpdate(MainActivity.this,code,url);
+                        UpgradeUtils.checkToUpdate(MainActivity.this.bindToLifecycle(),MainActivity.this, code, url);
                     }
                 });
     }
@@ -180,40 +181,26 @@ public class MainActivity extends BaseActivity {
                         settingImg.setVisibility(View.VISIBLE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
+                        hideAllFragments();
                         if (orderFragment == null) {
                             orderFragment = new OrderFragment();
                             getSupportFragmentManager().beginTransaction().add(R.id.container_layout, orderFragment).commit();
                         } else {
                             getSupportFragmentManager().beginTransaction().show(orderFragment).commit();
                         }
-                        if (queryFragment != null && !queryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(queryFragment).commit();
-                        if (repertoryFragment != null && !repertoryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(repertoryFragment).commit();
-                        if (inventoryFragment != null && !inventoryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
-                        if (datasFragment != null && !datasFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(datasFragment).commit();
                         break;
                     case 1:
                         titleTv.setText("查 单");
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
+                        hideAllFragments();
                         if (queryFragment == null) {
                             queryFragment = new QueryFragment();
                             getSupportFragmentManager().beginTransaction().add(R.id.container_layout, queryFragment).commit();
                         } else {
                             getSupportFragmentManager().beginTransaction().show(queryFragment).commit();
                         }
-                        if (orderFragment != null && !orderFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(orderFragment).commit();
-                        if (repertoryFragment != null && !repertoryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(repertoryFragment).commit();
-                        if (inventoryFragment != null && !inventoryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
-                        if (datasFragment != null && !datasFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(datasFragment).commit();
 //                        queryFragment.showKeyBord();
                         break;
                     case 2:
@@ -221,60 +208,39 @@ public class MainActivity extends BaseActivity {
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.VISIBLE);
                         repertorySearchLayout.setVisibility(View.VISIBLE);
+                        hideAllFragments();
                         if (repertoryFragment == null) {
                             repertoryFragment = new RepertoryFragment();
                             getSupportFragmentManager().beginTransaction().add(R.id.container_layout, repertoryFragment).commit();
                         } else {
                             getSupportFragmentManager().beginTransaction().show(repertoryFragment).commit();
                         }
-                        if (queryFragment != null && !queryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(queryFragment).commit();
-                        if (orderFragment != null && !orderFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(orderFragment).commit();
-                        if (inventoryFragment != null && !inventoryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
-                        if (datasFragment != null && !datasFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(datasFragment).commit();
                         break;
                     case 3:
                         titleTv.setText("盘 点");
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
+                        hideAllFragments();
                         if (inventoryFragment == null) {
                             inventoryFragment = new InventoryFragment();
                             getSupportFragmentManager().beginTransaction().add(R.id.container_layout, inventoryFragment).commit();
                         } else {
                             getSupportFragmentManager().beginTransaction().show(inventoryFragment).commit();
                         }
-                        if (queryFragment != null && !queryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(queryFragment).commit();
-                        if (repertoryFragment != null && !repertoryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(repertoryFragment).commit();
-                        if (orderFragment != null && !orderFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(orderFragment).commit();
-                        if (datasFragment != null && !datasFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(datasFragment).commit();
                         break;
                     case 4:
                         titleTv.setText("数 据");
                         settingImg.setVisibility(View.GONE);
                         scanImg.setVisibility(View.GONE);
                         repertorySearchLayout.setVisibility(View.GONE);
+                        hideAllFragments();
                         if (datasFragment == null) {
                             datasFragment = new DatasFragment();
                             getSupportFragmentManager().beginTransaction().add(R.id.container_layout, datasFragment).commit();
                         } else {
                             getSupportFragmentManager().beginTransaction().show(datasFragment).commit();
                         }
-                        if (queryFragment != null && !queryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(queryFragment).commit();
-                        if (repertoryFragment != null && !repertoryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(repertoryFragment).commit();
-                        if (orderFragment != null && !orderFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(orderFragment).commit();
-                        if (inventoryFragment != null && !inventoryFragment.isHidden())
-                            getSupportFragmentManager().beginTransaction().hide(inventoryFragment).commit();
                         break;
                 }
             }
@@ -291,6 +257,22 @@ public class MainActivity extends BaseActivity {
         });
         navigation.selectTab(0);
     }
+
+    public void hideAllFragments() {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        if (queryFragment != null && !queryFragment.isHidden())
+            fragmentTransaction.hide(queryFragment);
+        if (repertoryFragment != null && !repertoryFragment.isHidden())
+            fragmentTransaction.hide(repertoryFragment);
+        if (orderFragment != null && !orderFragment.isHidden())
+            fragmentTransaction.hide(orderFragment);
+        if (inventoryFragment != null && !inventoryFragment.isHidden())
+            fragmentTransaction.hide(inventoryFragment);
+        if (datasFragment != null && !datasFragment.isHidden())
+            fragmentTransaction.hide(datasFragment);
+        fragmentTransaction.commit();
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -376,7 +358,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    public void getDayReport(){
+    public void getDayReport() {
         RetrofitManager.createString(ApiService.class).getDayReport()
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
@@ -384,15 +366,15 @@ public class MainActivity extends BaseActivity {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
-                        Log.e("test","result:" + s);
-                        DayReportBean dayReportBean = gson.fromJson(s,DayReportBean.class);
+                        Log.e("test", "result:" + s);
+                        DayReportBean dayReportBean = gson.fromJson(s, DayReportBean.class);
                         printGoldTable(dayReportBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Log.e("test","throwable:" + gson.toJson(throwable));
-                        Toast.makeText(MainActivity.this,"查不到日报表数据",Toast.LENGTH_SHORT).show();
+                        Log.e("test", "throwable:" + gson.toJson(throwable));
+                        Toast.makeText(MainActivity.this, "查不到日报表数据", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -402,11 +384,11 @@ public class MainActivity extends BaseActivity {
         List<View> views = new ArrayList<>();
         List<DayReportBean.ItemsBean> templist = new ArrayList<>();
         templist.addAll(dayReportBean.getItems());
-        if(dayReportBean.getRefunditem().size() != 0){
+        if (dayReportBean.getRefunditem().size() != 0) {
             DayReportBean.ItemsBean returnTitleBean = new DayReportBean.ItemsBean();
             returnTitleBean.setProductname("退货标题");
             templist.add(returnTitleBean);
-            for(DayReportBean.RefunditemBean refunditemBean : dayReportBean.getRefunditem()){
+            for (DayReportBean.RefunditemBean refunditemBean : dayReportBean.getRefunditem()) {
                 DayReportBean.ItemsBean itemsBean = new DayReportBean.ItemsBean();
                 itemsBean.setProductname(refunditemBean.getProductname());
                 itemsBean.setCatalog(refunditemBean.getCatalog());
@@ -431,7 +413,7 @@ public class MainActivity extends BaseActivity {
         for (int i = 0; i < size; i++) {
             List<DayReportBean.ItemsBean> extraList = new ArrayList<>();
             if (i == (size - 1)) {
-                if(a == 0){
+                if (a == 0) {
                     a = perPageSize;
                 }
                 for (int t = 0; t < a; t++) {
@@ -451,10 +433,10 @@ public class MainActivity extends BaseActivity {
                 layoutid = R.layout.gold_daliy_table2;
             }
             final View printView = LayoutInflater.from(MainActivity.this).inflate(layoutid, null);
-            if(extraList.size() != 0 && !extraList.get(0).isReturnItem()){
+            if (extraList.size() != 0 && !extraList.get(0).isReturnItem()) {
                 printView.findViewById(R.id.list_title_layout0).setVisibility(View.VISIBLE);
                 printView.findViewById(R.id.list_title_layout1).setVisibility(View.GONE);
-            }else {
+            } else {
                 printView.findViewById(R.id.list_title_layout0).setVisibility(View.GONE);
                 printView.findViewById(R.id.list_title_layout1).setVisibility(View.VISIBLE);
             }
@@ -478,7 +460,7 @@ public class MainActivity extends BaseActivity {
 
             RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
             TablePrintGoodsAdapter adapter = new TablePrintGoodsAdapter(R.layout.gold_table_print_good_list_item, extraList,
-                    i,dayReportBean.getItems().size(),dayReportBean.getRefunditem().size(),perPageSize);
+                    i, dayReportBean.getItems().size(), dayReportBean.getRefunditem().size(), perPageSize);
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
             mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
             listview.setLayoutManager(mLayoutManager);

@@ -2,7 +2,6 @@ package com.infitack.rxretorfit2library;
 
 import android.util.Log;
 
-
 import java.io.EOFException;
 import java.io.IOException;
 import java.nio.charset.Charset;

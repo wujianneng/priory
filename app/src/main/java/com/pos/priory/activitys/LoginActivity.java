@@ -165,6 +165,7 @@ public class LoginActivity extends BaseActivity {
                     .doOnNext(new Consumer<String>() {
                         @Override
                         public void accept(String s) throws Exception {
+                            Log.e("test", "doOnNext:" + s);
                             String token = new JSONObject(s).getString("key");
                             MyApplication.authorization = "Token " + token;
                             RetrofitManager.initHeader(Constants.Authorization_KEY, MyApplication.authorization);

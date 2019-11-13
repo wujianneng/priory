@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.activitys.GoodDetialActivity;
@@ -172,23 +173,20 @@ public class RepertoryFragment extends BaseFragment {
     }
 
     private void refreshMainRepertorySumDatas() {
-        RetrofitManager.createString(ApiService.class).getStockSumDatas()
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        JSONObject jsonObject = new JSONObject(s);
-                        leftTv.setText("黄金：" + jsonObject.getInt("goldcount") + "件 | " + jsonObject.getDouble("goldweight") +"g");
-                        rightTv.setVisibility(View.VISIBLE);
-                        rightTv.setText("晶石：" + jsonObject.getInt("cystalcount") + "件");
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
+        RetrofitManager.excute(this.bindToLifecycle(), new ModelListener() {
+            @Override
+            public void onSuccess(String result) throws Exception {
+                JSONObject jsonObject = new JSONObject(result);
+                leftTv.setText("黄金：" + jsonObject.getInt("goldcount") + "件 | " + jsonObject.getDouble("goldweight") + "g");
+                rightTv.setVisibility(View.VISIBLE);
+                rightTv.setText("晶石：" + jsonObject.getInt("cystalcount") + "件");
+            }
 
-                    }
-                });
+            @Override
+            public void onFailed(String erromsg) {
+
+            }
+        },RetrofitManager.createString(ApiService.class).getStockSumDatas());
     }
 
     public void onChangeRepertoryListener(boolean isStore) {
@@ -237,52 +235,46 @@ public class RepertoryFragment extends BaseFragment {
         });
         customDialog.show();
         GoodBean goodBean = dataList.get(pos);
-        RetrofitManager.createString(ApiService.class)
-                .returnStockById(goodBean.getId())
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        customDialog.dismiss();
-                        ToastUtils.showShort("退货成功");
-                        refreshLayout.autoRefresh();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        customDialog.dismiss();
-                        ToastUtils.showShort("退货失败");
-                    }
-                });
+        RetrofitManager.excute(this.bindToLifecycle(), new ModelListener() {
+            @Override
+            public void onSuccess(String result) throws Exception {
+                customDialog.dismiss();
+                ToastUtils.showShort("退货成功");
+                refreshLayout.autoRefresh();
+            }
+
+            @Override
+            public void onFailed(String erromsg) {
+                customDialog.dismiss();
+                ToastUtils.showShort("退货失败");
+            }
+        }, RetrofitManager.createString(ApiService.class)
+                .returnStockById(goodBean.getId()));
     }
 
     List<String> stores = new ArrayList<>();
     Map<String, Integer> storesMaps = new HashMap<>();
 
     private void getExchangeableStores(final int adapterPosition) {
-        RetrofitManager.createString(ApiService.class).getTranStores()
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        JSONArray jsonArray = new JSONArray(s);
-                        stores.clear();
-                        storesMaps.clear();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            stores.add(jsonObject.getString("name"));
-                            storesMaps.put(jsonObject.getString("name"), jsonObject.getInt("id"));
-                        }
-                        showChoiceDiscountDialog(adapterPosition);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
+        RetrofitManager.excute(this.bindToLifecycle(), new ModelListener() {
+            @Override
+            public void onSuccess(String result) throws Exception {
+                JSONArray jsonArray = new JSONArray(result);
+                stores.clear();
+                storesMaps.clear();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    stores.add(jsonObject.getString("name"));
+                    storesMaps.put(jsonObject.getString("name"), jsonObject.getInt("id"));
+                }
+                showChoiceDiscountDialog(adapterPosition);
+            }
 
-                    }
-                });
+            @Override
+            public void onFailed(String erromsg) {
+
+            }
+        },RetrofitManager.createString(ApiService.class).getTranStores());
     }
 
 
@@ -369,29 +361,24 @@ public class RepertoryFragment extends BaseFragment {
         } else {
             observable = RetrofitManager.createString(ApiService.class).getStockListByParam(str);
         }
-        call = observable
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String results) throws Exception {
-                        JSONObject jsonObject = new JSONObject(results);
-                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<GoodBean>>() {
-                        }.getType());
-                        if (goodBeanList != null) {
-                            dataList.addAll(goodBeanList);
-                            repertoryAdapter.notifyDataSetChanged();
-                        }
-                        refreshLayout.finishRefresh();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        refreshLayout.finishRefresh();
-                    }
-                });
+        call = RetrofitManager.excute(this.bindToLifecycle(), new ModelListener() {
+            @Override
+            public void onSuccess(String result) throws Exception {
+                JSONObject jsonObject = new JSONObject(result);
+                List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<GoodBean>>() {
+                }.getType());
+                if (goodBeanList != null) {
+                    dataList.addAll(goodBeanList);
+                    repertoryAdapter.notifyDataSetChanged();
+                }
+                refreshLayout.finishRefresh();
+            }
 
+            @Override
+            public void onFailed(String erromsg) {
+                refreshLayout.finishRefresh();
+            }
+        },observable);
     }
 
     public void refreshReturnRecyclerView() {
@@ -399,28 +386,24 @@ public class RepertoryFragment extends BaseFragment {
             call.dispose();
         returnGoodBeanList.clear();
         repertoryReturnAdapter.notifyDataSetChanged();
-        Observable<String> observable;
-        observable = RetrofitManager.createString(ApiService.class).getReturnStockLists();
-        call = observable.compose(this.<String>bindToLifecycle()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String results) throws Exception {
-                        ReturnGoodBean returnGoodBean = gson.fromJson(results, ReturnGoodBean.class);
-                        if (returnGoodBean != null) {
-                            returnGoodBeanList.addAll(returnGoodBean.getReturnstockitem());
-                            repertoryReturnAdapter.notifyDataSetChanged();
-                        }
-                        leftTv.setText("黄金：" + returnGoodBean.getGoldcount() + "件 | " + returnGoodBean.getGoldweight() + "g");
-                        rightTv.setVisibility(View.GONE);
-                        refreshLayout.finishRefresh();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        refreshLayout.finishRefresh();
-                    }
-                });
+        call = RetrofitManager.excute(this.<String>bindToLifecycle(), new ModelListener() {
+            @Override
+            public void onSuccess(String results) throws Exception {
+                ReturnGoodBean returnGoodBean = gson.fromJson(results, ReturnGoodBean.class);
+                if (returnGoodBean != null) {
+                    returnGoodBeanList.addAll(returnGoodBean.getReturnstockitem());
+                    repertoryReturnAdapter.notifyDataSetChanged();
+                }
+                leftTv.setText("黄金：" + returnGoodBean.getGoldcount() + "件 | " + returnGoodBean.getGoldweight() + "g");
+                rightTv.setVisibility(View.GONE);
+                refreshLayout.finishRefresh();
+            }
 
+            @Override
+            public void onFailed(String erromsg) {
+                refreshLayout.finishRefresh();
+            }
+        }, RetrofitManager.createString(ApiService.class).getReturnStockLists());
     }
 
     @Override

@@ -1,1 +1,1 @@
-include ':app', ':zxinglib', ':rxretorfit2library', ':wjnbaselib'
+include ':app', ':zxinglib', ':wjnbaselib'

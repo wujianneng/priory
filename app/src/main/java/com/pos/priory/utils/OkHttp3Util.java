@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.ConnectionPool;
+import okhttp3.Dispatcher;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.MediaType;
@@ -56,6 +57,22 @@ public class OkHttp3Util {
 
         }
         return okHttpClient;
+    }
+
+    public static Call doGet(String url, Okhttp3BitmapCallback callback) {
+        //创建OkHttpClient请求对象
+        OkHttpClient okHttpClient = getInstance();
+        //创建Request
+        Request request = null;
+        request = new Request.Builder()
+                .url(url)
+                .build();
+        //得到Call对象
+        Call call = okHttpClient.newCall(request);
+        //执行异步请求
+        call.enqueue(callback);
+
+        return call;
     }
 
     public static Call doGet(String url, Okhttp3StringCallback callback) {
