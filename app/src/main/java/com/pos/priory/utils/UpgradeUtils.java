@@ -12,13 +12,13 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.blankj.utilcode.util.LogUtils;
-import com.downloader.Error;
-import com.downloader.OnDownloadListener;
-import com.downloader.OnProgressListener;
-import com.downloader.PRDownloader;
-import com.downloader.Progress;
+import com.infitack.rxretorfit2library.DownloadListener;
+import com.infitack.rxretorfit2library.RetrofitManager;
+import com.pos.priory.networks.ApiService;
 
 import java.io.File;
+
+import io.reactivex.ObservableTransformer;
 
 
 /**
@@ -68,30 +68,25 @@ public class UpgradeUtils {
         return url.substring(url.lastIndexOf("/") + 1);
     }
 
-    public static String getSDPath(){
+    public static String getSDPath() {
         File sdDir = null;
         boolean sdCardExist = Environment.getExternalStorageState()
                 .equals(android.os.Environment.MEDIA_MOUNTED);//判断sd卡是否存在
-        if(sdCardExist)
-        {
+        if (sdCardExist) {
             sdDir = Environment.getExternalStorageDirectory();//获取跟目录
         }
         return sdDir.toString();
     }
 
 
-    public static void checkToUpdate(final Context context, int serverVersionCode, final String apkurl) {
+    public static void checkToUpdate(ObservableTransformer transformer, final Context context, int serverVersionCode, final String apkurl) {
         try {
             int launcher_loca_v = getVersionCode(context, context.getPackageName()); //本地版本号
-            Log.e(TAG, "launcher_v=" + serverVersionCode);
-            Log.e(TAG, "launcher_loca_v=" + launcher_loca_v);
-            Log.e(TAG, "Integer.MAX_VALUE=" + Integer.MAX_VALUE);
 
             if (serverVersionCode > launcher_loca_v || launcher_loca_v == Integer.MAX_VALUE) {//本地版本小于服务器版本，或者找不到版本号（卸载了）
                 if (!TextUtils.isEmpty(apkurl)) {
                     Log.e(TAG, "a1");
                     File parentFile = new File(context.getFilesDir().getAbsolutePath() + File.separator + "priory");
-//                    File parentFile = new File(getSDPath() + File.separator + "priory");
                     if (!parentFile.exists())
                         parentFile.mkdirs();
                     final File launcherFile = new File(parentFile.getAbsolutePath() + "/" + getFileNameFromUrl(apkurl));
@@ -104,27 +99,25 @@ public class UpgradeUtils {
                     }
                     if (!launcherFile.exists()) {
                         Log.e(TAG, "a2:" + apkurl + " parent:" + tempLauncherFile.getParent() + " file:" + tempLauncherFile.getName());
-                        PRDownloader.download(apkurl, tempLauncherFile.getParent(), tempLauncherFile.getName())
-                                .build()
-                                .setOnProgressListener(new OnProgressListener() {
+                        RetrofitManager.excuteDownloadAndSaveToPath(transformer,
+                                RetrofitManager.createGson(ApiService.class).download(apkurl),
+                                tempLauncherFile, new DownloadListener() {
                                     @Override
-                                    public void onProgress(Progress progress) {
-                                        Log.e(TAG, "progress:" + progress.currentBytes + "/" + progress.totalBytes);
+                                    public void onProgress(float percent) {
+                                        Log.e(TAG, "progress:" + percent);
                                     }
-                                })
-                                .start(new OnDownloadListener() {
+
                                     @Override
-                                    public void onDownloadComplete() {
-                                        Log.e("test", "onDownloadComplete");
+                                    public void onDownloadComplete(File file) {
+                                        Log.e("test", "onDownloadComplete:" + file.getTotalSpace());
                                         tempLauncherFile.renameTo(launcherFile);
                                         if (!(launcherFile == null) && !(isFileNullOrTemp(launcherFile))) {
                                             showIfInstallNewApkDialog(context, launcherFile);
                                         }
                                     }
 
-
                                     @Override
-                                    public void onError(Error error) {
+                                    public void onError(String error) {
                                         Log.e("test", "error:" + error.toString());
                                         if (tempLauncherFile != null && tempLauncherFile.exists()) {
                                             tempLauncherFile.delete();
@@ -140,7 +133,6 @@ public class UpgradeUtils {
             Log.e("test", "exception:" + e);
         }
     }
-
 
 
     //是否安装新版本apk的对话框

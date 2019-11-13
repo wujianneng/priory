@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FF8D8D</color>
-    <color name="colorPrimaryDark">#FF8D8D</color>
     <color name="colorAccent">#FF8D8D</color>
     <color name="login_btn_bg">#71C671</color>
     <color name="drag_btn_green">#71C671</color>

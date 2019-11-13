@@ -5,7 +5,6 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/table0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -163,7 +162,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/table1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -476,7 +474,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/table2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -809,12 +806,6 @@
             android:layout_height="match_parent"
             android:background="#333333" />
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-
-        </FrameLayout>
     </LinearLayout>
 
     <LinearLayout

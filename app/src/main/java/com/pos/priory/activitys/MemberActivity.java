@@ -15,14 +15,11 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.adapters.QueryMemberAdapter;
 import com.pos.priory.beans.MemberBean;
 import com.pos.priory.networks.ApiService;
-import com.pos.priory.networks.RetrofitManager;
-import com.pos.priory.utils.Constants;
-import com.pos.priory.utils.OkHttp3Util;
-import com.pos.priory.utils.Okhttp3StringCallback;
 import com.pos.priory.utils.RunOnUiThreadSafe;
 
 import java.util.ArrayList;

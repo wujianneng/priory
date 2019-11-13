@@ -1,7 +1,6 @@
 package com.pos.priory.activitys;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,16 +14,12 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.adapters.OrderAdapter;
 import com.pos.priory.beans.MemberBean;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.networks.ApiService;
-import com.pos.priory.networks.RetrofitManager;
-import com.pos.priory.utils.Constants;
-import com.pos.priory.utils.OkHttp3Util;
-import com.pos.priory.utils.Okhttp3StringCallback;
-import com.pos.priory.utils.RunOnUiThreadSafe;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;

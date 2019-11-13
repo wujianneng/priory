@@ -4,7 +4,6 @@
     tools:context=".MipcaActivityCapture">
 
     <item
-        android:id="@+id/flashlight"
         android:icon="@drawable/icon_flashlight_normal"
         android:title="flashlight"
         app:showAsAction="always" />

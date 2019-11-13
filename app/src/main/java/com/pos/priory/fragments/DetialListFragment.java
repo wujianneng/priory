@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.view.Gravity;
@@ -24,18 +23,13 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
-import com.pos.priory.activitys.MainActivity;
 import com.pos.priory.adapters.DetialListAdapter;
 import com.pos.priory.beans.PurchasingItemBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
-import com.pos.priory.networks.RetrofitManager;
-import com.pos.priory.utils.Constants;
-import com.pos.priory.utils.OkHttp3Util;
-import com.pos.priory.utils.Okhttp3StringCallback;
-import com.pos.priory.utils.RunOnUiThreadSafe;
 import com.pos.zxinglib.utils.DeviceUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -51,12 +45,8 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
-import org.json.JSONArray;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -198,7 +188,7 @@ public class DetialListFragment extends BaseFragment {
             TextView code_tv = view.findViewById(R.id.code_tv);
             TextView name_tv = view.findViewById(R.id.name_tv);
             final EditText edt_count = view.findViewById(R.id.edt_count);
-            Glide.with(getActivity()).load(MyApplication.hostName + purchasingBean.getProduct().getImage())
+            Glide.with(getActivity()).load(RetrofitManager.hostname + purchasingBean.getProduct().getImage())
                     .error(android.R.drawable.ic_menu_gallery)
                     .into(icon_good);
             code_tv.setText(purchasingBean.getProduct().getProductcode() + "");

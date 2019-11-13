@@ -7,7 +7,6 @@
 
 
     <View
-        android:id="@+id/padding_laout"
         android:layout_width="match_parent"
         android:layout_height="19dp"
         android:background="@color/colorAccent"
