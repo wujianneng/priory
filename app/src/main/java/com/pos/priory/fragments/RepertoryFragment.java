@@ -6,16 +6,24 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -26,13 +34,13 @@ import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.activitys.GoodDetialActivity;
-import com.pos.priory.activitys.MainActivity;
 import com.pos.priory.adapters.RepertoryAdapter;
 import com.pos.priory.adapters.RepertoryReturnAdapter;
 import com.pos.priory.beans.GoodBean;
 import com.pos.priory.beans.ReturnGoodBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.zxinglib.utils.DeviceUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -55,6 +63,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -78,14 +87,38 @@ public class RepertoryFragment extends BaseFragment {
     @Bind(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
     String currentStr = "";
-    @Bind(R.id.left_tv)
-    TextView leftTv;
-    @Bind(R.id.right_tv)
-    TextView rightTv;
     @Bind(R.id.return_recycler_view)
     RecyclerView returnRecyclerView;
 
     boolean isStoreRepertory = true;
+    @Bind(R.id.title_tv)
+    TextView titleTv;
+    @Bind(R.id.dinghuo_tv)
+    TextView dinghuoTv;
+    @Bind(R.id.title_layout)
+    FrameLayout titleLayout;
+    @Bind(R.id.edt_search)
+    EditText edtSearch;
+    @Bind(R.id.btn_clear)
+    ImageView btnClear;
+    @Bind(R.id.search_card)
+    CardView searchCard;
+    @Bind(R.id.btn_select_repertory)
+    MaterialButton btnSelectRepertory;
+    @Bind(R.id.btn_records)
+    MaterialButton btnRecords;
+    @Bind(R.id.btn_select_type)
+    MaterialButton btnSelectType;
+    @Bind(R.id.btn_select_order_params)
+    MaterialButton btnSelectOrderParams;
+    @Bind(R.id.btn_select_order_type)
+    MaterialButton btnSelectOrderType;
+    @Bind(R.id.filter_params_layout)
+    LinearLayout filterParamsLayout;
+    @Bind(R.id.padding_layout)
+    View paddingLayout;
+    @Bind(R.id.left_tv)
+    TextView leftTv;
 
     @Nullable
     @Override
@@ -103,7 +136,6 @@ public class RepertoryFragment extends BaseFragment {
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
                 if (isStoreRepertory) {
                     refreshRecyclerView(currentStr);
-                    refreshMainRepertorySumDatas();
                 } else {
                     refreshReturnRecyclerView();
                 }
@@ -149,7 +181,7 @@ public class RepertoryFragment extends BaseFragment {
             }
         });
 
-        repertoryReturnAdapter = new RepertoryReturnAdapter(getActivity(), R.layout.repertory_return_list_item, returnGoodBeanList);
+        repertoryReturnAdapter = new RepertoryReturnAdapter(getActivity(), R.layout.repertory_list_item, returnGoodBeanList);
         LinearLayoutManager mLayoutManager0 = new LinearLayoutManager(getActivity());
         mLayoutManager0.setOrientation(OrientationHelper.VERTICAL);
         returnRecyclerView.setLayoutManager(mLayoutManager0);
@@ -160,34 +192,76 @@ public class RepertoryFragment extends BaseFragment {
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(repertoryAdapter);
-        repertoryAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(getActivity(), GoodDetialActivity.class);
-                intent.putExtra("goodbean", gson.toJson(dataList.get(position)));
-                startActivity(intent);
-                ((MainActivity) getActivity()).edtSearch.setText("");
-            }
+        repertoryAdapter.setOnItemClickListener((BaseQuickAdapter adapter, View view, int position) -> {
+            Intent intent = new Intent(getActivity(), GoodDetialActivity.class);
+            intent.putExtra("goodbean", gson.toJson(dataList.get(position)));
+            startActivity(intent);
+            edtSearch.setText("");
         });
         refreshLayout.autoRefresh();
     }
 
-    private void refreshMainRepertorySumDatas() {
-        RetrofitManager.excute(this.bindToLifecycle(), new ModelListener() {
-            @Override
-            public void onSuccess(String result) throws Exception {
-                JSONObject jsonObject = new JSONObject(result);
-                leftTv.setText("黄金：" + jsonObject.getInt("goldcount") + "件 | " + jsonObject.getDouble("goldweight") + "g");
-                rightTv.setVisibility(View.VISIBLE);
-                rightTv.setText("晶石：" + jsonObject.getInt("cystalcount") + "件");
+    private void refreshMainRepertorySumDatas(boolean isMain) {
+//        RetrofitManager.createString(ApiService.class).getStockSumDatas()
+//                .compose(this.<String>bindToLifecycle())
+//                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String s) throws Exception {
+//                        JSONObject jsonObject = new JSONObject(s);
+//                        leftTv.setText("黄金：" + jsonObject.getInt("goldcount") + "件 | " + jsonObject.getDouble("goldweight") + "g");
+//                        rightTv.setVisibility(View.VISIBLE);
+//                        rightTv.setText("晶石：" + jsonObject.getInt("cystalcount") + "件");
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//
+//                    }
+//                });
+        int count = 0;
+        float weight = 0;
+        if (isMain) {
+            for (GoodBean goodBean : dataList) {
+                count += goodBean.getQuantity();
+                weight += goodBean.getWeight();
             }
-
-            @Override
-            public void onFailed(String erromsg) {
-
+        } else {
+            for (ReturnGoodBean.ReturnstockitemBean goodBean : returnGoodBeanList) {
+                count++;
+                weight += Double.parseDouble(goodBean.getWeight());
             }
-        },RetrofitManager.createString(ApiService.class).getStockSumDatas());
+        }
+        leftTv.setText("數量：" + count + "件，" + "重量：" + LogicUtils.getKeepLastTwoNumberAfterLittlePoint(weight) + "g");
     }
+
+    private void showRepertoryMenu() {
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(getActivity(), btnSelectRepertory);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.repertory_menu, popupMenu.getMenu());
+        popupMenu.show();
+        // 通过上面这几行代码，就可以把控件显示出来了
+        popupMenu.setOnMenuItemClickListener((item) -> {
+            // 控件每一个item的点击事件
+            switch (item.getItemId()) {
+                case R.id.menu0:
+                    btnSelectRepertory.setText(item.getTitle());
+                    onChangeRepertoryListener(true);
+                    searchCard.setVisibility(View.VISIBLE);
+                    filterParamsLayout.setVisibility(View.VISIBLE);
+                    break;
+                case R.id.menu1:
+                    btnSelectRepertory.setText(item.getTitle());
+                    onChangeRepertoryListener(false);
+                    searchCard.setVisibility(View.GONE);
+                    filterParamsLayout.setVisibility(View.GONE);
+                    break;
+            }
+            return true;
+        });
+    }
+
 
     public void onChangeRepertoryListener(boolean isStore) {
         isStoreRepertory = isStore;
@@ -205,18 +279,12 @@ public class RepertoryFragment extends BaseFragment {
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle("提示")
                 .setMessage("是否确定要退货该商品？")
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
+                .setNegativeButton("取消", (mdialog, which) -> {
+                    mdialog.dismiss();
                 })
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        doReturnStock(adapterPosition);
-                    }
+                .setPositiveButton("确定", (mdialog, which) -> {
+                    mdialog.dismiss();
+                    doReturnStock(adapterPosition);
                 })
                 .create();
         dialog.show();
@@ -235,7 +303,8 @@ public class RepertoryFragment extends BaseFragment {
         });
         customDialog.show();
         GoodBean goodBean = dataList.get(pos);
-        RetrofitManager.excute(this.bindToLifecycle(), new ModelListener() {
+        RetrofitManager.excute(this.bindToLifecycle(), RetrofitManager.createString(ApiService.class)
+                .returnStockById(goodBean.getId()), new ModelListener() {
             @Override
             public void onSuccess(String result) throws Exception {
                 customDialog.dismiss();
@@ -248,33 +317,34 @@ public class RepertoryFragment extends BaseFragment {
                 customDialog.dismiss();
                 ToastUtils.showShort("退货失败");
             }
-        }, RetrofitManager.createString(ApiService.class)
-                .returnStockById(goodBean.getId()));
+        });
     }
 
     List<String> stores = new ArrayList<>();
     Map<String, Integer> storesMaps = new HashMap<>();
 
     private void getExchangeableStores(final int adapterPosition) {
-        RetrofitManager.excute(this.bindToLifecycle(), new ModelListener() {
-            @Override
-            public void onSuccess(String result) throws Exception {
-                JSONArray jsonArray = new JSONArray(result);
-                stores.clear();
-                storesMaps.clear();
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    stores.add(jsonObject.getString("name"));
-                    storesMaps.put(jsonObject.getString("name"), jsonObject.getInt("id"));
-                }
-                showChoiceDiscountDialog(adapterPosition);
-            }
+        RetrofitManager.excute(this.bindToLifecycle(),
+                RetrofitManager.createString(ApiService.class).getTranStores(),
+                new ModelListener() {
+                    @Override
+                    public void onSuccess(String result) throws Exception {
+                        JSONArray jsonArray = new JSONArray(result);
+                        stores.clear();
+                        storesMaps.clear();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject jsonObject = jsonArray.getJSONObject(i);
+                            stores.add(jsonObject.getString("name"));
+                            storesMaps.put(jsonObject.getString("name"), jsonObject.getInt("id"));
+                        }
+                        showChoiceDiscountDialog(adapterPosition);
+                    }
 
-            @Override
-            public void onFailed(String erromsg) {
+                    @Override
+                    public void onFailed(String erromsg) {
 
-            }
-        },RetrofitManager.createString(ApiService.class).getTranStores());
+                    }
+                });
     }
 
 
@@ -361,24 +431,26 @@ public class RepertoryFragment extends BaseFragment {
         } else {
             observable = RetrofitManager.createString(ApiService.class).getStockListByParam(str);
         }
-        call = RetrofitManager.excute(this.bindToLifecycle(), new ModelListener() {
-            @Override
-            public void onSuccess(String result) throws Exception {
-                JSONObject jsonObject = new JSONObject(result);
-                List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<GoodBean>>() {
-                }.getType());
-                if (goodBeanList != null) {
-                    dataList.addAll(goodBeanList);
-                    repertoryAdapter.notifyDataSetChanged();
-                }
-                refreshLayout.finishRefresh();
-            }
+        call = RetrofitManager.excute(this.bindToLifecycle(), observable,
+                new ModelListener() {
+                    @Override
+                    public void onSuccess(String result) throws Exception {
+                        JSONObject jsonObject = new JSONObject(result);
+                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<GoodBean>>() {
+                        }.getType());
+                        if (goodBeanList != null) {
+                            dataList.addAll(goodBeanList);
+                            repertoryAdapter.notifyDataSetChanged();
+                        }
+                        refreshLayout.finishRefresh();
+                        refreshMainRepertorySumDatas(true);
+                    }
 
-            @Override
-            public void onFailed(String erromsg) {
-                refreshLayout.finishRefresh();
-            }
-        },observable);
+                    @Override
+                    public void onFailed(String erromsg) {
+                        refreshLayout.finishRefresh();
+                    }
+                });
     }
 
     public void refreshReturnRecyclerView() {
@@ -386,24 +458,34 @@ public class RepertoryFragment extends BaseFragment {
             call.dispose();
         returnGoodBeanList.clear();
         repertoryReturnAdapter.notifyDataSetChanged();
-        call = RetrofitManager.excute(this.<String>bindToLifecycle(), new ModelListener() {
-            @Override
-            public void onSuccess(String results) throws Exception {
-                ReturnGoodBean returnGoodBean = gson.fromJson(results, ReturnGoodBean.class);
-                if (returnGoodBean != null) {
-                    returnGoodBeanList.addAll(returnGoodBean.getReturnstockitem());
-                    repertoryReturnAdapter.notifyDataSetChanged();
-                }
-                leftTv.setText("黄金：" + returnGoodBean.getGoldcount() + "件 | " + returnGoodBean.getGoldweight() + "g");
-                rightTv.setVisibility(View.GONE);
-                refreshLayout.finishRefresh();
-            }
+        call = RetrofitManager.excute(this.<String>bindToLifecycle(),
+                RetrofitManager.createString(ApiService.class).getReturnStockLists(),
+                new ModelListener() {
+                    @Override
+                    public void onSuccess(String results) throws Exception {
+                        ReturnGoodBean returnGoodBean = gson.fromJson(results, ReturnGoodBean.class);
+                        if (returnGoodBean != null) {
+                            returnGoodBeanList.addAll(returnGoodBean.getReturnstockitem());
+                            repertoryReturnAdapter.notifyDataSetChanged();
+                        }
+                        refreshLayout.finishRefresh();
+                        refreshMainRepertorySumDatas(false);
+                    }
 
-            @Override
-            public void onFailed(String erromsg) {
-                refreshLayout.finishRefresh();
-            }
-        }, RetrofitManager.createString(ApiService.class).getReturnStockLists());
+                    @Override
+                    public void onFailed(String erromsg) {
+                        refreshLayout.finishRefresh();
+                    }
+                });
+    }
+
+    @OnClick({R.id.btn_select_repertory})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_select_repertory:
+                showRepertoryMenu();
+                break;
+        }
     }
 
     @Override

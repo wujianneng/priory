@@ -1,0 +1,104 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/store_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="營業額"
+        android:textColor="@color/blue_text"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/date_tv"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:elevation="5dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="请选择日期"
+            android:textColor="#4a4a4a"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/start_date_tv"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:elevation="5dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="请选择开始日期"
+            android:textColor="#4a4a4a"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/end_date_tv"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="#ffffff"
+            android:elevation="5dp"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="请选择结束日期"
+            android:textColor="#4a4a4a"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/btn_search_type"
+            android:layout_width="140dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:backgroundTint="#ffffff"
+            android:text="單日查詢"
+            android:textColor="#333333"
+            android:textSize="12sp"
+            app:cornerRadius="1dp"
+            app:icon="@drawable/go_bottom"
+            app:iconTint="#333" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/amount_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="總數：1000"
+        android:textColor="@color/blue_text"
+        android:textSize="20sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

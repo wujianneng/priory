@@ -267,13 +267,17 @@ public class AddNewOrderActivity extends BaseActivity {
                 break;
             case R.id.btn_next:
                 if(changeGoodsMoeny == 0){
-                    if (sumMoney <= 0) {
+                    if (sumMoney < 0 || goodList.size() == 0) {
                         Toast.makeText(AddNewOrderActivity.this, "请先增加购买商品", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }else {
                     if ((sumMoney + changeGoodsMoeny) < 0) {
                         Toast.makeText(AddNewOrderActivity.this, "新商品总额要大于等于换货商品总额", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (goodList.size() == 0) {
+                        Toast.makeText(AddNewOrderActivity.this, "请先增加购买商品", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }

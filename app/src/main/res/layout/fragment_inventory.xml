@@ -1,63 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
     <View
+        android:id="@+id/padding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        android:elevation="5dp"
+        android:background="@color/colorPrimary"/>
+
+    <FrameLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:elevation="5dp"
+        android:background="@color/colorAccent"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="盘点"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+
+    </FrameLayout>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
-
-    <android.support.design.button.MaterialButton
-        android:id="@+id/day_inventory_btn"
-        android:layout_width="130dp"
-        android:layout_height="52dp"
-        android:layout_marginBottom="30dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/colorAccent"
-        android:text="日 盘 点"
-        android:textColor="#ffffff"
-        android:textSize="20sp"
-        app:cornerRadius="26dp"
-        />
-
-    <android.support.design.button.MaterialButton
-        android:id="@+id/big_inventory_btn"
-        android:layout_width="130dp"
-        android:layout_height="52dp"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="30dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/colorAccent"
-        android:text="大 盘 点"
-        android:textColor="#ffffff"
-        android:textSize="20sp"
-        app:cornerRadius="26dp"
-        />
-
-    <android.support.design.button.MaterialButton
-        android:id="@+id/ding_huo_list_btn"
-        android:layout_width="130dp"
-        android:layout_height="52dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/colorAccent"
-        android:text="订货清单"
-        android:textColor="#ffffff"
-        android:textSize="20sp"
-        app:cornerRadius="26dp"
-        />
+        android:layout_weight="1">
 
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"></android.support.v7.widget.RecyclerView>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 
 </LinearLayout>

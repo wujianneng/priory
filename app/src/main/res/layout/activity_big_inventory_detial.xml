@@ -1,13 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activitys.BigInventoryDetialActivity">
 
-    <include layout="@layout/title_layout"/>
+    <FrameLayout
+        android:id="@+id/title_layout"
+        android:paddingTop="19dp"
+        android:layout_width="match_parent"
+        android:layout_height="74dp"
+        android:background="@color/colorAccent"
+        app:layout_collapseMode="pin">
+
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="6dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:src="@drawable/icon_back" />
+
+        <TextView
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="订单详情"
+            android:textColor="#fff"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/right_img"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="16dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/scan" />
+
+
+    </FrameLayout>
+
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refresh_layout"
@@ -15,72 +54,96 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <LinearLayout
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <FrameLayout
-                android:background="#ffffff"
-                android:padding="5dp"
-                android:elevation="3dp"
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="#00000000">
 
-                <TextView
-                    android:id="@+id/left_tv"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/search_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/colorPrimary"
+                    app:layout_scrollFlags="scroll|enterAlways">
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/search_card"
+                        android:layout_width="0dp"
+                        android:layout_height="38dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="#fff"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="1dp"
+                        app:cardPreventCornerOverlap="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/search_img"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="16dp"
+                                android:src="@drawable/icon_search" />
+
+                            <EditText
+                                android:id="@+id/edt_search"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="1"
+                                android:background="@null"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:hint="搜尋"
+                                android:imeOptions="actionDone"
+                                android:inputType="text"
+                                android:textSize="16sp" />
+
+
+                        </LinearLayout>
+
+
+                    </android.support.v7.widget.CardView>
+
+
+                </LinearLayout>
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tab_layout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="16dp"
-                    android:textStyle="bold"
-                    android:text=""
-                    android:textColor="@color/blue_text"
-                    android:textSize="15sp" />
+                    android:backgroundTint="@color/colorPrimary"
+                    app:tabBackground="@color/colorPrimary"
+                    app:tabIndicatorColor="#ffffff"
+                    app:tabSelectedTextColor="#ffffff"
+                    app:tabTextColor="#cccccc" />
 
-                <TextView
-                    android:id="@+id/right_tv"
-                    android:textStyle="bold"
-                    android:visibility="invisible"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="16dp"
-                    android:text=""
-                    android:textColor="@color/blue_text"
-                    android:textSize="15sp" />
-
-            </FrameLayout>
+            </android.support.design.widget.AppBarLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"></android.support.v7.widget.RecyclerView>
-        </LinearLayout>
+                android:layout_marginRight="20dp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"></android.support.v7.widget.RecyclerView>
+        </android.support.design.widget.CoordinatorLayout>
 
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-
-    <android.support.design.button.MaterialButton
-        android:id="@+id/btn_finish"
-        android:layout_width="110dp"
-        android:layout_height="46dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:background="@color/colorAccent"
-        app:icon="@drawable/icon_gou"
-        android:text="完成"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        app:cornerRadius="28dp"
-        />
 
 
 </LinearLayout>

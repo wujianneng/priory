@@ -27,7 +27,7 @@ public class RepertoryReturnAdapter extends BaseQuickAdapter<ReturnGoodBean.Retu
     @Override
     protected void convert(BaseViewHolder helper, ReturnGoodBean.ReturnstockitemBean item) {
         helper.setText(R.id.name_tv,item.getName());
-        helper.setText(R.id.count_tv, item.getWeight() + "g");
+        helper.setText(R.id.weight_tv, item.getWeight() + "g");
         helper.setText(R.id.code_tv, DateUtils.covertIso8601ToDate2(item.getCreated()));
         helper.setText(R.id.price_tv,item.getReturnprice() + "");
     }

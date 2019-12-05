@@ -61,28 +61,12 @@ public class MainActivity extends BaseActivity {
     DatasFragment datasFragment;
 
 
-    @Bind(R.id.title_tv)
-    TextView titleTv;
-    @Bind(R.id.setting_img)
-    ImageView settingImg;
-    @Bind(R.id.scan_img)
-    ImageView scanImg;
     @Bind(R.id.container_layout)
     FrameLayout containerLayout;
     @Bind(R.id.navigation)
     BottomNavigationBar navigation;
     @Bind(R.id.container)
     LinearLayout container;
-    @Bind(R.id.edt_search)
-    public EditText edtSearch;
-    @Bind(R.id.repertory_search_layout)
-    LinearLayout repertorySearchLayout;
-    @Bind(R.id.btn_clear)
-    ImageView btnClear;
-    @Bind(R.id.btn_select)
-    MaterialButton btnSelect;
-    @Bind(R.id.repertory_search_card)
-    CardView repertorySearchCard;
 
 
     @Override
@@ -143,25 +127,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-        edtSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                btnClear.setVisibility(charSequence.toString().equals("") ? View.INVISIBLE : View.VISIBLE);
-                if (repertoryFragment != null)
-                    repertoryFragment.refreshRecyclerView(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-
         navigation.setMode(BottomNavigationBar.MODE_FIXED);
         navigation.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
         navigation.setInActiveColor(R.color.blue_text);
@@ -177,70 +142,24 @@ public class MainActivity extends BaseActivity {
             public void onTabSelected(int position) {
                 switch (position) {
                     case 0:
-                        titleTv.setText("订 单");
-                        settingImg.setVisibility(View.VISIBLE);
-                        scanImg.setVisibility(View.GONE);
-                        repertorySearchLayout.setVisibility(View.GONE);
-                        hideAllFragments();
-                        if (orderFragment == null) {
-                            orderFragment = new OrderFragment();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_layout, orderFragment).commit();
-                        } else {
-                            getSupportFragmentManager().beginTransaction().show(orderFragment).commit();
-                        }
+                        orderFragment = BaseActivity.handleTabFragments(MainActivity.this,R.id.container_layout,
+                                OrderFragment.class,orderFragment,queryFragment,repertoryFragment,inventoryFragment,datasFragment);
                         break;
                     case 1:
-                        titleTv.setText("查 单");
-                        settingImg.setVisibility(View.GONE);
-                        scanImg.setVisibility(View.GONE);
-                        repertorySearchLayout.setVisibility(View.GONE);
-                        hideAllFragments();
-                        if (queryFragment == null) {
-                            queryFragment = new QueryFragment();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_layout, queryFragment).commit();
-                        } else {
-                            getSupportFragmentManager().beginTransaction().show(queryFragment).commit();
-                        }
-//                        queryFragment.showKeyBord();
+                        queryFragment = BaseActivity.handleTabFragments(MainActivity.this,R.id.container_layout,
+                                QueryFragment.class,queryFragment,orderFragment,repertoryFragment,inventoryFragment,datasFragment);
                         break;
                     case 2:
-                        titleTv.setText("仓 库");
-                        settingImg.setVisibility(View.GONE);
-                        scanImg.setVisibility(View.VISIBLE);
-                        repertorySearchLayout.setVisibility(View.VISIBLE);
-                        hideAllFragments();
-                        if (repertoryFragment == null) {
-                            repertoryFragment = new RepertoryFragment();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_layout, repertoryFragment).commit();
-                        } else {
-                            getSupportFragmentManager().beginTransaction().show(repertoryFragment).commit();
-                        }
+                        repertoryFragment = BaseActivity.handleTabFragments(MainActivity.this,R.id.container_layout,
+                                RepertoryFragment.class,repertoryFragment,orderFragment,queryFragment,inventoryFragment,datasFragment);
                         break;
                     case 3:
-                        titleTv.setText("盘 点");
-                        settingImg.setVisibility(View.GONE);
-                        scanImg.setVisibility(View.GONE);
-                        repertorySearchLayout.setVisibility(View.GONE);
-                        hideAllFragments();
-                        if (inventoryFragment == null) {
-                            inventoryFragment = new InventoryFragment();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_layout, inventoryFragment).commit();
-                        } else {
-                            getSupportFragmentManager().beginTransaction().show(inventoryFragment).commit();
-                        }
+                        inventoryFragment = BaseActivity.handleTabFragments(MainActivity.this,R.id.container_layout,
+                                InventoryFragment.class,inventoryFragment,orderFragment,queryFragment,repertoryFragment,datasFragment);
                         break;
                     case 4:
-                        titleTv.setText("数 据");
-                        settingImg.setVisibility(View.GONE);
-                        scanImg.setVisibility(View.GONE);
-                        repertorySearchLayout.setVisibility(View.GONE);
-                        hideAllFragments();
-                        if (datasFragment == null) {
-                            datasFragment = new DatasFragment();
-                            getSupportFragmentManager().beginTransaction().add(R.id.container_layout, datasFragment).commit();
-                        } else {
-                            getSupportFragmentManager().beginTransaction().show(datasFragment).commit();
-                        }
+                        datasFragment = BaseActivity.handleTabFragments(MainActivity.this,R.id.container_layout,
+                                DatasFragment.class,datasFragment,orderFragment,queryFragment,repertoryFragment,inventoryFragment);
                         break;
                 }
             }
@@ -258,21 +177,6 @@ public class MainActivity extends BaseActivity {
         navigation.selectTab(0);
     }
 
-    public void hideAllFragments() {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if (queryFragment != null && !queryFragment.isHidden())
-            fragmentTransaction.hide(queryFragment);
-        if (repertoryFragment != null && !repertoryFragment.isHidden())
-            fragmentTransaction.hide(repertoryFragment);
-        if (orderFragment != null && !orderFragment.isHidden())
-            fragmentTransaction.hide(orderFragment);
-        if (inventoryFragment != null && !inventoryFragment.isHidden())
-            fragmentTransaction.hide(inventoryFragment);
-        if (datasFragment != null && !datasFragment.isHidden())
-            fragmentTransaction.hide(datasFragment);
-        fragmentTransaction.commit();
-    }
-
 
     @Override
     public void onBackPressed() {
@@ -282,204 +186,4 @@ public class MainActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    @OnClick({R.id.setting_img, R.id.scan_img, R.id.btn_clear, R.id.btn_select})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.setting_img:
-                showMainMenu();
-                break;
-            case R.id.scan_img:
-                startActivityForResult(new Intent(MainActivity.this, MipcaActivityCapture.class), 1000);
-                break;
-            case R.id.btn_clear:
-                edtSearch.setText("");
-                break;
-            case R.id.btn_select:
-                showRepertoryMenu();
-                break;
-        }
-    }
-
-    private void showRepertoryMenu() {
-        // 这里的view代表popupMenu需要依附的view
-        PopupMenu popupMenu = new PopupMenu(MainActivity.this, btnSelect);
-        // 获取布局文件
-        popupMenu.getMenuInflater().inflate(R.menu.repertory_menu, popupMenu.getMenu());
-        popupMenu.show();
-        // 通过上面这几行代码，就可以把控件显示出来了
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                // 控件每一个item的点击事件
-                switch (item.getItemId()) {
-                    case R.id.menu0:
-                        btnSelect.setText(item.getTitle());
-                        repertoryFragment.onChangeRepertoryListener(true);
-                        repertorySearchCard.setVisibility(View.VISIBLE);
-                        scanImg.setVisibility(View.VISIBLE);
-                        break;
-                    case R.id.menu1:
-                        btnSelect.setText(item.getTitle());
-                        repertoryFragment.onChangeRepertoryListener(false);
-                        repertorySearchCard.setVisibility(View.INVISIBLE);
-                        scanImg.setVisibility(View.INVISIBLE);
-                        break;
-                }
-                return true;
-            }
-        });
-    }
-
-    private void showMainMenu() {
-        // 这里的view代表popupMenu需要依附的view
-        PopupMenu popupMenu = new PopupMenu(MainActivity.this, settingImg);
-        // 获取布局文件
-        popupMenu.getMenuInflater().inflate(R.menu.main_menu, popupMenu.getMenu());
-        popupMenu.show();
-        // 通过上面这几行代码，就可以把控件显示出来了
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                // 控件每一个item的点击事件
-                switch (item.getItemId()) {
-                    case R.id.menu0:
-                        getDayReport();
-                        break;
-                    case R.id.menu1:
-                        startActivity(new Intent(MainActivity.this, EditPasswordActivity.class));
-                        break;
-                    case R.id.menu2:
-                        ColseActivityUtils.closeAllAcitivty();
-                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                        break;
-                }
-                return true;
-            }
-        });
-    }
-
-    public void getDayReport() {
-        RetrofitManager.createString(ApiService.class).getDayReport()
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        Log.e("test", "result:" + s);
-                        DayReportBean dayReportBean = gson.fromJson(s, DayReportBean.class);
-                        printGoldTable(dayReportBean);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.e("test", "throwable:" + gson.toJson(throwable));
-                        Toast.makeText(MainActivity.this, "查不到日报表数据", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    public void printGoldTable(DayReportBean dayReportBean) {
-        Log.e("test", "printGoldTable");
-        List<View> views = new ArrayList<>();
-        List<DayReportBean.ItemsBean> templist = new ArrayList<>();
-        templist.addAll(dayReportBean.getItems());
-        if (dayReportBean.getRefunditem().size() != 0) {
-            DayReportBean.ItemsBean returnTitleBean = new DayReportBean.ItemsBean();
-            returnTitleBean.setProductname("退货标题");
-            templist.add(returnTitleBean);
-            for (DayReportBean.RefunditemBean refunditemBean : dayReportBean.getRefunditem()) {
-                DayReportBean.ItemsBean itemsBean = new DayReportBean.ItemsBean();
-                itemsBean.setProductname(refunditemBean.getProductname());
-                itemsBean.setCatalog(refunditemBean.getCatalog());
-                itemsBean.setDiscount(refunditemBean.getDiscount());
-                itemsBean.setDiscountprice(refunditemBean.getDiscountprice());
-                itemsBean.setQuantity(refunditemBean.getQuantity());
-                itemsBean.setPrice(refunditemBean.getPrice());
-                itemsBean.setStock(refunditemBean.getStock());
-                itemsBean.setWeight(refunditemBean.getWeight());
-                itemsBean.setReturnItem(true);
-                templist.add(itemsBean);
-            }
-        }
-
-        int perPageSize = 18;
-        int size = templist.size() / perPageSize;
-        int a = templist.size() % perPageSize;
-        if (a != 0) {
-            size++;
-        }
-        Log.e("test", "size:" + size + " a:" + a + "templist.size():" + templist.size());
-        for (int i = 0; i < size; i++) {
-            List<DayReportBean.ItemsBean> extraList = new ArrayList<>();
-            if (i == (size - 1)) {
-                if (a == 0) {
-                    a = perPageSize;
-                }
-                for (int t = 0; t < a; t++) {
-                    extraList.add(templist.get(t + perPageSize * i));
-                }
-
-            } else {
-                for (int t = 0; t < perPageSize; t++) {
-                    extraList.add(templist.get(t + perPageSize * i));
-                }
-            }
-            Log.e("test", "MyApplication.getContext().region:" + MyApplication.getContext().region);
-            int layoutid = 0;
-            if (MyApplication.getContext().region.equals("中国大陆")) {
-                layoutid = R.layout.gold_daliy_table;
-            } else {
-                layoutid = R.layout.gold_daliy_table2;
-            }
-            final View printView = LayoutInflater.from(MainActivity.this).inflate(layoutid, null);
-            if (extraList.size() != 0 && !extraList.get(0).isReturnItem()) {
-                printView.findViewById(R.id.list_title_layout0).setVisibility(View.VISIBLE);
-                printView.findViewById(R.id.list_title_layout1).setVisibility(View.GONE);
-            } else {
-                printView.findViewById(R.id.list_title_layout0).setVisibility(View.GONE);
-                printView.findViewById(R.id.list_title_layout1).setVisibility(View.VISIBLE);
-            }
-            ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.staffInfoBean.getStore());
-            ((TextView) printView.findViewById(R.id.date_tv)).setText(DateUtils.getDateOfToday());
-            ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + size);
-            ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(dayReportBean.getTurnovertotal() + "");
-            ((TextView) printView.findViewById(R.id.cash_tv)).setText(dayReportBean.getCash() + "");
-            ((TextView) printView.findViewById(R.id.coupon_tv)).setText(dayReportBean.getVoucher() + "");
-            ((TextView) printView.findViewById(R.id.card_pay_tv)).setText(dayReportBean.getCredit() + "");
-            ((TextView) printView.findViewById(R.id.ali_pay_tv)).setText(dayReportBean.getAlipay() + "");
-            ((TextView) printView.findViewById(R.id.wechat_pay_tv)).setText(dayReportBean.getWechatpay() + "");
-            ((TextView) printView.findViewById(R.id.return_mount_tv)).setText(dayReportBean.getRefund() + "");
-            ((TextView) printView.findViewById(R.id.gold_amount_tv)).setText(dayReportBean.getGoldturnover() + "");
-            ((TextView) printView.findViewById(R.id.gold_count_tv)).setText(dayReportBean.getGolditemcount() + "");
-            ((TextView) printView.findViewById(R.id.gold_weight_tv)).setText(dayReportBean.getGolditemweight() + "g");
-            ((TextView) printView.findViewById(R.id.spar_amount_tv)).setText(dayReportBean.getCystalturnover() + "");
-            ((TextView) printView.findViewById(R.id.spar_count_tv)).setText(dayReportBean.getCystalitemcount() + "");
-            ((TextView) printView.findViewById(R.id.hand_amount_tv)).setText(dayReportBean.getBraceletturnover() + "");
-            ((TextView) printView.findViewById(R.id.hand_count_tv)).setText(dayReportBean.getBraceletitemcount() + "");
-
-            RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
-            TablePrintGoodsAdapter adapter = new TablePrintGoodsAdapter(R.layout.gold_table_print_good_list_item, extraList,
-                    i, dayReportBean.getItems().size(), dayReportBean.getRefunditem().size(), perPageSize);
-            LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-            mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
-            listview.setLayoutManager(mLayoutManager);
-            listview.setAdapter(adapter);
-            views.add(printView);
-        }
-        Log.e("test", "viewsize:" + views.size());
-        BillActivity.print(this, views);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode) {
-            case 1:
-                String str = data.getStringExtra("resultString");
-                Log.e("result", "result:" + str);
-                edtSearch.setText(str);
-                break;
-        }
-    }
 }

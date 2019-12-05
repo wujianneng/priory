@@ -6,8 +6,8 @@ android {
         applicationId "com.pos.priory"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 14
-        versionName "4.0.11"
+        versionCode 15
+        versionName "4.0.12"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         javaCompileOptions {
@@ -16,7 +16,10 @@ android {
             }
         }
 
-
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
 
 
     }
@@ -38,7 +41,7 @@ dependencies {
     implementation project(':wjnbaselib')
 //    implementation project(':rxretorfit2library')
 
-    implementation 'com.wujianneng:WjnHttp:1.0.0'
+    implementation 'com.wujianneng:WjnHttp:1.0.1'
 
     implementation "com.blankj:utilcode:1.9.6"
 
@@ -47,4 +50,5 @@ dependencies {
     implementation 'com.ashokvarma.android:bottom-navigation-bar:2.0.2'
 
 
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

@@ -9,13 +9,19 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,12 +31,19 @@ import com.google.gson.reflect.TypeToken;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
+import com.pos.priory.activitys.BillActivity;
+import com.pos.priory.activitys.EditPasswordActivity;
+import com.pos.priory.activitys.LoginActivity;
 import com.pos.priory.activitys.MemberActivity;
 import com.pos.priory.activitys.OrderDetialActivity;
 import com.pos.priory.adapters.OrderAdapter;
+import com.pos.priory.adapters.TablePrintGoodsAdapter;
+import com.pos.priory.beans.DayReportBean;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
+import com.pos.priory.utils.ColseActivityUtils;
+import com.pos.priory.utils.DateUtils;
 import com.pos.zxinglib.utils.DeviceUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -54,10 +67,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -78,32 +89,26 @@ public class OrderFragment extends BaseFragment {
 
     int currentPage = 1;
     @Bind(R.id.gold_price_layout)
-    LinearLayout goldPriceLayout;
-    @Bind(R.id.row1_tv1)
-    TextView row1Tv1;
-    @Bind(R.id.row1_tv2)
-    TextView row1Tv2;
-    @Bind(R.id.row1)
-    FrameLayout row1;
-    @Bind(R.id.row2_tv1)
-    TextView row2Tv1;
-    @Bind(R.id.row2_tv2)
-    TextView row2Tv2;
-    @Bind(R.id.row2)
-    FrameLayout row2;
-    @Bind(R.id.row3_tv1)
-    TextView row3Tv1;
-    @Bind(R.id.row3_tv2)
-    TextView row3Tv2;
-    @Bind(R.id.row3)
-    FrameLayout row3;
-    @Bind(R.id.row4_tv1)
-    TextView row4Tv1;
-    @Bind(R.id.row4_tv2)
-    TextView row4Tv2;
-    @Bind(R.id.row4)
-    FrameLayout row4;
+    FrameLayout goldPriceLayout;
     public static final String UPDATE_ORDER_LIST = "orderFragment_update_list";
+    @Bind(R.id.search_img)
+    ImageView searchImg;
+    @Bind(R.id.edt_search)
+    EditText edtSearch;
+    @Bind(R.id.search_card)
+    CardView searchCard;
+    @Bind(R.id.search_layout)
+    LinearLayout searchLayout;
+    @Bind(R.id.date_tv)
+    TextView dateTv;
+    @Bind(R.id.gold_price_tv)
+    TextView goldPriceTv;
+    @Bind(R.id.title_tv)
+    TextView titleTv;
+    @Bind(R.id.setting_img)
+    ImageView settingImg;
+    @Bind(R.id.title_layout)
+    FrameLayout titleLayout;
 
 
     @Nullable
@@ -206,6 +211,7 @@ public class OrderFragment extends BaseFragment {
     }
 
     CustomDialog customDialog;
+
     private void cancelOrder(final int pos) {
         if (customDialog == null) {
             customDialog = new CustomDialog(getActivity(), "正在撤回订单..");
@@ -227,7 +233,7 @@ public class OrderFragment extends BaseFragment {
                             Log.e("test", "结算成功");
                             customDialog.dismiss();
                             orderList.remove(pos);
-                            orderAdapter.notifyItemRangeChanged(0,orderList.size());
+                            orderAdapter.notifyItemRangeChanged(0, orderList.size());
                             orderAdapter.notifyItemRemoved(pos);
                             Toast.makeText(getActivity(), "撤回订单成功", Toast.LENGTH_SHORT).show();
                         }
@@ -249,35 +255,14 @@ public class OrderFragment extends BaseFragment {
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnNext(new Consumer<String>() {
+                .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
                         Log.e("okhttp", "getCurrentGoldPriceresult:" + s);
                         String currentGoldPrice = new JSONObject(s).getString("price");
                         goldPriceLayout.setVisibility(View.VISIBLE);
-                        row1Tv2.setText("金价：" + (int) Double.parseDouble(currentGoldPrice) + "/g");
-                        row2Tv2.setText("金价：" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/两");
-                    }
-                })
-                .observeOn(Schedulers.io())
-                .flatMap(new Function<String, Observable<String>>() {
-                    @Override
-                    public Observable<String> apply(String s) throws Exception {
-                        return  RetrofitManager.createString(ApiService.class).getDashboard();
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        JSONObject jsonObject = new JSONObject(s);
-                        Log.e("okhttp", "getDashboardresult:" + s);
-                        row1Tv1.setText("营业额：" + jsonObject.getDouble("turnover"));
-                        row2Tv1.setText("现金：" + jsonObject.getDouble("cash") + " | " + " 现金券：" + jsonObject.getDouble("voucher"));
-                        row3Tv1.setText("信用卡：" + jsonObject.getDouble("credit"));
-                        row3Tv2.setText("总数：" + (int)jsonObject.getDouble("orderitem") + "件");
-                        row4Tv1.setText("支付宝：" + jsonObject.getDouble("alipay") + " | " + " 微信支付：" + jsonObject.getDouble("wechatpay"));
-                        row4Tv2.setText("总重：" + jsonObject.getDouble("weight") + "g");
+                        dateTv.setText(DateUtils.getDateOfToday());
+                        goldPriceTv.setText("金價：" + (int) Double.parseDouble(currentGoldPrice) + "/g，" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/两");
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -328,12 +313,157 @@ public class OrderFragment extends BaseFragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.fab})
+    @OnClick({R.id.fab, R.id.setting_img})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fab:
                 startActivity(new Intent(getActivity(), MemberActivity.class));
                 break;
+            case R.id.setting_img:
+                showMainMenu();
+                break;
         }
     }
+
+    private void showMainMenu() {
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(getActivity(), settingImg);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.main_menu, popupMenu.getMenu());
+        popupMenu.show();
+        // 通过上面这几行代码，就可以把控件显示出来了
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // 控件每一个item的点击事件
+                switch (item.getItemId()) {
+                    case R.id.menu0:
+                        getDayReport();
+                        break;
+                    case R.id.menu1:
+                        startActivity(new Intent(getActivity(), EditPasswordActivity.class));
+                        break;
+                    case R.id.menu2:
+                        ColseActivityUtils.closeAllAcitivty();
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    public void getDayReport() {
+        RetrofitManager.createString(ApiService.class).getDayReport()
+                .compose(this.<String>bindToLifecycle())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Log.e("test", "result:" + s);
+                        DayReportBean dayReportBean = gson.fromJson(s, DayReportBean.class);
+                        printGoldTable(dayReportBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.e("test", "throwable:" + gson.toJson(throwable));
+                        Toast.makeText(getActivity(), "查不到日报表数据", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public void printGoldTable(DayReportBean dayReportBean) {
+        Log.e("test", "printGoldTable");
+        List<View> views = new ArrayList<>();
+        List<DayReportBean.ItemsBean> templist = new ArrayList<>();
+        templist.addAll(dayReportBean.getItems());
+        if (dayReportBean.getRefunditem().size() != 0) {
+            DayReportBean.ItemsBean returnTitleBean = new DayReportBean.ItemsBean();
+            returnTitleBean.setProductname("退货标题");
+            templist.add(returnTitleBean);
+            for (DayReportBean.RefunditemBean refunditemBean : dayReportBean.getRefunditem()) {
+                DayReportBean.ItemsBean itemsBean = new DayReportBean.ItemsBean();
+                itemsBean.setProductname(refunditemBean.getProductname());
+                itemsBean.setCatalog(refunditemBean.getCatalog());
+                itemsBean.setDiscount(refunditemBean.getDiscount());
+                itemsBean.setDiscountprice(refunditemBean.getDiscountprice());
+                itemsBean.setQuantity(refunditemBean.getQuantity());
+                itemsBean.setPrice(refunditemBean.getPrice());
+                itemsBean.setStock(refunditemBean.getStock());
+                itemsBean.setWeight(refunditemBean.getWeight());
+                itemsBean.setReturnItem(true);
+                templist.add(itemsBean);
+            }
+        }
+
+        int perPageSize = 18;
+        int size = templist.size() / perPageSize;
+        int a = templist.size() % perPageSize;
+        if (a != 0) {
+            size++;
+        }
+        Log.e("test", "size:" + size + " a:" + a + "templist.size():" + templist.size());
+        for (int i = 0; i < size; i++) {
+            List<DayReportBean.ItemsBean> extraList = new ArrayList<>();
+            if (i == (size - 1)) {
+                if (a == 0) {
+                    a = perPageSize;
+                }
+                for (int t = 0; t < a; t++) {
+                    extraList.add(templist.get(t + perPageSize * i));
+                }
+
+            } else {
+                for (int t = 0; t < perPageSize; t++) {
+                    extraList.add(templist.get(t + perPageSize * i));
+                }
+            }
+            Log.e("test", "MyApplication.getContext().region:" + MyApplication.getContext().region);
+            int layoutid = 0;
+            if (MyApplication.getContext().region.equals("中国大陆")) {
+                layoutid = R.layout.gold_daliy_table;
+            } else {
+                layoutid = R.layout.gold_daliy_table2;
+            }
+            final View printView = LayoutInflater.from(getActivity()).inflate(layoutid, null);
+            if (extraList.size() != 0 && !extraList.get(0).isReturnItem()) {
+                printView.findViewById(R.id.list_title_layout0).setVisibility(View.VISIBLE);
+                printView.findViewById(R.id.list_title_layout1).setVisibility(View.GONE);
+            } else {
+                printView.findViewById(R.id.list_title_layout0).setVisibility(View.GONE);
+                printView.findViewById(R.id.list_title_layout1).setVisibility(View.VISIBLE);
+            }
+            ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.staffInfoBean.getStore());
+            ((TextView) printView.findViewById(R.id.date_tv)).setText(DateUtils.getDateOfToday());
+            ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + size);
+            ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(dayReportBean.getTurnovertotal() + "");
+            ((TextView) printView.findViewById(R.id.cash_tv)).setText(dayReportBean.getCash() + "");
+            ((TextView) printView.findViewById(R.id.coupon_tv)).setText(dayReportBean.getVoucher() + "");
+            ((TextView) printView.findViewById(R.id.card_pay_tv)).setText(dayReportBean.getCredit() + "");
+            ((TextView) printView.findViewById(R.id.ali_pay_tv)).setText(dayReportBean.getAlipay() + "");
+            ((TextView) printView.findViewById(R.id.wechat_pay_tv)).setText(dayReportBean.getWechatpay() + "");
+            ((TextView) printView.findViewById(R.id.return_mount_tv)).setText(dayReportBean.getRefund() + "");
+            ((TextView) printView.findViewById(R.id.gold_amount_tv)).setText(dayReportBean.getGoldturnover() + "");
+            ((TextView) printView.findViewById(R.id.gold_count_tv)).setText(dayReportBean.getGolditemcount() + "");
+            ((TextView) printView.findViewById(R.id.gold_weight_tv)).setText(dayReportBean.getGolditemweight() + "g");
+            ((TextView) printView.findViewById(R.id.spar_amount_tv)).setText(dayReportBean.getCystalturnover() + "");
+            ((TextView) printView.findViewById(R.id.spar_count_tv)).setText(dayReportBean.getCystalitemcount() + "");
+            ((TextView) printView.findViewById(R.id.hand_amount_tv)).setText(dayReportBean.getBraceletturnover() + "");
+            ((TextView) printView.findViewById(R.id.hand_count_tv)).setText(dayReportBean.getBraceletitemcount() + "");
+
+            RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
+            TablePrintGoodsAdapter adapter = new TablePrintGoodsAdapter(R.layout.gold_table_print_good_list_item, extraList,
+                    i, dayReportBean.getItems().size(), dayReportBean.getRefunditem().size(), perPageSize);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+            mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+            listview.setLayoutManager(mLayoutManager);
+            listview.setAdapter(adapter);
+            views.add(printView);
+        }
+        Log.e("test", "viewsize:" + views.size());
+        BillActivity.print(getActivity(), views);
+    }
+
 }
