@@ -89,19 +89,29 @@
                 android:id="@+id/price_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="fff"
                 android:textColor="#fff"
-                android:textSize="23sp"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/code_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/price_tv"
+                android:text="fff"
+                android:textColor="#fff"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/repertory_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/price_tv"
-                android:text=""
+                android:layout_below="@+id/code_tv"
+                android:text="fff"
                 android:textColor="#fff"
-                android:textSize="23sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -109,9 +119,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/repertory_tv"
-                android:text=""
+                android:text="fff"
                 android:textColor="#fff"
-                android:textSize="23sp" />
+                android:textSize="20sp" />
 
         </RelativeLayout>
 
@@ -124,12 +134,24 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="10dp"></com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView>
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"></android.support.v7.widget.RecyclerView>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <TextView
+        android:id="@+id/exchange_btn"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorAccent"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:text="调 货"
+        android:textSize="18sp"
+        />
 </LinearLayout>

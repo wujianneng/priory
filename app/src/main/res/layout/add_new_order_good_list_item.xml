@@ -4,13 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="90dp"
     android:layout_gravity="center_horizontal"
+    android:layout_marginLeft="1dp"
     android:layout_marginTop="0.5dp"
     android:layout_marginBottom="8dp"
-    android:layout_marginLeft="1dp"
     app:cardBackgroundColor="#fff"
     app:cardCornerRadius="0dp"
-    app:cardElevation="1dp"
-    >
+    app:cardElevation="1dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,8 +17,8 @@
 
         <ImageView
             android:id="@+id/icon_good"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:src="@drawable/app_logo" />
@@ -30,45 +29,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_toRightOf="@+id/icon_good"
             android:text="大福珠"
             android:textColor="@color/blue_text"
-            android:textSize="17sp" />
+            android:textSize="13sp" />
 
-        <TextView
-            android:id="@+id/code_tv"
+        <LinearLayout
+            android:id="@+id/product_data_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/name_tv"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@+id/icon_good"
-            android:text="888666333"
-            android:textColor="@color/blue_text"
-            android:textSize="15sp" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/weight_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/icon_good"
-            android:text="1g"
-            android:textColor="@color/blue_text"
-            android:textSize="15sp" />
+            <TextView
+                android:id="@+id/code_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/name_tv"
+                android:layout_toRightOf="@+id/icon_good"
+                android:text="888666333"
+                android:textColor="@color/blue_text"
+                android:textSize="12sp" />
 
-
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_marginRight="30dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
+            <TextView
+                android:id="@+id/weight_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/icon_good"
+                android:text="1g"
+                android:textColor="@color/blue_text"
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/origin_price_tv"
@@ -76,36 +70,106 @@
                 android:layout_height="wrap_content"
                 android:text="原价：799"
                 android:textColor="@color/blue_text"
-                android:textSize="13sp" />
-
-            <TextView
-                android:id="@+id/discount_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="折扣：88折"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:textColor="@color/blue_text"
-                android:textSize="13sp" />
-
+                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/price_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="折后价：799"
-                android:textColor="@color/colorAccent"
-                android:textSize="13sp" />
+                android:text="售价：799"
+                android:textColor="@color/blue_text"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fitting_data_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/name_tv"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/icon_good"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/fitting_price_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="单价：799"
+                android:textColor="@color/blue_text"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/fitting_amount_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="小计：799"
+                android:textColor="@color/blue_text"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/fitting_sale_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="售价：799"
+                android:textColor="@color/blue_text"
+                android:textSize="12sp" />
         </LinearLayout>
 
 
+        <LinearLayout
+            android:id="@+id/fitting_count_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/decrease_btn"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="#cccccc"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:text="-"
+                android:textColor="@color/blue_text"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/fitting_count_tv"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/border_gray"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/blue_text"
+                android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/increase_btn"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:background="#cccccc"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center"
+                android:text="+"
+                android:textColor="@color/blue_text"
+                android:textSize="20sp" />
+        </LinearLayout>
+
 
         <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_gravity="right"
-            android:layout_width="1dp"
-            android:background="@color/drag_btn_green"
-            android:layout_height="match_parent"/>
+            android:background="@color/colorPrimary" />
 
     </RelativeLayout>
 

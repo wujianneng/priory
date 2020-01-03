@@ -20,7 +20,10 @@
         android:roundIcon="@drawable/app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activitys.BigInventoryTypesDetialActivity"></activity>
+        <activity android:name=".activitys.ExchangeCashCouponActivity"></activity>
+        <activity android:name=".activitys.SelectCashCouponActivity" />
+        <activity android:name=".activitys.AddFittingActivity" />
+        <activity android:name=".activitys.BigInventoryTypesDetialActivity" />
         <activity android:name=".activitys.BigInventoryDetialActivity" />
         <activity
             android:name=".activitys.LoginActivity"
@@ -40,6 +43,9 @@
             android:name=".activitys.EditPasswordActivity"
             android:windowSoftInputMode="adjustPan|stateVisible" />
         <activity
+            android:name=".activitys.SelectDiscountActivity"
+            android:windowSoftInputMode="adjustPan|stateVisible" />
+        <activity
             android:name=".activitys.MemberActivity"
             android:windowSoftInputMode="adjustPan|stateVisible" />
         <activity
@@ -53,12 +59,6 @@
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activitys.OrderDetialActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activitys.ChangeGoodsActivity"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".activitys.ReturnGoodsActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".activitys.GoodDetialActivity"
@@ -81,6 +81,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <meta-data
+            android:name="com.infitack.rxretorfit2library.MyAppGlideModule"
+            android:value="AppGlideModule" />
     </application>
 
 </manifest>

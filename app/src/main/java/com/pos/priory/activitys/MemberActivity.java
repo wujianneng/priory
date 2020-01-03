@@ -60,15 +60,11 @@ public class MemberActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void beForeInitViews() {
         setContentView(R.layout.activity_member);
         ButterKnife.bind(this);
+        initViews();
     }
 
-    @Override
     protected void initViews() {
         memberAdapter = new QueryMemberAdapter(R.layout.query_member_list_item, memberList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);

@@ -22,7 +22,7 @@ import java.util.List;
 public class AddNewOrderGoodsAdapter extends BaseQuickAdapter<GoodBean, BaseViewHolder> {
     Context context;
 
-    public AddNewOrderGoodsAdapter(Context context,@LayoutRes int layoutResId, @Nullable List<GoodBean> data) {
+    public AddNewOrderGoodsAdapter(Context context, @LayoutRes int layoutResId, @Nullable List<GoodBean> data) {
         super(layoutResId, data);
         this.context = context;
     }
@@ -31,13 +31,21 @@ public class AddNewOrderGoodsAdapter extends BaseQuickAdapter<GoodBean, BaseView
     protected void convert(BaseViewHolder helper, GoodBean item) {
         helper.setText(R.id.code_tv, item.getProduct().getProductcode() + item.getStockno());
         helper.setText(R.id.name_tv, item.getProduct().getName());
-        helper.setText(R.id.weight_tv,item.getWeight() + "g");
-        helper.setText(R.id.origin_price_tv,"原价：" + item.getProduct().getPrePrice());
-        helper.setText(R.id.discount_tv,"折扣：" + item.getDiscountRate());
+        helper.setText(R.id.weight_tv, item.getWeight() + "g");
+        helper.setText(R.id.origin_price_tv, "原价：" + item.getProduct().getPrePrice());
         helper.setText(R.id.price_tv, "折后价：" + item.getProduct().getPrice());
         Glide.with(context).load(Constants.BASE_URL_HTTP + item.getProduct().getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));
+        helper.setOnClickListener(R.id.decrease_btn, v -> {
+            item.setQuantity(item.getQuantity() == 1 ? 1 : item.getQuantity() - 1);
+            notifyItemChanged(helper.getAdapterPosition());
+        });
+        helper.setOnClickListener(R.id.increase_btn, v -> {
+            item.setQuantity(item.getQuantity() + 1);
+            notifyItemChanged(helper.getAdapterPosition());
+        });
+        helper.setText(R.id.fitting_count_tv, item.getQuantity() + "");
     }
 }

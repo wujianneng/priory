@@ -3,12 +3,10 @@ package com.pos.priory.utils;
 import android.app.Activity;
 
 import com.pos.priory.activitys.AddNewOrderActivity;
-import com.pos.priory.activitys.ChangeGoodsActivity;
 import com.pos.priory.activitys.MemberActivity;
 import com.pos.priory.activitys.MemberInfoActivity;
 import com.pos.priory.activitys.OrderDetialActivity;
 import com.pos.priory.activitys.ReturnBalanceActivity;
-import com.pos.priory.activitys.ReturnGoodsActivity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,8 +27,8 @@ public class ColseActivityUtils {
             if (activityList.size() > 0) {
                 for (Activity activity : activityList) {
                     if (activity instanceof AddNewOrderActivity || activity instanceof MemberActivity
-                            || activity instanceof OrderDetialActivity || activity instanceof ChangeGoodsActivity
-                            || activity instanceof MemberInfoActivity || activity instanceof ReturnGoodsActivity
+                            || activity instanceof OrderDetialActivity
+                            || activity instanceof MemberInfoActivity
                             || activity instanceof ReturnBalanceActivity) {
                         activity.finish();
                     }

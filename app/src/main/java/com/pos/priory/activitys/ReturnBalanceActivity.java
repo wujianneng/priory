@@ -64,13 +64,15 @@ public class ReturnBalanceActivity extends BaseActivity {
 
     String checkedGoodListString;
 
-    @Override
-    protected void beForeInitViews() {
-        setContentView(R.layout.activity_return_balance);
-        ButterKnife.bind(this);
-    }
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_return_balance);
+        ButterKnife.bind(this);
+        initViews();
+    }
+
     protected void initViews() {
         rightImg.setVisibility(View.GONE);
         titleTv.setText("结算");
@@ -143,10 +145,5 @@ public class ReturnBalanceActivity extends BaseActivity {
     }
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
+
 }

@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
@@ -64,15 +66,11 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void beForeInitViews() {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        initViews();
     }
 
-    @Override
     protected void initViews() {
         if (sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false)) {
             edtUsename.setText(sharedPreferences.getString(Constants.LAST_USERNAME_KEY, ""));
@@ -145,95 +143,72 @@ public class LoginActivity extends BaseActivity {
     private void login() {
         if (customDialog == null) {
             customDialog = new CustomDialog(this, "登录中..");
-            customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-                    customDialog = null;
-                }
-            });
+            customDialog.setOnDismissListener(dialogInterface -> customDialog = null);
             customDialog.show();
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("username", edtUsename.getText().toString());
             paramMap.put("password", edtPasswrod.getText().toString());
             Log.e("test", "username:" + edtUsename.getText().toString() + " password:" + edtPasswrod.getText().toString());
-            RetrofitManager
-                    .createString(ApiService.class)
-                    .login(paramMap)
-                    .compose(this.<String>bindToLifecycle())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .doOnNext(new Consumer<String>() {
-                        @Override
-                        public void accept(String s) throws Exception {
-                            Log.e("test", "doOnNext:" + s);
-                            String token = new JSONObject(s).getString("key");
-                            MyApplication.authorization = "Token " + token;
-                            RetrofitManager.initHeader(Constants.Authorization_KEY, MyApplication.authorization);
-                        }
-                    })
-                    .doOnError(new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            customDialog.dismiss();
-                            Log.e("test", "请与总部相关人员联络及查询1");
-                            Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .observeOn(Schedulers.io())
-                    .flatMap(new Function<String, Observable<String>>() {
-                        @Override
-                        public Observable<String> apply(String s) throws Exception {
-                            return RetrofitManager.createString(ApiService.class).
-                                    getStaffInfo(edtUsename.getText().toString()).compose(LoginActivity.this.<String>bindToLifecycle());
-                        }
-                    })
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<String>() {
-                        @Override
-                        public void accept(String s) throws Exception {
-                            List<StaffInfoBean> staffInfoBeanList = gson.fromJson(s,
-                                    new TypeToken<List<StaffInfoBean>>() {
-                                    }.getType());
+            RetrofitManager.excuteTwoOrder(bindToLifecycle(), RetrofitManager.createString(ApiService.class).login(paramMap), new ModelListener() {
+                @Override
+                public void onSuccess(String result) throws Exception {
+                    Log.e("test", "doOnNext:" + result);
+                    String token = new JSONObject(result).getString("key");
+                    MyApplication.authorization = "Token " + token;
+                    RetrofitManager.initHeader(Constants.Authorization_KEY, MyApplication.authorization);
+                }
 
-                            if (staffInfoBeanList != null && staffInfoBeanList.size() != 0) {
-                                StaffInfoBean staffInfoBean = staffInfoBeanList.get(0);
-                                MyApplication.staffInfoBean = staffInfoBean;
-                                if (staffInfoBean.getUser().equals(edtUsename.getText().toString())) {
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
-                                    if (checkbox.isChecked()) {
-                                        editor.putString(Constants.LAST_USERNAME_KEY,
-                                                edtUsename.getText().toString());
-                                        editor.putString(Constants.LAST_PASSWORD_KEY,
-                                                edtPasswrod.getText().toString());
-                                        editor.putString(Constants.LAST_BASE_URL_KEY,
-                                                RetrofitManager.hostname);
-                                    }
-                                    editor.putString(Constants.CURRENT_STAFF_INFO_KEY, s);
-                                    editor.commit();
-                                    if (customDialog != null)
-                                        customDialog.dismiss();
-                                    RetrofitManager.initSentry(edtUsename.getText().toString());
-                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                    finish();
-                                }
-                            } else {
-                                if (customDialog != null)
-                                    customDialog.dismiss();
-                                Log.e("test", "请与总部相关人员联络及查询2");
-                                Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
+                @Override
+                public void onFailed(String erromsg) {
+                    customDialog.dismiss();
+                    Log.e("test", "请与总部相关人员联络及查询1");
+                    Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
+                }
+            }, RetrofitManager.createString(ApiService.class).getStaffInfo(edtUsename.getText().toString()), new ModelListener() {
+                @Override
+                public void onSuccess(String result) throws Exception {
+                    List<StaffInfoBean> staffInfoBeanList = gson.fromJson(result,
+                            new TypeToken<List<StaffInfoBean>>() {
+                            }.getType());
+
+                    if (staffInfoBeanList != null && staffInfoBeanList.size() != 0) {
+                        StaffInfoBean staffInfoBean = staffInfoBeanList.get(0);
+                        MyApplication.staffInfoBean = staffInfoBean;
+                        if (staffInfoBean.getUser().equals(edtUsename.getText().toString())) {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
+                            if (checkbox.isChecked()) {
+                                editor.putString(Constants.LAST_USERNAME_KEY,
+                                        edtUsename.getText().toString());
+                                editor.putString(Constants.LAST_PASSWORD_KEY,
+                                        edtPasswrod.getText().toString());
+                                editor.putString(Constants.LAST_BASE_URL_KEY,
+                                        RetrofitManager.hostname);
                             }
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
+                            editor.putString(Constants.CURRENT_STAFF_INFO_KEY, result);
+                            editor.commit();
                             if (customDialog != null)
                                 customDialog.dismiss();
-                            Log.e("test", "请与总部相关人员联络及查询3");
-                            Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
+                            RetrofitManager.initSentry(edtUsename.getText().toString());
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
                         }
-                    });
+                    } else {
+                        if (customDialog != null)
+                            customDialog.dismiss();
+                        Log.e("test", "请与总部相关人员联络及查询2");
+                        Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
+                    }
+                }
 
+                @Override
+                public void onFailed(String erromsg) {
+                    if (customDialog != null)
+                        customDialog.dismiss();
+                    Log.e("test", "请与总部相关人员联络及查询3");
+                    Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
 

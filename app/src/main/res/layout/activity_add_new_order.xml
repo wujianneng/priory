@@ -1,316 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/title_layout"/>
+    <include
+        android:id="@+id/title_layout"
+        layout="@layout/title_layout" />
 
-    <FrameLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="5dp">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title_layout">
 
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:background="@color/colorAccent" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/data_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50px"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="50px"
-            android:layout_marginBottom="10dp"
-            android:foreground="?attr/selectableItemBackground"
-            app:cardBackgroundColor="#fff"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="2dp">
-
-
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/member_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:text="价格: "
-                        android:textColor="@color/blue_text"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/money_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:text="2305元"
-                        android:textColor="@color/blue_text"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/count_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="16dp"
-                        android:text="0件|0g"
-                        android:textColor="#000000"
-                        android:textSize="12sp" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_marginTop="5dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:id="@+id/member_name_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
-                        android:text="会员:  李先生"
-                        android:textColor="#000000"
-                        android:textSize="14sp" />
-
-                    <ImageView
-                        android:id="@+id/sex_img"
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="50dp"
-                        android:src="@drawable/icon_boy"/>
-
-                </LinearLayout>
-
-
+                android:layout_height="wrap_content"
+                android:foreground="?attr/selectableItemBackground"
+                android:background="@color/cardview_light_background">
 
                 <TextView
-                    android:layout_marginTop="3dp"
-                    android:id="@+id/member_phone_tv"
+                    android:id="@+id/member_name_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="15dp"
-                    android:text="手机号码:  李先生"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:text="会员:  李先生"
                     android:textColor="#000000"
                     android:textSize="14sp" />
 
+                <ImageView
+                    android:id="@+id/sex_img"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_toRightOf="@+id/member_name_tv"
+                    android:src="@drawable/icon_boy" />
 
                 <TextView
                     android:id="@+id/member_reward_tv"
-                    android:layout_marginTop="3dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
-                    android:text="积分:  13000分"
-                    android:paddingBottom="10dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="15dp"
+                    android:text="可用积分:  13000分"
                     android:textColor="#000000"
                     android:textSize="14sp" />
 
-
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-
-    </FrameLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:text="新购买项目"
-        android:textColor="#cccccc"
-        android:textSize="15sp" />
-
-    <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
-        android:id="@+id/good_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_weight="1"></com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/btn_scan"
-            android:layout_width="95dp"
-            android:layout_height="42dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/colorAccent"
-            app:cardCornerRadius="21dp"
-            app:cardElevation="3dp"
-            android:layout_marginBottom="20dp"
-            app:cardPreventCornerOverlap="true"
-            app:contentPadding="5dp">
+                <TextView
+                    android:id="@+id/member_phone_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/member_name_tv"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:text="手机号码:  6664443"
+                    android:textColor="#000000"
+                    android:textSize="14sp" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
-                <View
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/add_fitting_btn"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-                <ImageView
-                    android:id="@+id/icon_scan"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_marginLeft="30dp"
                     android:layout_marginRight="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/scan" />
+                    android:layout_weight="1"
+                    android:text="添加配件" />
 
-                <TextView
-                    android:id="@+id/text_scan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="扫码"
-                    android:textColor="#fff"
-                    android:textSize="16sp" />
-
-                <View
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/add_product_btn"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="30dp"
+                    android:layout_weight="1"
+                    android:text="添加产品" />
 
             </LinearLayout>
 
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/btn_add"
-            android:layout_width="95dp"
-            android:layout_height="42dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/colorAccent"
-            app:cardCornerRadius="21dp"
-            app:cardElevation="3dp"
-            app:cardPreventCornerOverlap="true"
-            app:contentPadding="5dp">
-
-            <LinearLayout
+            <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+                android:id="@+id/good_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="20dp"></com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView>
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="5dp"
+                android:text="订单概览"
+                android:textColor="@color/blue_text"
+                android:textSize="15sp" />
 
-                <ImageView
-                    android:id="@+id/icon_add"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/add" />
-
-                <TextView
-                    android:id="@+id/text_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="手输"
-                    android:textColor="#fff"
-                    android:textSize="16sp" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
-
-            </LinearLayout>
-
-
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-            android:id="@+id/btn_next"
-            android:layout_width="95dp"
-            android:layout_height="42dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/colorAccent"
-            app:cardCornerRadius="21dp"
-            android:layout_marginBottom="20dp"
-            app:cardElevation="3dp"
-            app:cardPreventCornerOverlap="true"
-            app:contentPadding="5dp">
-
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/types_recycler_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="20dp" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+            <TextView
+                android:id="@+id/money_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="15dp"
+                android:text="合计：2305元"
+                android:textColor="@color/blue_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/icon"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/icon_next" />
+            <RelativeLayout
+                android:id="@+id/discount_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/cardview_light_background"
+                android:elevation="2dp"
+                android:foreground="?attr/selectableItemBackground"
+                android:minHeight="50dp">
 
                 <TextView
-                    android:id="@+id/text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="结算"
-                    android:textColor="#fff"
-                    android:textSize="16sp" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="优惠"
+                    android:textColor="@color/blue_text"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                <TextView
+                    android:id="@+id/discount_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="35dp"
+                    android:text="不使用"
+                    android:textColor="@color/blue_text"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
-            </LinearLayout>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/icon_right" />
 
+            </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/payment_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="15dp"
+                android:text="客户应付：2305元"
+                android:textColor="@color/blue_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
+        </LinearLayout>
 
-</LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+</RelativeLayout>

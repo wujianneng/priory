@@ -9,7 +9,7 @@
         android:id="@+id/padding_layout"
         android:layout_width="match_parent"
         android:layout_height="19dp"
-        android:background="@color/colorPrimary"/>
+        android:background="@color/colorPrimary" />
 
     <FrameLayout
         android:id="@+id/title_layout"
@@ -51,10 +51,10 @@
             android:layout_height="match_parent">
 
             <android.support.design.widget.AppBarLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#00000000">
+                android:background="#00000000"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -63,13 +63,107 @@
                     android:elevation="5dp"
                     app:layout_scrollFlags="scroll|enterAlways">
 
-                    <android.support.v7.widget.CardView
-                        android:id="@+id/search_card"
+                    <android.support.design.button.MaterialButton
+                        android:id="@+id/btn_select_repertory"
+                        android:layout_width="100dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="15dp"
+                        android:backgroundTint="#ffffff"
+                        android:text="主仓库"
+                        android:textColor="#333333"
+                        android:textSize="12sp"
+                        app:cornerRadius="10dp"
+                        app:icon="@drawable/go_bottom"
+                        app:iconTint="#333" />
+
+
+                    <android.support.design.button.MaterialButton
+                        android:id="@+id/btn_select_type"
+                        android:layout_width="100dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:backgroundTint="#ffffff"
+                        android:text="黄金"
+                        android:textColor="#333333"
+                        android:textSize="12sp"
+                        app:cornerRadius="10dp"
+                        app:icon="@drawable/go_bottom"
+                        app:iconTint="#333" />
+
+
+                    <android.support.design.button.MaterialButton
+                        android:id="@+id/btn_records"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#ffffff"
+                        android:text="仓库记录"
+                        android:textColor="#333333"
+                        android:textSize="12sp"
+                        app:cornerRadius="10dp"
+                        app:iconTint="#333" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/filter_params_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/colorAccent"
+                    android:elevation="5dp"
+                    app:layout_scrollFlags="scroll|enterAlways">
+
+                    <android.support.design.button.MaterialButton
+                        android:id="@+id/btn_select_order_params"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_horizontal"
                         android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#ffffff"
+                        android:text="按更新时间"
+                        android:textColor="#333333"
+                        android:textSize="12sp"
+                        app:cornerRadius="10dp"
+                        app:icon="@drawable/go_bottom"
+                        app:iconTint="#333" />
+
+                    <android.support.design.button.MaterialButton
+                        android:id="@+id/btn_select_order_type"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="#ffffff"
+                        android:text="降序"
+                        android:textColor="#333333"
+                        android:textSize="12sp"
+                        app:cornerRadius="10dp"
+                        app:icon="@drawable/go_bottom"
+                        app:iconTint="#333" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/colorAccent"
+                    android:elevation="5dp"
+                    app:layout_scrollFlags="scroll|enterAlways">
+
+                    <android.support.v7.widget.CardView
+                        android:id="@+id/search_card"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="15dp"
                         android:layout_marginBottom="10dp"
-                        android:layout_weight="2"
                         app:cardBackgroundColor="#fff"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="1dp"
@@ -113,99 +207,14 @@
 
 
                     </android.support.v7.widget.CardView>
-
-                    <android.support.design.button.MaterialButton
-                        android:id="@+id/btn_select_repertory"
-                        android:layout_width="100dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:backgroundTint="#ffffff"
-                        android:text="主仓库"
-                        android:textColor="#333333"
-                        android:textSize="12sp"
-                        app:cornerRadius="10dp"
-                        app:icon="@drawable/go_bottom"
-                        app:iconTint="#333" />
-
-                    <android.support.design.button.MaterialButton
-                        android:id="@+id/btn_records"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="40dp"
-                        android:layout_marginRight="15dp"
-                        android:backgroundTint="#ffffff"
-                        android:text="仓库记录"
-                        android:textColor="#333333"
-                        android:textSize="12sp"
-                        app:cornerRadius="10dp"
-                        app:iconTint="#333" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/filter_params_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@color/colorAccent"
-                    android:elevation="5dp"
-                    app:layout_scrollFlags="scroll|enterAlways">
-
-
-                    <android.support.design.button.MaterialButton
-                        android:id="@+id/btn_select_type"
-                        android:layout_width="100dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="15dp"
-                        android:backgroundTint="#ffffff"
-                        android:text="黄金"
-                        android:textColor="#333333"
-                        android:textSize="12sp"
-                        app:cornerRadius="10dp"
-                        app:icon="@drawable/go_bottom"
-                        app:iconTint="#333" />
-
-                    <android.support.design.button.MaterialButton
-                        android:id="@+id/btn_select_order_params"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="20dp"
-                        android:backgroundTint="#ffffff"
-                        android:text="按更新时间"
-                        android:textColor="#333333"
-                        android:textSize="12sp"
-                        app:cornerRadius="10dp"
-                        app:icon="@drawable/go_bottom"
-                        app:iconTint="#333" />
-
-                    <android.support.design.button.MaterialButton
-                        android:id="@+id/btn_select_order_type"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="15dp"
-                        android:backgroundTint="#ffffff"
-                        android:text="降序"
-                        android:textColor="#333333"
-                        android:textSize="12sp"
-                        app:cornerRadius="10dp"
-                        app:icon="@drawable/go_bottom"
-                        app:iconTint="#333" />
-                </LinearLayout>
+                </FrameLayout>
 
                 <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="#ffffff"
                     android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:paddingBottom="5dp">
 
                     <TextView
                         android:id="@+id/left_tv"
@@ -213,30 +222,17 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginLeft="16dp"
-                        android:textStyle="bold"
                         android:text=""
                         android:textColor="@color/blue_text"
-                        android:textSize="15sp" />
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
 
                 </FrameLayout>
 
             </android.support.design.widget.AppBarLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
 
                 <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginRight="20dp"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"></com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView>
-
-                <android.support.v7.widget.RecyclerView
                     android:id="@+id/return_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -244,8 +240,16 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="20dp"
                     android:visibility="gone"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"></com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="20dp"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"></android.support.v7.widget.RecyclerView>
-            </LinearLayout>
 
         </android.support.design.widget.CoordinatorLayout>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>

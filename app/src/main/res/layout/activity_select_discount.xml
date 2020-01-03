@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_layout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:id="@+id/exchange_edt"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toLeftOf="@+id/exchange_btn"
+            android:background="@color/cardview_light_background"
+            android:elevation="5dp"
+            android:gravity="center_vertical"
+            android:hint="兑换码"
+            android:paddingLeft="15dp"
+            android:textColor="@color/blue_text"
+            android:textSize="15sp" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/exchange_btn"
+            android:layout_width="70dp"
+            android:layout_height="@dimen/dp_40"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:text="兑换"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="14sp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="25dp"
+        android:text="可用的优惠券"
+        android:textColor="@color/blue_text"
+        android:textSize="15sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginRight="15dp" />
+
+</LinearLayout>

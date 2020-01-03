@@ -6,6 +6,7 @@ package com.pos.priory.utils;
 
 public class Constants {
     public static final String BASE_URL = "http://api.annabellaip.com";
+    public static final String DEV_BASE_URL = "http://annabella-dev.infitack.net";
     public static final String MACAL_BASE_URL = "http://mo.api.annabellaip.com";
     public static final String BASE_URL_HTTP = BASE_URL;
 

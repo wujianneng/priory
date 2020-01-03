@@ -76,12 +76,13 @@ public class BigInventoryDetialActivity extends BaseActivity {
     TabLayout tabLayout;
 
     @Override
-    protected void beForeInitViews() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_big_inventory_detial);
         ButterKnife.bind(this);
+        initViews();
     }
 
-    @Override
     protected void initViews() {
         inventoryId = getIntent().getIntExtra("inventoryId", 0);
         status = getIntent().getStringExtra("status");
@@ -231,11 +232,6 @@ public class BigInventoryDetialActivity extends BaseActivity {
                 });
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
+
 
 }

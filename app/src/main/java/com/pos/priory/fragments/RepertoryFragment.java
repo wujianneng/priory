@@ -83,12 +83,12 @@ public class RepertoryFragment extends BaseFragment {
     RepertoryAdapter repertoryAdapter;
     RepertoryReturnAdapter repertoryReturnAdapter;
     @Bind(R.id.recycler_view)
-    SwipeMenuRecyclerView recyclerView;
+    RecyclerView recyclerView;
     @Bind(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
     String currentStr = "";
     @Bind(R.id.return_recycler_view)
-    RecyclerView returnRecyclerView;
+    SwipeMenuRecyclerView returnRecyclerView;
 
     boolean isStoreRepertory = true;
     @Bind(R.id.title_tv)
@@ -131,53 +131,34 @@ public class RepertoryFragment extends BaseFragment {
 
     private void initViews() {
         refreshLayout.setEnableLoadMore(false);
-        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                if (isStoreRepertory) {
-                    refreshRecyclerView(currentStr);
-                } else {
-                    refreshReturnRecyclerView();
-                }
+        refreshLayout.setOnRefreshListener(refreshLayout -> {
+            if (isStoreRepertory) {
+                refreshRecyclerView(currentStr);
+            } else {
+                refreshReturnRecyclerView();
             }
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
 
         //设置侧滑菜单
-        recyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
-            @Override
-            public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-                SwipeMenuItem tuihuoItem = new SwipeMenuItem(getActivity())
-                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
-                        .setImage(R.drawable.icon_dinghuo)
-                        .setText("退货")
-                        .setTextColor(Color.WHITE)
-                        .setHeight(DeviceUtil.dip2px(getActivity(), 91))//设置高，这里使用match_parent，就是与item的高相同
-                        .setWidth(DeviceUtil.dip2px(getActivity(), 100));//设置宽
-                swipeRightMenu.addMenuItem(tuihuoItem);//设置右边的侧滑
-                SwipeMenuItem diaohuoItem = new SwipeMenuItem(getActivity())
-                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_red))
-                        .setImage(R.drawable.icon_dinghuo)
-                        .setText("调货")
-                        .setTextColor(Color.WHITE)
-                        .setHeight(DeviceUtil.dip2px(getActivity(), 91))//设置高，这里使用match_parent，就是与item的高相同
-                        .setWidth(DeviceUtil.dip2px(getActivity(), 100));//设置宽
-                swipeRightMenu.addMenuItem(diaohuoItem);//设置右边的侧滑
-            }
+        returnRecyclerView.setSwipeMenuCreator((swipeLeftMenu, swipeRightMenu, viewType) -> {
+            SwipeMenuItem tuihuoItem = new SwipeMenuItem(getActivity())
+                    .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
+                    .setImage(R.drawable.icon_dinghuo)
+                    .setText("编辑")
+                    .setTextColor(Color.WHITE)
+                    .setHeight(DeviceUtil.dip2px(getActivity(), 91))//设置高，这里使用match_parent，就是与item的高相同
+                    .setWidth(DeviceUtil.dip2px(getActivity(), 100));//设置宽
+            swipeRightMenu.addMenuItem(tuihuoItem);//设置右边的侧滑
         });
         //设置侧滑菜单的点击事件
-        recyclerView.setSwipeMenuItemClickListener(new SwipeMenuItemClickListener() {
-            @Override
-            public void onItemClick(SwipeMenuBridge menuBridge) {
-                menuBridge.closeMenu();
+        returnRecyclerView.setSwipeMenuItemClickListener(menuBridge -> {
+            menuBridge.closeMenu();
 //                int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。0是左，右是1，暂时没有用到
-                int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
-                int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
-                if (menuPosition == 0) {
-                    showIsReturnDialog(adapterPosition);
-                } else {
-                    getExchangeableStores(adapterPosition);
-                }
+            int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
+            int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
+            if (menuPosition == 0) {
+
             }
         });
 
@@ -248,14 +229,10 @@ public class RepertoryFragment extends BaseFragment {
                 case R.id.menu0:
                     btnSelectRepertory.setText(item.getTitle());
                     onChangeRepertoryListener(true);
-                    searchCard.setVisibility(View.VISIBLE);
-                    filterParamsLayout.setVisibility(View.VISIBLE);
                     break;
                 case R.id.menu1:
                     btnSelectRepertory.setText(item.getTitle());
                     onChangeRepertoryListener(false);
-                    searchCard.setVisibility(View.GONE);
-                    filterParamsLayout.setVisibility(View.GONE);
                     break;
             }
             return true;
@@ -274,148 +251,6 @@ public class RepertoryFragment extends BaseFragment {
         }
         refreshLayout.autoRefresh();
     }
-
-    private void showIsReturnDialog(final int adapterPosition) {
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setTitle("提示")
-                .setMessage("是否确定要退货该商品？")
-                .setNegativeButton("取消", (mdialog, which) -> {
-                    mdialog.dismiss();
-                })
-                .setPositiveButton("确定", (mdialog, which) -> {
-                    mdialog.dismiss();
-                    doReturnStock(adapterPosition);
-                })
-                .create();
-        dialog.show();
-    }
-
-    CustomDialog customDialog;
-
-    private void doReturnStock(int pos) {
-        if (customDialog == null)
-            customDialog = new CustomDialog(getActivity(), "退货中..");
-        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                customDialog = null;
-            }
-        });
-        customDialog.show();
-        GoodBean goodBean = dataList.get(pos);
-        RetrofitManager.excute(this.bindToLifecycle(), RetrofitManager.createString(ApiService.class)
-                .returnStockById(goodBean.getId()), new ModelListener() {
-            @Override
-            public void onSuccess(String result) throws Exception {
-                customDialog.dismiss();
-                ToastUtils.showShort("退货成功");
-                refreshLayout.autoRefresh();
-            }
-
-            @Override
-            public void onFailed(String erromsg) {
-                customDialog.dismiss();
-                ToastUtils.showShort("退货失败");
-            }
-        });
-    }
-
-    List<String> stores = new ArrayList<>();
-    Map<String, Integer> storesMaps = new HashMap<>();
-
-    private void getExchangeableStores(final int adapterPosition) {
-        RetrofitManager.excute(this.bindToLifecycle(),
-                RetrofitManager.createString(ApiService.class).getTranStores(),
-                new ModelListener() {
-                    @Override
-                    public void onSuccess(String result) throws Exception {
-                        JSONArray jsonArray = new JSONArray(result);
-                        stores.clear();
-                        storesMaps.clear();
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                            stores.add(jsonObject.getString("name"));
-                            storesMaps.put(jsonObject.getString("name"), jsonObject.getInt("id"));
-                        }
-                        showChoiceDiscountDialog(adapterPosition);
-                    }
-
-                    @Override
-                    public void onFailed(String erromsg) {
-
-                    }
-                });
-    }
-
-
-    int yourChoice = 0;
-
-    private void showChoiceDiscountDialog(final int position) {
-        AlertDialog.Builder singleChoiceDialog =
-                new AlertDialog.Builder(getActivity());
-        singleChoiceDialog.setTitle("请选择调拨店铺");
-        // 第二个参数是默认选项，此处设置为0
-        ListAdapter adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_single_choice, stores);
-        singleChoiceDialog.setSingleChoiceItems(adapter, yourChoice,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        yourChoice = which;
-                    }
-                });
-        singleChoiceDialog.setPositiveButton("确定",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (yourChoice != -1) {
-                            doExchange(storesMaps.get(stores.get(yourChoice)), dataList.get(position).getId());
-                        }
-                        dialog.dismiss();
-                    }
-                });
-        singleChoiceDialog.create().show();
-    }
-
-
-    private void doExchange(int storeid, int stockid) {
-        if (customDialog == null)
-            customDialog = new CustomDialog(getActivity(), "调货中..");
-        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                customDialog = null;
-            }
-        });
-        customDialog.show();
-        Map<String, Object> paramMap = new HashMap<>();
-        List<Map<String, Object>> stocktransfer = new ArrayList<>();
-        Map<String, Object> stocktransferMap = new HashMap<>();
-        stocktransferMap.put("storeid", storeid);
-        stocktransferMap.put("stockid", stockid);
-        stocktransfer.add(stocktransferMap);
-        paramMap.put("stocktransfer", stocktransfer);
-        Log.e("test", "params:" + gson.toJson(paramMap));
-        RetrofitManager.createString(ApiService.class)
-                .tranferGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        customDialog.dismiss();
-                        ToastUtils.showShort("调货成功");
-                        refreshLayout.autoRefresh();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        customDialog.dismiss();
-                        ToastUtils.showShort("调货失败");
-                    }
-                });
-    }
-
 
     Disposable call;
 

@@ -2,6 +2,7 @@ package com.pos.priory.activitys;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
 import android.view.View;
@@ -55,12 +56,13 @@ public class BigInventoryTypesDetialActivity extends BaseActivity {
     MaterialButton finishBtn;
 
     @Override
-    protected void beForeInitViews() {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_big_inventory_types_detial);
         ButterKnife.bind(this);
+        initViews();
     }
 
-    @Override
     protected void initViews() {
         rightImg.setVisibility(View.GONE);
         titleTv.setText("盘点详情");

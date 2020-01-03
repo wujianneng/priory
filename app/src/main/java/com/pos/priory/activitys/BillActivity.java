@@ -93,15 +93,11 @@ public class BillActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void beForeInitViews() {
         setContentView(R.layout.activity_bill);
         ButterKnife.bind(this);
+        initViews();
     }
 
-    @Override
     protected void initViews() {
         titleTv.setText("账单");
         rightImg.setVisibility(View.GONE);

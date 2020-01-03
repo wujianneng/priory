@@ -130,61 +130,41 @@ public class OrderFragment extends BaseFragment {
 
     private void initViews() {
         smartRefreshLayout.setEnableLoadMore(false);
-        smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                refreshRecyclerView(false);
-            }
-        });
+        smartRefreshLayout.setOnRefreshListener(refreshLayout -> refreshRecyclerView(false));
         smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
         smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()).setSpinnerStyle(SpinnerStyle.Translate));
-        smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                refreshRecyclerView(true);
-            }
-        });
-        //设置侧滑菜单
-        recyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
-            @Override
-            public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-                Log.e("viewtype", "viewtype:" + viewType);
-                if (viewType == 0 && MyApplication.staffInfoBean.getPermission().equals("店长")) {
-                    SwipeMenuItem cancelItem = new SwipeMenuItem(getActivity())
-                            .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
-                            .setImage(R.drawable.edit)
-                            .setText("撤回")
-                            .setTextColor(Color.WHITE)
-                            .setHeight(DeviceUtil.dip2px(getContext(), 91))//设置高，这里使用match_parent，就是与item的高相同
-                            .setWidth(DeviceUtil.dip2px(getContext(), 100));//设置宽
-                    swipeRightMenu.addMenuItem(cancelItem);//设置右边的侧滑
-                }
+        smartRefreshLayout.setOnLoadMoreListener(refreshLayout -> refreshRecyclerView(true));
+        recyclerView.setSwipeMenuCreator((swipeLeftMenu, swipeRightMenu, viewType) -> {
+            Log.e("viewtype", "viewtype:" + viewType);
+            if (viewType == 0 && MyApplication.staffInfoBean.getPermission().equals("店长")) {
+                SwipeMenuItem cancelItem = new SwipeMenuItem(getActivity())
+                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
+                        .setImage(R.drawable.edit)
+                        .setText("撤回")
+                        .setTextColor(Color.WHITE)
+                        .setHeight(DeviceUtil.dip2px(getContext(), 91))//设置高，这里使用match_parent，就是与item的高相同
+                        .setWidth(DeviceUtil.dip2px(getContext(), 100));//设置宽
+                swipeRightMenu.addMenuItem(cancelItem);//设置右边的侧滑
             }
         });
         orderAdapter = new OrderAdapter(R.layout.order_list_item, orderList);
         //设置侧滑菜单的点击事件
-        recyclerView.setSwipeMenuItemClickListener(new SwipeMenuItemClickListener() {
-            @Override
-            public void onItemClick(SwipeMenuBridge menuBridge) {
-                menuBridge.closeMenu();
-                int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
-                int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
-                if (menuPosition == 0) {
-                    showIsCancelOrderDialog(adapterPosition);
-                }
+        recyclerView.setSwipeMenuItemClickListener(menuBridge -> {
+            menuBridge.closeMenu();
+            int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
+            int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
+            if (menuPosition == 0) {
+                showIsCancelOrderDialog(adapterPosition);
             }
         });
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(orderAdapter);
-        orderAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(getActivity(), OrderDetialActivity.class);
-                intent.putExtra("orderId", orderList.get(position).getId());
-                startActivity(intent);
-            }
+        orderAdapter.setOnItemClickListener((adapter, view, position) -> {
+            Intent intent = new Intent(getActivity(), OrderDetialActivity.class);
+            intent.putExtra("orderId", orderList.get(position).getId());
+            startActivity(intent);
         });
         smartRefreshLayout.autoRefresh();
     }
@@ -193,18 +173,10 @@ public class OrderFragment extends BaseFragment {
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle("提示")
                 .setMessage("是否确定要撤回该订单？")
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        cancelOrder(adapterPosition);
-                    }
+                .setNegativeButton("取消", (dialog1, which) -> dialog1.dismiss())
+                .setPositiveButton("确定", (dialog1, which) -> {
+                    dialog1.dismiss();
+                    cancelOrder(adapterPosition);
                 })
                 .create();
         dialog.show();
@@ -215,35 +187,24 @@ public class OrderFragment extends BaseFragment {
     private void cancelOrder(final int pos) {
         if (customDialog == null) {
             customDialog = new CustomDialog(getActivity(), "正在撤回订单..");
-            customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialogInterface) {
-                    customDialog = null;
-                }
-            });
+            customDialog.setOnDismissListener(dialog -> customDialog = null);
             customDialog.show();
             RetrofitManager.createString(ApiService.class)
                     .deleteOrder(orderList.get(pos).getId())
-                    .compose(this.<String>bindToLifecycle())
+                    .compose(bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<String>() {
-                        @Override
-                        public void accept(String s) throws Exception {
-                            Log.e("test", "结算成功");
-                            customDialog.dismiss();
-                            orderList.remove(pos);
-                            orderAdapter.notifyItemRangeChanged(0, orderList.size());
-                            orderAdapter.notifyItemRemoved(pos);
-                            Toast.makeText(getActivity(), "撤回订单成功", Toast.LENGTH_SHORT).show();
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            customDialog.dismiss();
-                            Log.e("test", "结算失败:" + throwable.getMessage());
-                            Toast.makeText(getActivity(), "撤回订单失败", Toast.LENGTH_SHORT).show();
-                        }
+                    .subscribe(s -> {
+                        Log.e("test", "结算成功");
+                        customDialog.dismiss();
+                        orderList.remove(pos);
+                        orderAdapter.notifyItemRangeChanged(0, orderList.size());
+                        orderAdapter.notifyItemRemoved(pos);
+                        Toast.makeText(getActivity(), "撤回订单成功", Toast.LENGTH_SHORT).show();
+                    }, throwable -> {
+                        customDialog.dismiss();
+                        Log.e("test", "结算失败:" + throwable.getMessage());
+                        Toast.makeText(getActivity(), "撤回订单失败", Toast.LENGTH_SHORT).show();
                     });
         }
     }
@@ -291,6 +252,7 @@ public class OrderFragment extends BaseFragment {
                         final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {
                         }.getType());
                         if (orderBeanList != null) {
+                            orderList.add(new OrderBean());
                             orderList.addAll(orderBeanList);
                             orderAdapter.notifyDataSetChanged();
                         }

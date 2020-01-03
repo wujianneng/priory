@@ -1,1 +1,1 @@
-include ':app', ':zxinglib', ':wjnbaselib'
+include ':app', ':zxinglib'

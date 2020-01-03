@@ -72,6 +72,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        initViews();
         getAppVersionFromServer();
         getStoreList();
     }
@@ -118,14 +121,6 @@ public class MainActivity extends BaseActivity {
                 });
     }
 
-    @Override
-    protected void beForeInitViews() {
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-    }
-
-
-    @Override
     protected void initViews() {
         navigation.setMode(BottomNavigationBar.MODE_FIXED);
         navigation.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
