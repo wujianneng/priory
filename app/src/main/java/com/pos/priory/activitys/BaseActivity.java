@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -76,5 +79,21 @@ public abstract class BaseActivity extends RxAppCompatActivity {
 
     protected abstract void beForeInitViews();
     protected abstract void initViews();
+
+    public static <F extends Fragment> F handleTabFragments(AppCompatActivity activity, int containerId, Class<F> sfClass,
+                                                            F sf, Fragment... fragments) {
+        FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
+        if (sf == null) {
+            sf = (F) Fragment.instantiate(activity, sfClass.getName());
+            fragmentTransaction.add(containerId, sf);
+        } else {
+            fragmentTransaction.show(sf);
+        }
+        for (Fragment fragment : fragments) {
+            if (fragment != null) fragmentTransaction.hide(fragment);
+        }
+        fragmentTransaction.commit();
+        return sf;
+    }
 
 }
