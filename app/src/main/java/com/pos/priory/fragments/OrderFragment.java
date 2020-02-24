@@ -39,6 +39,7 @@ import com.pos.priory.activitys.OrderDetialActivity;
 import com.pos.priory.adapters.OrderAdapter;
 import com.pos.priory.adapters.TablePrintGoodsAdapter;
 import com.pos.priory.beans.DayReportBean;
+import com.pos.priory.beans.DayReportDataBean;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
@@ -62,6 +63,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -316,70 +318,59 @@ public class OrderFragment extends BaseFragment {
     }
 
     public void getDayReport() {
-        RetrofitManager.createString(ApiService.class).getDayReport()
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        Log.e("test", "result:" + s);
-                        DayReportBean dayReportBean = gson.fromJson(s, DayReportBean.class);
-                        printGoldTable(dayReportBean);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.e("test", "throwable:" + gson.toJson(throwable));
-                        Toast.makeText(getActivity(), "查不到日报表数据", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        printGoldTable();
+//        RetrofitManager.createString(ApiService.class).getDayReport()
+//                .compose(this.<String>bindToLifecycle())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String s) throws Exception {
+//                        Log.e("test", "result:" + s);
+//                        DayReportBean dayReportBean = gson.fromJson(s, DayReportBean.class);
+//                        printGoldTable(dayReportBean);
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//                        Log.e("test", "throwable:" + gson.toJson(throwable));
+//                        Toast.makeText(getActivity(), "查不到日报表数据", Toast.LENGTH_SHORT).show();
+//                        DayReportBean dayReportBean = new DayReportBean();
+//                        printGoldTable(dayReportBean);
+//                    }
+//                });
     }
 
-    public void printGoldTable(DayReportBean dayReportBean) {
+    public void printGoldTable() {
         Log.e("test", "printGoldTable");
         List<View> views = new ArrayList<>();
-        List<DayReportBean.ItemsBean> templist = new ArrayList<>();
-        templist.addAll(dayReportBean.getItems());
-        if (dayReportBean.getRefunditem().size() != 0) {
-            DayReportBean.ItemsBean returnTitleBean = new DayReportBean.ItemsBean();
-            returnTitleBean.setProductname("退货标题");
-            templist.add(returnTitleBean);
-            for (DayReportBean.RefunditemBean refunditemBean : dayReportBean.getRefunditem()) {
-                DayReportBean.ItemsBean itemsBean = new DayReportBean.ItemsBean();
-                itemsBean.setProductname(refunditemBean.getProductname());
-                itemsBean.setCatalog(refunditemBean.getCatalog());
-                itemsBean.setDiscount(refunditemBean.getDiscount());
-                itemsBean.setDiscountprice(refunditemBean.getDiscountprice());
-                itemsBean.setQuantity(refunditemBean.getQuantity());
-                itemsBean.setPrice(refunditemBean.getPrice());
-                itemsBean.setStock(refunditemBean.getStock());
-                itemsBean.setWeight(refunditemBean.getWeight());
-                itemsBean.setReturnItem(true);
-                templist.add(itemsBean);
-            }
-        }
-
-        int perPageSize = 18;
-        int size = templist.size() / perPageSize;
-        int a = templist.size() % perPageSize;
+        String[] dataarry = new String[]{"標題","數據","數據","數據","標題","數據","數據","數據","標題","數據","數據","數據","標題","數據","數據","數據","標題","數據","數據","數據"};
+        int perPageSize = 16;
+        int size = dataarry.length / perPageSize;
+        int a = dataarry.length % perPageSize;
         if (a != 0) {
             size++;
         }
-        Log.e("test", "size:" + size + " a:" + a + "templist.size():" + templist.size());
+        Log.e("test", "size:" + size + " a:" + a + "templist.size():" + dataarry.length);
         for (int i = 0; i < size; i++) {
-            List<DayReportBean.ItemsBean> extraList = new ArrayList<>();
+            List<DayReportDataBean> extraList = new ArrayList<>();
             if (i == (size - 1)) {
                 if (a == 0) {
                     a = perPageSize;
                 }
                 for (int t = 0; t < a; t++) {
-                    extraList.add(templist.get(t + perPageSize * i));
+                    DayReportDataBean dayReportDataBean = new DayReportDataBean();
+                    String str = dataarry[t + perPageSize * i];
+                    dayReportDataBean.itemType = str.equals("標題")? 0 : 1;
+                    extraList.add(dayReportDataBean);
                 }
 
             } else {
                 for (int t = 0; t < perPageSize; t++) {
-                    extraList.add(templist.get(t + perPageSize * i));
+                    DayReportDataBean dayReportDataBean = new DayReportDataBean();
+                    String str = dataarry[t + perPageSize * i];
+                    dayReportDataBean.itemType = str.equals("標題")? 0 : 1;
+                    extraList.add(dayReportDataBean);
                 }
             }
             Log.e("test", "MyApplication.getContext().region:" + MyApplication.getContext().region);
@@ -390,34 +381,14 @@ public class OrderFragment extends BaseFragment {
                 layoutid = R.layout.gold_daliy_table2;
             }
             final View printView = LayoutInflater.from(getActivity()).inflate(layoutid, null);
-            if (extraList.size() != 0 && !extraList.get(0).isReturnItem()) {
-                printView.findViewById(R.id.list_title_layout0).setVisibility(View.VISIBLE);
-                printView.findViewById(R.id.list_title_layout1).setVisibility(View.GONE);
-            } else {
-                printView.findViewById(R.id.list_title_layout0).setVisibility(View.GONE);
-                printView.findViewById(R.id.list_title_layout1).setVisibility(View.VISIBLE);
-            }
             ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.staffInfoBean.getStore());
             ((TextView) printView.findViewById(R.id.date_tv)).setText(DateUtils.getDateOfToday());
+            ((TextView) printView.findViewById(R.id.time_tv)).setText(DateUtils.getCurrentTime());
             ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + size);
-            ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(dayReportBean.getTurnovertotal() + "");
-            ((TextView) printView.findViewById(R.id.cash_tv)).setText(dayReportBean.getCash() + "");
-            ((TextView) printView.findViewById(R.id.coupon_tv)).setText(dayReportBean.getVoucher() + "");
-            ((TextView) printView.findViewById(R.id.card_pay_tv)).setText(dayReportBean.getCredit() + "");
-            ((TextView) printView.findViewById(R.id.ali_pay_tv)).setText(dayReportBean.getAlipay() + "");
-            ((TextView) printView.findViewById(R.id.wechat_pay_tv)).setText(dayReportBean.getWechatpay() + "");
-            ((TextView) printView.findViewById(R.id.return_mount_tv)).setText(dayReportBean.getRefund() + "");
-            ((TextView) printView.findViewById(R.id.gold_amount_tv)).setText(dayReportBean.getGoldturnover() + "");
-            ((TextView) printView.findViewById(R.id.gold_count_tv)).setText(dayReportBean.getGolditemcount() + "");
-            ((TextView) printView.findViewById(R.id.gold_weight_tv)).setText(dayReportBean.getGolditemweight() + "g");
-            ((TextView) printView.findViewById(R.id.spar_amount_tv)).setText(dayReportBean.getCystalturnover() + "");
-            ((TextView) printView.findViewById(R.id.spar_count_tv)).setText(dayReportBean.getCystalitemcount() + "");
-            ((TextView) printView.findViewById(R.id.hand_amount_tv)).setText(dayReportBean.getBraceletturnover() + "");
-            ((TextView) printView.findViewById(R.id.hand_count_tv)).setText(dayReportBean.getBraceletitemcount() + "");
+
 
             RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
-            TablePrintGoodsAdapter adapter = new TablePrintGoodsAdapter(R.layout.gold_table_print_good_list_item, extraList,
-                    i, dayReportBean.getItems().size(), dayReportBean.getRefunditem().size(), perPageSize);
+            TablePrintGoodsAdapter adapter = new TablePrintGoodsAdapter(extraList);
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
             listview.setLayoutManager(mLayoutManager);

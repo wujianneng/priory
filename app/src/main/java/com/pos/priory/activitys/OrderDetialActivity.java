@@ -119,6 +119,9 @@ public class OrderDetialActivity extends BaseActivity {
     }
 
     protected void initViews() {
+        rightImg.setVisibility(View.VISIBLE);
+        rightImg.setImageResource(R.drawable.icon_print);
+
         goodsAdapter = new OrderDetialGoodsAdapter(goodList,this);
         goodRecyclerView.setLayoutManager(new LinearLayoutManager(OrderDetialActivity.this,LinearLayoutManager.VERTICAL,false));
         goodRecyclerView.setAdapter(goodsAdapter);
@@ -155,42 +158,60 @@ public class OrderDetialActivity extends BaseActivity {
 //                        customDialog.dismiss();
 //                    });
 //        }
-        OrderBean.ItemsBean itemsBean = new OrderBean.ItemsBean();
-        OrderBean.ItemsBean itemsBean1 = new OrderBean.ItemsBean();
-        itemsBean.itemType = 0;
-        itemsBean1.itemType = 1;
-        goodList.add(itemsBean);
-        goodList.add(itemsBean1);
+        for(int i = 0 ; i < 30 ; i++) {
+            OrderBean.ItemsBean itemsBean = new OrderBean.ItemsBean();
+            goodList.add(itemsBean);
+        }
         goodsAdapter.notifyDataSetChanged();
 
     }
 
-    public static void printViews(final Activity activity, List<OrderBean.ItemsBean> goodList, String orderNumber,
-                                  String memberName, String createDate, double sumMoney, int storeId) {
+    public void printViews() {
         List<View> views = new ArrayList<>();
         List<OrderBean.ItemsBean> templist = new ArrayList<>();
         templist.addAll(goodList);
-        int perPageSize = 8;
-        int size = templist.size() / perPageSize;
-        int a = templist.size() % perPageSize;
-        if (a != 0) {
-            size++;
+        int perPageSize = 12;
+        int lastPageSize = 6;
+        int sumSize = templist.size();
+        int pageCount = sumSize / perPageSize;
+        int remainder = sumSize % perPageSize;//餘數
+        if (remainder != 0) {
+            if(remainder > lastPageSize){
+                pageCount = pageCount + 2;
+            }else {
+                pageCount++;
+            }
         } else {
-            if (size == 1) {
-                a = perPageSize;
+            if (pageCount == 1) {
+                remainder = perPageSize;
             }
         }
 
-        Log.e("test", "size:" + size + " a:" + a);
-        for (int i = 0; i < size; i++) {
+        Log.e("test", "pageCount:" + pageCount + " remainder:" + remainder);
+        for (int i = 0; i < pageCount; i++) {
             List<OrderBean.ItemsBean> extraList = new ArrayList<>();
-            if (i == (size - 1)) {
-                for (int t = 0; t < a; t++) {
-                    extraList.add(templist.get(t + perPageSize * i));
+            if(remainder > lastPageSize){
+                if (i == (pageCount - 1)) {
+                   //最後一頁放匯總
+                }else if (i == (pageCount - 2)) {
+                    for (int t = 0; t < remainder; t++) {
+                        extraList.add(templist.get(t + perPageSize * i));
+                    }
+                } else {
+                    Log.e("test", "i:" + i);
+                    for (int t = 0; t < perPageSize; t++) {
+                        extraList.add(templist.get(t + perPageSize * i));
+                    }
                 }
-            } else {
-                for (int t = 0; t < perPageSize; t++) {
-                    extraList.add(templist.get(t + perPageSize * i));
+            }else {
+                if (i == (pageCount - 1)) {
+                    for (int t = 0; t < remainder; t++) {
+                        extraList.add(templist.get(t + perPageSize * i));
+                    }
+                } else {
+                    for (int t = 0; t < perPageSize; t++) {
+                        extraList.add(templist.get(t + perPageSize * i));
+                    }
                 }
             }
             int layoutid = 0;
@@ -199,26 +220,27 @@ public class OrderDetialActivity extends BaseActivity {
             } else {
                 layoutid = R.layout.dialog_preview2;
             }
-            final View printView = LayoutInflater.from(activity).inflate(layoutid, null);
+            final View printView = LayoutInflater.from(this).inflate(layoutid, null);
             ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.getContext().storeName);
             ((TextView) printView.findViewById(R.id.address_tv)).setText(MyApplication.getContext().storeAddress);
             ((TextView) printView.findViewById(R.id.tel_tv)).setText(MyApplication.getContext().storeTel);
-            ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
-            ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
-            ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
-            ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + size);
-            ((TextView) printView.findViewById(R.id.good_size_tv)).setText(templist.size() + "");
-            ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
+            ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + pageCount);
             RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
             OrderDetailPrintGoodsAdapter adapter = new OrderDetailPrintGoodsAdapter(R.layout.bill_print_good_list_item, extraList);
-            LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
             mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
             listview.setLayoutManager(mLayoutManager);
             listview.setAdapter(adapter);
+            printView.findViewById(R.id.sum_data_layout).setVisibility(i == pageCount - 1 ? View.VISIBLE :View.GONE);
+            if(remainder > lastPageSize){
+                printView.findViewById(R.id.line0).setVisibility(i == pageCount - 1 ? View.GONE :View.VISIBLE);
+                printView.findViewById(R.id.title_layout).setVisibility(i == pageCount - 1 ? View.GONE :View.VISIBLE);
+                listview.setVisibility(i == pageCount - 1 ? View.GONE :View.VISIBLE);
+            }
             views.add(printView);
         }
         Log.e("test", "viewsize:" + views.size());
-        BillActivity.print(activity, views);
+        BillActivity.print(this, views);
     }
 
 
@@ -226,8 +248,7 @@ public class OrderDetialActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.right_img:
-//                printViews(this, goodList, orderBean.getOrdernumber(), orderBean.getMember().getLast_name() + orderBean.getMember().getFirst_name(),
-//                        dateTv.getText().toString(), orderBean.getTotalprice(), MyApplication.staffInfoBean.getStoreid());
+                printViews();
                 break;
             case R.id.btn_change:
                 goodsAdapter.operatingStatus = 1;

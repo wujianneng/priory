@@ -94,7 +94,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         runOnUiThread(() -> Toast.makeText(BaseActivity.this, msg, Toast.LENGTH_SHORT).show());
     }
 
-    public synchronized static <F extends Fragment> F handleTabFragments(AppCompatActivity activity, int containerId, Class<F> sfClass,
+    public static <F extends Fragment> F handleTabFragments(AppCompatActivity activity, int containerId, Class<F> sfClass,
                                                             F sf, Fragment... fragments) {
         FragmentTransaction fragmentTransaction = activity.getSupportFragmentManager().beginTransaction();
         if (sf == null) {
@@ -106,7 +106,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         for (Fragment fragment : fragments) {
             if (fragment != null) fragmentTransaction.hide(fragment);
         }
-        fragmentTransaction.commit();
+        fragmentTransaction.commitNowAllowingStateLoss();
         return sf;
     }
 

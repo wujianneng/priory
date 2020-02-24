@@ -23,11 +23,11 @@ public class OrderDetailPrintGoodsAdapter extends BaseQuickAdapter<OrderBean.Ite
 
     @Override
     protected void convert(BaseViewHolder helper, OrderBean.ItemsBean item) {
-        helper.setText(R.id.good_code_tv, item.getStock().getProduct().getProductcode() + item.getStock().getStockno());
-        helper.setText(R.id.good_name_tv,item.getStock().getProduct().getName());
-        helper.setText(R.id.good_count_tv, "1");
-        helper.setText(R.id.discount_tv, item.getDiscount());
-        helper.setText(R.id.reatial_price_tv,item.getOriginprice() + "");
-        helper.setText(R.id.price_tv,item.getPrice() + "");
+//        helper.setText(R.id.good_code_tv, item.getStock().getProduct().getProductcode() + item.getStock().getStockno());
+//        helper.setText(R.id.good_name_tv,item.getStock().getProduct().getName());
+//        helper.setText(R.id.good_count_tv, "1");
+//        helper.setText(R.id.discount_tv, item.getDiscount());
+//        helper.setText(R.id.reatial_price_tv,item.getOriginprice() + "");
+//        helper.setText(R.id.price_tv,item.getPrice() + "");
     }
 }

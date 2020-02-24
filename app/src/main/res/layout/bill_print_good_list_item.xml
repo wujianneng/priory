@@ -18,9 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:text="货品名称"
-            android:layout_marginBottom="5dp"
             android:textColor="#333"
-            android:textSize="10sp" />
+            android:textSize="8sp" />
 
         <TextView
             android:id="@+id/good_code_tv"
@@ -28,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="343454554"
             android:textColor="#333"
-            android:textSize="10sp" />
+            android:textSize="7sp" />
     </LinearLayout>
 
 
@@ -40,7 +39,7 @@
         android:gravity="center"
         android:text="数量"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="8sp" />
 
     <TextView
         android:id="@+id/reatial_price_tv"
@@ -50,17 +49,8 @@
         android:gravity="center"
         android:text="原价"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="8sp" />
 
-    <TextView
-        android:id="@+id/discount_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="折扣"
-        android:textColor="#333"
-        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/price_tv"
@@ -70,6 +60,6 @@
         android:gravity="center"
         android:text="售价"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="8sp" />
 
 </LinearLayout>

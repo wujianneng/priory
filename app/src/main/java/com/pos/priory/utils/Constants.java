@@ -5,9 +5,14 @@ package com.pos.priory.utils;
  */
 
 public class Constants {
+    //生产环境域名
     public static final String BASE_URL = "http://api.annabellaip.com";
-    public static final String DEV_BASE_URL = "http://annabella-dev.infitack.net";
     public static final String MACAL_BASE_URL = "http://mo.api.annabellaip.com";
+
+    //开发环境域名
+//    public static final String BASE_URL = "http://annabella-dev.infitack.net";
+//    public static final String MACAL_BASE_URL = "http://annabella-dev.infitack.net";
+
     public static final String BASE_URL_HTTP = BASE_URL;
 
     public static final String SENTRY_DNS = "https://16fbe74588aa409eafdb10e6a94bc827:39bbbc909aec4afba24523c286bbc926@sentry.io/1481689";
