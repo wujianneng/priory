@@ -89,7 +89,18 @@
                 android:id="@+id/price_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="fff"
+                android:text=""
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                 />
+
+            <TextView
+                android:id="@+id/name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
                 android:textColor="#fff"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -99,29 +110,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/price_tv"
-                android:text="fff"
+                android:text=""
                 android:textColor="#fff"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                 />
 
             <TextView
                 android:id="@+id/repertory_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/code_tv"
-                android:text="fff"
+                android:text=""
                 android:textColor="#fff"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+               />
 
             <TextView
                 android:id="@+id/weight_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/repertory_tv"
-                android:text="fff"
+                android:text=""
                 android:textColor="#fff"
                 android:textSize="20sp" />
+
 
         </RelativeLayout>
 

@@ -20,7 +20,9 @@ import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.OrderDetailDiscountAdapter;
 import com.pos.priory.adapters.OrderDetailPayTypeAdapter;
+import com.pos.priory.adapters.OrderDetailPrintDiscountAdapter;
 import com.pos.priory.adapters.OrderDetailPrintGoodsAdapter;
+import com.pos.priory.adapters.OrderDetailPrintPayTypeAdapter;
 import com.pos.priory.adapters.OrderDetialGoodsAdapter;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.coustomViews.CustomDialog;
@@ -39,8 +41,8 @@ import butterknife.OnClick;
  */
 
 public class OrderDetialActivity extends BaseActivity {
-    List<OrderBean.ItemsBean> goodList = new ArrayList<>();
-    List<OrderBean.ItemsBean> checkedGoodList = new ArrayList<>();
+    List<OrderBean.ResultsBean> goodList = new ArrayList<>();
+    List<OrderBean.ResultsBean> checkedGoodList = new ArrayList<>();
     OrderDetialGoodsAdapter goodsAdapter;
     @Bind(R.id.member_name_tv)
     TextView memberNameTv;
@@ -158,8 +160,8 @@ public class OrderDetialActivity extends BaseActivity {
 //                        customDialog.dismiss();
 //                    });
 //        }
-        for(int i = 0 ; i < 30 ; i++) {
-            OrderBean.ItemsBean itemsBean = new OrderBean.ItemsBean();
+        for(int i = 0 ; i < 33 ; i++) {
+            OrderBean.ResultsBean itemsBean = new OrderBean.ResultsBean();
             goodList.add(itemsBean);
         }
         goodsAdapter.notifyDataSetChanged();
@@ -168,10 +170,10 @@ public class OrderDetialActivity extends BaseActivity {
 
     public void printViews() {
         List<View> views = new ArrayList<>();
-        List<OrderBean.ItemsBean> templist = new ArrayList<>();
+        List<OrderBean.ResultsBean> templist = new ArrayList<>();
         templist.addAll(goodList);
-        int perPageSize = 12;
-        int lastPageSize = 6;
+        int perPageSize = 13;
+        int lastPageSize = 7;
         int sumSize = templist.size();
         int pageCount = sumSize / perPageSize;
         int remainder = sumSize % perPageSize;//餘數
@@ -189,7 +191,7 @@ public class OrderDetialActivity extends BaseActivity {
 
         Log.e("test", "pageCount:" + pageCount + " remainder:" + remainder);
         for (int i = 0; i < pageCount; i++) {
-            List<OrderBean.ItemsBean> extraList = new ArrayList<>();
+            List<OrderBean.ResultsBean> extraList = new ArrayList<>();
             if(remainder > lastPageSize){
                 if (i == (pageCount - 1)) {
                    //最後一頁放匯總
@@ -231,6 +233,39 @@ public class OrderDetialActivity extends BaseActivity {
             mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
             listview.setLayoutManager(mLayoutManager);
             listview.setAdapter(adapter);
+            if(i == pageCount - 1){
+                List<String> dclist = new ArrayList<>();
+                dclist.add("千足金滿1000元95折");
+                dclist.add("關閘店新店開張千足金額外95折");
+                dclist.add("95折");
+                dclist.add("千足金滿1000元98折");
+                dclist.add("關閘店新店開張千足金額外98折");
+                dclist.add("98折");
+                dclist.add("千足金滿1000元66折");
+                dclist.add("關閘店新店開張千足金額外66折");
+                dclist.add("66折");
+                RecyclerView dcListview = (RecyclerView) printView.findViewById(R.id.discount_list);
+                OrderDetailPrintDiscountAdapter dcmLayoutManageradapter = new OrderDetailPrintDiscountAdapter
+                        (R.layout.order_detail_print_discount_list_item, dclist);
+                LinearLayoutManager dcmLayoutManager = new LinearLayoutManager(this);
+                dcmLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+                dcListview.setLayoutManager(dcmLayoutManager);
+                dcListview.setAdapter(dcmLayoutManageradapter);
+
+                List<String> ptlist = new ArrayList<>();
+                ptlist.add("現金券 #201287410084");
+                ptlist.add("信用卡");
+                ptlist.add("現金");
+                ptlist.add("支付寶");
+                ptlist.add("微信支付");
+                RecyclerView ptListview = (RecyclerView) printView.findViewById(R.id.pay_type_list);
+                OrderDetailPrintPayTypeAdapter ptmLayoutManageradapter = new OrderDetailPrintPayTypeAdapter
+                        (R.layout.order_detail_print_discount_list_item, ptlist);
+                LinearLayoutManager ptmLayoutManager = new LinearLayoutManager(this);
+                ptmLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+                ptListview.setLayoutManager(ptmLayoutManager);
+                ptListview.setAdapter(ptmLayoutManageradapter);
+            }
             printView.findViewById(R.id.sum_data_layout).setVisibility(i == pageCount - 1 ? View.VISIBLE :View.GONE);
             if(remainder > lastPageSize){
                 printView.findViewById(R.id.line0).setVisibility(i == pageCount - 1 ? View.GONE :View.VISIBLE);
@@ -324,15 +359,15 @@ public class OrderDetialActivity extends BaseActivity {
 
     private void resetCheckedGoodList(boolean isReturn) {
         checkedGoodList.clear();
-        for (OrderBean.ItemsBean bean : goodList) {
-            if (bean.isSelected()) {
-                if (bean.getStock().getProduct().getCatalog().equals("其他") && isReturn) {
-                    Toast.makeText(OrderDetialActivity.this, "只有黄金类型商品才能进行回收", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                checkedGoodList.add(bean);
-            }
-        }
+//        for (OrderBean.ItemsBean bean : goodList) {
+//            if (bean.isSelected()) {
+//                if (bean.getStock().getProduct().getCatalog().equals("其他") && isReturn) {
+//                    Toast.makeText(OrderDetialActivity.this, "只有黄金类型商品才能进行回收", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                checkedGoodList.add(bean);
+//            }
+//        }
     }
 
 

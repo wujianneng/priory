@@ -14,16 +14,16 @@ import java.util.List;
  * Created by Lenovo on 2018/12/29.
  */
 
-public class QueryMemberAdapter extends BaseQuickAdapter<MemberBean, BaseViewHolder> {
+public class QueryMemberAdapter extends BaseQuickAdapter<MemberBean.ResultsBean, BaseViewHolder> {
 
-    public QueryMemberAdapter(@LayoutRes int layoutResId, @Nullable List<MemberBean> data) {
+    public QueryMemberAdapter(@LayoutRes int layoutResId, @Nullable List<MemberBean.ResultsBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, MemberBean item) {
-        helper.setText(R.id.name_tv, item.getLast_name() + item.getFirst_name());
-        helper.setImageResource(R.id.sex_img, item.getSex().equals("男") ? R.drawable.icon_boy : R.drawable.icon_girl);
+    protected void convert(BaseViewHolder helper, MemberBean.ResultsBean item) {
+        helper.setText(R.id.name_tv, item.getName());
+        helper.setImageResource(R.id.sex_img, item.getGender().equals("男") ? R.drawable.icon_boy : R.drawable.icon_girl);
         helper.setText(R.id.phone_tv,item.getMobile());
     }
 }

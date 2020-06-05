@@ -17,29 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/status_btn"
-            android:layout_width="64dp"
-            android:layout_height="26dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="16dp"
-            android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="@color/colorAccent"
-            app:cardCornerRadius="13dp"
-            app:cardElevation="3dp">
-
-            <TextView
-                android:id="@+id/status_tv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:elevation="5dp"
-                android:gravity="center"
-                android:text="未完成"
-                android:textColor="#ffffff"
-                android:textSize="14sp" />
-
-        </android.support.v7.widget.CardView>
-
 
         <TextView
             android:id="@+id/date_tv"
@@ -47,7 +24,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp"
-            android:layout_toRightOf="@+id/status_btn"
             android:text="2019/03/01 11:10:09"
             android:textColor="#000000"
             android:textSize="18sp" />
@@ -59,7 +35,6 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
             android:layout_below="@+id/date_tv"
-            android:layout_toRightOf="@+id/status_btn"
             android:text="(50/100)"
             android:textColor="#000000"
             android:textSize="18sp" />

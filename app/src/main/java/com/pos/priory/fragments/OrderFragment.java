@@ -40,6 +40,7 @@ import com.pos.priory.adapters.OrderAdapter;
 import com.pos.priory.adapters.TablePrintGoodsAdapter;
 import com.pos.priory.beans.DayReportBean;
 import com.pos.priory.beans.DayReportDataBean;
+import com.pos.priory.beans.GoldpriceBean;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
@@ -85,7 +86,7 @@ public class OrderFragment extends BaseFragment {
     FloatingActionButton fab;
 
     OrderAdapter orderAdapter;
-    List<OrderBean> orderList = new ArrayList<>();
+    List<OrderBean.ResultsBean> orderList = new ArrayList<>();
     @Bind(R.id.srf_lay)
     SmartRefreshLayout smartRefreshLayout;
 
@@ -213,19 +214,17 @@ public class OrderFragment extends BaseFragment {
 
 
     private void getCurrentGoldPrice() {
-        RetrofitManager.createString(ApiService.class)
+        RetrofitManager.createGson(ApiService.class)
                 .getCurrentGoldPrice()
-                .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
+                .subscribe(new Consumer<GoldpriceBean>() {
                     @Override
-                    public void accept(String s) throws Exception {
+                    public void accept(GoldpriceBean s) throws Exception {
                         Log.e("okhttp", "getCurrentGoldPriceresult:" + s);
-                        String currentGoldPrice = new JSONObject(s).getString("price");
                         goldPriceLayout.setVisibility(View.VISIBLE);
                         dateTv.setText(DateUtils.getDateOfToday());
-                        goldPriceTv.setText("金價：" + (int) Double.parseDouble(currentGoldPrice) + "/g，" + (int) (Double.parseDouble(currentGoldPrice) * 37.5) + "/两");
+                        goldPriceTv.setText("金價：" + s.getResults().get(0).getGramprice() + "/g，" + s.getResults().get(0).getTaelprice() + "/两");
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -243,7 +242,7 @@ public class OrderFragment extends BaseFragment {
             orderAdapter.notifyDataSetChanged();
             getCurrentGoldPrice();
         }
-        RetrofitManager.createString(ApiService.class).getTodayOrders(true)
+        RetrofitManager.createString(ApiService.class).getTodayOrders(currentPage)
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -251,11 +250,9 @@ public class OrderFragment extends BaseFragment {
                     @Override
                     public void accept(String results) throws Exception {
                         currentPage++;
-                        final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {
-                        }.getType());
-                        if (orderBeanList != null) {
-                            orderList.add(new OrderBean());
-                            orderList.addAll(orderBeanList);
+                        OrderBean orderBean = gson.fromJson(results,OrderBean.class);
+                        if (orderBean != null) {
+                            orderList.addAll(orderBean.getResults());
                             orderAdapter.notifyDataSetChanged();
                         }
                         smartRefreshLayout.finishLoadMore();
@@ -345,7 +342,7 @@ public class OrderFragment extends BaseFragment {
         Log.e("test", "printGoldTable");
         List<View> views = new ArrayList<>();
         String[] dataarry = new String[]{"標題","數據","數據","數據","標題","數據","數據","數據","標題","數據","數據","數據","標題","數據","數據","數據","標題","數據","數據","數據"};
-        int perPageSize = 16;
+        int perPageSize = 24;
         int size = dataarry.length / perPageSize;
         int a = dataarry.length % perPageSize;
         if (a != 0) {
@@ -381,7 +378,7 @@ public class OrderFragment extends BaseFragment {
                 layoutid = R.layout.gold_daliy_table2;
             }
             final View printView = LayoutInflater.from(getActivity()).inflate(layoutid, null);
-            ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.staffInfoBean.getStore());
+            ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.staffInfoBean.getShop());
             ((TextView) printView.findViewById(R.id.date_tv)).setText(DateUtils.getDateOfToday());
             ((TextView) printView.findViewById(R.id.time_tv)).setText(DateUtils.getCurrentTime());
             ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + size);

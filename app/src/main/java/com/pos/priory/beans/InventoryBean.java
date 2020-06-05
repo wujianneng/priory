@@ -10,93 +10,67 @@ public class InventoryBean {
 
 
     /**
-     * id : 80
-     * golditemcount : 1
-     * golditemweight : 1.1
-     * cystalitemcount : 0
-     * status : 未完成
-     * inventoryitem : [{"id":70,"check":false,"productname":"測試2","stockno":"100211111","stockweight":1.1}]
-     * created : 2019-05-07T08:27:16.249586Z
+     * count : 1
+     * next : null
+     * previous : null
+     * results : [{"id":1,"status":true,"warehouse":"主倉庫","done":true,"count":"3 / 3","created":"2020-03-16 17:48:40","updated":"2020-03-26 09:39:45"}]
      */
 
-    private int id;
-    private String golditemcount;
-    private double golditemweight;
-    private String cystalitemcount;
-    private String status;
-    private String created;
-    private List<InventoryitemBean> inventoryitem;
+    private int count;
+    private Object next;
+    private Object previous;
+    private List<ResultsBean> results;
 
-    public int getId() {
-        return id;
+    public int getCount() {
+        return count;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCount(int count) {
+        this.count = count;
     }
 
-    public String getGolditemcount() {
-        return golditemcount;
+    public Object getNext() {
+        return next;
     }
 
-    public void setGolditemcount(String golditemcount) {
-        this.golditemcount = golditemcount;
+    public void setNext(Object next) {
+        this.next = next;
     }
 
-    public double getGolditemweight() {
-        return golditemweight;
+    public Object getPrevious() {
+        return previous;
     }
 
-    public void setGolditemweight(double golditemweight) {
-        this.golditemweight = golditemweight;
+    public void setPrevious(Object previous) {
+        this.previous = previous;
     }
 
-    public String getCystalitemcount() {
-        return cystalitemcount;
+    public List<ResultsBean> getResults() {
+        return results;
     }
 
-    public void setCystalitemcount(String cystalitemcount) {
-        this.cystalitemcount = cystalitemcount;
+    public void setResults(List<ResultsBean> results) {
+        this.results = results;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getCreated() {
-        return created;
-    }
-
-    public void setCreated(String created) {
-        this.created = created;
-    }
-
-    public List<InventoryitemBean> getInventoryitem() {
-        return inventoryitem;
-    }
-
-    public void setInventoryitem(List<InventoryitemBean> inventoryitem) {
-        this.inventoryitem = inventoryitem;
-    }
-
-    public static class InventoryitemBean {
+    public static class ResultsBean {
         /**
-         * id : 70
-         * check : false
-         * productname : 測試2
-         * stockno : 100211111
-         * stockweight : 1.1
+         * id : 1
+         * status : true
+         * warehouse : 主倉庫
+         * done : true
+         * count : 3 / 3
+         * created : 2020-03-16 17:48:40
+         * updated : 2020-03-26 09:39:45
          */
 
         private int id;
-        private boolean check;
-        private String productname;
-        private String stockno;
-        private double stockweight;
+        private boolean status;
+        private String warehouse;
+        private boolean done;
+        private String count;
+        private String created;
+        private String updated;
 
         public int getId() {
             return id;
@@ -106,36 +80,52 @@ public class InventoryBean {
             this.id = id;
         }
 
-        public boolean isCheck() {
-            return check;
+        public boolean isStatus() {
+            return status;
         }
 
-        public void setCheck(boolean check) {
-            this.check = check;
+        public void setStatus(boolean status) {
+            this.status = status;
         }
 
-        public String getProductname() {
-            return productname;
+        public String getWarehouse() {
+            return warehouse;
         }
 
-        public void setProductname(String productname) {
-            this.productname = productname;
+        public void setWarehouse(String warehouse) {
+            this.warehouse = warehouse;
         }
 
-        public String getStockno() {
-            return stockno;
+        public boolean isDone() {
+            return done;
         }
 
-        public void setStockno(String stockno) {
-            this.stockno = stockno;
+        public void setDone(boolean done) {
+            this.done = done;
         }
 
-        public double getStockweight() {
-            return stockweight;
+        public String getCount() {
+            return count;
         }
 
-        public void setStockweight(double stockweight) {
-            this.stockweight = stockweight;
+        public void setCount(String count) {
+            this.count = count;
+        }
+
+        public String getCreated() {
+            return created;
+        }
+
+        public void setCreated(String created) {
+            this.created = created;
+        }
+
+        public String getUpdated() {
+            return updated;
+        }
+
+        public void setUpdated(String updated) {
+            this.updated = updated;
         }
     }
 }

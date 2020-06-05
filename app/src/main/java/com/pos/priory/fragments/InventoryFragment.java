@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
@@ -52,7 +53,7 @@ public class InventoryFragment extends BaseFragment {
     @Bind(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
     InventoryStoreAdapter adapter;
-    List<InventoryBean> dataList = new ArrayList<>();
+    List<InventoryBean.ResultsBean> dataList = new ArrayList<>();
 
 
     @Nullable
@@ -83,7 +84,7 @@ public class InventoryFragment extends BaseFragment {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getActivity(), BigInventoryTypesDetialActivity.class);
                 intent.putExtra("inventoryId", dataList.get(position).getId());
-                intent.putExtra("status", dataList.get(position).getStatus());
+                intent.putExtra("status", dataList.get(position).isDone());
                 startActivity(intent);
             }
         });
@@ -91,17 +92,15 @@ public class InventoryFragment extends BaseFragment {
     }
 
     private void refreshRecyclerView() {
-        RetrofitManager.excute(this.bindToLifecycle(),
-                RetrofitManager.createString(ApiService.class).getBigInventorys(),
-                new ModelListener() {
+        RetrofitManager.excuteGson(this.bindToLifecycle(),
+                RetrofitManager.createGson(ApiService.class).getInventorys(),
+                new ModelGsonListener<InventoryBean>() {
                     @Override
-                    public void onSuccess(String result) throws Exception {
+                    public void onSuccess(InventoryBean result) throws Exception {
                         refreshLayout.finishRefresh();
-                        List<InventoryBean> list = gson.fromJson(result, new TypeToken<List<InventoryBean>>() {
-                        }.getType());
-                        if (list != null) {
+                        if (result.getResults() != null) {
                             dataList.clear();
-                            dataList.addAll(list);
+                            dataList.addAll(result.getResults());
                             adapter.notifyDataSetChanged();
                         }
                         Log.e("test", "size:" + dataList.size());

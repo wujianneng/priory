@@ -1,5 +1,7 @@
 package com.pos.priory.beans;
 
+import java.util.List;
+
 /**
  * Created by Lenovo on 2019/1/8.
  */
@@ -8,18 +10,12 @@ public class InventoryDetialBean {
 
 
     /**
-     * id : 11070
-     * check : false
-     * productname : 父情节活动产品009
-     * stockno : 155706100024
-     * stockweight : 0.0
+     * id : 1
+     * item : [{"id":1,"name":"測試產品1001","code":"1001201903170001","done":true}]
      */
 
     private int id;
-    private boolean check;
-    private String productname;
-    private String stockno;
-    private double stockweight;
+    private List<ItemBean> item;
 
     public int getId() {
         return id;
@@ -29,35 +25,57 @@ public class InventoryDetialBean {
         this.id = id;
     }
 
-    public boolean isCheck() {
-        return check;
+    public List<ItemBean> getItem() {
+        return item;
     }
 
-    public void setCheck(boolean check) {
-        this.check = check;
+    public void setItem(List<ItemBean> item) {
+        this.item = item;
     }
 
-    public String getProductname() {
-        return productname;
-    }
+    public static class ItemBean {
+        /**
+         * id : 1
+         * name : 測試產品1001
+         * code : 1001201903170001
+         * done : true
+         */
 
-    public void setProductname(String productname) {
-        this.productname = productname;
-    }
+        private int id;
+        private String name;
+        private String code;
+        private boolean done;
 
-    public String getStockno() {
-        return stockno;
-    }
+        public int getId() {
+            return id;
+        }
 
-    public void setStockno(String stockno) {
-        this.stockno = stockno;
-    }
+        public void setId(int id) {
+            this.id = id;
+        }
 
-    public double getStockweight() {
-        return stockweight;
-    }
+        public String getName() {
+            return name;
+        }
 
-    public void setStockweight(double stockweight) {
-        this.stockweight = stockweight;
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public void setCode(String code) {
+            this.code = code;
+        }
+
+        public boolean isDone() {
+            return done;
+        }
+
+        public void setDone(boolean done) {
+            this.done = done;
+        }
     }
 }

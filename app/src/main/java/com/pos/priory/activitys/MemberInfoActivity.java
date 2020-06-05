@@ -53,7 +53,7 @@ public class MemberInfoActivity extends BaseActivity {
     TextView orderTitle;
     @Bind(R.id.btn_save)
     MaterialButton btnSave;
-    MemberBean memberBean;
+    MemberBean.ResultsBean memberBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,11 +67,11 @@ public class MemberInfoActivity extends BaseActivity {
     protected void initViews() {
         titleTv.setText("会员信息");
         rightImg.setVisibility(View.GONE);
-        memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.class);
-        edtFirstName.setText(memberBean.getLast_name()
+        memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.ResultsBean.class);
+        edtFirstName.setText(memberBean.getName()
         );
-        edtName.setText(memberBean.getFirst_name());
-        sexTv.setText(memberBean.getSex());
+        edtName.setText(memberBean.getName());
+        sexTv.setText(memberBean.getGender());
         phoneTv.setText(memberBean.getMobile());
         scoutTv.setText(memberBean.getReward() + "");
     }

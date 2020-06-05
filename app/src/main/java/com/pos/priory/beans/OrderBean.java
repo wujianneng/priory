@@ -8,300 +8,54 @@ import java.util.List;
  * Created by Lenovo on 2019/1/4.
  */
 
-public class OrderBean {
+public class OrderBean{
+
     /**
-     * id : 1075
-     * ordernumber : 20190618025549
-     * member : {"id":1,"mobile":"66236133","first_name":"Billy","last_name":"lam","sex":"男","reward":7459}
-     * staff : testmanager
-     * status : 已完成
-     * items : [{"id":3058,"stock":{"id":2220,"stockno":"061719162401","location":"測試店11","product":{"id":1,"name":"光面圓珠A","productcode":1001,"price":"399.00","image":"/media/uploads/0001_MTNAde2.jpg","catalog":{"name":"黃金","discounts":[{"id":1,"name":"原價","value":"1.000000"},{"id":4,"name":"85折","value":"0.850000"},{"id":21,"name":"特別開張折扣","value":"0.666120"},{"id":11,"name":"5折","value":"0.500000"},{"id":15,"name":"3折","value":"0.300000"},{"id":19,"name":"1折","value":"0.100000"},{"id":2,"name":"95折","value":"0.950000"},{"id":22,"name":"88折","value":"0.880000"},{"id":18,"name":"15折","value":"0.150000"},{"id":17,"name":"2折","value":"0.200000"},{"id":16,"name":"25折","value":"0.250000"},{"id":14,"name":"35折","value":"0.350000"},{"id":13,"name":"4折","value":"0.400000"},{"id":12,"name":"45折","value":"0.450000"},{"id":10,"name":"55折","value":"0.550000"},{"id":9,"name":"6折","value":"0.600000"},{"id":8,"name":"65折","value":"0.650000"},{"id":7,"name":"7折","value":"0.700000"},{"id":6,"name":"75折","value":"0.750000"},{"id":5,"name":"8折","value":"0.800000"},{"id":3,"name":"9折","value":"0.900000"}]}},"weight":1,"quantity":0},"discount":"原價","price":399,"returned":false}]
-     * invoiceitem : {"id":733,"invoicenumber":"INV1000708","amount":"399.0","status":"完成","transactionitem":[{"id":724,"transactionnumber":"T10000701","amount":"299.0","paymentmethod":"信用卡"},{"id":723,"transactionnumber":"T10000700","amount":"100.0","paymentmethod":"現金"}]}
-     * totalprice : 399.0
-     * itemscount : 1
-     * itemsweight : 1.0
-     * location : 測試店11
-     * created : 2019-06-18T10:55:49.439994+08:00
+     * count : 2
+     * next : null
+     * previous : null
+     * results : [{"id":2,"status":1,"orderno":"20200420053529","member":{"name":"林","mobile":"12345678"},"staff":"","shop":"內測分店","totalprice":0,"created":"2020-04-20 05:34:32","updated":"2020-04-20 05:35:29"},{"id":1,"status":1,"orderno":"20200420053541","member":{"name":"林","mobile":"12345678"},"staff":"","shop":"測試店","totalprice":0,"created":"2020-04-20 05:32:30","updated":"2020-04-20 05:35:41"}]
      */
 
-    private int id;
-    private String ordernumber;
-    private MemberBean member;
-    private String staff;
-    private String status;
-    private InvoiceitemBean invoiceitem;
-    private double totalprice;
-    private int itemscount;
-    private double itemsweight;
-    private String location;
-    private String created;
-    private List<ItemsBean> items;
+    private int count;
+    private Object next;
+    private Object previous;
+    private List<ResultsBean> results;
 
-    public int getId() {
-        return id;
+    public int getCount() {
+        return count;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCount(int count) {
+        this.count = count;
     }
 
-    public String getOrdernumber() {
-        return ordernumber;
+    public Object getNext() {
+        return next;
     }
 
-    public void setOrdernumber(String ordernumber) {
-        this.ordernumber = ordernumber;
+    public void setNext(Object next) {
+        this.next = next;
     }
 
-    public MemberBean getMember() {
-        return member;
+    public Object getPrevious() {
+        return previous;
     }
 
-    public void setMember(MemberBean member) {
-        this.member = member;
+    public void setPrevious(Object previous) {
+        this.previous = previous;
     }
 
-    public String getStaff() {
-        return staff;
+    public List<ResultsBean> getResults() {
+        return results;
     }
 
-    public void setStaff(String staff) {
-        this.staff = staff;
+    public void setResults(List<ResultsBean> results) {
+        this.results = results;
     }
 
-    public String getStatus() {
-        return status;
-    }
+    public static class ResultsBean implements MultiItemEntity {
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public InvoiceitemBean getInvoiceitem() {
-        return invoiceitem;
-    }
-
-    public void setInvoiceitem(InvoiceitemBean invoiceitem) {
-        this.invoiceitem = invoiceitem;
-    }
-
-    public double getTotalprice() {
-        return totalprice;
-    }
-
-    public void setTotalprice(double totalprice) {
-        this.totalprice = totalprice;
-    }
-
-    public int getItemscount() {
-        return itemscount;
-    }
-
-    public void setItemscount(int itemscount) {
-        this.itemscount = itemscount;
-    }
-
-    public double getItemsweight() {
-        return itemsweight;
-    }
-
-    public void setItemsweight(double itemsweight) {
-        this.itemsweight = itemsweight;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getCreated() {
-        return created;
-    }
-
-    public void setCreated(String created) {
-        this.created = created;
-    }
-
-    public List<ItemsBean> getItems() {
-        return items;
-    }
-
-    public void setItems(List<ItemsBean> items) {
-        this.items = items;
-    }
-
-    public static class MemberBean {
-        /**
-         * id : 1
-         * mobile : 66236133
-         * first_name : Billy
-         * last_name : lam
-         * sex : 男
-         * reward : 7459
-         */
-
-        private int id;
-        private String mobile;
-        private String first_name;
-        private String last_name;
-        private String sex;
-        private int reward;
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getMobile() {
-            return mobile;
-        }
-
-        public void setMobile(String mobile) {
-            this.mobile = mobile;
-        }
-
-        public String getFirst_name() {
-            return first_name;
-        }
-
-        public void setFirst_name(String first_name) {
-            this.first_name = first_name;
-        }
-
-        public String getLast_name() {
-            return last_name;
-        }
-
-        public void setLast_name(String last_name) {
-            this.last_name = last_name;
-        }
-
-        public String getSex() {
-            return sex;
-        }
-
-        public void setSex(String sex) {
-            this.sex = sex;
-        }
-
-        public int getReward() {
-            return reward;
-        }
-
-        public void setReward(int reward) {
-            this.reward = reward;
-        }
-    }
-
-    public static class InvoiceitemBean {
-        /**
-         * id : 733
-         * invoicenumber : INV1000708
-         * amount : 399.0
-         * status : 完成
-         * transactionitem : [{"id":724,"transactionnumber":"T10000701","amount":"299.0","paymentmethod":"信用卡"},{"id":723,"transactionnumber":"T10000700","amount":"100.0","paymentmethod":"現金"}]
-         */
-
-        private int id;
-        private String invoicenumber;
-        private String amount;
-        private String status;
-        private List<TransactionitemBean> transactionitem;
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getInvoicenumber() {
-            return invoicenumber;
-        }
-
-        public void setInvoicenumber(String invoicenumber) {
-            this.invoicenumber = invoicenumber;
-        }
-
-        public String getAmount() {
-            return amount;
-        }
-
-        public void setAmount(String amount) {
-            this.amount = amount;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
-        }
-
-        public List<TransactionitemBean> getTransactionitem() {
-            return transactionitem;
-        }
-
-        public void setTransactionitem(List<TransactionitemBean> transactionitem) {
-            this.transactionitem = transactionitem;
-        }
-
-        public static class TransactionitemBean {
-            /**
-             * id : 724
-             * transactionnumber : T10000701
-             * amount : 299.0
-             * paymentmethod : 信用卡
-             */
-
-            private int id;
-            private String transactionnumber;
-            private String amount;
-            private String paymentmethod;
-
-            public int getId() {
-                return id;
-            }
-
-            public void setId(int id) {
-                this.id = id;
-            }
-
-            public String getTransactionnumber() {
-                return transactionnumber;
-            }
-
-            public void setTransactionnumber(String transactionnumber) {
-                this.transactionnumber = transactionnumber;
-            }
-
-            public String getAmount() {
-                return amount;
-            }
-
-            public void setAmount(String amount) {
-                this.amount = amount;
-            }
-
-            public String getPaymentmethod() {
-                return paymentmethod;
-            }
-
-            public void setPaymentmethod(String paymentmethod) {
-                this.paymentmethod = paymentmethod;
-            }
-        }
-    }
-
-    public static class ItemsBean implements MultiItemEntity {
         public int itemType = 0;
 
         @Override
@@ -309,66 +63,28 @@ public class OrderBean {
             return itemType;
         }
 
+
         /**
-         * id : 3058
-         * stock : {"id":2220,"stockno":"061719162401","location":"測試店11","product":{"id":1,"name":"光面圓珠A","productcode":1001,"price":"399.00","image":"/media/uploads/0001_MTNAde2.jpg","catalog":{"name":"黃金","discounts":[{"id":1,"name":"原價","value":"1.000000"},{"id":4,"name":"85折","value":"0.850000"},{"id":21,"name":"特別開張折扣","value":"0.666120"},{"id":11,"name":"5折","value":"0.500000"},{"id":15,"name":"3折","value":"0.300000"},{"id":19,"name":"1折","value":"0.100000"},{"id":2,"name":"95折","value":"0.950000"},{"id":22,"name":"88折","value":"0.880000"},{"id":18,"name":"15折","value":"0.150000"},{"id":17,"name":"2折","value":"0.200000"},{"id":16,"name":"25折","value":"0.250000"},{"id":14,"name":"35折","value":"0.350000"},{"id":13,"name":"4折","value":"0.400000"},{"id":12,"name":"45折","value":"0.450000"},{"id":10,"name":"55折","value":"0.550000"},{"id":9,"name":"6折","value":"0.600000"},{"id":8,"name":"65折","value":"0.650000"},{"id":7,"name":"7折","value":"0.700000"},{"id":6,"name":"75折","value":"0.750000"},{"id":5,"name":"8折","value":"0.800000"},{"id":3,"name":"9折","value":"0.900000"}]}},"weight":1,"quantity":0}
-         * discount : 原價
-         * price : 399.0
-         * returned : false
+         * id : 2
+         * status : 1
+         * orderno : 20200420053529
+         * member : {"name":"林","mobile":"12345678"}
+         * staff :
+         * shop : 內測分店
+         * totalprice : 0.0
+         * created : 2020-04-20 05:34:32
+         * updated : 2020-04-20 05:35:29
          */
 
         private int id;
-        private StockBean stock;
-        private String discount;
-        private double price;
-        private double originprice;
-        private boolean returned;
-
-        private String weight = "";
-
-        boolean isSelected = false;
-        private int returnStockId = -1;
-        private int oprateCount = 1;
-
-        public double getOriginprice() {
-            return originprice;
-        }
-
-        public void setOriginprice(double originprice) {
-            this.originprice = originprice;
-        }
-
-        public String getWeight() {
-            return weight;
-        }
-
-        public void setWeight(String weight) {
-            this.weight = weight;
-        }
-
-        public boolean isSelected() {
-            return isSelected;
-        }
-
-        public void setSelected(boolean selected) {
-            isSelected = selected;
-        }
-
-        public int getReturnStockId() {
-            return returnStockId;
-        }
-
-        public void setReturnStockId(int returnStockId) {
-            this.returnStockId = returnStockId;
-        }
-
-        public int getOprateCount() {
-            return oprateCount;
-        }
-
-        public void setOprateCount(int oprateCount) {
-            this.oprateCount = oprateCount;
-        }
+        private int status;
+        private String orderno;
+        private MemberBean member;
+        private String staff;
+        private String shop;
+        private double totalprice;
+        private String created;
+        private String updated;
 
         public int getId() {
             return id;
@@ -378,240 +94,103 @@ public class OrderBean {
             this.id = id;
         }
 
-        public StockBean getStock() {
-            return stock;
+        public int getStatus() {
+            return status;
         }
 
-        public void setStock(StockBean stock) {
-            this.stock = stock;
+        public void setStatus(int status) {
+            this.status = status;
         }
 
-        public String getDiscount() {
-            return discount;
+        public String getOrderno() {
+            return orderno;
         }
 
-        public void setDiscount(String discount) {
-            this.discount = discount;
+        public void setOrderno(String orderno) {
+            this.orderno = orderno;
         }
 
-        public double getPrice() {
-            return price;
+        public MemberBean getMember() {
+            return member;
         }
 
-        public void setPrice(double price) {
-            this.price = price;
+        public void setMember(MemberBean member) {
+            this.member = member;
         }
 
-        public boolean isReturned() {
-            return returned;
+        public String getStaff() {
+            return staff;
         }
 
-        public void setReturned(boolean returned) {
-            this.returned = returned;
+        public void setStaff(String staff) {
+            this.staff = staff;
         }
 
-        public static class StockBean {
+        public String getShop() {
+            return shop;
+        }
+
+        public void setShop(String shop) {
+            this.shop = shop;
+        }
+
+        public double getTotalprice() {
+            return totalprice;
+        }
+
+        public void setTotalprice(double totalprice) {
+            this.totalprice = totalprice;
+        }
+
+        public String getCreated() {
+            return created;
+        }
+
+        public void setCreated(String created) {
+            this.created = created;
+        }
+
+        public String getUpdated() {
+            return updated;
+        }
+
+        public void setUpdated(String updated) {
+            this.updated = updated;
+        }
+
+        public static class MemberBean {
             /**
-             * id : 2220
-             * stockno : 061719162401
-             * location : 測試店11
-             * product : {"id":1,"name":"光面圓珠A","productcode":1001,"price":"399.00","image":"/media/uploads/0001_MTNAde2.jpg","catalog":{"name":"黃金","discounts":[{"id":1,"name":"原價","value":"1.000000"},{"id":4,"name":"85折","value":"0.850000"},{"id":21,"name":"特別開張折扣","value":"0.666120"},{"id":11,"name":"5折","value":"0.500000"},{"id":15,"name":"3折","value":"0.300000"},{"id":19,"name":"1折","value":"0.100000"},{"id":2,"name":"95折","value":"0.950000"},{"id":22,"name":"88折","value":"0.880000"},{"id":18,"name":"15折","value":"0.150000"},{"id":17,"name":"2折","value":"0.200000"},{"id":16,"name":"25折","value":"0.250000"},{"id":14,"name":"35折","value":"0.350000"},{"id":13,"name":"4折","value":"0.400000"},{"id":12,"name":"45折","value":"0.450000"},{"id":10,"name":"55折","value":"0.550000"},{"id":9,"name":"6折","value":"0.600000"},{"id":8,"name":"65折","value":"0.650000"},{"id":7,"name":"7折","value":"0.700000"},{"id":6,"name":"75折","value":"0.750000"},{"id":5,"name":"8折","value":"0.800000"},{"id":3,"name":"9折","value":"0.900000"}]}}
-             * weight : 1.0
-             * quantity : 0
+             * name : 林
+             * mobile : 12345678
              */
 
-            private int id;
-            private String stockno;
-            private String location;
-            private ProductBean product;
-            private double weight;
-            private int quantity;
+            private String name;
+            private String mobile;
+            private String gender;
 
-            public int getId() {
-                return id;
+            public String getGender() {
+                return gender;
             }
 
-            public void setId(int id) {
-                this.id = id;
+            public void setGender(String gender) {
+                this.gender = gender;
             }
 
-            public String getStockno() {
-                return stockno;
+            public String getName() {
+                return name;
             }
 
-            public void setStockno(String stockno) {
-                this.stockno = stockno;
+            public void setName(String name) {
+                this.name = name;
             }
 
-            public String getLocation() {
-                return location;
+            public String getMobile() {
+                return mobile;
             }
 
-            public void setLocation(String location) {
-                this.location = location;
-            }
-
-            public ProductBean getProduct() {
-                return product;
-            }
-
-            public void setProduct(ProductBean product) {
-                this.product = product;
-            }
-
-            public double getWeight() {
-                return weight;
-            }
-
-            public void setWeight(double weight) {
-                this.weight = weight;
-            }
-
-            public int getQuantity() {
-                return quantity;
-            }
-
-            public void setQuantity(int quantity) {
-                this.quantity = quantity;
-            }
-
-            public static class ProductBean {
-                /**
-                 * id : 1
-                 * name : 光面圓珠A
-                 * productcode : 1001
-                 * price : 399.00
-                 * image : /media/uploads/0001_MTNAde2.jpg
-                 * catalog : {"name":"黃金","discounts":[{"id":1,"name":"原價","value":"1.000000"},{"id":4,"name":"85折","value":"0.850000"},{"id":21,"name":"特別開張折扣","value":"0.666120"},{"id":11,"name":"5折","value":"0.500000"},{"id":15,"name":"3折","value":"0.300000"},{"id":19,"name":"1折","value":"0.100000"},{"id":2,"name":"95折","value":"0.950000"},{"id":22,"name":"88折","value":"0.880000"},{"id":18,"name":"15折","value":"0.150000"},{"id":17,"name":"2折","value":"0.200000"},{"id":16,"name":"25折","value":"0.250000"},{"id":14,"name":"35折","value":"0.350000"},{"id":13,"name":"4折","value":"0.400000"},{"id":12,"name":"45折","value":"0.450000"},{"id":10,"name":"55折","value":"0.550000"},{"id":9,"name":"6折","value":"0.600000"},{"id":8,"name":"65折","value":"0.650000"},{"id":7,"name":"7折","value":"0.700000"},{"id":6,"name":"75折","value":"0.750000"},{"id":5,"name":"8折","value":"0.800000"},{"id":3,"name":"9折","value":"0.900000"}]}
-                 */
-
-                private int id;
-                private String name;
-                private int productcode;
-                private String price;
-                private String realPrice;
-                private String image;
-                private CatalogBean catalog;
-
-                public String getRealPrice() {
-                    return realPrice;
-                }
-
-                public void setRealPrice(String realPrice) {
-                    this.realPrice = realPrice;
-                }
-
-                public int getId() {
-                    return id;
-                }
-
-                public void setId(int id) {
-                    this.id = id;
-                }
-
-                public String getName() {
-                    return name;
-                }
-
-                public void setName(String name) {
-                    this.name = name;
-                }
-
-                public int getProductcode() {
-                    return productcode;
-                }
-
-                public void setProductcode(int productcode) {
-                    this.productcode = productcode;
-                }
-
-                public String getPrice() {
-                    return price;
-                }
-
-                public void setPrice(String price) {
-                    this.price = price;
-                }
-
-                public String getImage() {
-                    return image;
-                }
-
-                public void setImage(String image) {
-                    this.image = image;
-                }
-
-                public CatalogBean getCatalog() {
-                    return catalog;
-                }
-
-                public void setCatalog(CatalogBean catalog) {
-                    this.catalog = catalog;
-                }
-
-                public static class CatalogBean {
-                    /**
-                     * name : 黃金
-                     * discounts : [{"id":1,"name":"原價","value":"1.000000"},{"id":4,"name":"85折","value":"0.850000"},{"id":21,"name":"特別開張折扣","value":"0.666120"},{"id":11,"name":"5折","value":"0.500000"},{"id":15,"name":"3折","value":"0.300000"},{"id":19,"name":"1折","value":"0.100000"},{"id":2,"name":"95折","value":"0.950000"},{"id":22,"name":"88折","value":"0.880000"},{"id":18,"name":"15折","value":"0.150000"},{"id":17,"name":"2折","value":"0.200000"},{"id":16,"name":"25折","value":"0.250000"},{"id":14,"name":"35折","value":"0.350000"},{"id":13,"name":"4折","value":"0.400000"},{"id":12,"name":"45折","value":"0.450000"},{"id":10,"name":"55折","value":"0.550000"},{"id":9,"name":"6折","value":"0.600000"},{"id":8,"name":"65折","value":"0.650000"},{"id":7,"name":"7折","value":"0.700000"},{"id":6,"name":"75折","value":"0.750000"},{"id":5,"name":"8折","value":"0.800000"},{"id":3,"name":"9折","value":"0.900000"}]
-                     */
-
-                    private String name;
-                    private List<DiscountsBean> discounts;
-
-                    public String getName() {
-                        return name;
-                    }
-
-                    public void setName(String name) {
-                        this.name = name;
-                    }
-
-                    public List<DiscountsBean> getDiscounts() {
-                        return discounts;
-                    }
-
-                    public void setDiscounts(List<DiscountsBean> discounts) {
-                        this.discounts = discounts;
-                    }
-
-                    public static class DiscountsBean {
-                        /**
-                         * id : 1
-                         * name : 原價
-                         * value : 1.000000
-                         */
-
-                        private int id;
-                        private String name;
-                        private String value;
-
-                        public int getId() {
-                            return id;
-                        }
-
-                        public void setId(int id) {
-                            this.id = id;
-                        }
-
-                        public String getName() {
-                            return name;
-                        }
-
-                        public void setName(String name) {
-                            this.name = name;
-                        }
-
-                        public String getValue() {
-                            return value;
-                        }
-
-                        public void setValue(String value) {
-                            this.value = value;
-                        }
-                    }
-                }
+            public void setMobile(String mobile) {
+                this.mobile = mobile;
             }
         }
     }
-
 }

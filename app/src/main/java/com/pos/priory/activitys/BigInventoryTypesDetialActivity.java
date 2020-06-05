@@ -4,16 +4,24 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
+import com.pos.priory.adapters.InventoryTeypDetialAdapter;
+import com.pos.priory.beans.InventoryTypeDetialBean;
 import com.pos.priory.networks.ApiService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,26 +42,13 @@ public class BigInventoryTypesDetialActivity extends BaseActivity {
     TextView startTimeTv;
     @Bind(R.id.end_time_tv)
     TextView endTimeTv;
-    @Bind(R.id.gold_tv)
-    TextView goldTv;
-    @Bind(R.id.gold_btn)
-    MaterialButton goldBtn;
-    @Bind(R.id.gold_layout)
-    FrameLayout goldLayout;
-    @Bind(R.id.yushi_tv)
-    TextView yushiTv;
-    @Bind(R.id.yshi_btn)
-    MaterialButton yshiBtn;
-    @Bind(R.id.yushi_layout)
-    FrameLayout yushiLayout;
-    @Bind(R.id.jingshi_tv)
-    TextView jingshiTv;
-    @Bind(R.id.jingshi_btn)
-    MaterialButton jingshiBtn;
-    @Bind(R.id.jingshi_layout)
-    FrameLayout jingshiLayout;
     @Bind(R.id.finish_btn)
     MaterialButton finishBtn;
+
+    InventoryTeypDetialAdapter inventoryTeypDetialAdapter;
+    List<InventoryTypeDetialBean.CategoryBean> datalist = new ArrayList<>();
+    @Bind(R.id.recycler_view)
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,23 +61,27 @@ public class BigInventoryTypesDetialActivity extends BaseActivity {
     protected void initViews() {
         rightImg.setVisibility(View.GONE);
         titleTv.setText("盘点详情");
-        endTimeTv.setVisibility(getIntent().getStringExtra("status").equals("未完成") ? View.GONE : View.VISIBLE);
+        endTimeTv.setVisibility(getIntent().getBooleanExtra("status",
+                false) ? View.VISIBLE : View.GONE);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        recyclerView.setLayoutManager(layoutManager);
+        inventoryTeypDetialAdapter = new InventoryTeypDetialAdapter(R.layout.big_inventory_detail_list_item, datalist);
+        recyclerView.setAdapter(inventoryTeypDetialAdapter);
+        inventoryTeypDetialAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                goTypeDetailActivity(datalist.get(position).getId());
+            }
+        });
+        getInventoryDetail();
     }
 
-    @OnClick({R.id.back_btn,R.id.gold_btn,R.id.yshi_btn,R.id.jingshi_btn,R.id.finish_btn})
-    public void onClick(View v){
-        switch (v.getId()){
+    @OnClick({R.id.back_btn, R.id.finish_btn})
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.back_btn:
                 onBackPressed();
-                break;
-            case R.id.gold_btn:
-                goTypeDetailActivity(0);
-                break;
-            case R.id.yshi_btn:
-                goTypeDetailActivity(0);
-                break;
-            case R.id.jingshi_btn:
-                goTypeDetailActivity(0);
                 break;
             case R.id.finish_btn:
                 finishInventory();
@@ -90,16 +89,35 @@ public class BigInventoryTypesDetialActivity extends BaseActivity {
         }
     }
 
-    public void goTypeDetailActivity(int type){
-        Intent intent = new Intent(this,BigInventoryDetialActivity.class);
-        intent.putExtra("inventoryId", getIntent().getIntExtra("inventoryId",0));
-        intent.putExtra("status", getIntent().getStringExtra("status"));
+    public void goTypeDetailActivity(int categoryId) {
+        Intent intent = new Intent(this, BigInventoryDetialActivity.class);
+        intent.putExtra("inventoryId", getIntent().getIntExtra("inventoryId", 0));
+        intent.putExtra("categoryId", categoryId);
+        intent.putExtra("status", getIntent().getBooleanExtra("status", false));
         startActivity(intent);
+    }
+
+    private void getInventoryDetail() {
+        RetrofitManager.excuteGson(this.bindToLifecycle(), RetrofitManager.createGson(ApiService.class).
+                getInventoryTypeDetailById(getIntent().getIntExtra("inventoryId", 0)), new ModelGsonListener<InventoryTypeDetialBean>() {
+            @Override
+            public void onSuccess(InventoryTypeDetialBean result) throws Exception {
+                startTimeTv.setText(result.getCreated());
+                datalist.addAll(result.getCategory());
+                inventoryTeypDetialAdapter.notifyDataSetChanged();
+                finishBtn.setVisibility(result.isDone() ? View.GONE : View.VISIBLE);
+            }
+
+            @Override
+            public void onFailed(String erromsg) {
+
+            }
+        });
     }
 
     private void finishInventory() {
         RetrofitManager.createString(ApiService.class)
-                .updateBigInventoryById(getIntent().getIntExtra("inventoryId",0), "已完成")
+                .updateBigInventoryById(getIntent().getIntExtra("inventoryId", 0))
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

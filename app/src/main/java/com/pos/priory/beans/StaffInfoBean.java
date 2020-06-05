@@ -6,36 +6,57 @@ package com.pos.priory.beans;
 
 public class StaffInfoBean {
 
+
     /**
+     * id : 6
+     * shop : 測試店
+     * shopid : 2
      * user : staff01
-     * sex : M
-     * staffno : ab00001
-     * mobile : 12345678
-     * store : 高士德
+     * permission : 店员
+     * name :
+     * gender :
+     * staffno :
+     * mobile :
+     * status : true
+     * created : 2020-03-02T07:41:44.910501+08:00
+     * updated : 2020-03-20T16:05:15.028471+08:00
      */
 
+    private int id;
+    private String shop;
+    private int shopid;
     private String user;
-    private String sex;
+    private String permission;
+    private String name;
+    private String gender;
     private String staffno;
     private String mobile;
-    private String store;
-    private String permission;
-    private int storeid;
+    private boolean status;
+    private String created;
+    private String updated;
 
-    public int getStoreid() {
-        return storeid;
+    public int getId() {
+        return id;
     }
 
-    public void setStoreid(int storeid) {
-        this.storeid = storeid;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getPermission() {
-        return permission;
+    public String getShop() {
+        return shop;
     }
 
-    public void setPermission(String permissionString) {
-        this.permission = permissionString;
+    public void setShop(String shop) {
+        this.shop = shop;
+    }
+
+    public int getShopid() {
+        return shopid;
+    }
+
+    public void setShopid(int shopid) {
+        this.shopid = shopid;
     }
 
     public String getUser() {
@@ -46,12 +67,28 @@ public class StaffInfoBean {
         this.user = user;
     }
 
-    public String getSex() {
-        return sex;
+    public String getPermission() {
+        return permission;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getStaffno() {
@@ -70,11 +107,27 @@ public class StaffInfoBean {
         this.mobile = mobile;
     }
 
-    public String getStore() {
-        return store;
+    public boolean isStatus() {
+        return status;
     }
 
-    public void setStore(String store) {
-        this.store = store;
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public String getCreated() {
+        return created;
+    }
+
+    public void setCreated(String created) {
+        this.created = created;
+    }
+
+    public String getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(String updated) {
+        this.updated = updated;
     }
 }

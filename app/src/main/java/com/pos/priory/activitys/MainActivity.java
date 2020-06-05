@@ -75,8 +75,8 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initViews();
-        getAppVersionFromServer();
-        getStoreList();
+//        getAppVersionFromServer();
+//        getStoreList();
     }
 
     private void getStoreList() {
@@ -92,11 +92,8 @@ public class MainActivity extends BaseActivity {
                             MyApplication.getContext().storeListJsonString = s;
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                if (jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getStore())) {
-                                    MyApplication.getContext().storeName = jsonObject.getString("name");
-                                    MyApplication.getContext().storeAddress = jsonObject.getString("address");
-                                    MyApplication.getContext().storeTel = jsonObject.getString("tel");
-                                    MyApplication.getContext().region = jsonObject.getString("region");
+                                if (jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getShop())) {
+
                                 }
                             }
                         }

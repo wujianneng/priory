@@ -19,7 +19,7 @@
         android:layout_gravity="center_horizontal"
         android:text="澳門安娜貝拉珠寶有限公司(關閘店)"
         android:textColor="#333"
-        android:textSize="8sp" />
+        android:textSize="7sp" />
 
     <TextView
         android:id="@+id/address_tv"
@@ -28,7 +28,7 @@
         android:layout_gravity="center_horizontal"
         android:text="澳門多祿長街(白馬行)20-A號雅明閣地下C座"
         android:textColor="#333"
-        android:textSize="8sp" />
+        android:textSize="7sp" />
 
     <TextView
         android:id="@+id/tel_tv"
@@ -37,13 +37,13 @@
         android:layout_gravity="center_horizontal"
         android:text="+853 2892 0767"
         android:textColor="#333"
-        android:textSize="8sp" />
+        android:textSize="7sp" />
 
     <TextView
         android:id="@+id/order_number_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="300dp"
+        android:layout_marginLeft="325dp"
         android:text="收據編號   S181123012"
         android:textColor="#333"
         android:textSize="6sp" />
@@ -52,56 +52,58 @@
         android:id="@+id/date_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="300dp"
+        android:layout_marginLeft="325dp"
         android:text="購買日期   2018-10-10 10:10:10"
         android:textColor="#333"
         android:textSize="6sp" />
 
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp">
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
             android:text="貨品（名稱/條碼）"
+            android:gravity="center_vertical"
             android:textColor="#333"
             android:textSize="10sp" />
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_vertical|right"
             android:text="數量"
+            android:layout_gravity="right"
+            android:layout_marginRight="180dp"
             android:textColor="#333"
             android:textSize="10sp" />
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_vertical|right"
             android:text="原價"
+            android:layout_gravity="right"
+            android:layout_marginRight="100dp"
             android:textColor="#333"
             android:textSize="10sp" />
 
         <TextView
-            android:layout_width="0dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
+            android:gravity="center_vertical|right"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right"
             android:text="售價"
             android:textColor="#333"
             android:textSize="10sp" />
-    </LinearLayout>
+    </FrameLayout>
 
     <View
         android:id="@+id/line0"
@@ -124,8 +126,8 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
         android:background="#333" />
 
@@ -152,6 +154,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:text="客戶註意事項"
+            android:textStyle="bold"
             android:textColor="#333"
             android:textSize="8sp" />
 
@@ -223,6 +226,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="100dp"
             android:gravity="right"
+            android:textStyle="bold"
             android:text="合計(12件)"
             android:textColor="#333"
             android:textSize="7sp" />
@@ -249,6 +253,7 @@
             android:layout_marginRight="100dp"
             android:gravity="right"
             android:text="優惠"
+            android:textStyle="bold"
             android:textColor="#333"
             android:textSize="7sp" />
 
@@ -257,7 +262,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/discount_tv"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp" />
 
         <TextView
             android:id="@+id/pay_type_tv"
@@ -269,6 +276,7 @@
             android:layout_marginRight="100dp"
             android:gravity="right"
             android:text="付款方法"
+            android:textStyle="bold"
             android:textColor="#333"
             android:textSize="7sp" />
 
@@ -277,15 +285,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/pay_type_tv"
-            android:layout_alignParentRight="true" />
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pay_type_list"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="100dp"
+            android:text="合計的付款"
+            android:textColor="#333"
+            android:textSize="7sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sum_pay_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pay_type_list"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
+            android:text="$ 13,480.0"
+            android:textColor="#333"
+            android:textSize="6sp" />
 
     </RelativeLayout>
 
-
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_marginBottom="30dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp">
 
         <TextView
             android:id="@+id/page_tv"

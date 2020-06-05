@@ -2,7 +2,6 @@ package com.pos.priory.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
@@ -69,9 +68,9 @@ public class QueryFragment extends BaseFragment {
     SwipeMenuRecyclerView orderRecyclerView;
 
     QueryMemberAdapter memberAdapter;
-    List<MemberBean> memberList = new ArrayList<>();
+    List<MemberBean.ResultsBean> memberList = new ArrayList<>();
     QueryOrderAdapter orderAdapter;
-    List<OrderBean> orderList = new ArrayList<>();
+    List<OrderBean.ResultsBean> orderList = new ArrayList<>();
     @Bind(R.id.padding_layout)
     View paddingLayout;
     @Bind(R.id.title_layout)
@@ -142,7 +141,7 @@ public class QueryFragment extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (true)
+                if (btnSearchType.getText().toString().equals("搜索会员"))
                     refreshMemberRecyclerView(charSequence.toString());
                 else
                     refreshOrderRecyclerView(charSequence.toString());
@@ -166,18 +165,16 @@ public class QueryFragment extends BaseFragment {
             memberCall.dispose();
         memberList.clear();
         memberAdapter.notifyDataSetChanged();
-        memberCall = RetrofitManager.createString(ApiService.class).getMembers(str).compose(this.<String>bindToLifecycle())
+        memberCall = RetrofitManager.createGson(ApiService.class).getMembers(str)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
+                .subscribe(new Consumer<MemberBean>() {
                     @Override
-                    public void accept(String results) throws Exception {
-                        final List<MemberBean> memberBeanList = gson.fromJson(results, new TypeToken<List<MemberBean>>() {
-                        }.getType());
-                        if (memberBeanList != null) {
+                    public void accept(MemberBean results) throws Exception {
+                        if (results.getResults() != null) {
                             new RunOnUiThreadSafe(getActivity()) {
                                 @Override
                                 public void runOnUiThread() {
-                                    memberList.addAll(memberBeanList);
+                                    memberList.addAll(results.getResults());
                                     memberAdapter.notifyDataSetChanged();
                                 }
                             };
@@ -208,11 +205,9 @@ public class QueryFragment extends BaseFragment {
                     @Override
                     public void accept(String results) throws Exception {
                         Log.e("test", "....refreshDateRecyclerView");
-                        final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {
-                        }.getType());
-                        if (orderBeanList != null) {
-                            Log.e("test", "....orderBeanList != null");
-                            orderList.addAll(orderBeanList);
+                        OrderBean orderBean = gson.fromJson(results, OrderBean.class);
+                        if (orderBean != null) {
+                            orderList.addAll(orderBean.getResults());
                             orderAdapter.notifyDataSetChanged();
                         }
                     }
@@ -240,10 +235,9 @@ public class QueryFragment extends BaseFragment {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String results) throws Exception {
-                        final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {
-                        }.getType());
-                        if (orderBeanList != null) {
-                            orderList.addAll(orderBeanList);
+                        OrderBean orderBean = gson.fromJson(results, OrderBean.class);
+                        if (orderBean != null) {
+                            orderList.addAll(orderBean.getResults());
                             orderAdapter.notifyDataSetChanged();
                         }
                     }
@@ -296,24 +290,32 @@ public class QueryFragment extends BaseFragment {
                         dateTv.setVisibility(View.GONE);
                         startDateTv.setVisibility(View.GONE);
                         endDateTv.setVisibility(View.GONE);
+                        memberRecyclerView.setVisibility(View.VISIBLE);
+                        orderRecyclerView.setVisibility(View.GONE);
                         break;
                     case R.id.menu1:
                         inputLayout.setVisibility(View.VISIBLE);
                         dateTv.setVisibility(View.GONE);
                         startDateTv.setVisibility(View.GONE);
                         endDateTv.setVisibility(View.GONE);
+                        memberRecyclerView.setVisibility(View.GONE);
+                        orderRecyclerView.setVisibility(View.VISIBLE);
                         break;
                     case R.id.menu2:
                         inputLayout.setVisibility(View.GONE);
                         dateTv.setVisibility(View.VISIBLE);
                         startDateTv.setVisibility(View.GONE);
                         endDateTv.setVisibility(View.GONE);
+                        memberRecyclerView.setVisibility(View.GONE);
+                        orderRecyclerView.setVisibility(View.VISIBLE);
                         break;
                     case R.id.menu3:
                         inputLayout.setVisibility(View.GONE);
                         dateTv.setVisibility(View.GONE);
                         startDateTv.setVisibility(View.VISIBLE);
                         endDateTv.setVisibility(View.VISIBLE);
+                        memberRecyclerView.setVisibility(View.GONE);
+                        orderRecyclerView.setVisibility(View.VISIBLE);
                         break;
                 }
                 btnSearchType.setText(item.getTitle());

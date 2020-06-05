@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/title_layout" />
+
+    <android.support.design.button.MaterialButton
+        android:id="@+id/btn_select_product"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="15dp"
+        android:backgroundTint="#ffffff"
+        android:text="產品名稱"
+        android:gravity="center_vertical"
+        android:textColor="#333333"
+        android:textSize="11sp"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        app:cornerRadius="10dp"
+        app:icon="@drawable/go_bottom"
+        app:iconSize="10dp"
+        app:iconTint="#333" />
+
+    <android.support.design.button.MaterialButton
+        android:id="@+id/btn_select_returntype"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="15dp"
+        android:backgroundTint="#ffffff"
+        android:text="回收"
+        android:gravity="center_vertical"
+        android:textColor="#333333"
+        android:textSize="11sp"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        app:cornerRadius="10dp"
+        app:icon="@drawable/go_bottom"
+        app:iconSize="10dp"
+        app:iconTint="#333" />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="15dp"
+        app:cardBackgroundColor="#fff"
+        app:cardCornerRadius="1dp"
+        app:cardElevation="1dp"
+        app:cardPreventCornerOverlap="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edt_weight"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:background="@null"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="重量"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:background="#cccccc"
+                android:text="克"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="15dp"
+        app:cardBackgroundColor="#fff"
+        app:cardCornerRadius="1dp"
+        app:cardElevation="1dp"
+        app:cardPreventCornerOverlap="true">
+
+
+        <TextView
+            android:id="@+id/start_date_tv"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:background="#ffffff"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:text="入庫時間"
+            android:textColor="#4a4a4a"
+            android:textSize="13sp" />
+
+
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="15dp"
+        app:cardBackgroundColor="#fff"
+        app:cardCornerRadius="1dp"
+        app:cardElevation="1dp"
+        app:cardPreventCornerOverlap="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edt_price"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:background="@null"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:hint="換貨或回收價格"
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:textSize="16sp" />
+
+            <TextView
+                android:background="#cccccc"
+                android:text="元"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+
+    </android.support.v7.widget.CardView>
+
+
+</LinearLayout>

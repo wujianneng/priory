@@ -55,6 +55,18 @@
             android:name=".activitys.AddNewOrderActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity
+            android:name=".activitys.DinghuoActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.DinghuoListActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.RepertoryRecordActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activitys.AddOrEditReturnItemActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
             android:name=".activitys.BalanceActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity

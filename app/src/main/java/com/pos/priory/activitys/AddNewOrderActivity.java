@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
@@ -36,6 +37,7 @@ import com.pos.priory.adapters.NewGoodTypeDataAdapter;
 import com.pos.priory.beans.DiscountBean;
 import com.pos.priory.beans.GoodBean;
 import com.pos.priory.beans.NewGoodTypeDataBean;
+import com.pos.priory.beans.WarehouseBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.utils.LogicUtils;
@@ -105,7 +107,7 @@ public class AddNewOrderActivity extends BaseActivity {
     TextView paymentTv;
 
 
-    List<GoodBean> goodList = new ArrayList<>();
+    List<WarehouseBean.ResultsBean> goodList = new ArrayList<>();
     AddNewOrderGoodsAdapter goodsAdapter;
     int memberid, memberReward;
     String memberName, memberMobile;
@@ -177,13 +179,13 @@ public class AddNewOrderActivity extends BaseActivity {
         sumMoney = 0;
         sumWeight = 0;
         newGoodTypeList.clear();
-        for (GoodBean bean : goodList) {
-            sumMoney += new BigDecimal(bean.getProduct().getPrice()).doubleValue();
-            sumWeight += bean.getWeight();
+        for (WarehouseBean.ResultsBean bean : goodList) {
+            sumMoney += new BigDecimal(bean.getItem().get(0).getPrice().get(0).getPrice()).doubleValue();
+            sumWeight += bean.getTotal().getWeight();
             if (!isTypeDatasContains(bean)) {
                 NewGoodTypeDataBean newGoodTypeDataBean = new NewGoodTypeDataBean();
-                newGoodTypeDataBean.setName(bean.getProduct().getCatalog().getName());
-                newGoodTypeDataBean.setWeight(bean.getWeight());
+                newGoodTypeDataBean.setName(bean.getItem().get(0).getName());
+                newGoodTypeDataBean.setWeight(bean.getTotal().getWeight());
                 newGoodTypeDataBean.setCount(1);
                 newGoodTypeList.add(newGoodTypeDataBean);
             }
@@ -194,10 +196,10 @@ public class AddNewOrderActivity extends BaseActivity {
 //        countTv.setText(goodList.size() + "件|" + LogicUtils.getKeepLastTwoNumberAfterLittlePoint(sumWeight) + "g");
     }
 
-    private boolean isTypeDatasContains(GoodBean goodBean) {
+    private boolean isTypeDatasContains(WarehouseBean.ResultsBean goodBean) {
         for (NewGoodTypeDataBean bean : newGoodTypeList) {
-            if (bean.getName().equals(goodBean.getProduct().getCatalog().getName())) {
-                bean.setWeight(bean.getWeight() + goodBean.getWeight());
+            if (bean.getName().equals(goodBean.getName())) {
+                bean.setWeight(bean.getWeight() + goodBean.getTotal().getWeight());
                 bean.setCount(bean.getCount() + 1);
                 return true;
             }
@@ -325,17 +327,13 @@ public class AddNewOrderActivity extends BaseActivity {
             return;
         }
         showLoadingDialog("正在增加商品..");
-        RetrofitManager.excute(bindToLifecycle(), RetrofitManager.createString(ApiService.class).getStockListByParam(productcode),
-                new ModelListener() {
+        RetrofitManager.excuteGson(bindToLifecycle(), RetrofitManager.createGson(ApiService.class).getStockListByParam(productcode),
+                new ModelGsonListener<WarehouseBean>() {
                     @Override
-                    public void onSuccess(String result) throws Exception {
-                        JSONObject jsonObject = new JSONObject(result);
-                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<GoodBean>>() {
-                        }.getType());
-                        if (goodBeanList != null && goodBeanList.size() != 0 && goodBeanList.get(0).getQuantity() > 0) {
+                    public void onSuccess(WarehouseBean result) throws Exception {
+                        if (result != null && result.getResults().size() != 0 && result.getResults().get(0).getTotal().getQuantity() > 0) {
                             hideLoadingDialog();
-                            goodBeanList.get(0).getProduct().setPrePrice(goodBeanList.get(0).getProduct().getPrice());
-                            goodList.add(goodBeanList.get(0));
+                            goodList.add(result.getResults().get(0));
                             goodsAdapter.notifyItemInserted(goodList.size() - 1);
                             refreshSumMoney();
                         } else {
@@ -355,9 +353,8 @@ public class AddNewOrderActivity extends BaseActivity {
     private boolean productExitInList(String productcode) {
         boolean result = false;
         Log.e("test", "productcode:" + productcode);
-        for (GoodBean goodBean : goodList) {
-            Log.e("test", "code:" + goodBean.getProduct().getProductcode() + goodBean.getStockno());
-            if ((goodBean.getProduct().getProductcode() + goodBean.getStockno()).equals(productcode)) {
+        for (WarehouseBean.ResultsBean goodBean : goodList) {
+            if (String.valueOf(goodBean.getItem().get(0).getProductcode()).equals(productcode)) {
                 return true;
             }
         }

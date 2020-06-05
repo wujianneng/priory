@@ -119,7 +119,6 @@ public final class ViewfinderView extends View {
 	@Override
 	public void onDraw(Canvas canvas) {
 		//中间的扫描框，你要修改扫描框的大小，去CameraManager里面修改
-		Log.e("test","onDraw");
 		Rect frame = CameraManager.get(getContext()).getFramingRect(getContext());
 		if (frame == null) {
 			return;

@@ -161,43 +161,32 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onFailed(String erromsg) {
                     customDialog.dismiss();
-                    Log.e("test", "请与总部相关人员联络及查询1");
+                    Log.e("test", "请与总部相关人员联络及查询1:" + erromsg);
                     Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
                 }
-            }, RetrofitManager.createString(ApiService.class).getStaffInfo(edtUsename.getText().toString()), new ModelListener() {
+            }, RetrofitManager.createString(ApiService.class).getStaffInfo(), new ModelListener() {
                 @Override
                 public void onSuccess(String result) throws Exception {
-                    List<StaffInfoBean> staffInfoBeanList = gson.fromJson(result,
-                            new TypeToken<List<StaffInfoBean>>() {
-                            }.getType());
-
-                    if (staffInfoBeanList != null && staffInfoBeanList.size() != 0) {
-                        StaffInfoBean staffInfoBean = staffInfoBeanList.get(0);
-                        MyApplication.staffInfoBean = staffInfoBean;
-                        if (staffInfoBean.getUser().equals(edtUsename.getText().toString())) {
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
-                            if (checkbox.isChecked()) {
-                                editor.putString(Constants.LAST_USERNAME_KEY,
-                                        edtUsename.getText().toString());
-                                editor.putString(Constants.LAST_PASSWORD_KEY,
-                                        edtPasswrod.getText().toString());
-                                editor.putString(Constants.LAST_BASE_URL_KEY,
-                                        RetrofitManager.hostname);
-                            }
-                            editor.putString(Constants.CURRENT_STAFF_INFO_KEY, result);
-                            editor.commit();
-                            if (customDialog != null)
-                                customDialog.dismiss();
-                            RetrofitManager.initSentry(edtUsename.getText().toString());
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            finish();
+                    StaffInfoBean staffInfoBean = gson.fromJson(result, StaffInfoBean.class);
+                    MyApplication.staffInfoBean = staffInfoBean;
+                    if (staffInfoBean.getUser().equals(edtUsename.getText().toString())) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
+                        if (checkbox.isChecked()) {
+                            editor.putString(Constants.LAST_USERNAME_KEY,
+                                    edtUsename.getText().toString());
+                            editor.putString(Constants.LAST_PASSWORD_KEY,
+                                    edtPasswrod.getText().toString());
+                            editor.putString(Constants.LAST_BASE_URL_KEY,
+                                    RetrofitManager.hostname);
                         }
-                    } else {
+                        editor.putString(Constants.CURRENT_STAFF_INFO_KEY, result);
+                        editor.commit();
                         if (customDialog != null)
                             customDialog.dismiss();
-                        Log.e("test", "请与总部相关人员联络及查询2");
-                        Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
+                        RetrofitManager.initSentry(edtUsename.getText().toString());
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
                     }
                 }
 
@@ -205,7 +194,7 @@ public class LoginActivity extends BaseActivity {
                 public void onFailed(String erromsg) {
                     if (customDialog != null)
                         customDialog.dismiss();
-                    Log.e("test", "请与总部相关人员联络及查询3");
+                    Log.e("test", "请与总部相关人员联络及查询3:" + erromsg);
                     Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
                 }
             });

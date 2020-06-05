@@ -1,76 +1,52 @@
 package com.pos.priory.fragments;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.gson.reflect.TypeToken;
-import com.infitack.rxretorfit2library.ModelListener;
+import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
+import com.pos.priory.activitys.AddOrEditReturnItemActivity;
+import com.pos.priory.activitys.DinghuoActivity;
 import com.pos.priory.activitys.GoodDetialActivity;
+import com.pos.priory.activitys.RepertoryRecordActivity;
 import com.pos.priory.adapters.RepertoryAdapter;
-import com.pos.priory.adapters.RepertoryReturnAdapter;
-import com.pos.priory.beans.GoodBean;
-import com.pos.priory.beans.ReturnGoodBean;
-import com.pos.priory.coustomViews.CustomDialog;
+import com.pos.priory.beans.RepertoryFiltersBean;
+import com.pos.priory.beans.WarehouseBean;
 import com.pos.priory.networks.ApiService;
-import com.pos.priory.utils.LogicUtils;
-import com.pos.zxinglib.utils.DeviceUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 
 /**
  * Created by Lenovo on 2018/12/29.
@@ -78,19 +54,14 @@ import okhttp3.RequestBody;
 
 public class RepertoryFragment extends BaseFragment {
     View view;
-    List<GoodBean> dataList = new ArrayList<>();
-    List<ReturnGoodBean.ReturnstockitemBean> returnGoodBeanList = new ArrayList<>();
+    List<WarehouseBean.ResultsBean.ItemBean> dataList = new ArrayList<>();
     RepertoryAdapter repertoryAdapter;
-    RepertoryReturnAdapter repertoryReturnAdapter;
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
     @Bind(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
     String currentStr = "";
-    @Bind(R.id.return_recycler_view)
-    SwipeMenuRecyclerView returnRecyclerView;
 
-    boolean isStoreRepertory = true;
     @Bind(R.id.title_tv)
     TextView titleTv;
     @Bind(R.id.dinghuo_tv)
@@ -119,6 +90,17 @@ public class RepertoryFragment extends BaseFragment {
     View paddingLayout;
     @Bind(R.id.left_tv)
     TextView leftTv;
+    @Bind(R.id.add_tv)
+    TextView addTv;
+    @Bind(R.id.btn_select_return_type)
+    MaterialButton btnSelectReturnType;
+    @Bind(R.id.btn_select_return_order_params)
+    MaterialButton btnSelectReturnOrderParams;
+
+    private List<RepertoryFiltersBean.ResultBean.WarehouseBean> warehouse;
+    RepertoryFiltersBean.ResultBean.WarehouseBean currentWarehouse;
+    private List<RepertoryFiltersBean.ResultBean.CategoryBean> category;
+    private List<RepertoryFiltersBean.ResultBean.ReturntypeBean> returntypeBeanList;
 
     @Nullable
     @Override
@@ -132,41 +114,9 @@ public class RepertoryFragment extends BaseFragment {
     private void initViews() {
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(refreshLayout -> {
-            if (isStoreRepertory) {
-                refreshRecyclerView(currentStr);
-            } else {
-                refreshReturnRecyclerView();
-            }
+            refreshRecyclerView();
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
-
-        //设置侧滑菜单
-        returnRecyclerView.setSwipeMenuCreator((swipeLeftMenu, swipeRightMenu, viewType) -> {
-            SwipeMenuItem tuihuoItem = new SwipeMenuItem(getActivity())
-                    .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
-                    .setImage(R.drawable.icon_dinghuo)
-                    .setText("编辑")
-                    .setTextColor(Color.WHITE)
-                    .setHeight(DeviceUtil.dip2px(getActivity(), 91))//设置高，这里使用match_parent，就是与item的高相同
-                    .setWidth(DeviceUtil.dip2px(getActivity(), 100));//设置宽
-            swipeRightMenu.addMenuItem(tuihuoItem);//设置右边的侧滑
-        });
-        //设置侧滑菜单的点击事件
-        returnRecyclerView.setSwipeMenuItemClickListener(menuBridge -> {
-            menuBridge.closeMenu();
-//                int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。0是左，右是1，暂时没有用到
-            int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
-            int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
-            if (menuPosition == 0) {
-
-            }
-        });
-
-        repertoryReturnAdapter = new RepertoryReturnAdapter(getActivity(), R.layout.repertory_list_item, returnGoodBeanList);
-        LinearLayoutManager mLayoutManager0 = new LinearLayoutManager(getActivity());
-        mLayoutManager0.setOrientation(OrientationHelper.VERTICAL);
-        returnRecyclerView.setLayoutManager(mLayoutManager0);
-        returnRecyclerView.setAdapter(repertoryReturnAdapter);
 
         repertoryAdapter = new RepertoryAdapter(getActivity(), R.layout.repertory_list_item, dataList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -174,154 +124,331 @@ public class RepertoryFragment extends BaseFragment {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(repertoryAdapter);
         repertoryAdapter.setOnItemClickListener((BaseQuickAdapter adapter, View view, int position) -> {
-            Intent intent = new Intent(getActivity(), GoodDetialActivity.class);
-            intent.putExtra("goodbean", gson.toJson(dataList.get(position)));
-            startActivity(intent);
-            edtSearch.setText("");
+            if (currentWarehouse.isWh_primary()) {
+                Intent intent = new Intent(getActivity(), GoodDetialActivity.class);
+                intent.putExtra("goodbean", gson.toJson(dataList.get(position)));
+                startActivity(intent);
+            }
         });
-        refreshLayout.autoRefresh();
+        repertoryAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                Intent intent2 = new Intent(getActivity(), AddOrEditReturnItemActivity.class);
+                intent2.putExtra("isCreate", false);
+                intent2.putExtra("warehouseId", currentWarehouse.getId());
+                intent2.putExtra("returnBean",gson.toJson(dataList.get(position)));
+                startActivity(intent2);
+            }
+        });
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentStr = s.toString();
+                refreshRecyclerView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        getFilters();
     }
 
-    private void refreshMainRepertorySumDatas(boolean isMain) {
-//        RetrofitManager.createString(ApiService.class).getStockSumDatas()
-//                .compose(this.<String>bindToLifecycle())
-//                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<String>() {
-//                    @Override
-//                    public void accept(String s) throws Exception {
-//                        JSONObject jsonObject = new JSONObject(s);
-//                        leftTv.setText("黄金：" + jsonObject.getInt("goldcount") + "件 | " + jsonObject.getDouble("goldweight") + "g");
-//                        rightTv.setVisibility(View.VISIBLE);
-//                        rightTv.setText("晶石：" + jsonObject.getInt("cystalcount") + "件");
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//
-//                    }
-//                });
-        int count = 0;
-        float weight = 0;
-        if (isMain) {
-            for (GoodBean goodBean : dataList) {
-                count += goodBean.getQuantity();
-                weight += goodBean.getWeight();
-            }
-        } else {
-            for (ReturnGoodBean.ReturnstockitemBean goodBean : returnGoodBeanList) {
-                count++;
-                weight += Double.parseDouble(goodBean.getWeight());
-            }
-        }
-        leftTv.setText("數量：" + count + "件，" + "重量：" + LogicUtils.getKeepLastTwoNumberAfterLittlePoint(weight) + "g");
+    private void getFilters() {
+        RetrofitManager.excuteGson(bindToLifecycle(), RetrofitManager.createGson(ApiService.class).getRepertoryFilters()
+                , new ModelGsonListener<RepertoryFiltersBean>() {
+                    @Override
+                    public void onSuccess(RepertoryFiltersBean result) throws Exception {
+                        warehouse = result.getResult().getWarehouse();
+                        category = result.getResult().getCategory();
+                        returntypeBeanList = result.getResult().getReturntype();
+                        currentWarehouse = warehouse.get(0);
+                        btnSelectRepertory.setText(currentWarehouse.getName());
+                        btnSelectType.setText(category.get(0).getName());
+                        btnSelectReturnType.setText(returntypeBeanList.get(0).getName());
+                        refreshLayout.autoRefresh();
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+
+                    }
+                });
     }
+
 
     private void showRepertoryMenu() {
-        // 这里的view代表popupMenu需要依附的view
         PopupMenu popupMenu = new PopupMenu(getActivity(), btnSelectRepertory);
+        for (RepertoryFiltersBean.ResultBean.WarehouseBean warehouseBean : warehouse) {
+            popupMenu.getMenu().add(warehouseBean.getName());
+        }
+        popupMenu.show();
+        popupMenu.setOnMenuItemClickListener((item) -> {
+            for (RepertoryFiltersBean.ResultBean.WarehouseBean warehouseBean : warehouse) {
+                if (warehouseBean.getName().equals(item.getTitle()))
+                    currentWarehouse = warehouseBean;
+            }
+            btnSelectRepertory.setText(item.getTitle());
+            dinghuoTv.setVisibility(currentWarehouse.isWh_primary() ? View.VISIBLE : View.GONE);
+            addTv.setVisibility(currentWarehouse.isWh_primary() ? View.GONE : View.VISIBLE);
+            btnSelectType.setVisibility(currentWarehouse.isWh_primary() ? View.VISIBLE : View.GONE);
+            btnSelectReturnType.setVisibility(currentWarehouse.isWh_primary() ? View.GONE : View.VISIBLE);
+            btnSelectOrderParams.setVisibility(currentWarehouse.isWh_primary() ? View.VISIBLE : View.GONE);
+            btnSelectReturnOrderParams.setVisibility(currentWarehouse.isWh_primary() ? View.GONE : View.VISIBLE);
+            refreshLayout.autoRefresh();
+            return true;
+        });
+    }
+
+    private void showCategoryMenu() {
+        PopupMenu popupMenu = new PopupMenu(getActivity(), btnSelectType);
+        for (RepertoryFiltersBean.ResultBean.CategoryBean categoryBean : category) {
+            popupMenu.getMenu().add(categoryBean.getName());
+        }
+        popupMenu.show();
+        popupMenu.setOnMenuItemClickListener((item) -> {
+            btnSelectType.setText(item.getTitle());
+            refreshLayout.autoRefresh();
+            return true;
+        });
+    }
+
+    private void showReturnCategoryMenu() {
+        PopupMenu popupMenu = new PopupMenu(getActivity(), btnSelectReturnType);
+        for (RepertoryFiltersBean.ResultBean.ReturntypeBean returnBean : returntypeBeanList) {
+            popupMenu.getMenu().add(returnBean.getName());
+        }
+        popupMenu.show();
+        popupMenu.setOnMenuItemClickListener((item) -> {
+            btnSelectReturnType.setText(item.getTitle());
+            refreshLayout.autoRefresh();
+            return true;
+        });
+    }
+
+    private void showOrderTypeMenu() {
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(getActivity(), btnSelectOrderType);
         // 获取布局文件
-        popupMenu.getMenuInflater().inflate(R.menu.repertory_menu, popupMenu.getMenu());
+        popupMenu.getMenuInflater().inflate(R.menu.repertory_order_menu, popupMenu.getMenu());
         popupMenu.show();
         // 通过上面这几行代码，就可以把控件显示出来了
         popupMenu.setOnMenuItemClickListener((item) -> {
             // 控件每一个item的点击事件
             switch (item.getItemId()) {
                 case R.id.menu0:
-                    btnSelectRepertory.setText(item.getTitle());
-                    onChangeRepertoryListener(true);
+                    btnSelectOrderType.setText(item.getTitle());
                     break;
                 case R.id.menu1:
-                    btnSelectRepertory.setText(item.getTitle());
-                    onChangeRepertoryListener(false);
+                    btnSelectOrderType.setText(item.getTitle());
                     break;
             }
+            refreshLayout.autoRefresh();
             return true;
         });
     }
 
+    private void showOrderParamsMenu() {
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(getActivity(), btnSelectOrderParams);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.repertory_order_name_menu, popupMenu.getMenu());
+        popupMenu.show();
+        // 通过上面这几行代码，就可以把控件显示出来了
+        popupMenu.setOnMenuItemClickListener((item) -> {
+            // 控件每一个item的点击事件
+            switch (item.getItemId()) {
+                case R.id.menu0:
+                    btnSelectOrderParams.setText(item.getTitle());
+                    break;
+                case R.id.menu1:
+                    btnSelectOrderParams.setText(item.getTitle());
+                    break;
+                case R.id.menu2:
+                    btnSelectOrderParams.setText(item.getTitle());
+                    break;
+                case R.id.menu3:
+                    btnSelectOrderParams.setText(item.getTitle());
+                    break;
+                case R.id.menu4:
+                    btnSelectOrderParams.setText(item.getTitle());
+                    break;
+            }
+            refreshLayout.autoRefresh();
+            return true;
+        });
+    }
 
-    public void onChangeRepertoryListener(boolean isStore) {
-        isStoreRepertory = isStore;
-        if (isStore) {
-            recyclerView.setVisibility(View.VISIBLE);
-            returnRecyclerView.setVisibility(View.GONE);
-        } else {
-            recyclerView.setVisibility(View.GONE);
-            returnRecyclerView.setVisibility(View.VISIBLE);
-        }
-        refreshLayout.autoRefresh();
+    private void showReturnOrderParamsMenu() {
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(getActivity(), btnSelectReturnOrderParams);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.repertory_return_order_name_menu, popupMenu.getMenu());
+        popupMenu.show();
+        // 通过上面这几行代码，就可以把控件显示出来了
+        popupMenu.setOnMenuItemClickListener((item) -> {
+            // 控件每一个item的点击事件
+            switch (item.getItemId()) {
+                case R.id.menu0:
+                    btnSelectReturnOrderParams.setText(item.getTitle());
+                    break;
+                case R.id.menu1:
+                    btnSelectReturnOrderParams.setText(item.getTitle());
+                    break;
+                case R.id.menu2:
+                    btnSelectReturnOrderParams.setText(item.getTitle());
+                    break;
+            }
+            refreshLayout.autoRefresh();
+            return true;
+        });
     }
 
     Disposable call;
+    int categoryId = 0, repertoryId = 0;
 
-    public void refreshRecyclerView(String str) {
-        currentStr = str;
+    public void refreshRecyclerView() {
+        if (currentWarehouse == null)
+            return;
         if (call != null)
             call.dispose();
         dataList.clear();
         repertoryAdapter.notifyDataSetChanged();
-        Observable<String> observable;
-        if (str.equals("")) {
-            observable = RetrofitManager.createString(ApiService.class).getStockLists();
+        Observable<WarehouseBean> observable = null;
+        repertoryId = currentWarehouse.getId();
+        String ordering = "", orderName,
+                orderType;
+        if (currentWarehouse.isWh_primary()) {
+            for (RepertoryFiltersBean.ResultBean.CategoryBean categoryBean : category) {
+                if (categoryBean.getName().equals(btnSelectType.getText().toString())) {
+                    categoryId = categoryBean.getCid();
+                }
+            }
+            orderName = btnSelectOrderParams.getText().toString();
+            orderType = btnSelectOrderType.getText().toString();
         } else {
-            observable = RetrofitManager.createString(ApiService.class).getStockListByParam(str);
+            orderName = btnSelectReturnOrderParams.getText().toString();
+            orderType = btnSelectOrderType.getText().toString();
         }
-        call = RetrofitManager.excute(this.bindToLifecycle(), observable,
-                new ModelListener() {
+
+        if (orderName.equals("按入库時間") && orderType.equals("升序")) ordering = "returndate";
+        if (orderName.equals("按入库時間") && orderType.equals("降序")) ordering = "-returndate";
+
+        if (orderName.equals("按更新時間") && orderType.equals("升序")) ordering = "updated";
+        if (orderName.equals("按更新時間") && orderType.equals("降序")) ordering = "-updated";
+
+        if (orderName.equals("按名稱") && orderType.equals("升序")) ordering = "product__name";
+        if (orderName.equals("按名稱") && orderType.equals("降序")) ordering = "-product__name";
+
+        if (orderName.equals("按數量") && orderType.equals("升序")) ordering = "quantity";
+        if (orderName.equals("按數量") && orderType.equals("降序")) ordering = "-quantity";
+
+        if (orderName.equals("按重量") && orderType.equals("升序")) ordering = "weight";
+        if (orderName.equals("按重量") && orderType.equals("降序")) ordering = "-weight";
+
+        if (orderName.equals("按售價") && orderType.equals("升序")) ordering = "product__price";
+        if (orderName.equals("按售價") && orderType.equals("降序")) ordering = "-product__price";
+
+        if (currentStr.equals("")) {
+            if (currentWarehouse.isWh_primary()) {
+                observable = RetrofitManager.createGson(ApiService.class).getStockLists(repertoryId,
+                        categoryId, ordering);
+            } else {
+                observable = RetrofitManager.createGson(ApiService.class).getStockListsReturn(repertoryId,
+                        btnSelectReturnType.getText().toString(), ordering);
+            }
+        } else {
+            if (currentWarehouse.isWh_primary()) {
+                observable = RetrofitManager.createGson(ApiService.class).getStockListByParam(currentStr, repertoryId, categoryId, ordering);
+            } else {
+                observable = RetrofitManager.createGson(ApiService.class).getStockListByParamReturn(currentStr, repertoryId,
+                        btnSelectReturnType.getText().toString(), ordering);
+            }
+        }
+        call = RetrofitManager.excuteGson(this.bindToLifecycle(), observable,
+                new ModelGsonListener<WarehouseBean>() {
                     @Override
-                    public void onSuccess(String result) throws Exception {
-                        JSONObject jsonObject = new JSONObject(result);
-                        List<GoodBean> goodBeanList = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<GoodBean>>() {
-                        }.getType());
-                        if (goodBeanList != null) {
-                            dataList.addAll(goodBeanList);
+                    public void onSuccess(WarehouseBean result) throws Exception {
+                        Log.e("test","1111");
+                        if (result != null) {
+                            Log.e("test","22222");
+                            dataList.clear();
+                            dataList.addAll(result.getResults().get(0).getItem());
                             repertoryAdapter.notifyDataSetChanged();
+                            double sumCount = 0, sumWeight = 0;
+                            for (WarehouseBean.ResultsBean resultsBean : result.getResults()) {
+                                sumCount += resultsBean.getTotal().getQuantity();
+                                sumWeight += resultsBean.getTotal().getWeight();
+                            }
+                            leftTv.setText("數量：" + sumCount + "件，" + "重量：" + sumWeight + "g");
                         }
                         refreshLayout.finishRefresh();
-                        refreshMainRepertorySumDatas(true);
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
+                        Log.e("test","3333");
                         refreshLayout.finishRefresh();
                     }
                 });
+
     }
 
-    public void refreshReturnRecyclerView() {
-        if (call != null)
-            call.dispose();
-        returnGoodBeanList.clear();
-        repertoryReturnAdapter.notifyDataSetChanged();
-        call = RetrofitManager.excute(this.<String>bindToLifecycle(),
-                RetrofitManager.createString(ApiService.class).getReturnStockLists(),
-                new ModelListener() {
-                    @Override
-                    public void onSuccess(String results) throws Exception {
-                        ReturnGoodBean returnGoodBean = gson.fromJson(results, ReturnGoodBean.class);
-                        if (returnGoodBean != null) {
-                            returnGoodBeanList.addAll(returnGoodBean.getReturnstockitem());
-                            repertoryReturnAdapter.notifyDataSetChanged();
-                        }
-                        refreshLayout.finishRefresh();
-                        refreshMainRepertorySumDatas(false);
-                    }
 
-                    @Override
-                    public void onFailed(String erromsg) {
-                        refreshLayout.finishRefresh();
-                    }
-                });
-    }
-
-    @OnClick({R.id.btn_select_repertory})
+    @OnClick({R.id.btn_select_repertory, R.id.btn_select_type, R.id.btn_select_return_type, R.id.dinghuo_tv, R.id.add_tv,
+            R.id.btn_records, R.id.btn_select_order_params, R.id.btn_select_return_order_params, R.id.btn_select_order_type,})
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.dinghuo_tv:
+                Intent intent = new Intent(getActivity(), DinghuoActivity.class);
+                intent.putExtra("mainRepertoryId", repertoryId);
+                intent.putExtra("categoryList", gson.toJson(category));
+                startActivity(intent);
+                break;
+            case R.id.add_tv:
+                Intent intent2 = new Intent(getActivity(), AddOrEditReturnItemActivity.class);
+                intent2.putExtra("isCreate", true);
+                intent2.putExtra("warehouseId", currentWarehouse.getId());
+                startActivity(intent2);
+                break;
             case R.id.btn_select_repertory:
                 showRepertoryMenu();
                 break;
+            case R.id.btn_select_return_type:
+                showReturnCategoryMenu();
+                break;
+            case R.id.btn_select_type:
+                showCategoryMenu();
+                break;
+            case R.id.btn_records:
+                startActivity(new Intent(getActivity(), RepertoryRecordActivity.class));
+                break;
+            case R.id.btn_select_order_params:
+                showOrderParamsMenu();
+                break;
+            case R.id.btn_select_return_order_params:
+                showReturnOrderParamsMenu();
+                break;
+            case R.id.btn_select_order_type:
+                showOrderTypeMenu();
+                break;
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void handleEventBus(String event){
+       if(event.equals("refreshReturnList")){
+           refreshLayout.autoRefresh();
+       }
+    }
+
 
     @Override
     public void onDestroyView() {

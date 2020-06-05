@@ -25,35 +25,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_marginTop="15dp"
             android:textStyle="bold"
-            android:layout_toRightOf="@+id/icon_good"
+            android:layout_centerVertical="true"
             android:text="大福珠"
             android:textColor="@color/blue_text"
-            android:textSize="18sp" />
+            android:textSize="17sp" />
+
 
         <TextView
             android:id="@+id/code_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_below="@+id/name_tv"
-            android:layout_toRightOf="@+id/icon_good"
-            android:text="1023"
-            android:textColor="@color/blue_text"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/weight_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:layout_alignParentRight="true"
-            android:text="10g"
-            android:textColor="@color/drag_btn_green"
-            android:textSize="24sp" />
+            android:text="66666655555"
+            android:textColor="@color/blue_text"
+            android:textSize="15sp" />
 
 
 

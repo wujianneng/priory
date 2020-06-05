@@ -1,6 +1,21 @@
 package com.pos.priory.networks;
 
 
+import com.pos.priory.beans.DinghuoGoodBean;
+import com.pos.priory.beans.GoldpriceBean;
+import com.pos.priory.beans.GoodBean;
+import com.pos.priory.beans.InventoryBean;
+import com.pos.priory.beans.InventoryDetialBean;
+import com.pos.priory.beans.InventoryTypeDetialBean;
+import com.pos.priory.beans.MemberBean;
+import com.pos.priory.beans.RepertoryFiltersBean;
+import com.pos.priory.beans.RepertoryRecordBean;
+import com.pos.priory.beans.RepertoryRecordFiltersBean;
+import com.pos.priory.beans.ReturnFilterBean;
+import com.pos.priory.beans.TranferStoresBean;
+import com.pos.priory.beans.WarehouseBean;
+
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Observable;
@@ -27,47 +42,47 @@ import retrofit2.http.Url;
 public interface ApiService {
     @FormUrlEncoded
     @POST("/api/rest-auth/login/")
-    Observable<String> login(@FieldMap Map<String,Object> map);//登錄接口
+    Observable<String> login(@FieldMap Map<String, Object> map);//登錄接口
 
     @FormUrlEncoded
     @POST("/api/rest-auth/password/change")
-    Observable<String> resetPassword(@FieldMap Map<String,Object> map);//修改密碼接口
+    Observable<String> resetPassword(@FieldMap Map<String, Object> map);//修改密碼接口
 
-    @GET("/api/app/staff")
-    Observable<String> getStaffInfo(@Query("user__username") String username);//獲取員工信息
+    @GET("/api/user/profile")
+    Observable<String> getStaffInfo();//獲取員工信息
 
-    @GET("/api/data/goldprice")
-    Observable<String> getCurrentGoldPrice();//獲取當前金價
+    @GET("/api/goldprice")
+    Observable<GoldpriceBean> getCurrentGoldPrice();//獲取當前金價
 
     @GET("/api/data/report")
     Observable<String> getDayReport();//獲取日报表
 
-    @GET("/api/orders")
-    Observable<String> getTodayOrders(@Query("today") boolean isToday);//獲取當天所有訂單
+    @GET("/api/order")
+    Observable<String> getTodayOrders(@Query("page") int page);//獲取當天所有訂單
 
-    @POST("/api/orders/create")
+    @POST("/api/order/create")
     Observable<String> createOrder(@Body RequestBody requestBody);//新建訂單
 
-    @DELETE("/api/orders/{id}")
+    @DELETE("/api/order/detail/{id}")
     Observable<String> deleteOrder(@Path("id") int id);//删除一個訂單
 
-    @POST("/api/orders/return/create")
+    @POST("/api/order/return/create")
     Observable<String> returnGoods(@Body RequestBody requestBody);//新建回收單
 
-    @GET("/api/app/members")
-    Observable<String> getMembers(@Query("search") String mobile);//根據電話號碼查詢會員信息
+    @GET("/api/member")
+    Observable<MemberBean> getMembers(@Query("search") String mobile);//根據電話號碼查詢會員信息
 
     @FormUrlEncoded
-    @POST("/api/app/members")
-    Observable<String> registerMember(@FieldMap Map<String,Object> map);//注冊會員接口
+    @POST("/api/member/create")
+    Observable<String> registerMember(@FieldMap Map<String, Object> map);//注冊會員接口
 
-    @GET("/api/orders")
+    @GET("/api/order")
     Observable<String> getOrdersByOrdernumber(@Query("search") String ordernumber);//通过订单号码查询订单
 
-    @GET("/api/orders/{id}")
+    @GET("/api/order/{id}")
     Observable<String> getOrderByOrderId(@Path("id") int id);//通过订单id查询订单
 
-    @GET("/api/orders")
+    @GET("/api/order")
     Observable<String> getOrdersByDate(@Query("date") String date);//通过日期查询订单
 
     @GET("/api/data/dashboard")
@@ -76,8 +91,35 @@ public interface ApiService {
     @GET("/api/data/saleslist")
     Observable<String> getDatas();//获取数据页数据
 
-    @GET("/api/warehouse/stocks")
-    Observable<String> getStockLists();//获取所有商品
+    @GET("/api/warehouse/filter")
+    Observable<RepertoryFiltersBean> getRepertoryFilters();
+
+    @GET("/api/warehouse/record")
+    Observable<RepertoryRecordBean> getRepertoryRecords(@Query("wh_id") int whname, @Query("whfrom_id") int whfrom_id, @Query("type") int type, @Query("purpose") int purpose,
+                                                        @Query("startdate") String startdate, @Query("enddate") String enddate);
+
+    @GET("/api/warehouse/record")
+    Observable<RepertoryRecordBean> getRepertoryRecordsWithSearch(@Query("wh_id") int whname, @Query("whfrom_id") int whfrom_id, @Query("type") int type, @Query("purpose") int purpose,
+                                                                  @Query("startdate") String startdate, @Query("enddate") String enddate, @Query("search") String search);
+
+    @GET("/api/warehouse/record/filter")
+    Observable<RepertoryRecordFiltersBean> getRepertoryRecordFilters();
+
+    @FormUrlEncoded
+    @POST("/api/warehouse/return")
+    Observable<String> createReturnItem(@Field("warehouse_id") int warehouse_id, @Field("product_id") int product_id
+            , @Field("returntype") String returntype, @Field("returndate") String returndate, @Field("returncost") String returncost
+            , @Field("weight") String weight);
+
+    @PUT("/api/warehouse/return/detail/{id}")
+    Observable<String> editReturnItem(@Path("id") int id, @Body RequestBody requestBody);
+
+    @GET("/api/warehouse")
+    Observable<WarehouseBean> getStockLists(@Query("warehouse_id") int whname, @Query("category_id") int category, @Query("ordering") String ordering);//获取所有商品
+
+    @GET("/api/warehouse")
+    Observable<WarehouseBean> getStockListsReturn(@Query("warehouse_id") int whname, @Query("returntype") String returntype,
+                                                  @Query("ordering") String ordering);//获取所有商品
 
     @GET("/api/warehouse/stocks/count")
     Observable<String> getStockSumDatas();//获取倉庫的統計數據
@@ -85,14 +127,52 @@ public interface ApiService {
     @GET("/api/warehouse/returnstock")
     Observable<String> getReturnStockLists();//获取回收艙所有商品
 
-    @GET("/api/warehouse/stocks")
-    Observable<String> getStockListByParam(@Query("search") String param);//通过商品二维码/商品条码/商品名 查询商品
+    @GET("/api/warehouse")
+    Observable<WarehouseBean> getStockListByParamReturn(@Query("search") String param, @Query("warehouse_id") int whname
+            , @Query("returntype") String returntype, @Query("ordering") String ordering);
 
-    @GET("/api/app/store/list")
-    Observable<String> getTranStores();//可调货店铺列表
+    @GET("/api/warehouse")
+    Observable<WarehouseBean> getStockListByParam(@Query("search") String param, @Query("warehouse_id") int whname
+            , @Query("category_id") int category, @Query("ordering") String ordering);
 
-    @POST("/api/warehouse/stocks/transfer")
-    Observable<String> tranferGoods(@Body RequestBody requestBody);//调货
+    @GET("/api/warehouse")
+    Observable<WarehouseBean> getStockLists2(@Query("warehouse_id") int whname, @Query("category_id") int category);//获
+
+    @GET("/api/warehouse")
+    Observable<WarehouseBean> getStockListByParam2(@Query("warehouse_id") int whname, @Query("category_id") int category, @Query("search") String search);//获
+
+    @GET("/api/warehouse")
+    Observable<WarehouseBean> getStockListByParam(@Query("search") String param);
+
+    @GET("/api/warehouse/purchase")
+    Observable<DinghuoGoodBean> getDinghuoList();
+
+    @GET("/api/warehouse/return/filter")
+    Observable<ReturnFilterBean> getReturnFilters();
+
+    @FormUrlEncoded
+    @POST("/api/warehouse/purchase/done")
+    Observable<String> submitDinghuoList(@Field("id") String purchaseid);//调货
+
+    @FormUrlEncoded
+    @PUT("/api/warehouse/purchase/item/{id}")
+    Observable<String> editOneDinghuoItem(@Path("id") int id, @Field("quantity") int quantity, @Field("weight") String weight);//调货
+
+    @DELETE("/api/warehouse/purchase/item/{id}")
+    Observable<String> deleteOneDinghuoItem(@Path("id") int id);//调货
+
+    @GET("/api/warehouse/detail/{id}")
+    Observable<WarehouseBean> getStockItemById(@Path("id") int id);
+
+    @GET("/api/warehouse/code")
+    Observable<GoodBean> getStockByCode();//通过商品二维码/商品条码/商品名 查询商品
+
+    @GET("/api/warehouse/transfer/shoplist")
+    Observable<TranferStoresBean> getTranStores();//可调货店铺列表
+
+    @FormUrlEncoded
+    @POST("/api/warehouse/transfer")
+    Observable<String> tranferGoods(@Field("id") int shopid, @Field("item") List<Integer> item);//调货
 
     @PUT("/api/warehouse/stocks/{id}/return")
     Observable<String> returnStockById(@Path("id") int id);//退货
@@ -100,11 +180,18 @@ public interface ApiService {
     @POST("/api/warehouse/inventory/create")
     Observable<String> createBigInventory();//新建大盤點
 
-    @GET("/api/warehouse/inventory")
-    Observable<String> getBigInventorys();//獲取所有大盤點清單
+    @GET("/api/inventory")
+    Observable<InventoryBean> getInventorys();//獲取所有大盤點清單
 
-    @GET("/api/warehouse/inventory/detail")
-    Observable<String> getBigInventoryById(@Query("id") int id,@Query("page") int page);//獲取所有大盤點清單
+    @GET("/api/inventory/detail/{id}")
+    Observable<InventoryTypeDetialBean> getInventoryTypeDetailById(@Path("id") int id);
+
+    @GET("/api/inventory/detail/{id}")
+    Observable<InventoryDetialBean> getBigInventoryDetailWithSearch(@Path("id") int id, @Query("category") int categoryid,
+                                                                    @Query("counted") boolean counted, @Query("search") String search);
+
+    @GET("/api/inventory/detail/{id}")
+    Observable<InventoryDetialBean> getBigInventoryDetail(@Path("id") int id, @Query("category") int categoryid, @Query("counted") boolean counted);//獲取所有大盤點清單
 
     @GET("/api/warehouse/inventory/daily")
     Observable<String> getDailyInventorys();//獲取所有日盤點數據
@@ -114,19 +201,19 @@ public interface ApiService {
     Observable<String> updateDailyInventoryById(@Path("id") int id, @Field("quantity") int quantity);//提交日盤點
 
     @FormUrlEncoded
-    @POST("/api/warehouse/inventory/item/update")
-    Observable<String> updateOnBigInventoryItemById(@Field("inventoryid") int id,@Field("qrcode") String code);//提交单个大盘点盤點
+    @POST("/api/inventory/action/itemcount")
+    Observable<String> updateOnBigInventoryItemById(@Field("id") int id, @Field("code") String code);//提交单个大盘点盤點
 
     @FormUrlEncoded
-    @PUT("/api/warehouse/inventory/{id}/update")
-    Observable<String> updateBigInventoryById(@Path("id") int id,@Field("status") String status);//提交整个大盘点盤點
+    @POST("/api/inventory/action/finish")
+    Observable<String> updateBigInventoryById(@Field("id") int inventoryid);//提交整个大盘点盤點
 
     @GET("/api/warehouse/purchasingitem")
     Observable<String> getPurchasingitems();//获取订货清单
 
     @FormUrlEncoded
-    @POST("/api/warehouse/purchasingitem/create")
-    Observable<String> createPurchasingitem(@FieldMap Map<String,Object> map);//生成订货单
+    @POST("/api/warehouse/purchase/item/create")
+    Observable<String> createPurchasingitem(@Field("id") int productid);//生成订货单
 
     @FormUrlEncoded
     @PUT("/api/warehouse/purchasingitem/{id}/update")
