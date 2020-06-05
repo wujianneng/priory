@@ -6,12 +6,10 @@ package com.pos.priory.utils;
 
 public class Constants {
     //生产环境域名
-    public static final String BASE_URL = "http://api.annabellaip.com";
-    public static final String MACAL_BASE_URL = "http://mo.api.annabellaip.com";
+//    public static final String BASE_URL = "http://api.annabellaip.com";
 
     //开发环境域名
-//    public static final String BASE_URL = "http://annabella-dev.infitack.net";
-//    public static final String MACAL_BASE_URL = "http://annabella-dev.infitack.net";
+    public static final String BASE_URL = "http://annabella.infitack.cn";
 
     public static final String BASE_URL_HTTP = BASE_URL;
 

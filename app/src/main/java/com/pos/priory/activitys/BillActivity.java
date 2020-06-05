@@ -125,7 +125,8 @@ public class BillActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.btn_print:
                 printViews(this, goodList, orderNumberTv.getText().toString(), getIntent().getStringExtra("memberName"),
-                        createDateTv.getText().toString(), getIntent().getDoubleExtra("sumMoney", 0), MyApplication.staffInfoBean.getStoreid());
+                        createDateTv.getText().toString(), getIntent().getDoubleExtra("sumMoney", 0),
+                        MyApplication.staffInfoBean.getShopid());
                 break;
             case R.id.back_btn:
                 onBackPressed();

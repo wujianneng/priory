@@ -26,17 +26,21 @@ import retrofit2.http.Url;
 
 public interface ApiService {
     @FormUrlEncoded
-    @POST("/api/rest-auth/login/")
+    @POST("/api/token")
     Observable<String> login(@FieldMap Map<String,Object> map);//登錄接口
+
+    @FormUrlEncoded
+    @POST("/api/token/refresh")
+    Observable<String> refreshToken(@FieldMap Map<String,Object> map);//刷新token接口
 
     @FormUrlEncoded
     @POST("/api/rest-auth/password/change")
     Observable<String> resetPassword(@FieldMap Map<String,Object> map);//修改密碼接口
 
-    @GET("/api/app/staff")
-    Observable<String> getStaffInfo(@Query("user__username") String username);//獲取員工信息
+    @GET("/api/user/profile")
+    Observable<String> getStaffInfo();//獲取員工信息
 
-    @GET("/api/data/goldprice")
+    @GET("/api/goldprice")
     Observable<String> getCurrentGoldPrice();//獲取當前金價
 
     @GET("/api/data/report")

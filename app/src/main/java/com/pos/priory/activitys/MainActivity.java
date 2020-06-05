@@ -88,8 +88,8 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getAppVersionFromServer();
-        getStoreList();
+//        getAppVersionFromServer();
+//        getStoreList();
     }
 
     private void getStoreList() {
@@ -105,7 +105,7 @@ public class MainActivity extends BaseActivity {
                             MyApplication.getContext().storeListJsonString = s;
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                if (jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getStore())) {
+                                if (jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getShop())) {
                                     MyApplication.getContext().storeName = jsonObject.getString("name");
                                     MyApplication.getContext().storeAddress = jsonObject.getString("address");
                                     MyApplication.getContext().storeTel = jsonObject.getString("tel");
@@ -440,7 +440,7 @@ public class MainActivity extends BaseActivity {
                 printView.findViewById(R.id.list_title_layout0).setVisibility(View.GONE);
                 printView.findViewById(R.id.list_title_layout1).setVisibility(View.VISIBLE);
             }
-            ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.staffInfoBean.getStore());
+            ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.staffInfoBean.getShop());
             ((TextView) printView.findViewById(R.id.date_tv)).setText(DateUtils.getDateOfToday());
             ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + size);
             ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(dayReportBean.getTurnovertotal() + "");

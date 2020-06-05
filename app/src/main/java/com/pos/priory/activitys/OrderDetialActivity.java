@@ -227,7 +227,7 @@ public class OrderDetialActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.right_img:
                 printViews(this, goodList, orderBean.getOrdernumber(), orderBean.getMember().getLast_name() + orderBean.getMember().getFirst_name(),
-                        dateTv.getText().toString(), orderBean.getTotalprice(), MyApplication.staffInfoBean.getStoreid());
+                        dateTv.getText().toString(), orderBean.getTotalprice(), MyApplication.staffInfoBean.getShopid());
                 break;
             case R.id.btn_change:
                 resetCheckedGoodList(false);

@@ -56,10 +56,6 @@ public class LoginActivity extends BaseActivity {
     MaterialButton btnCardview;
     @Bind(R.id.checkbox)
     CheckBox checkbox;
-    @Bind(R.id.location_tv)
-    TextView locationTv;
-    @Bind(R.id.select_location_btn)
-    LinearLayout selectLocationBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,56 +84,17 @@ public class LoginActivity extends BaseActivity {
         checkbox.setChecked(sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false));
         RetrofitManager.changeBaseUrl(sharedPreferences.getString(Constants.LAST_BASE_URL_KEY, Constants.BASE_URL));
         Log.e("test", "MyApplication.hostName:" + RetrofitManager.hostname);
-        locationTv.setText(RetrofitManager.hostname.equals(Constants.BASE_URL) ? "中国大陆" : "澳门");
     }
 
-    @OnClick({R.id.btn_cardview, R.id.select_location_btn})
+    @OnClick({R.id.btn_cardview})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_cardview:
                 login();
                 break;
-            case R.id.select_location_btn:
-                showSelectLocationPop(v);
-                break;
         }
     }
 
-    PopupMenu popupMenu;
-
-    private void showSelectLocationPop(View view) {
-        // 这里的view代表popupMenu需要依附的view
-        if (popupMenu == null) {
-            popupMenu = new PopupMenu(LoginActivity.this, view);
-            // 获取布局文件
-            popupMenu.getMenuInflater().inflate(R.menu.location_menu, popupMenu.getMenu());
-            popupMenu.show();
-            popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-                @Override
-                public void onDismiss(PopupMenu popupMenu1) {
-                    popupMenu = null;
-                }
-            });
-            // 通过上面这几行代码，就可以把控件显示出来了
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    // 控件每一个item的点击事件
-                    switch (item.getItemId()) {
-                        case R.id.menu0:
-                            locationTv.setText(item.getTitle());
-                            RetrofitManager.changeBaseUrl(Constants.BASE_URL);
-                            break;
-                        case R.id.menu1:
-                            locationTv.setText(item.getTitle());
-                            RetrofitManager.changeBaseUrl(Constants.MACAL_BASE_URL);
-                            break;
-                    }
-                    return true;
-                }
-            });
-        }
-    }
 
 
     CustomDialog customDialog;
@@ -166,8 +123,8 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public void accept(String s) throws Exception {
                             Log.e("test", "doOnNext:" + s);
-                            String token = new JSONObject(s).getString("key");
-                            MyApplication.authorization = "Token " + token;
+                            String token = new JSONObject(s).getString("token");
+                            MyApplication.authorization = "JWT " + token;
                             RetrofitManager.initHeader(Constants.Authorization_KEY, MyApplication.authorization);
                         }
                     })
@@ -184,19 +141,15 @@ public class LoginActivity extends BaseActivity {
                         @Override
                         public Observable<String> apply(String s) throws Exception {
                             return RetrofitManager.createString(ApiService.class).
-                                    getStaffInfo(edtUsename.getText().toString()).compose(LoginActivity.this.<String>bindToLifecycle());
+                                    getStaffInfo().compose(LoginActivity.this.<String>bindToLifecycle());
                         }
                     })
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<String>() {
                         @Override
                         public void accept(String s) throws Exception {
-                            List<StaffInfoBean> staffInfoBeanList = gson.fromJson(s,
-                                    new TypeToken<List<StaffInfoBean>>() {
-                                    }.getType());
-
-                            if (staffInfoBeanList != null && staffInfoBeanList.size() != 0) {
-                                StaffInfoBean staffInfoBean = staffInfoBeanList.get(0);
+                            StaffInfoBean staffInfoBean = gson.fromJson(s,StaffInfoBean.class);
+                            if (staffInfoBean != null) {
                                 MyApplication.staffInfoBean = staffInfoBean;
                                 if (staffInfoBean.getUser().equals(edtUsename.getText().toString())) {
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
