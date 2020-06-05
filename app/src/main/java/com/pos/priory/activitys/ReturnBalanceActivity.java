@@ -96,52 +96,52 @@ public class ReturnBalanceActivity extends BaseActivity {
 
     CustomDialog customDialog;
     private void doReturnGoods() {
-        if (customDialog == null)
-            customDialog = new CustomDialog(this, "正在结算..");
-        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialogInterface) {
-                customDialog = null;
-            }
-        });
-        customDialog.show();
-        Map<String, Object> paramMap = new HashMap<>();
-        if(checkedGoodListString != null){
-            List<OrderBean.ItemsBean> itemsBeanList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
-                    new TypeToken<List<OrderBean.ItemsBean>>() {
-                    }.getType());
-            List<Map<String, Object>> returnorderitems = new ArrayList<>();
-            for(OrderBean.ItemsBean itemsBean : itemsBeanList){
-                Map<String, Object> returnorderitemMap = new HashMap<>();
-                returnorderitemMap.put("orderitemid",itemsBean.getId());
-                returnorderitemMap.put("weight",itemsBean.getWeight());
-                returnorderitems.add(returnorderitemMap);
-            }
-            paramMap.put("returnorderitems",returnorderitems);
-        }
-        Log.e("test","params:" + gson.toJson(paramMap));
-        RetrofitManager.createString(ApiService.class)
-                .returnGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        customDialog.dismiss();
-                        EventBus.getDefault().post(OrderFragment.UPDATE_ORDER_LIST);
-                        EventBus.getDefault().post(MemberInfoActivity.UPDATE_ORDER_LIST);
-                        ColseActivityUtils.finishWholeFuntionActivitys();
-                        finish();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        customDialog.dismiss();
-                        Log.e("test", "throwable:" + throwable.getMessage());
-                        Toast.makeText(ReturnBalanceActivity.this, "结算失败", Toast.LENGTH_SHORT).show();
-                    }
-                });
+//        if (customDialog == null)
+//            customDialog = new CustomDialog(this, "正在结算..");
+//        customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialogInterface) {
+//                customDialog = null;
+//            }
+//        });
+//        customDialog.show();
+//        Map<String, Object> paramMap = new HashMap<>();
+//        if(checkedGoodListString != null){
+//            List<OrderBean.ItemsBean> itemsBeanList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
+//                    new TypeToken<List<OrderBean.ItemsBean>>() {
+//                    }.getType());
+//            List<Map<String, Object>> returnorderitems = new ArrayList<>();
+//            for(OrderBean.ItemsBean itemsBean : itemsBeanList){
+//                Map<String, Object> returnorderitemMap = new HashMap<>();
+//                returnorderitemMap.put("orderitemid",itemsBean.getId());
+//                returnorderitemMap.put("weight",itemsBean.getWeight());
+//                returnorderitems.add(returnorderitemMap);
+//            }
+//            paramMap.put("returnorderitems",returnorderitems);
+//        }
+//        Log.e("test","params:" + gson.toJson(paramMap));
+//        RetrofitManager.createString(ApiService.class)
+//                .returnGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
+//                .compose(this.<String>bindToLifecycle())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String s) throws Exception {
+//                        customDialog.dismiss();
+//                        EventBus.getDefault().post(OrderFragment.UPDATE_ORDER_LIST);
+//                        EventBus.getDefault().post(MemberInfoActivity.UPDATE_ORDER_LIST);
+//                        ColseActivityUtils.finishWholeFuntionActivitys();
+//                        finish();
+//                    }
+//                }, new Consumer<Throwable>() {
+//                    @Override
+//                    public void accept(Throwable throwable) throws Exception {
+//                        customDialog.dismiss();
+//                        Log.e("test", "throwable:" + throwable.getMessage());
+//                        Toast.makeText(ReturnBalanceActivity.this, "结算失败", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
     }
 
 

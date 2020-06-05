@@ -4,376 +4,338 @@
     android:layout_height="630dp"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:baselineAligned="false"
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/print_logo" />
+
+    <TextView
+        android:id="@+id/store_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="澳門安娜貝拉珠寶有限公司(關閘店)"
+        android:textColor="#333"
+        android:textSize="7sp" />
+
+    <TextView
+        android:id="@+id/address_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="澳門多祿長街(白馬行)20-A號雅明閣地下C座"
+        android:textColor="#333"
+        android:textSize="7sp" />
+
+    <TextView
+        android:id="@+id/tel_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="+853 2892 0767"
+        android:textColor="#333"
+        android:textSize="7sp" />
+
+    <TextView
+        android:id="@+id/order_number_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="325dp"
+        android:text="收據編號   S181123012"
+        android:textColor="#333"
+        android:textSize="6sp" />
+
+    <TextView
+        android:id="@+id/date_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="325dp"
+        android:text="購買日期   2018-10-10 10:10:10"
+        android:textColor="#333"
+        android:textSize="6sp" />
+
+
+    <FrameLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="貨品（名稱/條碼）"
+            android:gravity="center_vertical"
+            android:textColor="#333"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|right"
+            android:text="數量"
+            android:layout_gravity="right"
+            android:layout_marginRight="180dp"
+            android:textColor="#333"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|right"
+            android:text="原價"
+            android:layout_gravity="right"
+            android:layout_marginRight="100dp"
+            android:textColor="#333"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|right"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right"
+            android:text="售價"
+            android:textColor="#333"
+            android:textSize="10sp" />
+    </FrameLayout>
+
+    <View
+        android:id="@+id/line0"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="#333" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/good_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_weight="1"></android.support.v7.widget.RecyclerView>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <ImageView
-                android:src="@drawable/print_logo"
-                android:layout_width="150dp"
-                android:layout_marginLeft="25dp"
-                android:gravity="center_horizontal"
-                android:layout_height="wrap_content" />
-
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:text="Invoice No."
-                android:textColor="#333"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/order_number_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:text="收據編號   S181123012"
-                android:textColor="#333"
-                android:textSize="8sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="8dp"
-                android:text="Name"
-                android:textColor="#333"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/buyer_name_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:text="客戶姓名   羅小姐"
-                android:textColor="#333"
-                android:textSize="8sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:layout_marginTop="8dp"
-                android:text="Date"
-                android:textColor="#333"
-                android:textSize="10sp" />
-
-            <TextView
-                android:id="@+id/date_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="25dp"
-                android:text="購買日期   2018-10-10 10:10:10"
-                android:textColor="#333"
-                android:textSize="8sp" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_marginRight="20dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="40dp"
-                    android:text="澳門安娜貝拉珠寶有限公司"
-                    android:textColor="#333"
-                    android:textSize="8sp" />
-
-                <TextView
-                    android:id="@+id/store_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:text="白馬行店"
-                    android:textColor="#333"
-                    android:textSize="8sp" />
-
-                <TextView
-                    android:id="@+id/address_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:text="澳門多祿長街(白馬行)20-A號雅明閣地下C座"
-                    android:textColor="#333"
-                    android:textSize="8sp" />
-
-                <TextView
-                    android:id="@+id/tel_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="15dp"
-                    android:text="+853 2892 0767"
-                    android:textColor="#333"
-                    android:textSize="8sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_marginLeft="17dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="頁數"
-                            android:textColor="#333"
-                            android:textSize="10sp" />
-
-                        <TextView
-                            android:id="@+id/page_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="1/3"
-                            android:textColor="#333"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="總數量(件)"
-                            android:textColor="#333"
-                            android:textSize="10sp" />
-
-                        <TextView
-                            android:id="@+id/good_size_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="18"
-                            android:textColor="#333"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="總金額"
-                            android:textColor="#333"
-                            android:textSize="10sp" />
-
-                        <TextView
-                            android:id="@+id/sum_money_tv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="1000"
-                            android:textColor="#333"
-                            android:textSize="10sp" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <View
+        android:id="@+id/line1"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_weight="3"
-        android:orientation="vertical">
+        android:layout_height="0.5dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="5dp"
+        android:background="#333" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/sum_data_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/text0"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp">
+            android:text="我確認我對收到的相關商品/服務感到滿意。"
+            android:textColor="#333"
+            android:textSize="7sp" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="貨品（名稱/條碼）"
-                android:textColor="#333"
-                android:textSize="10sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="數量"
-                android:textColor="#333"
-                android:textSize="10sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="原價"
-                android:textColor="#333"
-                android:textSize="10sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="折扣"
-                android:textColor="#333"
-                android:textSize="10sp" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="售價"
-                android:textColor="#333"
-                android:textSize="10sp" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+        <TextView
+            android:id="@+id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text0"
             android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:text="客戶註意事項"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:textSize="8sp" />
+
+        <TextView
+            android:id="@+id/text2"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text1"
+            android:layout_marginLeft="20dp"
+            android:text="1.黃金貨品可憑公司收據售回本公司,回售計算方式:重量 x 購入金價 x 0.95;"
+            android:textColor="#333"
+            android:textSize="6sp" />
+
+        <TextView
+            android:id="@+id/text3"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text2"
+            android:layout_marginLeft="20dp"
+            android:text="2.黃金貨品可憑公司收據可享有8折換貨服務(不包括手繩製作,水晶,k金和玉器類產品);"
+            android:textColor="#333"
+            android:textSize="6sp" />
+
+        <TextView
+            android:id="@+id/text4"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text3"
+            android:layout_marginLeft="20dp"
+            android:text="3.更換皮繩或編制手繩本公司收取材料費手工費$50;"
+            android:textColor="#333"
+            android:textSize="6sp" />
+
+        <TextView
+            android:id="@+id/text5"
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text4"
+            android:layout_marginLeft="20dp"
+            android:text="*本公司保留最終解釋權"
+            android:textColor="#333"
+            android:textSize="6sp" />
+
+
+        <ImageView
+            android:id="@+id/img_barcode"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/text5"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/barcode" />
+
+        <TextView
+            android:id="@+id/tip_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_barcode"
+            android:layout_marginLeft="20dp"
+            android:text="保養小Tips"
+            android:textColor="#333"
+            android:textSize="6sp" />
+
+
+        <TextView
+            android:id="@+id/count_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="100dp"
+            android:gravity="right"
+            android:textStyle="bold"
+            android:text="合計(12件)"
+            android:textColor="#333"
+            android:textSize="7sp" />
+
+
+        <TextView
+            android:id="@+id/amount_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:background="#333" />
+            android:gravity="right"
+            android:text="MOP$ 13,484.0"
+            android:textColor="#333"
+            android:textSize="7sp" />
+
+        <TextView
+            android:id="@+id/discount_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/count_tv"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="100dp"
+            android:gravity="right"
+            android:text="優惠"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:textSize="7sp" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/good_list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"></android.support.v7.widget.RecyclerView>
-
-
-
-        <RelativeLayout
-            android:layout_width="match_parent"
+            android:id="@+id/discount_list"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+            android:layout_below="@+id/discount_tv"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp" />
 
-            <TextView
-                android:id="@+id/text0"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="客戶註意事項"
-                android:textColor="#333"
-                android:textSize="10sp" />
+        <TextView
+            android:id="@+id/pay_type_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/discount_list"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="100dp"
+            android:gravity="right"
+            android:text="付款方法"
+            android:textStyle="bold"
+            android:textColor="#333"
+            android:textSize="7sp" />
 
-            <TextView
-                android:id="@+id/text1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text0"
-                android:layout_marginLeft="20dp"
-                android:text="1.黃金貨品可憑公司收據售回本公司,回售計算方式:重量 x 購入金價 x 0.95;"
-                android:textColor="#333"
-                android:textSize="8sp" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/pay_type_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pay_type_tv"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp" />
 
-            <TextView
-                android:id="@+id/text2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text1"
-                android:layout_marginLeft="20dp"
-                android:text="2.黃金貨品可憑公司收據可享有8折換貨服務(不包括手繩製作,水晶,k金和玉器類產品);"
-                android:textColor="#333"
-                android:textSize="8sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pay_type_list"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="100dp"
+            android:text="合計的付款"
+            android:textColor="#333"
+            android:textSize="7sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/text3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text2"
-                android:layout_marginLeft="20dp"
-                android:text="3.更換皮繩或編制手繩本公司收取材料費手工費$50;"
-                android:textColor="#333"
-                android:textSize="8sp" />
+        <TextView
+            android:id="@+id/sum_pay_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pay_type_list"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
+            android:text="$ 13,480.0"
+            android:textColor="#333"
+            android:textSize="6sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text3"
-                android:layout_marginLeft="20dp"
-                android:text="*本公司保留最終解釋權"
-                android:textColor="#333"
-                android:textSize="8sp" />
+    </RelativeLayout>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp">
 
-            <ImageView
-                android:id="@+id/img_barcode"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:src="@drawable/barcode" />
+        <TextView
+            android:id="@+id/page_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="1/3"
+            android:textColor="#333"
+            android:textSize="10sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/img_barcode"
-                android:layout_marginRight="25dp"
-                android:text="保養小Tips"
-                android:textColor="#333"
-                android:textSize="8sp" />
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="50dp"
+            android:text="www.annabala.com"
+            android:textColor="#333"
+            android:textSize="10sp" />
+    </FrameLayout>
 </LinearLayout>

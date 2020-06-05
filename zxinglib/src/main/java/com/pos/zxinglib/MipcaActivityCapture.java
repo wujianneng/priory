@@ -290,21 +290,16 @@ public class MipcaActivityCapture extends AppCompatActivity implements
                 Toast.makeText(MipcaActivityCapture.this, "Scan failed!",
                         Toast.LENGTH_SHORT).show();
             }
-            if (!canSeriesScan) {
-                Intent intent = new Intent();
-                intent.putExtra("resultString", resultString);
-                intent.putExtra("resultBitmapPath", barcodePath);
-                intent.putExtra("time", currentTime);
-                intent.putExtra("meta", meta);
-                intent.putExtra("format", format);
-                intent.putExtra("type", type);
-                intent.putExtra("tag", 0);
-                setResult(1, intent);
-                MipcaActivityCapture.this.finish();
-            } else {
-                EventBus.getDefault().post(new InventryScanBean(resultString));
-                MipcaActivityCapture.this.finish();
-            }
+            Intent intent = new Intent();
+            intent.putExtra("resultString", resultString);
+            intent.putExtra("resultBitmapPath", barcodePath);
+            intent.putExtra("time", currentTime);
+            intent.putExtra("meta", meta);
+            intent.putExtra("format", format);
+            intent.putExtra("type", type);
+            intent.putExtra("tag", 0);
+            setResult(1, intent);
+            MipcaActivityCapture.this.finish();
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

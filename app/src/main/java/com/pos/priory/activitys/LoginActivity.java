@@ -121,7 +121,7 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onFailed(String erromsg) {
                     customDialog.dismiss();
-                    Log.e("test", "请与总部相关人员联络及查询1");
+                    Log.e("test", "请与总部相关人员联络及查询1:" + erromsg);
                     Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
                 }
             }, RetrofitManager.createString(ApiService.class).getStaffInfo(), new ModelListener() {
@@ -149,11 +149,6 @@ public class LoginActivity extends BaseActivity {
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         }
-                    } else {
-                        if (customDialog != null)
-                            customDialog.dismiss();
-                        Log.e("test", "请与总部相关人员联络及查询2");
-                        Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -161,7 +156,7 @@ public class LoginActivity extends BaseActivity {
                 public void onFailed(String erromsg) {
                     if (customDialog != null)
                         customDialog.dismiss();
-                    Log.e("test", "请与总部相关人员联络及查询3");
+                    Log.e("test", "请与总部相关人员联络及查询3:" + erromsg);
                     Toast.makeText(LoginActivity.this, "请与总部相关人员联络及查询！", Toast.LENGTH_SHORT).show();
                 }
             });

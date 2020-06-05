@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:layout_marginBottom="7dp">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
         android:orientation="vertical">
 
         <TextView
@@ -18,9 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:text="货品名称"
-            android:layout_marginBottom="5dp"
             android:textColor="#333"
-            android:textSize="10sp" />
+            android:textSize="8sp" />
 
         <TextView
             android:id="@+id/good_code_tv"
@@ -28,48 +25,41 @@
             android:layout_height="wrap_content"
             android:text="343454554"
             android:textColor="#333"
-            android:textSize="10sp" />
+            android:textSize="7sp" />
     </LinearLayout>
 
 
     <TextView
         android:id="@+id/good_count_tv"
-        android:layout_width="0dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="数量"
+        android:gravity="center_vertical|right"
+        android:text="數量"
+        android:layout_gravity="right"
+        android:layout_marginRight="160dp"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="8sp" />
 
     <TextView
         android:id="@+id/reatial_price_tv"
-        android:layout_width="0dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
+        android:gravity="center_vertical|right"
+        android:layout_gravity="right"
+        android:layout_marginRight="80dp"
         android:text="原价"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="8sp" />
 
-    <TextView
-        android:id="@+id/discount_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="折扣"
-        android:textColor="#333"
-        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/price_tv"
-        android:layout_width="0dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="center"
+        android:gravity="center_vertical|right"
+        android:layout_gravity="right"
         android:text="售价"
         android:textColor="#333"
-        android:textSize="10sp" />
+        android:textSize="8sp" />
 
-</LinearLayout>
+</FrameLayout>

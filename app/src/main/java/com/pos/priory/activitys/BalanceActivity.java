@@ -252,17 +252,17 @@ public class BalanceActivity extends BaseActivity {
 //            if (radioBtnIntegral.isChecked())
 //                paramMap.put("reward", hasPayedIntegralMoney);
             if (checkedGoodListString != null) {
-                List<OrderBean.ItemsBean> itemsBeanList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
-                        new TypeToken<List<OrderBean.ItemsBean>>() {
-                        }.getType());
-                List<Map<String, Object>> returnorderitems = new ArrayList<>();
-                for (OrderBean.ItemsBean itemsBean : itemsBeanList) {
-                    Map<String, Object> returnorderitemMap = new HashMap<>();
-                    returnorderitemMap.put("orderitemid", itemsBean.getId());
-                    returnorderitemMap.put("weight", itemsBean.getWeight());
-                    returnorderitems.add(returnorderitemMap);
-                }
-                paramMap.put("returnorderitems", returnorderitems);
+//                List<OrderBean.ItemsBean> itemsBeanList = gson.fromJson(getIntent().getStringExtra("checkedGoodList"),
+//                        new TypeToken<List<OrderBean.ItemsBean>>() {
+//                        }.getType());
+//                List<Map<String, Object>> returnorderitems = new ArrayList<>();
+//                for (OrderBean.ItemsBean itemsBean : itemsBeanList) {
+//                    Map<String, Object> returnorderitemMap = new HashMap<>();
+//                    returnorderitemMap.put("orderitemid", itemsBean.getId());
+//                    returnorderitemMap.put("weight", itemsBean.getWeight());
+//                    returnorderitems.add(returnorderitemMap);
+//                }
+//                paramMap.put("returnorderitems", returnorderitems);
             }
             Log.e("test", "paramMap:" + gson.toJson(paramMap));
             RetrofitManager.createString(ApiService.class)

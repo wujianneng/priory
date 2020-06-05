@@ -15,19 +15,19 @@ import java.util.List;
  * Created by Lenovo on 2019/1/8.
  */
 
-public class OrderDetailPrintGoodsAdapter extends BaseQuickAdapter<OrderBean.ItemsBean,BaseViewHolder> {
+public class OrderDetailPrintGoodsAdapter extends BaseQuickAdapter<OrderBean.ResultsBean,BaseViewHolder> {
 
-    public OrderDetailPrintGoodsAdapter(@LayoutRes int layoutResId, @Nullable List<OrderBean.ItemsBean> data) {
+    public OrderDetailPrintGoodsAdapter(@LayoutRes int layoutResId, @Nullable List<OrderBean.ResultsBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, OrderBean.ItemsBean item) {
-        helper.setText(R.id.good_code_tv, item.getStock().getProduct().getProductcode() + item.getStock().getStockno());
-        helper.setText(R.id.good_name_tv,item.getStock().getProduct().getName());
-        helper.setText(R.id.good_count_tv, "1");
-        helper.setText(R.id.discount_tv, item.getDiscount());
-        helper.setText(R.id.reatial_price_tv,item.getOriginprice() + "");
-        helper.setText(R.id.price_tv,item.getPrice() + "");
+    protected void convert(BaseViewHolder helper, OrderBean.ResultsBean item) {
+//        helper.setText(R.id.good_code_tv, item.getStock().getProduct().getProductcode() + item.getStock().getStockno());
+//        helper.setText(R.id.good_name_tv,item.getStock().getProduct().getName());
+//        helper.setText(R.id.good_count_tv, "1");
+//        helper.setText(R.id.discount_tv, item.getDiscount());
+//        helper.setText(R.id.reatial_price_tv,item.getOriginprice() + "");
+//        helper.setText(R.id.price_tv,item.getPrice() + "");
     }
 }

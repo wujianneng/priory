@@ -15,16 +15,15 @@ import java.util.List;
  * Created by Lenovo on 2018/12/29.
  */
 
-public class InventoryDetialAdapter extends BaseQuickAdapter<InventoryDetialBean, BaseViewHolder> {
+public class InventoryDetialAdapter extends BaseQuickAdapter<InventoryDetialBean.ItemBean, BaseViewHolder> {
 
-    public InventoryDetialAdapter(@LayoutRes int layoutResId, @Nullable List<InventoryDetialBean> data) {
+    public InventoryDetialAdapter(@LayoutRes int layoutResId, @Nullable List<InventoryDetialBean.ItemBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, InventoryDetialBean item) {
-         helper.setText(R.id.name_tv,item.getProductname());
-         helper.setText(R.id.code_tv,item.getStockno());
-         helper.setText(R.id.weight_tv,item.getStockweight() + "g");
+    protected void convert(BaseViewHolder helper, InventoryDetialBean.ItemBean item) {
+       helper.setText(R.id.name_tv,item.getName());
+       helper.setText(R.id.code_tv,item.getCode());
     }
 }

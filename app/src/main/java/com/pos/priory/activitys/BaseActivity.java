@@ -106,7 +106,7 @@ public abstract class BaseActivity extends RxAppCompatActivity {
         for (Fragment fragment : fragments) {
             if (fragment != null) fragmentTransaction.hide(fragment);
         }
-        fragmentTransaction.commit();
+        fragmentTransaction.commitNowAllowingStateLoss();
         return sf;
     }
 

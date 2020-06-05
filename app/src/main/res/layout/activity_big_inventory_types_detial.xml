@@ -30,98 +30,14 @@
         android:textSize="15sp"
         android:textStyle="bold" />
 
-    <FrameLayout
-        android:id="@+id/gold_layout"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="170dp"
-        android:layout_marginRight="16dp">
-
-        <TextView
-            android:id="@+id/gold_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="黄金（100/200）"
-            android:textColor="@color/blue_text"
-            android:textSize="15sp"
-            android:textStyle="italic" />
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/gold_btn"
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:layout_marginRight="2dp"
-            android:layout_gravity="center_vertical|right"
-            android:backgroundTint="#ffffff"
-            android:text="详情"
-            android:textColor="@color/drag_btn_green"
-            app:cornerRadius="3dp" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/yushi_layout"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="250dp"
-        android:layout_marginRight="16dp">
-
-        <TextView
-            android:id="@+id/yushi_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="玉石（100/200）"
-            android:textColor="@color/blue_text"
-            android:textSize="15sp"
-            android:textStyle="italic" />
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/yshi_btn"
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:layout_marginRight="2dp"
-            android:layout_gravity="center_vertical|right"
-            android:backgroundTint="#ffffff"
-            android:text="详情"
-            android:textColor="@color/drag_btn_green"
-            app:cornerRadius="3dp" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/jingshi_layout"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="330dp"
-        android:layout_marginRight="16dp">
-
-        <TextView
-            android:id="@+id/jingshi_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="晶石（100/200）"
-            android:textColor="@color/blue_text"
-            android:textSize="15sp"
-            android:textStyle="italic" />
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/jingshi_btn"
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:layout_marginRight="2dp"
-            android:layout_gravity="center_vertical|right"
-            android:backgroundTint="#ffffff"
-            android:text="详情"
-            android:textColor="@color/drag_btn_green"
-            app:cornerRadius="3dp" />
-
-    </FrameLayout>
+        android:layout_marginRight="16dp"
+        />
 
     <android.support.design.button.MaterialButton
         android:id="@+id/finish_btn"

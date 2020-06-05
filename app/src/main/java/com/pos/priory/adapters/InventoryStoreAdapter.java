@@ -18,22 +18,17 @@ import java.util.List;
  * Created by Lenovo on 2018/12/29.
  */
 
-public class InventoryStoreAdapter extends BaseQuickAdapter<InventoryBean, BaseViewHolder> {
+public class InventoryStoreAdapter extends BaseQuickAdapter<InventoryBean.ResultsBean, BaseViewHolder> {
     Context context;
 
-    public InventoryStoreAdapter(Context context,@LayoutRes int layoutResId, @Nullable List<InventoryBean> data) {
+    public InventoryStoreAdapter(Context context,@LayoutRes int layoutResId, @Nullable List<InventoryBean.ResultsBean> data) {
         super(layoutResId, data);
         this.context = context;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, InventoryBean item) {
-        helper.setText(R.id.date_tv, DateUtils.covertIso8601ToDate(item.getCreated()));
-        helper.setText(R.id.status_tv, item.getStatus());
-        if(item.getStatus().equals("未完成")){
-            ((CardView)helper.getView(R.id.status_btn)).setCardBackgroundColor(Color.parseColor("#FF8D8D"));
-        }else {
-            ((CardView)helper.getView(R.id.status_btn)).setCardBackgroundColor(Color.parseColor("#71C671"));
-        }
+    protected void convert(BaseViewHolder helper, InventoryBean.ResultsBean item) {
+        helper.setText(R.id.date_tv, item.getCreated());
+        helper.setText(R.id.count_tv,"(" + item.getCount() + ")");
     }
 }

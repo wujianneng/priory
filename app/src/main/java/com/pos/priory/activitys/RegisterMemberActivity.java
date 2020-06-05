@@ -142,10 +142,10 @@ public class RegisterMemberActivity extends BaseActivity {
         });
         customDialog.show();
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("last_name", edtFirstName.getText().toString());
-        paramMap.put("first_name", edtName.getText().toString());
+        paramMap.put("lastname", edtFirstName.getText().toString());
+        paramMap.put("firstname", edtName.getText().toString());
         paramMap.put("mobile", edtPhone.getText().toString());
-        paramMap.put("sex", btnSex.getText().toString());
+        paramMap.put("gender", btnSex.getText().toString());
         RetrofitManager.createString(ApiService.class)
                 .registerMember(paramMap)
                 .compose(this.<String>bindToLifecycle())

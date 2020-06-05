@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
 import com.pos.priory.beans.GoodBean;
+import com.pos.priory.beans.WarehouseBean;
 import com.pos.priory.utils.Constants;
 
 import java.util.List;
@@ -19,17 +20,17 @@ import java.util.List;
  * Created by Lenovo on 2018/12/29.
  */
 
-public class GoodDetialAdapter extends BaseQuickAdapter<GoodBean, BaseViewHolder> {
+public class GoodDetialAdapter extends BaseQuickAdapter<WarehouseBean.ResultsBean.ItemBean, BaseViewHolder> {
     Context context;
 
 
-    public GoodDetialAdapter(Context context,@LayoutRes int layoutResId, @Nullable List<GoodBean> data) {
+    public GoodDetialAdapter(Context context, @LayoutRes int layoutResId, @Nullable List<WarehouseBean.ResultsBean.ItemBean> data) {
         super(layoutResId, data);
         this.context = context;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, GoodBean item) {
+    protected void convert(BaseViewHolder helper, WarehouseBean.ResultsBean.ItemBean item) {
         RadioButton radioButton = helper.getView(R.id.radio);
         radioButton.setOnClickListener(view -> {
             if (item.isSelected())
@@ -43,7 +44,7 @@ public class GoodDetialAdapter extends BaseQuickAdapter<GoodBean, BaseViewHolder
         } else {
             radioButton.setChecked(false);
         }
-        helper.setText(R.id.code_tv,item.getStockno());
-        helper.setText(R.id.weight_tv,item.getWeight() + "g");
+        helper.setText(R.id.code_tv, item.getProductcode() + "");
+        helper.setText(R.id.weight_tv, item.getSubtotal().getWeight() + "g");
     }
 }

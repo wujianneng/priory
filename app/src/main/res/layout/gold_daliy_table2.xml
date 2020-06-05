@@ -12,153 +12,57 @@
         android:layout_marginRight="20dp"
         android:orientation="horizontal">
 
-        <View
-            android:layout_width="1dp"
+        <ImageView
+            android:layout_width="150dp"
             android:layout_height="match_parent"
-            android:background="#333333" />
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/print_logo" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="5"
+            android:layout_marginRight="60dp"
             android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#333333" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/store_tv"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#cccccc"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:paddingTop="5dp"
+                android:paddingBottom="3dp"
+                android:text="關閘店（MOP）"
+                android:textStyle="bold"
+                android:textColor="#333"
+                android:textSize="10sp" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="門店日結表" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:gravity="center"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="日期" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="版" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#333333" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/date_tv"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:paddingBottom="3dp"
+                android:text="日結日期：2020-02-29"
+                android:textColor="#333"
+                android:textSize="10sp" />
 
-                <TextView
-                    android:id="@+id/store_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="白馬行店" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:id="@+id/date_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:text="2019" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:id="@+id/page_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:text="1/2" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#333333" />
-
+            <TextView
+                android:id="@+id/time_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:text="打印時間：2020-02-29 13:11:48"
+                android:textColor="#333"
+                android:textSize="10sp" />
         </LinearLayout>
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#333333" />
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="4">
-
-            <ImageView
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_horizontal|right"
-                android:src="@drawable/print_logo" />
-        </FrameLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -195,29 +99,13 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="總銷售額" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="現金" />
+                    android:text="營業額"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -230,10 +118,10 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="現金券" />
+                    android:text="現金"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -246,10 +134,10 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="信用卡" />
+                    android:text="信用卡"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -262,10 +150,10 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="支付寶" />
+                    android:text="支付寶"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -278,10 +166,10 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="微信支付" />
+                    android:text="微信支付"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -294,10 +182,10 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="退還" />
+                    android:text="現金券"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -310,10 +198,42 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="" />
+                    android:text="應收"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#333333" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="換款"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#333333" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="回收"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
             </LinearLayout>
 
             <View
@@ -324,20 +244,20 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="9"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="9">
 
                 <TextView
                     android:id="@+id/sum_pay_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="323434" />
+                    android:text="323434"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -350,28 +270,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="23334" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:id="@+id/coupon_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
+                    android:text="23334"
                     android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="0" />
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -385,10 +288,10 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="434343" />
+                    android:text="434343"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -402,10 +305,10 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="8" />
+                    android:text="8"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -419,10 +322,10 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
                     android:paddingBottom="5dp"
-                    android:text="23" />
+                    android:text="23"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -430,17 +333,33 @@
                     android:background="#333333" />
 
                 <TextView
-                    android:id="@+id/return_mount_tv"
+                    android:id="@+id/coupon_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="0"
                     android:textColor="#333"
-                    android:textSize="10sp"
+                    android:textSize="10sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#333333" />
+
+                <TextView
+                    android:id="@+id/yingshou_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     android:text="1500"
-                    android:paddingBottom="5dp"
-                    />
+                    android:textColor="#333"
+                    android:textSize="10sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -448,15 +367,33 @@
                     android:background="#333333" />
 
                 <TextView
+                    android:id="@+id/exchange_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
+                    android:text="999"
                     android:paddingBottom="5dp"
-                    />
+                    android:textColor="#333"
+                    android:textSize="10sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#333333" />
+
+                <TextView
+                    android:id="@+id/return_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="1000"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
             </LinearLayout>
 
             <View
@@ -473,568 +410,37 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:weightSum="9"
-        android:orientation="horizontal">
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#333333" />
-
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="8"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#333333" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#cccccc"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="黃金" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="晶石" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="手繩" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#333333" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#cccccc"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="銷售額" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="數量" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="重量" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="銷售額" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="數量" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="銷售額" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="數量" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#333333" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/gold_amount_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="323434" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:id="@+id/gold_count_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="23334" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:id="@+id/gold_weight_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="0" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:id="@+id/spar_amount_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="434343" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:id="@+id/spar_count_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="8" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:id="@+id/hand_amount_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="23" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:id="@+id/hand_count_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:textColor="#333"
-                    android:textSize="10sp"
-                    android:paddingBottom="5dp"
-                    android:text="23" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#333333" />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="#333333" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/list_title_layout0"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:background="#cccccc"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="No." />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.8"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="編號" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2.2"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="名稱" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="數量" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="類別" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="金重" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.9"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="原價" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="折扣" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="售價" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/list_title_layout1"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:background="#cccccc"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="No." />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.8"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="編號" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2.2"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="名稱" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="數量" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="類別" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.8"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="金重" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.9"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="售價" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="折扣" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:paddingTop="5dp"
-            android:textColor="#333"
-            android:textSize="10sp"
-            android:paddingBottom="5dp"
-            android:text="退換價" />
-    </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/good_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="5dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"></android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+
+    <FrameLayout
+        android:layout_marginBottom="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/page_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1/2"
+            android:layout_gravity="center"
+            android:textColor="#333"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="www.annabala.com"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="40dp"
+            android:textColor="#333"
+            android:textSize="10sp" />
+    </FrameLayout>
 </LinearLayout>

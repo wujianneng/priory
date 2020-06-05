@@ -1,15 +1,16 @@
 package com.pos.priory.activitys;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.button.MaterialButton;
 import android.support.design.widget.TabLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -17,25 +18,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.ToastUtils;
-import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.adapters.InventoryDetialAdapter;
 import com.pos.priory.beans.InventoryDetialBean;
 import com.pos.priory.networks.ApiService;
-import com.pos.priory.utils.LogicUtils;
-import com.pos.zxinglib.InventryScanBean;
 import com.pos.zxinglib.MipcaActivityCapture;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +36,9 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -60,10 +55,10 @@ public class BigInventoryDetialActivity extends BaseActivity {
     @Bind(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
     InventoryDetialAdapter adapter;
-    List<InventoryDetialBean> dataList = new ArrayList<>();
+    List<InventoryDetialBean.ItemBean> dataList = new ArrayList<>();
     int inventoryId = 0;
-    String status = "未完成";
-    int page = 1;
+    int categoryId = 0;
+    boolean status = false;
     @Bind(R.id.search_img)
     ImageView searchImg;
     @Bind(R.id.edt_search)
@@ -75,6 +70,8 @@ public class BigInventoryDetialActivity extends BaseActivity {
     @Bind(R.id.tab_layout)
     TabLayout tabLayout;
 
+    boolean counted = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,22 +82,16 @@ public class BigInventoryDetialActivity extends BaseActivity {
 
     protected void initViews() {
         inventoryId = getIntent().getIntExtra("inventoryId", 0);
-        status = getIntent().getStringExtra("status");
-        scanBtn.setVisibility(status.equals("未完成") ? View.VISIBLE : View.GONE);
+        status = getIntent().getBooleanExtra("status", false);
+        categoryId = getIntent().getIntExtra("categoryId", 0);
+        scanBtn.setVisibility(!status ? View.VISIBLE : View.GONE);
         titleTv.setText("盘点分类详情");
         scanBtn.setImageResource(R.drawable.scan);
-        refreshLayout.setEnableLoadMore(true);
+        refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                page = 1;
-                refreshRecyclerView(true);
-            }
-        });
-        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                refreshRecyclerView(false);
+                refreshRecyclerView();
             }
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(this));
@@ -110,15 +101,30 @@ public class BigInventoryDetialActivity extends BaseActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter);
 
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                refreshRecyclerView();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         tabLayout.addTab(tabLayout.newTab().setText("未盤點"));
         tabLayout.addTab(tabLayout.newTab().setText("已盤點"));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if (tab.getText().toString().equals("未盤點"))
-                    refreshRecyclerView(true);
-                else
-                    refreshRecyclerView(true);
+                counted = tab.getPosition() == 1;
+                refreshRecyclerView();
             }
 
             @Override
@@ -134,52 +140,31 @@ public class BigInventoryDetialActivity extends BaseActivity {
         refreshLayout.autoRefresh();
     }
 
-    private void refreshRecyclerView(final boolean isRefresh) {
-        RetrofitManager.createString(ApiService.class)
-                .getBigInventoryById(inventoryId, page)
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        JSONObject jsonObject = new JSONObject(s);
-                        List<InventoryDetialBean> inventoryBean = gson.fromJson(jsonObject.getJSONArray("results").toString(), new TypeToken<List<InventoryDetialBean>>() {
-                        }.getType());
-                        if (isRefresh) {
-                            dataList.clear();
-                        }
-                        dataList.addAll(inventoryBean);
-                        adapter.notifyDataSetChanged();
-                        refreshLayout.finishRefresh();
-                        refreshLayout.finishLoadMore();
-                        double sumweight = 0;
-                        for (InventoryDetialBean inventoryDetialBean : dataList) {
-                            sumweight += inventoryDetialBean.getStockweight();
-                        }
-                        page++;
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        refreshLayout.finishRefresh();
-                        refreshLayout.finishLoadMore();
-                    }
-                });
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onScanedCode(InventryScanBean inventryScanBean) {
-        Log.e("result", "result:" + inventryScanBean.getScanResult());
-        doInventry(inventryScanBean.getScanResult());
-        final ProgressDialog customDialog = ProgressDialog.show(this, "", "正在准备下一次扫码", true);
-        customDialog.show();
-        handler.postDelayed(new Runnable() {
+    Disposable disposable;
+    private void refreshRecyclerView() {
+        if(disposable != null && !disposable.isDisposed()) disposable.dispose();
+        Observable<InventoryDetialBean> observable;
+        if (edtSearch.getText().toString().isEmpty())
+            observable = RetrofitManager.createGson(ApiService.class)
+                    .getBigInventoryDetail(inventoryId, categoryId, counted);
+        else
+            observable = RetrofitManager.createGson(ApiService.class)
+                    .getBigInventoryDetailWithSearch(inventoryId, categoryId, counted,edtSearch.getText().toString());
+        disposable = RetrofitManager.excuteGson(this.<String>bindToLifecycle(), observable, new ModelGsonListener<InventoryDetialBean>() {
             @Override
-            public void run() {
-                customDialog.dismiss();
-                onClickScan();
+            public void onSuccess(InventoryDetialBean result) throws Exception {
+                dataList.clear();
+                dataList.addAll(result.getItem());
+                adapter.notifyDataSetChanged();
+                refreshLayout.finishRefresh();
             }
-        }, 1500);
+
+            @Override
+            public void onFailed(String erromsg) {
+                refreshLayout.finishRefresh();
+            }
+        });
+
     }
 
     @OnClick({R.id.back_btn})
@@ -201,37 +186,59 @@ public class BigInventoryDetialActivity extends BaseActivity {
         switch (resultCode) {
             case 1:
                 if (data != null) {
-//                    String str = data.getStringExtra("resultString");
-//                    Log.e("result", "result:" + str);
-//                    for (InventoryBean.InventoryitemBean bean : dataList) {
-//                        if (bean.getStockno().equals(str)) {
-//                            doInventry(bean.getId());
-//                        }
-//                    }
+                    String str = data.getStringExtra("resultString");
+                    for (InventoryDetialBean.ItemBean bean : dataList) {
+                        Log.e("result", "str:" + str + " code:" + bean.getCode());
+                        if (bean.getCode().equals(str)) {
+                            doInventry(bean);
+                        }
+                    }
                 }
                 break;
         }
     }
 
-    private void doInventry(String code) {
+    private void doInventry(InventoryDetialBean.ItemBean bean) {
         RetrofitManager.createString(ApiService.class)
-                .updateOnBigInventoryItemById(inventoryId, code)
+                .updateOnBigInventoryItemById(inventoryId, bean.getCode())
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
+                        Log.e("test","s:" + s);
                         refreshLayout.autoRefresh();
+                        showInventorySuccessDialog(bean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        Log.e("test","throwable:" + throwable.getMessage());
+                        if(throwable.getMessage().contains("204")){
+                            showInventoryedDialog(bean);
+                        }
                     }
                 });
     }
 
+    private void showInventoryedDialog(InventoryDetialBean.ItemBean bean) {
+        new AlertDialog.Builder(this).setTitle("已盤點過")
+                .setMessage(bean.getName() + "   " + bean.getCode())
+                .setPositiveButton("繼續掃描",((dialog, which) -> {
+                    onClickScan();
+                    dialog.dismiss();
+                })).create().show();
+    }
+
+    private void showInventorySuccessDialog(InventoryDetialBean.ItemBean bean) {
+        new AlertDialog.Builder(this).setTitle("盤點成功")
+                .setMessage(bean.getName() + "   " + bean.getCode())
+                .setPositiveButton("繼續掃描",((dialog, which) -> {
+                    onClickScan();
+                    dialog.dismiss();
+                })).create().show();
+    }
 
 
 }

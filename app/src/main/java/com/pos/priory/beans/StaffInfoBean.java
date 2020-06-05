@@ -7,21 +7,6 @@ package com.pos.priory.beans;
 public class StaffInfoBean {
 
 
-    /**
-     * id : 5
-     * shop : 測試店
-     * shopid : 2
-     * user : manager01
-     * permission : 店长
-     * name :
-     * gender :
-     * staffno :
-     * mobile :
-     * status : true
-     * created : 2020-03-02T07:41:38.534605+08:00
-     * updated : 2020-03-04T10:29:29.553227+08:00
-     */
-
     private int id;
     private String shop;
     private int shopid;

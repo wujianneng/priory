@@ -55,7 +55,7 @@ public class MemberActivity extends BaseActivity {
     RecyclerView memberRecyclerView;
 
     QueryMemberAdapter memberAdapter;
-    List<MemberBean> memberList = new ArrayList<>();
+    List<MemberBean.ResultsBean> memberList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,8 +78,7 @@ public class MemberActivity extends BaseActivity {
                 intent.putExtra("memberId", memberList.get(position).getId());
                 intent.putExtra("memberMobile", memberList.get(position).getMobile());
                 intent.putExtra("memberReward", memberList.get(position).getReward());
-                intent.putExtra("memberName", memberList.get(position).getLast_name() +
-                        memberList.get(position).getFirst_name());
+                intent.putExtra("memberName", memberList.get(position).getName());
                 startActivity(intent);
             }
         });
@@ -110,21 +109,18 @@ public class MemberActivity extends BaseActivity {
             memberCall.dispose();
         memberList.clear();
         memberAdapter.notifyDataSetChanged();
-            memberCall = RetrofitManager.createString(ApiService.class)
+            memberCall = RetrofitManager.createGson(ApiService.class)
                     .getMembers(str)
-                    .compose(this.<String>bindToLifecycle())
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<String>() {
+                    .subscribe(new Consumer<MemberBean>() {
                         @Override
-                        public void accept(String s) throws Exception {
-                            final List<MemberBean> memberBeanList = gson.fromJson(s, new TypeToken<List<MemberBean>>() {
-                            }.getType());
-                            if (memberBeanList != null) {
+                        public void accept(MemberBean s) throws Exception {
+                            if (s != null) {
                                 new RunOnUiThreadSafe(MemberActivity.this) {
                                     @Override
                                     public void runOnUiThread() {
-                                        memberList.addAll(memberBeanList);
+                                        memberList.addAll(s.getResults());
                                         memberAdapter.notifyDataSetChanged();
                                     }
                                 };

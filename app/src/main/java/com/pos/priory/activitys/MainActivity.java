@@ -93,10 +93,6 @@ public class MainActivity extends BaseActivity {
                             for (int i = 0; i < jsonArray.length(); i++) {
                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                 if (jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getShop())) {
-                                    MyApplication.getContext().storeName = jsonObject.getString("name");
-                                    MyApplication.getContext().storeAddress = jsonObject.getString("address");
-                                    MyApplication.getContext().storeTel = jsonObject.getString("tel");
-                                    MyApplication.getContext().region = jsonObject.getString("region");
                                 }
                             }
                         }
