@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp">
+
+    <TextView
+        android:id="@+id/name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:text="現金"
+        android:textColor="@color/blue_text"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/edt_view"
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/border_gray"
+        android:textColor="@color/blue_text"
+        android:textSize="15sp"
+        android:inputType="numberDecimal"
+        android:gravity="center"
+        android:layout_width="80dp"
+        android:layout_height="30dp"/>
+
+    <View
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginRight="15dp"
+        android:background="#bababa"/>
+
+</FrameLayout>

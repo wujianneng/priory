@@ -1,458 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/title_layout"/>
+    <include
+        android:id="@+id/title_layout"
+        layout="@layout/title_layout" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="5dp">
+    <android.support.v4.widget.NestedScrollView
+        android:layout_below="@+id/title_layout"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
 
-        <View
+        <LinearLayout
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:background="@color/colorAccent" />
+            android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/data_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50px"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="50px"
-            android:layout_marginBottom="10dp"
-            android:foreground="?attr/selectableItemBackground"
-            app:cardBackgroundColor="#fff"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="2dp">
+            <RelativeLayout
+                android:background="@color/cardview_light_background"
+                android:id="@+id/member_layout"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/member_name_tv"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:text="价格: "
-                        android:textColor="@color/blue_text"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:id="@+id/money_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:text="2305元"
-                        android:textColor="@color/blue_text"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <TextView
-                        android:id="@+id/count_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="16dp"
-                        android:text="12件|15g"
-                        android:textColor="#000000"
-                        android:textSize="12sp" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_width="wrap_content"
+                    android:text="会员:  李先生"
+                    android:textColor="#000000"
+                    android:textSize="14sp" />
 
-                    <TextView
-                        android:id="@+id/member_name_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="15dp"
-                        android:text="会员:  李先生"
-                        android:textColor="#000000"
-                        android:textSize="14sp" />
+                <ImageView
+                    android:id="@+id/sex_img"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_toRightOf="@+id/member_name_tv"
+                    android:layout_width="18dp"
+                    android:src="@drawable/icon_boy" />
 
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="50dp"
-                        android:src="@drawable/icon_boy" />
-
-                </LinearLayout>
-
+                <TextView
+                    android:id="@+id/member_reward_tv"
+                    android:layout_alignParentRight="true"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:text="可用积分:  13000分"
+                    android:textColor="#000000"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/member_phone_tv"
-                    android:layout_width="wrap_content"
+                    android:layout_below="@+id/member_name_tv"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/dp_10"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="3dp"
-                    android:text="手机号码:  李先生"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="wrap_content"
+                    android:text="手机号码:  6664443"
                     android:textColor="#000000"
                     android:textSize="14sp" />
+            </RelativeLayout>
 
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/order_number_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/exchange_coupon_btn"
+                    android:layout_height="@dimen/dp_40"
                     android:layout_marginLeft="15dp"
-                    android:layout_marginTop="3dp"
-                    android:text="积分:  13000分"
-                    android:textColor="#000000"
-                    android:textSize="14sp" />
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:text="積分換現金券" />
 
-                <TextView
-                    android:id="@+id/need_money_tv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/use_coupon_btn"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:text="使用現金券" />
+
+                <android.support.design.button.MaterialButton
+                    android:id="@+id/add_pay_btn"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_marginLeft="5dp"
                     android:layout_marginRight="15dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="right"
-                    android:text="剩馀:54元"
-                    android:textColor="#000000"
-                    android:textSize="15sp" />
-
+                    android:layout_weight="1"
+                    android:textSize="13sp"
+                    android:layout_width="0dp"
+                    android:text="添加付款方式" />
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
-
-    </FrameLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginLeft="20px"
-                android:layout_marginRight="20px"
-                app:cardBackgroundColor="#fff"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp">
-
-
-                <CheckBox
-                    android:id="@+id/radio_btn_card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:checked="true" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="60dp"
-                    android:drawableLeft="@drawable/icon_card"
-                    android:drawablePadding="5dp"
-                    android:text="信用卡"
-                    android:textColor="#000000"
-                    android:textSize="15sp" />
-
-                <EditText
-                    android:id="@+id/edt_card_money"
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/input_bg"
-                    android:hint="请输入金额"
-                    android:textColor="@color/drag_btn_green"
-                    android:inputType="numberDecimal"
-                    android:paddingLeft="10dp"
-                    android:textSize="15sp" />
-
-            </android.support.v7.widget.CardView>
-
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginLeft="20px"
+            <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+                android:id="@+id/good_recycler_view"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="20px"
-                app:cardBackgroundColor="#fff"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp">
-
-                <CheckBox
-                    android:id="@+id/radio_btn_cash"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:checked="false"
-                    android:gravity="center" />
+                android:layout_width="match_parent"></com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView>
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="60dp"
-                    android:drawableLeft="@drawable/icon_money"
-                    android:drawablePadding="5dp"
-                    android:text="现金"
-                    android:textColor="#000000"
-                    android:textSize="15sp" />
+            <TextView
+                android:id="@+id/payment_tv"
+                android:layout_gravity="right"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_width="wrap_content"
+                android:text="客户应付：2305元"
+                android:textColor="@color/blue_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/edt_cash_money"
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
-                    android:visibility="gone"
-                    android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="20dp"
-                    android:textColor="@color/drag_btn_green"
-                    android:background="@drawable/input_bg"
-                    android:hint="请输入金额"
-                    android:inputType="numberDecimal"
-                    android:paddingLeft="10dp"
-                    android:textSize="15sp" />
-            </android.support.v7.widget.CardView>
+            <TextView
+                android:id="@+id/payed_tv"
+                android:layout_gravity="right"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_width="wrap_content"
+                android:text="已付款：2305元"
+                android:textColor="@color/blue_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginLeft="20px"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20px"
-                app:cardBackgroundColor="#fff"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp">
-
-                <CheckBox
-                    android:id="@+id/radio_btn_coupon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:checked="false"
-                    android:gravity="center" />
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="60dp"
-                    android:drawableLeft="@drawable/icon_money"
-                    android:drawablePadding="5dp"
-                    android:text="现金劵"
-                    android:textColor="#000000"
-                    android:textSize="15sp" />
-
-                <EditText
-                    android:id="@+id/edt_coupon_money"
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/input_bg"
-                    android:hint="请输入金额"
-                    android:visibility="gone"
-                    android:textColor="@color/drag_btn_green"
-                    android:inputType="numberDecimal"
-                    android:paddingLeft="10dp"
-                    android:textSize="15sp" />
-
-            </android.support.v7.widget.CardView>
-
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginLeft="20px"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20px"
-                app:cardBackgroundColor="#fff"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp">
-
-                <CheckBox
-                    android:id="@+id/radio_btn_alipay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:checked="false"
-                    android:gravity="center" />
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="60dp"
-                    android:drawableLeft="@drawable/icon_money"
-                    android:drawablePadding="5dp"
-                    android:text="支付宝"
-                    android:textColor="#000000"
-                    android:textSize="15sp" />
-
-                <EditText
-                    android:id="@+id/edt_alipay_money"
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/input_bg"
-                    android:hint="请输入金额"
-                    android:visibility="gone"
-                    android:textColor="@color/drag_btn_green"
-                    android:inputType="numberDecimal"
-                    android:paddingLeft="10dp"
-                    android:textSize="15sp" />
-
-
-            </android.support.v7.widget.CardView>
-
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginLeft="20px"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20px"
-                app:cardBackgroundColor="#fff"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp">
-
-                <CheckBox
-                    android:id="@+id/radio_btn_wechat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:checked="false"
-                    android:gravity="center" />
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="60dp"
-                    android:drawableLeft="@drawable/icon_money"
-                    android:drawablePadding="5dp"
-                    android:text="微信支付"
-                    android:textColor="#000000"
-                    android:textSize="15sp" />
-
-                <EditText
-                    android:id="@+id/edt_wechat_money"
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_vertical|right"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/input_bg"
-                    android:hint="请输入金额"
-                    android:textColor="@color/drag_btn_green"
-                    android:visibility="gone"
-                    android:inputType="numberDecimal"
-                    android:paddingLeft="10dp"
-                    android:textSize="15sp" />
-
-
-            </android.support.v7.widget.CardView>
-
-
-            <android.support.v7.widget.CardView
-                android:id="@+id/reward_layout"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_marginLeft="20px"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20px"
-                android:layout_marginBottom="30dp"
-                app:cardBackgroundColor="#fff"
-                app:cardCornerRadius="2dp"
-                app:cardElevation="1dp">
-
-                <CheckBox
-                    android:id="@+id/radio_btn_integral"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="15dp"
-                    android:checked="false"
-                    android:gravity="center" />
-
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="60dp"
-                    android:drawableLeft="@drawable/icon_money"
-                    android:drawablePadding="5dp"
-                    android:text="积分"
-                    android:textColor="#000000"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/integral_tv"
-                    android:text="300"
-                    android:visibility="gone"
-                    android:layout_gravity="center_vertical|right"
-                    android:textSize="16sp"
-                    android:textColor="@color/drag_btn_green"
-                    android:layout_marginRight="30dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-
-            </android.support.v7.widget.CardView>
-
+            <TextView
+                android:id="@+id/need_tv"
+                android:layout_gravity="right"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:layout_width="wrap_content"
+                android:text="剩餘：2305元"
+                android:textColor="@color/blue_text"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
-    </ScrollView>
 
-    <android.support.design.button.MaterialButton
-        android:id="@+id/btn_finish"
-        android:layout_width="230dp"
-        android:layout_height="56dp"
-        android:layout_marginTop="40dp"
-        app:icon="@drawable/icon_gou"
-        android:text="结算"
-        android:textColor="#ffffff"
-        android:textSize="20sp"
-        app:cornerRadius="28dp"
-        app:additionalPaddingStartForIcon="40dp"
-        app:additionalPaddingEndForIcon="5dp"
-        app:iconPadding="1dp"
-        android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="30dp"
-        />
+    </android.support.v4.widget.NestedScrollView>
 
-
-</LinearLayout>
+</RelativeLayout>

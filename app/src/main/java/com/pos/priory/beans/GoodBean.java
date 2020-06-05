@@ -20,6 +20,7 @@ public class GoodBean {
      */
 
     private int id;
+    boolean isSelected;
     private String stockno;
     private String location;
     private ProductBean product;
@@ -27,9 +28,19 @@ public class GoodBean {
     private int quantity;
     private int discountId = 1;
     private double discountRate = 1;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
     /**
      * weight : 1.2
      */
+
 
     public int getQuantity() {
         return quantity;

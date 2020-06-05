@@ -26,38 +26,58 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp" />
 
-
-        <TextView
-            android:id="@+id/name_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/text_layout"
+            android:orientation="vertical"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
             android:layout_toRightOf="@+id/icon_good"
-            android:text="大福珠"
-            android:textColor="#333333"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/code_tv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_below="@+id/name_tv"
-            android:layout_toRightOf="@+id/icon_good"
-            android:text="1023"
-            android:textColor="#333333"
-            android:textSize="16sp" />
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="大福珠"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/code_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1023"
+                android:textColor="#333333"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/weight_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2g"
+                android:textColor="#333333"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/count_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1件"
+                android:textColor="#333333"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
 
         <TextView
-            android:id="@+id/count_tv"
+            android:id="@+id/price_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="50dp"
             android:layout_alignParentRight="true"
-            android:text="10"
+            android:text="$999"
             android:textColor="@color/drag_btn_green"
             android:textSize="24sp" />
 

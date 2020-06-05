@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activitys.BigInventoryTypesDetialActivity">
+
+    <include layout="@layout/title_layout" />
+
+    <TextView
+        android:id="@+id/start_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="100dp"
+        android:text="开始时间：2010-10-11 19:10:12"
+        android:textColor="@color/blue_text"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/end_time_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="130dp"
+        android:text="结束时间：2010-10-11 19:10:12"
+        android:textColor="@color/blue_text"
+        android:textSize="15sp"
+        android:textStyle="bold" />
+
+    <FrameLayout
+        android:id="@+id/gold_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="170dp"
+        android:layout_marginRight="16dp">
+
+        <TextView
+            android:id="@+id/gold_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="黄金（100/200）"
+            android:textColor="@color/blue_text"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/gold_btn"
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:layout_marginRight="2dp"
+            android:layout_gravity="center_vertical|right"
+            android:backgroundTint="#ffffff"
+            android:text="详情"
+            android:textColor="@color/drag_btn_green"
+            app:cornerRadius="3dp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/yushi_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginRight="16dp">
+
+        <TextView
+            android:id="@+id/yushi_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="玉石（100/200）"
+            android:textColor="@color/blue_text"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/yshi_btn"
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:layout_marginRight="2dp"
+            android:layout_gravity="center_vertical|right"
+            android:backgroundTint="#ffffff"
+            android:text="详情"
+            android:textColor="@color/drag_btn_green"
+            app:cornerRadius="3dp" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/jingshi_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="330dp"
+        android:layout_marginRight="16dp">
+
+        <TextView
+            android:id="@+id/jingshi_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="晶石（100/200）"
+            android:textColor="@color/blue_text"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+
+        <android.support.design.button.MaterialButton
+            android:id="@+id/jingshi_btn"
+            android:layout_width="100dp"
+            android:layout_height="45dp"
+            android:layout_marginRight="2dp"
+            android:layout_gravity="center_vertical|right"
+            android:backgroundTint="#ffffff"
+            android:text="详情"
+            android:textColor="@color/drag_btn_green"
+            app:cornerRadius="3dp" />
+
+    </FrameLayout>
+
+    <android.support.design.button.MaterialButton
+        android:id="@+id/finish_btn"
+        android:layout_width="110dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="@color/colorPrimary"
+        app:icon="@drawable/icon_gou"
+        android:text="结束"
+        android:textColor="#ffffff"
+        app:cornerRadius="25dp" />
+
+
+</merge>

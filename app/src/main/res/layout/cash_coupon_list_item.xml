@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp">
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp" />
+
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@+id/checkbox"
+            android:text="优惠券名"
+            android:textColor="@color/blue_text"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/code_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_below="@+id/name_tv"
+            android:layout_toRightOf="@+id/checkbox"
+            android:text="#4444444"
+            android:textColor="@color/blue_text"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/date_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/code_tv"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@+id/checkbox"
+            android:text="2010-10-10 ~ 2019-10-10"
+            android:textColor="@color/blue_text"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/amount_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:text="$30"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/down_img"
+            android:textColor="@color/blue_text"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/down_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/go_bottom" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/detail_layout"
+        android:layout_width="match_parent"
+        android:background="#f3f3f3"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/detial_tv"
+            android:textColor="@color/blue_text"
+            android:textSize="15sp"
+            android:text="优惠券详细规则......"
+            android:layout_margin="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+</LinearLayout>

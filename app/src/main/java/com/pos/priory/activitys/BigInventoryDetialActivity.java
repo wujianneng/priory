@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.button.MaterialButton;
+import android.support.design.widget.TabLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
@@ -51,10 +55,6 @@ public class BigInventoryDetialActivity extends BaseActivity {
     TextView titleTv;
     @Bind(R.id.right_img)
     ImageView scanBtn;
-    @Bind(R.id.left_tv)
-    TextView leftTv;
-    @Bind(R.id.right_tv)
-    TextView rightTv;
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
     @Bind(R.id.refresh_layout)
@@ -63,24 +63,31 @@ public class BigInventoryDetialActivity extends BaseActivity {
     List<InventoryDetialBean> dataList = new ArrayList<>();
     int inventoryId = 0;
     String status = "未完成";
-    @Bind(R.id.btn_finish)
-    MaterialButton btnFinish;
-
     int page = 1;
+    @Bind(R.id.search_img)
+    ImageView searchImg;
+    @Bind(R.id.edt_search)
+    EditText edtSearch;
+    @Bind(R.id.search_card)
+    CardView searchCard;
+    @Bind(R.id.search_layout)
+    LinearLayout searchLayout;
+    @Bind(R.id.tab_layout)
+    TabLayout tabLayout;
 
     @Override
-    protected void beForeInitViews() {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_big_inventory_detial);
         ButterKnife.bind(this);
+        initViews();
     }
 
-    @Override
     protected void initViews() {
         inventoryId = getIntent().getIntExtra("inventoryId", 0);
         status = getIntent().getStringExtra("status");
         scanBtn.setVisibility(status.equals("未完成") ? View.VISIBLE : View.GONE);
-        btnFinish.setVisibility(status.equals("未完成") ? View.VISIBLE : View.GONE);
-        titleTv.setText("大盘点");
+        titleTv.setText("盘点分类详情");
         scanBtn.setImageResource(R.drawable.scan);
         refreshLayout.setEnableLoadMore(true);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -102,6 +109,28 @@ public class BigInventoryDetialActivity extends BaseActivity {
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter);
+
+        tabLayout.addTab(tabLayout.newTab().setText("未盤點"));
+        tabLayout.addTab(tabLayout.newTab().setText("已盤點"));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getText().toString().equals("未盤點"))
+                    refreshRecyclerView(true);
+                else
+                    refreshRecyclerView(true);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         refreshLayout.autoRefresh();
     }
 
@@ -127,8 +156,6 @@ public class BigInventoryDetialActivity extends BaseActivity {
                         for (InventoryDetialBean inventoryDetialBean : dataList) {
                             sumweight += inventoryDetialBean.getStockweight();
                         }
-                        leftTv.setText("黄金：" + dataList.size() + "件 | " + LogicUtils.getKeepLastTwoNumberAfterLittlePoint(sumweight) + "g");
-                        Log.e("test", "size:" + dataList.size());
                         page++;
                     }
                 }, new Consumer<Throwable>() {
@@ -167,30 +194,6 @@ public class BigInventoryDetialActivity extends BaseActivity {
         startActivityForResult(intent, 1000);
     }
 
-    @OnClick({R.id.btn_finish})
-    public void onClickFinish() {
-        finishInventory();
-    }
-
-    private void finishInventory() {
-        RetrofitManager.createString(ApiService.class)
-                .updateBigInventoryById(inventoryId, "已完成")
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        ToastUtils.showShort("已成功完成该大盘点！");
-                        finish();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        ToastUtils.showShort("完成该大盘点失败！");
-                    }
-                });
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -229,11 +232,6 @@ public class BigInventoryDetialActivity extends BaseActivity {
                 });
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
+
 
 }

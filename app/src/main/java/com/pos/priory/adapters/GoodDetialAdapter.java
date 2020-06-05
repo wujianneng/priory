@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -29,6 +30,19 @@ public class GoodDetialAdapter extends BaseQuickAdapter<GoodBean, BaseViewHolder
 
     @Override
     protected void convert(BaseViewHolder helper, GoodBean item) {
+        RadioButton radioButton = helper.getView(R.id.radio);
+        radioButton.setOnClickListener(view -> {
+            if (item.isSelected())
+                item.setSelected(false);
+            else
+                item.setSelected(true);
+            notifyItemChanged(helper.getAdapterPosition());
+        });
+        if (item.isSelected()) {
+            radioButton.setChecked(true);
+        } else {
+            radioButton.setChecked(false);
+        }
         helper.setText(R.id.code_tv,item.getStockno());
         helper.setText(R.id.weight_tv,item.getWeight() + "g");
     }

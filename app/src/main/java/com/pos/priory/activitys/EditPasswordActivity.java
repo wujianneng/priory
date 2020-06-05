@@ -52,15 +52,11 @@ public class EditPasswordActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void beForeInitViews() {
         setContentView(R.layout.activity_edit_password);
         ButterKnife.bind(this);
+        initViews() ;
     }
 
-    @Override
     protected void initViews() {
         rightImg.setVisibility(View.GONE);
         titleTv.setText("修改密码");

@@ -5,19 +5,23 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -55,10 +59,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class QueryFragment extends BaseFragment {
     View view;
-    @Bind(R.id.btn_member)
-    TextView btnMember;
-    @Bind(R.id.btn_order_number)
-    TextView btnOrderNumber;
     @Bind(R.id.icon)
     ImageView icon;
     @Bind(R.id.title_tv)
@@ -72,20 +72,22 @@ public class QueryFragment extends BaseFragment {
     List<MemberBean> memberList = new ArrayList<>();
     QueryOrderAdapter orderAdapter;
     List<OrderBean> orderList = new ArrayList<>();
-    @Bind(R.id.edt_member_input)
-    EditText edtMemberInput;
-    @Bind(R.id.edt_order_input)
-    EditText edtOrderInput;
-    @Bind(R.id.btn_date)
-    TextView btnDate;
+    @Bind(R.id.padding_layout)
+    View paddingLayout;
+    @Bind(R.id.title_layout)
+    FrameLayout titleLayout;
+    @Bind(R.id.edt_search)
+    EditText edtSearch;
     @Bind(R.id.input_layout)
     CardView inputLayout;
-    @Bind(R.id.date_img)
-    ImageView dateImg;
     @Bind(R.id.date_tv)
     TextView dateTv;
-    @Bind(R.id.date_layout)
-    CardView dateLayout;
+    @Bind(R.id.start_date_tv)
+    TextView startDateTv;
+    @Bind(R.id.end_date_tv)
+    TextView endDateTv;
+    @Bind(R.id.btn_search_type)
+    MaterialButton btnSearchType;
 
     @Nullable
     @Override
@@ -97,8 +99,8 @@ public class QueryFragment extends BaseFragment {
     }
 
     public void showKeyBord() {
-        if (edtMemberInput != null)
-            LogicUtils.openKeybord(edtMemberInput.getVisibility() == View.VISIBLE ? edtMemberInput : edtOrderInput, getActivity());
+        if (edtSearch != null)
+            LogicUtils.openKeybord(edtSearch.getVisibility() == View.VISIBLE ? edtSearch : edtSearch, getActivity());
     }
 
     private void initViews() {
@@ -113,7 +115,7 @@ public class QueryFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), MemberInfoActivity.class);
                 intent.putExtra("memberInfo", gson.toJson(memberList.get(position)));
                 startActivity(intent);
-                edtMemberInput.setText("");
+                edtSearch.setText("");
             }
         });
 
@@ -128,11 +130,11 @@ public class QueryFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), OrderDetialActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getId());
                 startActivity(intent);
-                edtOrderInput.setText("");
+                edtSearch.setText("");
             }
         });
 
-        edtMemberInput.addTextChangedListener(new TextWatcher() {
+        edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -140,7 +142,10 @@ public class QueryFragment extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                refreshMemberRecyclerView(charSequence.toString());
+                if (true)
+                    refreshMemberRecyclerView(charSequence.toString());
+                else
+                    refreshOrderRecyclerView(charSequence.toString());
             }
 
             @Override
@@ -149,22 +154,6 @@ public class QueryFragment extends BaseFragment {
             }
         });
 
-        edtOrderInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                refreshOrderRecyclerView(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
         refreshMemberRecyclerView("");
 //        showKeyBord();
     }
@@ -272,65 +261,82 @@ public class QueryFragment extends BaseFragment {
         ButterKnife.unbind(this);
     }
 
-    @OnClick({R.id.btn_member, R.id.btn_order_number, R.id.btn_date, R.id.date_layout})
+    @OnClick({R.id.date_tv, R.id.start_date_tv, R.id.end_date_tv, R.id.btn_search_type})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.btn_member:
-                btnMember.setTextColor(getResources().getColor(R.color.colorAccent));
-                btnOrderNumber.setTextColor(Color.parseColor("#000000"));
-                btnDate.setTextColor(Color.parseColor("#000000"));
-                icon.setImageResource(R.drawable.icon_detail);
-                titleTv.setText("电话");
-                edtMemberInput.setVisibility(View.VISIBLE);
-                edtOrderInput.setVisibility(View.GONE);
-                memberRecyclerView.setVisibility(View.VISIBLE);
-                orderRecyclerView.setVisibility(View.GONE);
-                inputLayout.setVisibility(View.VISIBLE);
-                dateLayout.setVisibility(View.GONE);
+            case R.id.date_tv:
+                getDate(0);
                 break;
-            case R.id.btn_date:
-                btnMember.setTextColor(Color.parseColor("#000000"));
-                btnOrderNumber.setTextColor(Color.parseColor("#000000"));
-                btnDate.setTextColor(getResources().getColor(R.color.colorAccent));
-                icon.setImageResource(R.drawable.icon_detail);
-                titleTv.setText("订单号");
-                edtMemberInput.setVisibility(View.GONE);
-                edtOrderInput.setVisibility(View.VISIBLE);
-                memberRecyclerView.setVisibility(View.GONE);
-                orderRecyclerView.setVisibility(View.VISIBLE);
-                inputLayout.setVisibility(View.GONE);
-                dateLayout.setVisibility(View.VISIBLE);
-                if (!dateTv.getText().toString().equals("请选择日期"))
-                    refreshDateRecyclerView(dateTv.getText().toString());
+            case R.id.start_date_tv:
+                getDate(1);
                 break;
-            case R.id.btn_order_number:
-                btnMember.setTextColor(Color.parseColor("#000000"));
-                btnDate.setTextColor(Color.parseColor("#000000"));
-                btnOrderNumber.setTextColor(getResources().getColor(R.color.colorAccent));
-                icon.setImageResource(R.drawable.icon_detail);
-                titleTv.setText("订单号");
-                edtMemberInput.setVisibility(View.GONE);
-                edtOrderInput.setVisibility(View.VISIBLE);
-                memberRecyclerView.setVisibility(View.GONE);
-                orderRecyclerView.setVisibility(View.VISIBLE);
-                inputLayout.setVisibility(View.VISIBLE);
-                dateLayout.setVisibility(View.GONE);
-                refreshOrderRecyclerView(edtOrderInput.getText().toString());
+            case R.id.end_date_tv:
+                getDate(2);
                 break;
-            case R.id.date_layout:
-                getDate();
+            case R.id.btn_search_type:
+                showSelectSearchTypePopu();
                 break;
         }
     }
 
-    private void getDate() {
+    private void showSelectSearchTypePopu() {
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(getActivity(), btnSearchType);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.search_type_menu, popupMenu.getMenu());
+        popupMenu.show();
+        // 通过上面这几行代码，就可以把控件显示出来了
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // 控件每一个item的点击事件
+                switch (item.getItemId()) {
+                    case R.id.menu0:
+                        inputLayout.setVisibility(View.VISIBLE);
+                        dateTv.setVisibility(View.GONE);
+                        startDateTv.setVisibility(View.GONE);
+                        endDateTv.setVisibility(View.GONE);
+                        break;
+                    case R.id.menu1:
+                        inputLayout.setVisibility(View.VISIBLE);
+                        dateTv.setVisibility(View.GONE);
+                        startDateTv.setVisibility(View.GONE);
+                        endDateTv.setVisibility(View.GONE);
+                        break;
+                    case R.id.menu2:
+                        inputLayout.setVisibility(View.GONE);
+                        dateTv.setVisibility(View.VISIBLE);
+                        startDateTv.setVisibility(View.GONE);
+                        endDateTv.setVisibility(View.GONE);
+                        break;
+                    case R.id.menu3:
+                        inputLayout.setVisibility(View.GONE);
+                        dateTv.setVisibility(View.GONE);
+                        startDateTv.setVisibility(View.VISIBLE);
+                        endDateTv.setVisibility(View.VISIBLE);
+                        break;
+                }
+                btnSearchType.setText(item.getTitle());
+                return true;
+            }
+        });
+    }
+
+
+    private void getDate(final int num) {
         final Calendar c = Calendar.getInstance();
         DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 c.set(year, monthOfYear, dayOfMonth);
-                dateTv.setText(DateFormat.format("yyy-MM-dd", c));
-                refreshDateRecyclerView(dateTv.getText().toString());
+                if (num == 0) {
+                    dateTv.setText(DateFormat.format("yyy-MM-dd", c));
+                    refreshDateRecyclerView(dateTv.getText().toString());
+                } else if (num == 1) {
+                    startDateTv.setText(DateFormat.format("yyy-MM-dd", c));
+                } else if (num == 2) {
+                    endDateTv.setText(DateFormat.format("yyy-MM-dd", c));
+                }
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         dialog.show();

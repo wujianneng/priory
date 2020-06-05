@@ -1,18 +1,46 @@
 package com.pos.priory.beans;
 
-public class DiscountBean {
+import java.io.Serializable;
 
-    /**
-     * id : 137
-     * name : 沒有折扣
-     * value : 1.00
-     * location : 測試
-     */
+public class DiscountBean implements Serializable {
 
     private int id;
     private String name;
-    private String value;
-    private String location;
+    private String detail;
+    private boolean isSelected;
+    private boolean isShowDetail;
+
+    public DiscountBean(int id, String name,  String detail, boolean isSelected, boolean isShowDetail) {
+        this.id = id;
+        this.name = name;
+        this.detail = detail;
+        this.isSelected = isSelected;
+        this.isShowDetail = isShowDetail;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public boolean isShowDetail() {
+        return isShowDetail;
+    }
+
+    public void setShowDetail(boolean showDetail) {
+        isShowDetail = showDetail;
+    }
 
     public int getId() {
         return id;
@@ -30,19 +58,4 @@ public class DiscountBean {
         this.name = name;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
 }

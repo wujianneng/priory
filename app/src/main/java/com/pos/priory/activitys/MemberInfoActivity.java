@@ -1,42 +1,22 @@
 package com.pos.priory.activitys;
 
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.button.MaterialButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.gson.reflect.TypeToken;
-import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
-import com.pos.priory.adapters.OrderAdapter;
 import com.pos.priory.beans.MemberBean;
-import com.pos.priory.beans.OrderBean;
-import com.pos.priory.networks.ApiService;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
-import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
-import com.scwang.smartrefresh.layout.header.ClassicsHeader;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/31.
@@ -44,135 +24,111 @@ import io.reactivex.schedulers.Schedulers;
 
 public class MemberInfoActivity extends BaseActivity {
 
-
-    OrderAdapter orderAdapter;
-    List<OrderBean> orderList = new ArrayList<>();
+    public static final String UPDATE_ORDER_LIST = "memberInfoActivity_update_list";
     @Bind(R.id.back_btn)
     ImageView backBtn;
     @Bind(R.id.title_tv)
     TextView titleTv;
+    @Bind(R.id.right_img)
+    ImageView rightImg;
+    @Bind(R.id.next_tv)
+    TextView nextTv;
+    @Bind(R.id.title_layout)
+    CardView titleLayout;
     @Bind(R.id.edt_first_name)
-    TextView edtFirstName;
+    EditText edtFirstName;
     @Bind(R.id.edt_name)
-    TextView edtName;
+    EditText edtName;
     @Bind(R.id.sex_tv)
     TextView sexTv;
     @Bind(R.id.phone_tv)
-    TextView phoneTv;
+    EditText phoneTv;
     @Bind(R.id.scout_tv)
     TextView scoutTv;
     @Bind(R.id.data_layout)
     CardView dataLayout;
+    @Bind(R.id.register_address_tv)
+    TextView registerAddressTv;
     @Bind(R.id.order_title)
     TextView orderTitle;
-    @Bind(R.id.recycler_view)
-    RecyclerView recyclerView;
-    @Bind(R.id.srf_lay)
-    SmartRefreshLayout smartRefreshLayout;
+    @Bind(R.id.btn_save)
+    MaterialButton btnSave;
     MemberBean memberBean;
-    @Bind(R.id.right_img)
-    ImageView rightImg;
-    public static final String UPDATE_ORDER_LIST = "memberInfoActivity_update_list";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    protected void beForeInitViews() {
         setContentView(R.layout.activity_member_info);
         ButterKnife.bind(this);
+        initViews();
     }
 
-    @Override
-    public void handleEventBus(String event) {
-        super.handleEventBus(event);
-        if(event.equals(UPDATE_ORDER_LIST)){
-            smartRefreshLayout.autoRefresh();
-        }
-    }
 
-    @Override
     protected void initViews() {
         titleTv.setText("会员信息");
         rightImg.setVisibility(View.GONE);
         memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.class);
-        edtFirstName.setText(memberBean.getLast_name());
+        edtFirstName.setText(memberBean.getLast_name()
+        );
         edtName.setText(memberBean.getFirst_name());
         sexTv.setText(memberBean.getSex());
         phoneTv.setText(memberBean.getMobile());
         scoutTv.setText(memberBean.getReward() + "");
-
-        smartRefreshLayout.setEnableLoadMore(false);
-        smartRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                refreshRecyclerView(false);
-            }
-        });
-        smartRefreshLayout.setRefreshHeader(new ClassicsHeader(this));
-        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(this).setSpinnerStyle(SpinnerStyle.Translate));
-        smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                refreshRecyclerView(true);
-            }
-        });
-        orderAdapter = new OrderAdapter(R.layout.order_list_item, orderList);
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(orderAdapter);
-        orderAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(MemberInfoActivity.this, OrderDetialActivity.class);
-                intent.putExtra("orderId", orderList.get(position).getId());
-                startActivity(intent);
-            }
-        });
-        refreshRecyclerView(false);
     }
 
 
-    private void refreshRecyclerView(boolean isLoadMore) {
-        if (!isLoadMore) {
-            orderList.clear();
-            orderAdapter.notifyDataSetChanged();
-        }
-        RetrofitManager.createString(ApiService.class)
-                .getOrdersByOrdernumber(memberBean.getMobile())
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String results) throws Exception {
-                        final List<OrderBean> orderBeanList = gson.fromJson(results, new TypeToken<List<OrderBean>>() {
-                        }.getType());
-                        if (orderBeanList != null) {
-                            orderList.addAll(orderBeanList);
-                            orderAdapter.notifyDataSetChanged();
-                        }
-                        smartRefreshLayout.finishLoadMore();
-                        smartRefreshLayout.finishRefresh();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        smartRefreshLayout.finishLoadMore();
-                        smartRefreshLayout.finishRefresh();
-                    }
-                });
-    }
-
-    @OnClick({R.id.back_btn})
+    @OnClick({R.id.back_btn, R.id.sex_tv, R.id.btn_save})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
                 finish();
                 break;
+            case R.id.sex_tv:
+                showChoiceSexDialog();
+                break;
+            case R.id.btn_save:
+                setResult(4);
+                finish();
+                break;
         }
     }
 
+    int yourChoice;
+    AlertDialog choiceSexDialog;
+
+    private void showChoiceSexDialog() {
+        if (choiceSexDialog == null) {
+            final String[] items = {"男", "女"};
+            yourChoice = 0;
+            AlertDialog.Builder singleChoiceDialog =
+                    new AlertDialog.Builder(this);
+            singleChoiceDialog.setTitle("请选择性别");
+            // 第二个参数是默认选项，此处设置为0
+            singleChoiceDialog.setSingleChoiceItems(items, yourChoice,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            yourChoice = which;
+                        }
+                    });
+            singleChoiceDialog.setPositiveButton("确定",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (yourChoice != -1) {
+                                sexTv.setText(items[yourChoice]);
+                            }
+                            choiceSexDialog.dismiss();
+                        }
+                    });
+            choiceSexDialog = singleChoiceDialog.create();
+            choiceSexDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    choiceSexDialog = null;
+                }
+            });
+            choiceSexDialog.show();
+        }
+    }
 }

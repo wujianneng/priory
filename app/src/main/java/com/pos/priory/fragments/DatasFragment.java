@@ -2,45 +2,36 @@ package com.pos.priory.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
+import android.support.design.button.MaterialButton;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.PopupMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
-import com.pos.priory.adapters.DataGoldAdapter;
-import com.pos.priory.beans.DatasSaleBean;
-import com.pos.priory.networks.ApiService;
-import com.pos.priory.utils.DateUtils;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 public class DatasFragment extends BaseFragment {
     View view;
-    @Bind(R.id.month_money_tv)
-    TextView monthMoneyTv;
-    @Bind(R.id.gold_recyclerview)
-    RecyclerView goldRecyclerview;
-    @Bind(R.id.spar_recyclerview)
-    RecyclerView sparRecyclerview;
+    @Bind(R.id.padding_layout)
+    View paddingLayout;
+    @Bind(R.id.title_tv)
+    TextView titleTv;
+    @Bind(R.id.btn_select_type)
+    MaterialButton btnSelectType;
+    @Bind(R.id.title_layout)
+    FrameLayout titleLayout;
+    @Bind(R.id.container)
+    FrameLayout container;
 
-    DataGoldAdapter goldAdapter,sparAdapter;
-    List<DatasSaleBean> goldlist = new ArrayList<>();
-    List<DatasSaleBean> sparlist = new ArrayList<>();
+    SaleAmountDatasFragment saleAmountDatasFragment;
+    SaleCountDatasFragment saleCountDatasFragment;
 
     @Nullable
     @Override
@@ -52,56 +43,63 @@ public class DatasFragment extends BaseFragment {
     }
 
     private void initViews() {
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
-        goldRecyclerview.setLayoutManager(mLayoutManager);
-        goldAdapter = new DataGoldAdapter(R.layout.datas_sale_list,goldlist);
-        goldRecyclerview.setAdapter(goldAdapter);
-
-        LinearLayoutManager mLayoutManager2 = new LinearLayoutManager(getActivity());
-        mLayoutManager2.setOrientation(OrientationHelper.VERTICAL);
-        sparRecyclerview.setLayoutManager(mLayoutManager2);
-        sparAdapter = new DataGoldAdapter(R.layout.datas_sale_list,sparlist);
-        sparRecyclerview.setAdapter(sparAdapter);
-        getDatas();
+        btnSelectType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSelectTypePopu();
+            }
+        });
+        changeFragment(0);
     }
 
-    private void getDatas() {
-        RetrofitManager.createString(ApiService.class)
-                .getDatas()
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        JSONObject jsonObject = new JSONObject(s);
-                        monthMoneyTv.setText(DateUtils.getCurrentMonth() + "月营业额： " + jsonObject.getInt("turnover") + "元");
-                        JSONArray itemcountgold = jsonObject.getJSONArray("itemcountgold");
-                        JSONArray itemscountcrystal = jsonObject.getJSONArray("itemscountcrystal");
-                        for(int i = 0 ; i < itemcountgold.length() ;i++){
-                            DatasSaleBean bean = new DatasSaleBean();
-                            bean.setProductName(itemcountgold.getJSONObject(i).getString("stock__product__name"));
-                            bean.setCount(itemcountgold.getJSONObject(i).getInt("catalog_count"));
-                            goldlist.add(bean);
-                        }
-                        goldAdapter.notifyDataSetChanged();
-                        for(int i = 0 ; i < itemscountcrystal.length() ;i++){
-                            DatasSaleBean bean = new DatasSaleBean();
-                            bean.setProductName(itemscountcrystal.getJSONObject(i).getString("stock__product__name"));
-                            bean.setCount(itemscountcrystal.getJSONObject(i).getInt("catalog_count"));
-                            sparlist.add(bean);
-                        }
-                        sparAdapter.notifyDataSetChanged();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                    }
-                });
-
+    private void showSelectTypePopu() {
+        // 这里的view代表popupMenu需要依附的view
+        PopupMenu popupMenu = new PopupMenu(getActivity(), btnSelectType);
+        // 获取布局文件
+        popupMenu.getMenuInflater().inflate(R.menu.datas_menu, popupMenu.getMenu());
+        popupMenu.show();
+        // 通过上面这几行代码，就可以把控件显示出来了
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                // 控件每一个item的点击事件
+                switch (item.getItemId()) {
+                    case R.id.menu0:
+                        changeFragment(0);
+                        break;
+                    case R.id.menu1:
+                        changeFragment(1);
+                        break;
+                }
+                btnSelectType.setText(item.getTitle());
+                return true;
+            }
+        });
     }
+
+    public void changeFragment(int index) {
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+        switch (index) {
+            case 0:
+                if (saleCountDatasFragment != null)
+                    fragmentTransaction.hide(saleCountDatasFragment);
+                if (saleAmountDatasFragment == null) {
+                    saleAmountDatasFragment = new SaleAmountDatasFragment();
+                    fragmentTransaction.add(R.id.container, saleAmountDatasFragment);
+                } else fragmentTransaction.show(saleAmountDatasFragment);
+                break;
+            case 1:
+                if (saleAmountDatasFragment != null)
+                    fragmentTransaction.hide(saleAmountDatasFragment);
+                if (saleCountDatasFragment == null) {
+                    saleCountDatasFragment = new SaleCountDatasFragment();
+                    fragmentTransaction.add(R.id.container, saleCountDatasFragment);
+                } else fragmentTransaction.show(saleCountDatasFragment);
+                break;
+        }
+        fragmentTransaction.commit();
+    }
+
 
     @Override
     public void onDestroyView() {

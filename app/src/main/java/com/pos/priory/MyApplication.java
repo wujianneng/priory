@@ -29,7 +29,7 @@ public class MyApplication extends Application {
         mContext = this;
         Utils.init(this);
 
-        RetrofitManager.init(this,Constants.SENTRY_DNS,Constants.MACAL_BASE_URL,new Cache(getCacheDir(),
+        RetrofitManager.init(this,Constants.SENTRY_DNS,Constants.BASE_URL,new Cache(getCacheDir(),
                 1024 * 1024 * 10),"",Constants.Authorization_KEY,authorization);
     }
 

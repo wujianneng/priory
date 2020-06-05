@@ -56,7 +56,7 @@
                             android:textColor="#cccccc"
                             android:textSize="12sp" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/edt_first_name"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
@@ -64,6 +64,7 @@
                             android:layout_marginLeft="30dp"
                             android:layout_marginRight="30dp"
                             android:layout_weight="1"
+                            android:background="@null"
                             android:textColor="#333333"
                             android:gravity="center_vertical"
                             android:text="long"
@@ -94,7 +95,7 @@
                             android:textColor="#cccccc"
                             android:textSize="12sp" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/edt_name"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
@@ -102,6 +103,7 @@
                             android:layout_marginLeft="30dp"
                             android:layout_marginRight="30dp"
                             android:layout_weight="1"
+                            android:background="@null"
                             android:textColor="#333333"
                             android:gravity="center_vertical"
                             android:text="willa"
@@ -179,7 +181,7 @@
                             android:textColor="#cccccc"
                             android:textSize="12sp" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/phone_tv"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
@@ -187,6 +189,8 @@
                             android:layout_marginLeft="30dp"
                             android:layout_marginRight="30dp"
                             android:layout_weight="1"
+                            android:background="@null"
+                            android:inputType="phone"
                             android:textColor="#333333"
                             android:gravity="center_vertical"
                             android:text="15019840934"
@@ -241,32 +245,45 @@
         </android.support.v7.widget.CardView>
 
         <TextView
-            android:id="@+id/order_title"
+            android:id="@+id/register_address_tv"
             android:layout_below="@+id/data_layout"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="15dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="16dp"
             android:textSize="15sp"
-            android:textColor="#cccccc"
-            android:text="新购买项目"
+            android:textColor="@color/blue_text"
+            android:text="注冊地點：高士德店"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/srf_lay"
-            android:layout_below="@+id/order_title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        <TextView
+            android:id="@+id/order_title"
+            android:layout_below="@+id/register_address_tv"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="16dp"
+            android:textSize="15sp"
+            android:textColor="@color/blue_text"
+            android:text="注冊時間：2019-10-10 12:11:11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
 
+        <android.support.design.button.MaterialButton
+            android:id="@+id/btn_save"
+            android:layout_width="230dp"
+            android:layout_height="56dp"
+            android:layout_marginTop="40dp"
+            app:icon="@drawable/icon_gou"
+            android:text="保  存"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            app:cornerRadius="28dp"
+            app:additionalPaddingStartForIcon="40dp"
+            app:additionalPaddingEndForIcon="5dp"
+            app:iconPadding="1dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="30dp"
+            />
     </RelativeLayout>
 
 </LinearLayout>
