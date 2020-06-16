@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
+import com.pos.priory.beans.MemberBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 
@@ -159,11 +160,15 @@ public class RegisterMemberActivity extends BaseActivity {
                         customDialog.dismiss();
                         finish();
                         Intent intent = new Intent(RegisterMemberActivity.this, AddNewOrderActivity.class);
-                        intent.putExtra("memberId", jsonObject.getInt("id"));
-                        intent.putExtra("memberMobile", jsonObject.getString("mobile"));
-                        intent.putExtra("memberReward", jsonObject.getInt("reward"));
-                        intent.putExtra("memberName", jsonObject.getString("last_name") +
+                        MemberBean.ResultsBean resultsBean = new MemberBean.ResultsBean();
+                        resultsBean.setId(jsonObject.getInt("id"));
+                        resultsBean.setMobile(jsonObject.getString("mobile"));
+                        resultsBean.setGender(jsonObject.getInt("gender") == 1 ? "男" : "女");
+                        resultsBean.setName(jsonObject.getString("last_name") +
                                 jsonObject.getString("first_name"));
+                        resultsBean.setReward(jsonObject.getInt("reward"));
+                        resultsBean.setCreated(jsonObject.getString("created"));
+                        intent.putExtra("memberInfo", gson.toJson(resultsBean));
                         startActivity(intent);
                     }
                 }, new Consumer<Throwable>() {

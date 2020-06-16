@@ -160,15 +160,15 @@ public class BillActivity extends BaseActivity {
                 }
             }
             int layoutid = 0;
-            if (MyApplication.getContext().region.equals("中国大陆")) {
-                layoutid = R.layout.dialog_preview;
-            } else {
+//            if (MyApplication.getContext().staffInfoBean..equals("中国大陆")) {
+//                layoutid = R.layout.dialog_preview;
+//            } else {
                 layoutid = R.layout.dialog_preview2;
-            }
+//            }
             final View printView = LayoutInflater.from(activity).inflate(layoutid, null);
-            ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.getContext().storeName);
-            ((TextView) printView.findViewById(R.id.address_tv)).setText(MyApplication.getContext().storeAddress);
-            ((TextView) printView.findViewById(R.id.tel_tv)).setText(MyApplication.getContext().storeTel);
+            ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.getContext().staffInfoBean.getShop());
+            ((TextView) printView.findViewById(R.id.address_tv)).setText(MyApplication.getContext().staffInfoBean.getShop());
+            ((TextView) printView.findViewById(R.id.tel_tv)).setText(MyApplication.getContext().staffInfoBean.getMobile());
             ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
             ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
             ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);

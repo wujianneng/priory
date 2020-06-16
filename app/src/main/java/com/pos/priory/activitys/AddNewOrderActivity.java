@@ -1,6 +1,5 @@
 package com.pos.priory.activitys;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,44 +12,33 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
-import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.adapters.AddNewOrderGoodsAdapter;
 import com.pos.priory.adapters.NewGoodTypeDataAdapter;
-import com.pos.priory.beans.DiscountBean;
-import com.pos.priory.beans.GoodBean;
+import com.pos.priory.beans.CouponResultBean;
+import com.pos.priory.beans.FittingBean;
+import com.pos.priory.beans.MemberBean;
 import com.pos.priory.beans.NewGoodTypeDataBean;
-import com.pos.priory.beans.WarehouseBean;
-import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.utils.LogicUtils;
 import com.pos.zxinglib.MipcaActivityCapture;
 import com.pos.zxinglib.utils.DeviceUtil;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
-
-import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -59,9 +47,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/31.
@@ -107,13 +92,12 @@ public class AddNewOrderActivity extends BaseActivity {
     TextView paymentTv;
 
 
-    List<WarehouseBean.ResultsBean> goodList = new ArrayList<>();
+    List<FittingBean.ResultsBean> goodList = new ArrayList<>();
     AddNewOrderGoodsAdapter goodsAdapter;
-    int memberid, memberReward;
-    String memberName, memberMobile;
+    MemberBean.ResultsBean memberBean;
     double sumMoney = 0, changeGoodsMoeny = 0;
     double sumWeight = 0;
-    List<DiscountBean> discountBeans = new ArrayList<>();
+    List<CouponResultBean.ResultBean> discountBeans = new ArrayList<>();
     AlertDialog actionDialog;
 
     List<NewGoodTypeDataBean> newGoodTypeList = new ArrayList<>();
@@ -134,8 +118,8 @@ public class AddNewOrderActivity extends BaseActivity {
         nextTv.setVisibility(View.VISIBLE);
         changeGoodsMoeny = getIntent().getIntExtra("sumMoney", 0);
 
-        moneyTv.setText("合計：" +LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
-        paymentTv.setText("客戶應付：" +LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
+        moneyTv.setText("合計：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
+        paymentTv.setText("客戶應付：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
 
         goodsAdapter = new AddNewOrderGoodsAdapter(this, R.layout.add_new_order_good_list_item, goodList);
         //设置侧滑菜单
@@ -161,13 +145,10 @@ public class AddNewOrderActivity extends BaseActivity {
         goodRecyclerView.setLayoutManager(new LinearLayoutManager(this, OrientationHelper.VERTICAL,
                 false));
         goodRecyclerView.setAdapter(goodsAdapter);
-        memberid = getIntent().getIntExtra("memberId", 0);
-        memberMobile = getIntent().getStringExtra("memberMobile");
-        memberReward = getIntent().getIntExtra("memberReward", 0);
-        memberName = getIntent().getStringExtra("memberName");
-        memberNameTv.setText("会员：" + memberName);
-        memberPhoneTv.setText("联繫电话：" + memberMobile);
-        memberRewardTv.setText("积分：" + memberReward);
+        memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.ResultsBean.class);
+        memberNameTv.setText("会员：" + memberBean.getName());
+        memberPhoneTv.setText("联繫电话：" + memberBean.getMobile());
+        memberRewardTv.setText("积分：" + memberBean.getReward());
 
         typesRecyclerView.setLayoutManager(new LinearLayoutManager(this, OrientationHelper.VERTICAL,
                 false));
@@ -177,29 +158,29 @@ public class AddNewOrderActivity extends BaseActivity {
 
     private void refreshSumMoney() {
         sumMoney = 0;
+        moneyTv.setText("合計：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
         sumWeight = 0;
         newGoodTypeList.clear();
-        for (WarehouseBean.ResultsBean bean : goodList) {
-            sumMoney += new BigDecimal(bean.getItem().get(0).getPrice().get(0).getPrice()).doubleValue();
-            sumWeight += bean.getTotal().getWeight();
+        for (FittingBean.ResultsBean bean : goodList) {
+            sumMoney += bean.getPrice().size() == 0 ? 0 : new BigDecimal(bean.getPrice().get(0).getPrice()).doubleValue();
+            sumWeight += bean.getWhitem().size() == 0 ? 0 : bean.getWhitem().get(0).getWeight();
             if (!isTypeDatasContains(bean)) {
                 NewGoodTypeDataBean newGoodTypeDataBean = new NewGoodTypeDataBean();
-                newGoodTypeDataBean.setName(bean.getItem().get(0).getName());
-                newGoodTypeDataBean.setWeight(bean.getTotal().getWeight());
+                newGoodTypeDataBean.setName(bean.getName());
+                newGoodTypeDataBean.setWeight(bean.getWhitem().size() == 0 ? 0 : bean.getWhitem().get(0).getWeight());
                 newGoodTypeDataBean.setCount(1);
                 newGoodTypeList.add(newGoodTypeDataBean);
             }
         }
         newGoodTypeDataAdapter.notifyDataSetChanged();
-        moneyTv.setText("合計：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
         paymentTv.setText("客戶應付：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
 //        countTv.setText(goodList.size() + "件|" + LogicUtils.getKeepLastTwoNumberAfterLittlePoint(sumWeight) + "g");
     }
 
-    private boolean isTypeDatasContains(WarehouseBean.ResultsBean goodBean) {
+    private boolean isTypeDatasContains(FittingBean.ResultsBean goodBean) {
         for (NewGoodTypeDataBean bean : newGoodTypeList) {
             if (bean.getName().equals(goodBean.getName())) {
-                bean.setWeight(bean.getWeight() + goodBean.getTotal().getWeight());
+                bean.setWeight(bean.getWeight() + goodBean.getWhitem().size() == 0 ? 0 : goodBean.getWhitem().get(0).getWeight());
                 bean.setCount(bean.getCount() + 1);
                 return true;
             }
@@ -207,14 +188,19 @@ public class AddNewOrderActivity extends BaseActivity {
         return false;
     }
 
-    @OnClick({R.id.next_tv, R.id.add_fitting_btn, R.id.add_product_btn, R.id.back_btn, R.id.discount_layout,R.id.member_layout})
+    @OnClick({R.id.next_tv, R.id.add_fitting_btn, R.id.add_product_btn, R.id.back_btn, R.id.discount_layout, R.id.member_layout})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.member_layout:
-                startActivityForResult(new Intent(AddNewOrderActivity.this, MemberInfoActivity.class), 100);
+                Intent intent0 = new Intent(AddNewOrderActivity.this, MemberInfoActivity.class);
+                intent0.putExtra("memberInfo", gson.toJson(memberBean));
+                startActivityForResult(intent0, 100);
                 break;
             case R.id.discount_layout:
-                startActivityForResult(new Intent(AddNewOrderActivity.this, SelectDiscountActivity.class), 100);
+                Intent intent1 = new Intent(AddNewOrderActivity.this, SelectDiscountActivity.class);
+                intent1.putExtra("memberInfo", gson.toJson(memberBean));
+                intent1.putExtra("goodlist", gson.toJson(goodList));
+                startActivityForResult(intent1, 100);
                 break;
             case R.id.add_fitting_btn:
                 startActivityForResult(new Intent(AddNewOrderActivity.this, AddFittingActivity.class), 100);
@@ -242,10 +228,7 @@ public class AddNewOrderActivity extends BaseActivity {
                 intent.putExtra("goodlist", gson.toJson(goodList));
                 intent.putExtra("sumMoney", sumMoney + changeGoodsMoeny);
                 intent.putExtra("newOrderSumMoney", sumMoney);
-                intent.putExtra("memberId", memberid);
-                intent.putExtra("memberName", memberName);
-                intent.putExtra("memberMobile", memberMobile);
-                intent.putExtra("memberReward", memberReward);
+                intent.putExtra("memberInfo", gson.toJson(memberBean));
                 intent.putExtra("sumCount", goodList.size());
                 intent.putExtra("sumWeight", sumWeight);
                 intent.putExtra("checkedGoodList", getIntent().getStringExtra("checkedGoodList"));
@@ -304,15 +287,26 @@ public class AddNewOrderActivity extends BaseActivity {
                 getGoodBeanByCode(data.getStringExtra("resultString"));
                 break;
             case 2:
-                discountBeans.clear();
-                discountBeans = gson.fromJson(data.getStringExtra("selectDiscountList"),
-                        new TypeToken<List<DiscountBean>>() {
+                List<CouponResultBean.ResultBean> discountList = gson.fromJson(data.getStringExtra("selectDiscountList"),
+                        new TypeToken<List<CouponResultBean.ResultBean>>() {
                         }.getType());
-                if (discountBeans.size() != 0)
-                    discountTv.setText(discountBeans.get(0).getName());
+                String result = "";
+                if (discountList != null && discountList.size() != 0) {
+                    discountBeans.clear();
+                    discountBeans.addAll(discountList);
+                    for (int i = 0 ; i < discountBeans.size() ; i++) {
+                        result += discountBeans.get(i).getName() + "\n";
+                    }
+                }
+                discountTv.setText(discountBeans.size() == 0 ? "不使用" : result);
                 break;
             case 3:
                 Log.e("test", "fittinglist:" + data.getStringExtra("selectFittingList"));
+                goodList.addAll(gson.fromJson(data.getStringExtra("selectFittingList"),
+                        new TypeToken<List<FittingBean.ResultsBean>>() {
+                        }.getType()));
+                goodsAdapter.notifyDataSetChanged();
+                refreshSumMoney();
                 break;
             case 4:
                 Log.e("test", "member:" + data.getStringExtra("member"));
@@ -327,34 +321,27 @@ public class AddNewOrderActivity extends BaseActivity {
             return;
         }
         showLoadingDialog("正在增加商品..");
-        RetrofitManager.excuteGson(bindToLifecycle(), RetrofitManager.createGson(ApiService.class).getStockListByParam(productcode),
-                new ModelGsonListener<WarehouseBean>() {
-                    @Override
-                    public void onSuccess(WarehouseBean result) throws Exception {
-                        if (result != null && result.getResults().size() != 0 && result.getResults().get(0).getTotal().getQuantity() > 0) {
-                            hideLoadingDialog();
-                            goodList.add(result.getResults().get(0));
-                            goodsAdapter.notifyItemInserted(goodList.size() - 1);
-                            refreshSumMoney();
-                        } else {
-                            hideLoadingDialog();
-                            showToast("增加商品失败");
-                        }
-                    }
+        RetrofitManager.excute(bindToLifecycle(), RetrofitManager.createString(ApiService.class).getProductBySearch(productcode), new ModelListener() {
+            @Override
+            public void onSuccess(String result) throws Exception {
+                hideLoadingDialog();
+                FittingBean fittingBean = gson.fromJson(result, FittingBean.class);
+                goodList.addAll(fittingBean.getResults());
+                goodsAdapter.notifyDataSetChanged();
+            }
 
-                    @Override
-                    public void onFailed(String erromsg) {
-                        hideLoadingDialog();
-                        showToast("增加商品失败");
-                    }
-                });
+            @Override
+            public void onFailed(String erromsg) {
+                hideLoadingDialog();
+            }
+        });
     }
 
     private boolean productExitInList(String productcode) {
         boolean result = false;
         Log.e("test", "productcode:" + productcode);
-        for (WarehouseBean.ResultsBean goodBean : goodList) {
-            if (String.valueOf(goodBean.getItem().get(0).getProductcode()).equals(productcode)) {
+        for (FittingBean.ResultsBean goodBean : goodList) {
+            if (String.valueOf(goodBean.getProductcode()).equals(productcode)) {
                 return true;
             }
         }

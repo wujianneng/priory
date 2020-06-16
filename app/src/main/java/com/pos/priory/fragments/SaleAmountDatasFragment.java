@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,10 +17,13 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.infitack.rxretorfit2library.ModelListener;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.DataAmountAdapter;
 import com.pos.priory.beans.DataAmountBean;
+import com.pos.priory.networks.ApiService;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +32,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
 
 public class SaleAmountDatasFragment extends BaseFragment {
     View view;
@@ -60,7 +65,7 @@ public class SaleAmountDatasFragment extends BaseFragment {
     }
 
     private void initViews() {
-        storeNameTv.setText("營業額(" + MyApplication.storeName + ")");
+        storeNameTv.setText("營業額(" + MyApplication.staffInfoBean.getShop() + ")");
         dataAmountAdapter = new DataAmountAdapter(R.layout.sale_amount_data_item,dataAmountBeanList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         recyclerView.setAdapter(dataAmountAdapter);
@@ -107,6 +112,16 @@ public class SaleAmountDatasFragment extends BaseFragment {
                 } else if (num == 2) {
                     endDateTv.setText(DateFormat.format("yyy-MM-dd", c));
                 }
+                if(dateTv.getVisibility() == View.VISIBLE){
+                    if(!dateTv.getText().toString().equals("請選擇日期")){
+                        getDatas();
+                    }
+                }else {
+                    if(!startDateTv.getText().toString().equals("請選擇開始日期") &&
+                            !endDateTv.getText().toString().equals("請選擇結束日期")){
+                        getDatas();
+                    }
+                }
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         dialog.show();
@@ -128,17 +143,47 @@ public class SaleAmountDatasFragment extends BaseFragment {
                         dateTv.setVisibility(View.VISIBLE);
                         startDateTv.setVisibility(View.GONE);
                         endDateTv.setVisibility(View.GONE);
+                        if(!dateTv.getText().toString().equals("請選擇日期")){
+                            getDatas();
+                        }
                         break;
                     case R.id.menu1:
                         dateTv.setVisibility(View.GONE);
                         startDateTv.setVisibility(View.VISIBLE);
                         endDateTv.setVisibility(View.VISIBLE);
+                        if(!startDateTv.getText().toString().equals("請選擇開始日期") &&
+                                !endDateTv.getText().toString().equals("請選擇結束日期")){
+                            getDatas();
+                        }
                         break;
                 }
                 btnSearchType.setText(item.getTitle());
                 return true;
             }
         });
+    }
+
+    private void getDatas() {
+        Observable observable = null;
+        if(dateTv.getVisibility() == View.VISIBLE){
+            observable = RetrofitManager.createString(ApiService.class).getSaleAmountDatas
+                    (dateTv.getText().toString(),dateTv.getText().toString());
+        }else {
+            observable = RetrofitManager.createString(ApiService.class).getSaleAmountDatas
+                    (startDateTv.getText().toString(),endDateTv.getText().toString());
+        }
+        RetrofitManager.excute(observable,
+                new ModelListener() {
+                    @Override
+                    public void onSuccess(String result) throws Exception {
+                        Log.e("test","sadatas:" + result);
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        Log.e("test","sadataserro:" + erromsg);
+                    }
+                });
     }
 
     @Override

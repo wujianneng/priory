@@ -17,10 +17,6 @@ public class MyApplication extends Application {
     private static MyApplication mContext;
     public static StaffInfoBean staffInfoBean;
     public static String authorization = "";
-    public static String storeName = "";
-    public static String storeAddress = "";
-    public static String storeTel = "";
-    public static String region = "";
     public static String storeListJsonString = "";
 
     @Override

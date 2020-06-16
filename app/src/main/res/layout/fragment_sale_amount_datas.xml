@@ -31,7 +31,7 @@
             android:elevation="5dp"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            android:text="请选择日期"
+            android:text="請選擇日期"
             android:textColor="#4a4a4a"
             android:textSize="15sp" />
 
@@ -46,7 +46,7 @@
             android:elevation="5dp"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            android:text="请选择开始日期"
+            android:text="請選擇開始日期"
             android:textColor="#4a4a4a"
             android:textSize="13sp"
             android:visibility="gone" />
@@ -62,7 +62,7 @@
             android:elevation="5dp"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            android:text="请选择结束日期"
+            android:text="請選擇結束日期"
             android:textColor="#4a4a4a"
             android:textSize="13sp"
             android:visibility="gone" />

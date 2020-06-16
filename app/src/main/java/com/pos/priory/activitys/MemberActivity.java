@@ -75,10 +75,7 @@ public class MemberActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(MemberActivity.this, AddNewOrderActivity.class);
-                intent.putExtra("memberId", memberList.get(position).getId());
-                intent.putExtra("memberMobile", memberList.get(position).getMobile());
-                intent.putExtra("memberReward", memberList.get(position).getReward());
-                intent.putExtra("memberName", memberList.get(position).getName());
+                intent.putExtra("memberInfo", gson.toJson(memberList.get(position)));
                 startActivity(intent);
             }
         });

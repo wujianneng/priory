@@ -11,8 +11,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.infitack.rxretorfit2library.ModelListener;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.beans.MemberBean;
+import com.pos.priory.networks.ApiService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -74,6 +80,9 @@ public class MemberInfoActivity extends BaseActivity {
         sexTv.setText(memberBean.getGender());
         phoneTv.setText(memberBean.getMobile());
         scoutTv.setText(memberBean.getReward() + "");
+        registerAddressTv.setText("注冊地點：" + memberBean.getShop());
+        orderTitle.setText("注冊時間：" + memberBean.getCreated());
+
     }
 
 
@@ -87,10 +96,41 @@ public class MemberInfoActivity extends BaseActivity {
                 showChoiceSexDialog();
                 break;
             case R.id.btn_save:
-                setResult(4);
-                finish();
+                doSave();
                 break;
         }
+    }
+
+    private void doSave() {
+        if(phoneTv.getText().toString().isEmpty()){
+            showToast("請先輸入電話");
+            return;
+        }
+        if(edtFirstName.getText().toString().isEmpty()){
+            showToast("請先輸入姓氏");
+            return;
+        }
+        Map<String, Object> params = new HashMap<>();
+        params.put("mobile", phoneTv.getText().toString());
+        params.put("lastname", edtFirstName.getText().toString());
+        if (!edtName.getText().toString().isEmpty())
+            params.put("firstname", edtName.getText().toString());
+        params.put("gender", sexTv.getText().toString().equals("男") ? 1 : 2);
+        showLoadingDialog("正在修改會員信息...");
+        RetrofitManager.excute(RetrofitManager.createString(ApiService.class).editMember(memberBean.getId(),params), new ModelListener() {
+            @Override
+            public void onSuccess(String result) throws Exception {
+                hideLoadingDialog();
+                 finish();
+            }
+
+            @Override
+            public void onFailed(String erromsg) {
+                hideLoadingDialog();
+                showToast("修改會員信息失敗");
+
+            }
+        });
     }
 
     int yourChoice;

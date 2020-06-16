@@ -80,6 +80,10 @@ public interface ApiService {
     @POST("/api/member/create")
     Observable<String> registerMember(@FieldMap Map<String, Object> map);//注冊會員接口
 
+    @FormUrlEncoded
+    @PUT("/api/member/detail/{id}")
+    Observable<String> editMember(@Path("id") int id,@FieldMap Map<String, Object> map);//修改會員信息
+
     @GET("/api/order")
     Observable<String> getOrdersByOrdernumber(@Query("search") String ordernumber);//通过订单号码查询订单
 
@@ -89,11 +93,19 @@ public interface ApiService {
     @GET("/api/order")
     Observable<String> getOrdersByDate(@Query("date") String date);//通过日期查询订单
 
+    @GET("/api/product")
+    Observable<String> getFittings(@Query("accessory") boolean accessory);//獲取配件列表
+
+    @GET("/api/product")
+    Observable<String> getProductBySearch(@Query("search") String search);//搜索單個產品
+
     @GET("/api/data/dashboard")
     Observable<String> getDashboard();//获取首页看板日统计数据
 
-    @GET("/api/data/saleslist")
-    Observable<String> getDatas();//获取数据页数据
+    @GET("/api/data/turnover")
+    Observable<String> getSaleAmountDatas(@Query("startdate") String startdate,
+                                          @Query("enddate") String enddate);//获取数据營業額数据
+
 
     @GET("/api/warehouse/filter")
     Observable<RepertoryFiltersBean> getRepertoryFilters();
@@ -220,6 +232,15 @@ public interface ApiService {
 
     @GET("/api/app/store/list")
     Observable<String> getAppStoreList();//獲取店鋪列表
+
+    @FormUrlEncoded
+    @POST("/api/coupon/action")
+    Observable<String> getCoupons(@FieldMap Map<String,Object> map);//獲取優惠券列表或兌換優惠券
+
+    @FormUrlEncoded
+    @POST("/api/cashcoupon/action")
+    Observable<String> getCashCoupons(@FieldMap Map<String,Object> map);//獲取現金券列表或兌換現金券
+
 
     @Streaming
     @GET

@@ -55,7 +55,7 @@ public class SaleCountDatasFragment extends BaseFragment {
     }
 
     private void initViews() {
-        storeNameTv.setText("銷售量(" + MyApplication.storeName + ")");
+        storeNameTv.setText("銷售量(" + MyApplication.staffInfoBean.getShop() + ")");
     }
 
     @OnClick({R.id.date_tv,R.id.start_date_tv,R.id.end_date_tv,R.id.btn_search_type,R.id.btn_select_good_type,R.id.btn_select_count})

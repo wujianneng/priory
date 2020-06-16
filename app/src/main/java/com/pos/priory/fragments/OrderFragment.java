@@ -370,13 +370,12 @@ public class OrderFragment extends BaseFragment {
                     extraList.add(dayReportDataBean);
                 }
             }
-            Log.e("test", "MyApplication.getContext().region:" + MyApplication.getContext().region);
             int layoutid = 0;
-            if (MyApplication.getContext().region.equals("中国大陆")) {
-                layoutid = R.layout.gold_daliy_table;
-            } else {
+//            if (MyApplication.getContext().region.equals("中国大陆")) {
+//                layoutid = R.layout.gold_daliy_table;
+//            } else {
                 layoutid = R.layout.gold_daliy_table2;
-            }
+//            }
             final View printView = LayoutInflater.from(getActivity()).inflate(layoutid, null);
             ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.staffInfoBean.getShop());
             ((TextView) printView.findViewById(R.id.date_tv)).setText(DateUtils.getDateOfToday());

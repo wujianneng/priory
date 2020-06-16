@@ -24,7 +24,9 @@ import com.google.gson.reflect.TypeToken;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.adapters.PayTypeAdapter;
+import com.pos.priory.beans.FittingBean;
 import com.pos.priory.beans.GoodBean;
+import com.pos.priory.beans.MemberBean;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.beans.PayTypeBean;
 import com.pos.priory.coustomViews.CustomDialog;
@@ -98,6 +100,9 @@ public class BalanceActivity extends BaseActivity {
     PayTypeAdapter adapter;
     List<PayTypeBean> payTypeBeanList = new ArrayList<>();
 
+    List<FittingBean.ResultsBean> goodList = new ArrayList<>();
+    MemberBean.ResultsBean memberBean;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +113,11 @@ public class BalanceActivity extends BaseActivity {
     }
 
     protected void initViews() {
+        memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.ResultsBean.class);
+        goodList = gson.fromJson(getIntent().getStringExtra("goodlist"),
+                new TypeToken<List<FittingBean.ResultsBean>>() {
+                }.getType());
+
         titleTv.setText("合計付款");
         nextTv.setVisibility(View.VISIBLE);
         nextTv.setText("結算");
@@ -115,10 +125,9 @@ public class BalanceActivity extends BaseActivity {
         checkedGoodListString = getIntent().getStringExtra("checkedGoodList");
         sumMoney = new BigDecimal(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney)).doubleValue();
         paymentTv.setText(sumMoney + "");
-        memberNameTv.setText("会员:  " + getIntent().getStringExtra("memberName"));
-        memberPhoneTv.setText("联係电话:  " + getIntent().getStringExtra("memberMobile"));
-        int reward = getIntent().getIntExtra("memberReward", 0);
-        memberRewardTv.setText("积分:  " + reward + "分");
+        memberNameTv.setText("会员:  " + memberBean.getName());
+        memberPhoneTv.setText("联係电话:  " + memberBean.getMobile());
+        memberRewardTv.setText("积分:  " + memberBean.getReward() + "分");
         needPayMoney = sumMoney;
         needTv.setText("馀额: " + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney));
 
@@ -172,7 +181,10 @@ public class BalanceActivity extends BaseActivity {
                 startActivityForResult(new Intent(BalanceActivity.this,ExchangeCashCouponActivity.class),100);
                 break;
             case R.id.use_coupon_btn:
-                startActivityForResult(new Intent(BalanceActivity.this,SelectCashCouponActivity.class),100);
+                Intent intent1 = new Intent(BalanceActivity.this,SelectCashCouponActivity.class);
+                intent1.putExtra("memberInfo", gson.toJson(memberBean));
+                intent1.putExtra("goodlist", gson.toJson(goodList));
+                startActivityForResult(intent1,100);
                 break;
         }
     }
