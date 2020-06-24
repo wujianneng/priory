@@ -10,9 +10,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.infitack.rxretorfit2library.ModelListener;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.adapters.ExchangeCashCouponAdapter;
 import com.pos.priory.beans.ExchangeCashCouponBean;
+import com.pos.priory.beans.MemberBean;
+import com.pos.priory.networks.ApiService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +47,9 @@ public class ExchangeCashCouponActivity extends BaseActivity {
     TextView ownIntegalTv;
 
     ExchangeCashCouponAdapter adapter;
-    List<ExchangeCashCouponBean> datalist = new ArrayList<>();
+    List<ExchangeCashCouponBean.ResultsBean> datalist = new ArrayList<>();
+    MemberBean.ResultsBean memberBean;
+    public double enableReward = 0, usedReward = 0, lastReward = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +60,64 @@ public class ExchangeCashCouponActivity extends BaseActivity {
     }
 
     private void initViews() {
-        titleTv.setText("积分换现金券");
+        memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.ResultsBean.class);
+        enableReward = memberBean.getReward();
+        lastReward = memberBean.getReward();
+        titleTv.setText("積分兌換");
         nextTv.setText("確定");
         nextTv.setVisibility(View.VISIBLE);
-        datalist.add(new ExchangeCashCouponBean("$300",-30000));
-        datalist.add(new ExchangeCashCouponBean("$100",-10000));
-        recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        adapter = new ExchangeCashCouponAdapter(R.layout.exchange_coupon_list_item,datalist);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        adapter = new ExchangeCashCouponAdapter(this, R.layout.exchange_coupon_list_item, datalist);
+        adapter.setOnItemChildClickListener(((adapter1, view, position) -> {
+            ExchangeCashCouponBean.ResultsBean item = datalist.get(position);
+            if (view.getId() == R.id.decrease_btn) {
+                if (item.getCount() == 1)
+                    return;
+                item.setCount(item.getCount() - 1);
+                adapter.notifyItemChanged(position);
+                resetRewardTvs();
+            } else if (view.getId() == R.id.increase_btn) {
+                if (lastReward < item.getReducereward())
+                    return;
+                item.setCount(item.getCount() + 1);
+                adapter.notifyItemChanged(position);
+                resetRewardTvs();
+            }
+        }));
         recyclerView.setAdapter(adapter);
+        resetRewardTvs();
+        getDatas();
+    }
+
+    public void resetRewardTvs() {
+        usedReward = 0;
+        for (ExchangeCashCouponBean.ResultsBean resultsBean : adapter.selectList) {
+            usedReward += resultsBean.getReducereward() * resultsBean.getCount();
+        }
+        lastReward = enableReward - usedReward;
+        if (lastReward < 0) lastReward = 0;
+
+        usableIntegalTv.setText("可使用積分：" + enableReward);
+        usedIntegalTv.setText("已扣除積分：" + usedReward);
+        ownIntegalTv.setText("剩餘積分：" + lastReward);
+    }
+
+    private void getDatas() {
+        showLoadingDialog("正在獲取積分兌換列表...");
+        RetrofitManager.excute(RetrofitManager.createString(ApiService.class).getRewardExList(), new ModelListener() {
+            @Override
+            public void onSuccess(String result) throws Exception {
+                hideLoadingDialog();
+                ExchangeCashCouponBean bean = gson.fromJson(result, ExchangeCashCouponBean.class);
+                datalist.addAll(bean.getResults());
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailed(String erromsg) {
+                hideLoadingDialog();
+            }
+        });
     }
 
     @OnClick({R.id.next_tv, R.id.back_btn})
@@ -69,7 +125,7 @@ public class ExchangeCashCouponActivity extends BaseActivity {
         switch (v.getId()) {
             case R.id.next_tv:
                 Intent intent = new Intent();
-                intent.putExtra("selectCashCouponList", gson.toJson(adapter.selectList));
+                intent.putExtra("selectExchangeCashCouponList", gson.toJson(adapter.selectList));
                 setResult(2, intent);
                 finish();
                 break;

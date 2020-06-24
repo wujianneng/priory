@@ -123,7 +123,7 @@ public class SelectDiscountActivity extends BaseActivity {
             public void onFailed(String erromsg) {
                 hideLoadingDialog();
                 if (erromsg.contains("302")) {
-                    showToast("優惠券已被使用");
+                    showToast("優惠券已被使用或已失效");
                 } else {
                     showToast("未能找到此優惠券");
                 }

@@ -10,18 +10,19 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
 import com.pos.priory.beans.PayTypeBean;
+import com.pos.priory.beans.PayTypesResultBean;
 
 import java.util.List;
 
-public class PayTypeAdapter extends BaseQuickAdapter<PayTypeBean, BaseViewHolder> {
+public class PayTypeAdapter extends BaseQuickAdapter<PayTypesResultBean.ResultsBean, BaseViewHolder> {
 
-    public PayTypeAdapter(int layoutResId, @Nullable List<PayTypeBean> data) {
+    public PayTypeAdapter(int layoutResId, @Nullable List<PayTypesResultBean.ResultsBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, PayTypeBean item) {
-        helper.setText(R.id.name_tv, item.getPayTypeName());
+    protected void convert(BaseViewHolder helper, PayTypesResultBean.ResultsBean item) {
+        helper.setText(R.id.name_tv, item.getName());
         final EditText edtWeight = helper.getView(R.id.edt_view);
         edtWeight.removeTextChangedListener((TextWatcher) edtWeight.getTag());
         edtWeight.setText(item.getPayAmount() + "");

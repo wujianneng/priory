@@ -2,13 +2,13 @@ package com.pos.priory.beans;
 
 import java.util.List;
 
-public class ExchangeCashCouponBean {
+public class PayTypesResultBean {
 
     /**
-     * count : 1
+     * count : 4
      * next : null
      * previous : null
-     * results : [{"id":1,"name":"积分现金1粉300减10000分换取","reducereward":10000,"value":"300.00"}]
+     * results : [{"id":1,"name":"现金"},{"id":2,"name":"信用卡"},{"id":3,"name":"支付宝"},{"id":4,"name":"微信支付"}]
      */
 
     private int count;
@@ -51,32 +51,19 @@ public class ExchangeCashCouponBean {
     public static class ResultsBean {
         /**
          * id : 1
-         * name : 积分现金1粉300减10000分换取
-         * reducereward : 10000
-         * value : 300.00
+         * name : 现金
          */
 
         private int id;
         private String name;
-        private int reducereward;
-        private String value;
-        int count = 1;
-        boolean isSelected;
+        double payAmount = 0;
 
-        public int getCount() {
-            return count;
+        public double getPayAmount() {
+            return payAmount;
         }
 
-        public void setCount(int count) {
-            this.count = count;
-        }
-
-        public boolean isSelected() {
-            return isSelected;
-        }
-
-        public void setSelected(boolean selected) {
-            isSelected = selected;
+        public void setPayAmount(double payAmount) {
+            this.payAmount = payAmount;
         }
 
         public int getId() {
@@ -93,22 +80,6 @@ public class ExchangeCashCouponBean {
 
         public void setName(String name) {
             this.name = name;
-        }
-
-        public int getReducereward() {
-            return reducereward;
-        }
-
-        public void setReducereward(int reducereward) {
-            this.reducereward = reducereward;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
         }
     }
 }

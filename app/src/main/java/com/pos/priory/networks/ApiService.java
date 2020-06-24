@@ -241,6 +241,12 @@ public interface ApiService {
     @POST("/api/cashcoupon/action")
     Observable<String> getCashCoupons(@FieldMap Map<String,Object> map);//獲取現金券列表或兌換現金券
 
+    @GET("/api/reward")
+    Observable<String> getRewardExList();//獲取積分兌換列表
+
+    @GET("/api/payment")
+    Observable<String> getPayTypes();//獲取付款方式
+
 
     @Streaming
     @GET

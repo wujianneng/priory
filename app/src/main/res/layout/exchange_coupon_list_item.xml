@@ -17,23 +17,13 @@
 
         <TextView
             android:id="@+id/name_tv"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
+            android:singleLine="false"
             android:layout_toRightOf="@+id/checkbox"
             android:text="优惠券名"
-            android:textColor="@color/blue_text"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/integal_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="25dp"
-            android:layout_toRightOf="@+id/name_tv"
-            android:text="-10000"
             android:textColor="@color/blue_text"
             android:textSize="15sp" />
 
@@ -41,6 +31,7 @@
             android:id="@+id/count_layout"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
+            android:visibility="gone"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"

@@ -21,14 +21,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.adapters.PayTypeAdapter;
+import com.pos.priory.beans.CouponResultBean;
+import com.pos.priory.beans.ExchangeCashCouponBean;
 import com.pos.priory.beans.FittingBean;
 import com.pos.priory.beans.GoodBean;
 import com.pos.priory.beans.MemberBean;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.beans.PayTypeBean;
+import com.pos.priory.beans.PayTypesResultBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.utils.ColseActivityUtils;
@@ -98,9 +102,11 @@ public class BalanceActivity extends BaseActivity {
     TextView needTv;
 
     PayTypeAdapter adapter;
-    List<PayTypeBean> payTypeBeanList = new ArrayList<>();
 
     List<FittingBean.ResultsBean> goodList = new ArrayList<>();
+    List<ExchangeCashCouponBean.ResultsBean> exchangCashList = new ArrayList<>();
+    List<CouponResultBean.ResultBean> couponBeanList = new ArrayList<>();
+    List<PayTypesResultBean.ResultsBean> selectedPayTypeList = new ArrayList<>();
     MemberBean.ResultsBean memberBean;
 
 
@@ -150,7 +156,7 @@ public class BalanceActivity extends BaseActivity {
                 deleteOrderItem(adapterPosition);
             }
         });
-        adapter = new PayTypeAdapter(R.layout.pay_type_list_item, payTypeBeanList);
+        adapter = new PayTypeAdapter(R.layout.pay_type_list_item, selectedPayTypeList);
         goodRecyclerView.setLayoutManager(new LinearLayoutManager(this, OrientationHelper.VERTICAL,
                 false));
         goodRecyclerView.setAdapter(adapter);
@@ -178,13 +184,15 @@ public class BalanceActivity extends BaseActivity {
                 showSelectPayType();
                 break;
             case R.id.exchange_coupon_btn:
-                startActivityForResult(new Intent(BalanceActivity.this,ExchangeCashCouponActivity.class),100);
+                Intent intent = new Intent(BalanceActivity.this, ExchangeCashCouponActivity.class);
+                intent.putExtra("memberInfo", gson.toJson(memberBean));
+                startActivityForResult(intent, 100);
                 break;
             case R.id.use_coupon_btn:
-                Intent intent1 = new Intent(BalanceActivity.this,SelectCashCouponActivity.class);
+                Intent intent1 = new Intent(BalanceActivity.this, SelectCashCouponActivity.class);
                 intent1.putExtra("memberInfo", gson.toJson(memberBean));
                 intent1.putExtra("goodlist", gson.toJson(goodList));
-                startActivityForResult(intent1,100);
+                startActivityForResult(intent1, 100);
                 break;
         }
     }
@@ -192,38 +200,56 @@ public class BalanceActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == 1){
-            Log.e("test","list:" + data.getStringExtra("selectCashCouponList"));
-        }else if(resultCode == 2){
-            Log.e("test","list2:" + data.getStringExtra("selectCashCouponList"));
+        if (resultCode == 1) {
+            Log.e("test", "list:" + data.getStringExtra("selectCashCouponList"));
+            couponBeanList = gson.fromJson(data.getStringExtra("selectCashCouponList"),
+                    new TypeToken<List<CouponResultBean.ResultBean>>() {
+                    }.getType());
+        } else if (resultCode == 2) {
+            exchangCashList = gson.fromJson(data.getStringExtra("selectExchangeCashCouponList"),
+                    new TypeToken<List<ExchangeCashCouponBean.ResultsBean>>() {
+                    }.getType());
         }
     }
 
+
     private void showSelectPayType() {
-        String[] payType = new String[]{"現金", "信用卡", "微信", "支付寶"};
-        boolean[] booleans = new boolean[payType.length];
-        for (boolean b : booleans) {
-            b = false;
-        }
-        new AlertDialog.Builder(this).setTitle("請選擇付款方式")
-                .setMultiChoiceItems(payType, booleans, (dialog, which, isChecked) -> {
-                    booleans[which] = isChecked;
-                })
-                .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
-                .setPositiveButton("確定", (dialog, which) -> {
-                    dialog.dismiss();
-                    payTypeBeanList.clear();
-                    for (int i = 0; i < booleans.length; i++) {
-                        if (booleans[i]) {
-                            PayTypeBean payTypeBean = new PayTypeBean();
-                            payTypeBean.setPayTypeName(payType[i]);
-                            payTypeBean.setPayAmount(0);
-                            payTypeBeanList.add(payTypeBean);
-                        }
-                    }
-                    adapter.notifyDataSetChanged();
-                })
-                .create().show();
+        showLoadingDialog("正在獲取付款方式列表...");
+        RetrofitManager.excute(RetrofitManager.createString(ApiService.class).getPayTypes(), new ModelListener() {
+            @Override
+            public void onSuccess(String result) throws Exception {
+                PayTypesResultBean payTypesResultBean = gson.fromJson(result, PayTypesResultBean.class);
+                hideLoadingDialog();
+                String[] payType = new String[payTypesResultBean.getResults().size()];
+                boolean[] booleans = new boolean[payTypesResultBean.getResults().size()];
+                for (int i = 0; i < payTypesResultBean.getResults().size(); i++) {
+                    payType[i] = payTypesResultBean.getResults().get(i).getName();
+                    booleans[i] = false;
+                }
+                new AlertDialog.Builder(BalanceActivity.this).setTitle("請選擇付款方式")
+                        .setMultiChoiceItems(payType, booleans, (dialog, which, isChecked) -> {
+                            booleans[which] = isChecked;
+                        })
+                        .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
+                        .setPositiveButton("確定", (dialog, which) -> {
+                            dialog.dismiss();
+                            selectedPayTypeList.clear();
+                            for (int i = 0; i < booleans.length; i++) {
+                                if (booleans[i]) {
+                                    selectedPayTypeList.add(payTypesResultBean.getResults().get(i));
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                        })
+                        .create().show();
+            }
+
+            @Override
+            public void onFailed(String erromsg) {
+                hideLoadingDialog();
+                showToast("獲取付款方式列表失敗");
+            }
+        });
     }
 
 
