@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -11,18 +12,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.gson.reflect.TypeToken;
 import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
-import com.pos.priory.activitys.BigInventoryDetialActivity;
 import com.pos.priory.activitys.BigInventoryTypesDetialActivity;
+import com.pos.priory.activitys.NfcActivity;
 import com.pos.priory.adapters.InventoryStoreAdapter;
+import com.pos.priory.beans.CreateInventoryResultBean;
 import com.pos.priory.beans.InventoryBean;
 import com.pos.priory.networks.ApiService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -54,6 +57,13 @@ public class InventoryFragment extends BaseFragment {
     SmartRefreshLayout refreshLayout;
     InventoryStoreAdapter adapter;
     List<InventoryBean.ResultsBean> dataList = new ArrayList<>();
+    @Bind(R.id.otg_btn)
+    Button otgBtn;
+
+    @Bind(R.id.fab)
+    FloatingActionButton fab;
+
+    boolean needRefresh = false;
 
 
     @Nullable
@@ -89,6 +99,37 @@ public class InventoryFragment extends BaseFragment {
             }
         });
         refreshLayout.autoRefresh();
+
+        otgBtn.setVisibility(View.GONE);
+        otgBtn.setOnClickListener(view1 -> startActivity(new Intent(getActivity(), NfcActivity.class)));
+
+        fab.setOnClickListener(view1 -> {
+            RetrofitManager.excute(RetrofitManager.createString(ApiService.class).createNewInventry(MyApplication.staffInfoBean.getShopid()), new ModelListener() {
+                @Override
+                public void onSuccess(String result) throws Exception {
+                    CreateInventoryResultBean createInventoryResultBean = gson.fromJson(result,CreateInventoryResultBean.class);
+                    Intent intent = new Intent(getActivity(), BigInventoryTypesDetialActivity.class);
+                    intent.putExtra("inventoryId", createInventoryResultBean.getId());
+                    intent.putExtra("status",createInventoryResultBean.isDone());
+                    startActivity(intent);
+                    needRefresh = true;
+                }
+
+                @Override
+                public void onFailed(String erromsg) {
+
+                }
+            });
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(needRefresh){
+            refreshRecyclerView();
+            needRefresh = false;
+        }
     }
 
     private void refreshRecyclerView() {

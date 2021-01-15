@@ -6,68 +6,112 @@ public class DayReportBean {
 
 
     /**
-     * date : 2019-07-01
-     * turnovertotal : 1737.1
-     * credit : 2277.0
+     * id : 0
+     * dayend_item : [{"id":0,"status":true,"created":"2021-01-14T09:34:32.417Z","updated":"2021-01-14T09:34:32.417Z","dayend_type":0,"price":0,"quantity":0,"weight":0,"dayend_table":0,"whitem":0}]
+     * status : true
+     * created : 2021-01-14T09:34:32.417Z
+     * updated : 2021-01-14T09:34:32.417Z
+     * dayend_no : string
+     * dayendno_num : 0
+     * dayend_date : 2021-01-14
+     * invoice_amount : 0
      * cash : 0
-     * alipay : 119.8
+     * credit_card : 0
+     * alipay : 0
      * wechatpay : 0
-     * voucher : 0
-     * refund : -1138.1
-     * goldturnover : 1737.1
-     * golditemcount : 3
-     * golditemweight : 6.04
-     * cystalturnover : 0
-     * cystalitemcount : 0
-     * braceletturnover : 0
-     * braceletitemcount : 0
-     * items : [{"stock":"2001070110321601","productname":"測試產品","quantity":1,"catalog":"黄金","weight":1.01,"price":599,"discount":"原价","discountprice":599},{"stock":"2001070110355901","productname":"測試產品","quantity":1,"catalog":"黄金","weight":2.01,"price":599,"discount":"9折","discountprice":539.1},{"stock":"2001070110371402","productname":"測試產品","quantity":1,"catalog":"黄金","weight":3.02,"price":599,"discount":"原价","discountprice":599}]
-     * refunditem : [{"stock":"2001070110321694","productname":"測試產品","quantity":1,"catalog":"黄金","weight":1.02,"price":599,"discount":"9折","discountprice":539.1},{"stock":"2001070110371401","productname":"測試產品","quantity":1,"catalog":"黄金","weight":3.01,"price":599,"discount":"原价","discountprice":599}]
+     * cashcoupon : 0
+     * other_pay : 0
+     * exchange : 0
+     * returned : 0
+     * return_goldprice : 0
+     * shop : 0
      */
 
-    private String date;
-    private double turnovertotal;
-    private double credit;
-    private double cash;
-    private double alipay;
-    private double wechatpay;
-    private double voucher;
-    private double refund;
-    private double goldturnover;
-    private double golditemcount;
-    private double golditemweight;
-    private double cystalturnover;
-    private double cystalitemcount;
-    private double braceletturnover;
-    private double braceletitemcount;
-    private List<ItemsBean> items;
-    private List<RefunditemBean> refunditem;
+    private int id;
+    private boolean status;
+    private String created;
+    private String updated;
+    private String dayend_no;
+    private int dayendno_num;
+    private String dayend_date;
+    private int invoice_amount;
+    private int cash;
+    private int credit_card;
+    private int alipay;
+    private int wechatpay;
+    private int cashcoupon;
+    private int other_pay;
+    private int exchange;
+    private int returned;
+    private int return_goldprice;
+    private int shop;
+    private List<DayendItemBean> dayend_item;
 
-    public String getDate() {
-        return date;
+    public int getId() {
+        return id;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public double getTurnovertotal() {
-        return turnovertotal;
+    public boolean isStatus() {
+        return status;
     }
 
-    public void setTurnovertotal(double turnovertotal) {
-        this.turnovertotal = turnovertotal;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
-    public double getCredit() {
-        return credit;
+    public String getCreated() {
+        return created;
     }
 
-    public void setCredit(double credit) {
-        this.credit = credit;
+    public void setCreated(String created) {
+        this.created = created;
     }
 
-    public double getCash() {
+    public String getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(String updated) {
+        this.updated = updated;
+    }
+
+    public String getDayend_no() {
+        return dayend_no;
+    }
+
+    public void setDayend_no(String dayend_no) {
+        this.dayend_no = dayend_no;
+    }
+
+    public int getDayendno_num() {
+        return dayendno_num;
+    }
+
+    public void setDayendno_num(int dayendno_num) {
+        this.dayendno_num = dayendno_num;
+    }
+
+    public String getDayend_date() {
+        return dayend_date;
+    }
+
+    public void setDayend_date(String dayend_date) {
+        this.dayend_date = dayend_date;
+    }
+
+    public int getInvoice_amount() {
+        return invoice_amount;
+    }
+
+    public void setInvoice_amount(int invoice_amount) {
+        this.invoice_amount = invoice_amount;
+    }
+
+    public int getCash() {
         return cash;
     }
 
@@ -75,15 +119,23 @@ public class DayReportBean {
         this.cash = cash;
     }
 
-    public double getAlipay() {
+    public int getCredit_card() {
+        return credit_card;
+    }
+
+    public void setCredit_card(int credit_card) {
+        this.credit_card = credit_card;
+    }
+
+    public int getAlipay() {
         return alipay;
     }
 
-    public void setAlipay(double alipay) {
+    public void setAlipay(int alipay) {
         this.alipay = alipay;
     }
 
-    public double getWechatpay() {
+    public int getWechatpay() {
         return wechatpay;
     }
 
@@ -91,138 +143,133 @@ public class DayReportBean {
         this.wechatpay = wechatpay;
     }
 
-    public double getVoucher() {
-        return voucher;
+    public int getCashcoupon() {
+        return cashcoupon;
     }
 
-    public void setVoucher(int voucher) {
-        this.voucher = voucher;
+    public void setCashcoupon(int cashcoupon) {
+        this.cashcoupon = cashcoupon;
     }
 
-    public double getRefund() {
-        return refund;
+    public int getOther_pay() {
+        return other_pay;
     }
 
-    public void setRefund(double refund) {
-        this.refund = refund;
+    public void setOther_pay(int other_pay) {
+        this.other_pay = other_pay;
     }
 
-    public double getGoldturnover() {
-        return goldturnover;
+    public int getExchange() {
+        return exchange;
     }
 
-    public void setGoldturnover(double goldturnover) {
-        this.goldturnover = goldturnover;
+    public void setExchange(int exchange) {
+        this.exchange = exchange;
     }
 
-    public double getGolditemcount() {
-        return golditemcount;
+    public int getReturned() {
+        return returned;
     }
 
-    public void setGolditemcount(int golditemcount) {
-        this.golditemcount = golditemcount;
+    public void setReturned(int returned) {
+        this.returned = returned;
     }
 
-    public double getGolditemweight() {
-        return golditemweight;
+    public int getReturn_goldprice() {
+        return return_goldprice;
     }
 
-    public void setGolditemweight(double golditemweight) {
-        this.golditemweight = golditemweight;
+    public void setReturn_goldprice(int return_goldprice) {
+        this.return_goldprice = return_goldprice;
     }
 
-    public double getCystalturnover() {
-        return cystalturnover;
+    public int getShop() {
+        return shop;
     }
 
-    public void setCystalturnover(int cystalturnover) {
-        this.cystalturnover = cystalturnover;
+    public void setShop(int shop) {
+        this.shop = shop;
     }
 
-    public double getCystalitemcount() {
-        return cystalitemcount;
+    public List<DayendItemBean> getDayend_item() {
+        return dayend_item;
     }
 
-    public void setCystalitemcount(int cystalitemcount) {
-        this.cystalitemcount = cystalitemcount;
+    public void setDayend_item(List<DayendItemBean> dayend_item) {
+        this.dayend_item = dayend_item;
     }
 
-    public double getBraceletturnover() {
-        return braceletturnover;
-    }
-
-    public void setBraceletturnover(int braceletturnover) {
-        this.braceletturnover = braceletturnover;
-    }
-
-    public double getBraceletitemcount() {
-        return braceletitemcount;
-    }
-
-    public void setBraceletitemcount(int braceletitemcount) {
-        this.braceletitemcount = braceletitemcount;
-    }
-
-    public List<ItemsBean> getItems() {
-        return items;
-    }
-
-    public void setItems(List<ItemsBean> items) {
-        this.items = items;
-    }
-
-    public List<RefunditemBean> getRefunditem() {
-        return refunditem;
-    }
-
-    public void setRefunditem(List<RefunditemBean> refunditem) {
-        this.refunditem = refunditem;
-    }
-
-    public static class ItemsBean {
+    public static class DayendItemBean {
         /**
-         * stock : 2001070110321601
-         * productname : 測試產品
-         * quantity : 1
-         * catalog : 黄金
-         * weight : 1.01
-         * price : 599.0
-         * discount : 原价
-         * discountprice : 599.0
+         * id : 0
+         * status : true
+         * created : 2021-01-14T09:34:32.417Z
+         * updated : 2021-01-14T09:34:32.417Z
+         * dayend_type : 0
+         * price : 0
+         * quantity : 0
+         * weight : 0
+         * dayend_table : 0
+         * whitem : 0
          */
 
-        private String stock;
-        private String productname;
+        private int id;
+        private boolean status;
+        private String created;
+        private String updated;
+        private int dayend_type;
+        private int price;
         private int quantity;
-        private String catalog;
-        private double weight;
-        private double price;
-        private String discount;
-        private double discountprice;
-        private boolean isReturnItem = false;
+        private int weight;
+        private int dayend_table;
+        private int whitem;
 
-        public boolean isReturnItem() {
-            return isReturnItem;
+        public int getId() {
+            return id;
         }
 
-        public void setReturnItem(boolean returnItem) {
-            isReturnItem = returnItem;
+        public void setId(int id) {
+            this.id = id;
         }
 
-        public String getStock() {
-            return stock;
+        public boolean isStatus() {
+            return status;
         }
 
-        public void setStock(String stock) {
-            this.stock = stock;
+        public void setStatus(boolean status) {
+            this.status = status;
         }
 
-        public String getProductname() {
-            return productname;
+        public String getCreated() {
+            return created;
         }
 
-        public void setProductname(String productname) {
-            this.productname = productname;
+        public void setCreated(String created) {
+            this.created = created;
+        }
+
+        public String getUpdated() {
+            return updated;
+        }
+
+        public void setUpdated(String updated) {
+            this.updated = updated;
+        }
+
+        public int getDayend_type() {
+            return dayend_type;
+        }
+
+        public void setDayend_type(int dayend_type) {
+            this.dayend_type = dayend_type;
+        }
+
+        public int getPrice() {
+            return price;
+        }
+
+        public void setPrice(int price) {
+            this.price = price;
         }
 
         public int getQuantity() {
@@ -233,130 +280,28 @@ public class DayReportBean {
             this.quantity = quantity;
         }
 
-        public String getCatalog() {
-            return catalog;
-        }
-
-        public void setCatalog(String catalog) {
-            this.catalog = catalog;
-        }
-
-        public double getWeight() {
+        public int getWeight() {
             return weight;
         }
 
-        public void setWeight(double weight) {
+        public void setWeight(int weight) {
             this.weight = weight;
         }
 
-        public double getPrice() {
-            return price;
+        public int getDayend_table() {
+            return dayend_table;
         }
 
-        public void setPrice(double price) {
-            this.price = price;
+        public void setDayend_table(int dayend_table) {
+            this.dayend_table = dayend_table;
         }
 
-        public String getDiscount() {
-            return discount;
+        public int getWhitem() {
+            return whitem;
         }
 
-        public void setDiscount(String discount) {
-            this.discount = discount;
-        }
-
-        public double getDiscountprice() {
-            return discountprice;
-        }
-
-        public void setDiscountprice(double discountprice) {
-            this.discountprice = discountprice;
-        }
-    }
-
-    public static class RefunditemBean {
-        /**
-         * stock : 2001070110321694
-         * productname : 測試產品
-         * quantity : 1
-         * catalog : 黄金
-         * weight : 1.02
-         * price : 599.0
-         * discount : 9折
-         * discountprice : 539.1
-         */
-
-        private String stock;
-        private String productname;
-        private int quantity;
-        private String catalog;
-        private double weight;
-        private double price;
-        private String discount;
-        private double discountprice;
-
-        public String getStock() {
-            return stock;
-        }
-
-        public void setStock(String stock) {
-            this.stock = stock;
-        }
-
-        public String getProductname() {
-            return productname;
-        }
-
-        public void setProductname(String productname) {
-            this.productname = productname;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
-        }
-
-        public String getCatalog() {
-            return catalog;
-        }
-
-        public void setCatalog(String catalog) {
-            this.catalog = catalog;
-        }
-
-        public double getWeight() {
-            return weight;
-        }
-
-        public void setWeight(double weight) {
-            this.weight = weight;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        public String getDiscount() {
-            return discount;
-        }
-
-        public void setDiscount(String discount) {
-            this.discount = discount;
-        }
-
-        public double getDiscountprice() {
-            return discountprice;
-        }
-
-        public void setDiscountprice(double discountprice) {
-            this.discountprice = discountprice;
+        public void setWhitem(int whitem) {
+            this.whitem = whitem;
         }
     }
 }

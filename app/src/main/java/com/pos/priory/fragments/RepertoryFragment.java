@@ -136,7 +136,7 @@ public class RepertoryFragment extends BaseFragment {
                 Intent intent2 = new Intent(getActivity(), AddOrEditReturnItemActivity.class);
                 intent2.putExtra("isCreate", false);
                 intent2.putExtra("warehouseId", currentWarehouse.getId());
-                intent2.putExtra("returnBean",gson.toJson(dataList.get(position)));
+                intent2.putExtra("returnBean", gson.toJson(dataList.get(position)));
                 startActivity(intent2);
             }
         });
@@ -169,16 +169,20 @@ public class RepertoryFragment extends BaseFragment {
                         warehouse = result.getResult().getWarehouse();
                         category = result.getResult().getCategory();
                         returntypeBeanList = result.getResult().getReturntype();
-                        currentWarehouse = warehouse.get(0);
-                        btnSelectRepertory.setText(currentWarehouse.getName());
-                        btnSelectType.setText(category.get(0).getName());
-                        btnSelectReturnType.setText(returntypeBeanList.get(0).getName());
+                        if (warehouse.size() != 0) {
+                            currentWarehouse = warehouse.get(0);
+                            btnSelectRepertory.setText(currentWarehouse.getName());
+                        }
+                        if (category.size() != 0)
+                            btnSelectType.setText(category.get(0).getName());
+                        if (returntypeBeanList.size() != 0)
+                            btnSelectReturnType.setText(returntypeBeanList.get(0).getName());
                         refreshLayout.autoRefresh();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
-
+                        Log.e("test", "erro:" + erromsg);
                     }
                 });
     }
@@ -197,7 +201,8 @@ public class RepertoryFragment extends BaseFragment {
             }
             btnSelectRepertory.setText(item.getTitle());
             dinghuoTv.setVisibility(currentWarehouse.isWh_primary() ? View.VISIBLE : View.GONE);
-            addTv.setVisibility(currentWarehouse.isWh_primary() ? View.GONE : View.VISIBLE);
+//            addTv.setVisibility(currentWarehouse.isWh_primary() ? View.GONE : View.VISIBLE);
+            addTv.setVisibility(View.GONE);
             btnSelectType.setVisibility(currentWarehouse.isWh_primary() ? View.VISIBLE : View.GONE);
             btnSelectReturnType.setVisibility(currentWarehouse.isWh_primary() ? View.GONE : View.VISIBLE);
             btnSelectOrderParams.setVisibility(currentWarehouse.isWh_primary() ? View.VISIBLE : View.GONE);
@@ -376,9 +381,9 @@ public class RepertoryFragment extends BaseFragment {
                 new ModelGsonListener<WarehouseBean>() {
                     @Override
                     public void onSuccess(WarehouseBean result) throws Exception {
-                        Log.e("test","1111");
+                        Log.e("test", "1111");
                         if (result != null) {
-                            Log.e("test","22222");
+                            Log.e("test", "22222");
                             dataList.clear();
                             dataList.addAll(result.getResults().get(0).getItem());
                             repertoryAdapter.notifyDataSetChanged();
@@ -394,7 +399,7 @@ public class RepertoryFragment extends BaseFragment {
 
                     @Override
                     public void onFailed(String erromsg) {
-                        Log.e("test","3333");
+                        Log.e("test", erromsg);
                         refreshLayout.finishRefresh();
                     }
                 });
@@ -443,10 +448,10 @@ public class RepertoryFragment extends BaseFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void handleEventBus(String event){
-       if(event.equals("refreshReturnList")){
-           refreshLayout.autoRefresh();
-       }
+    public void handleEventBus(String event) {
+        if (event.equals("refreshReturnList")) {
+            refreshLayout.autoRefresh();
+        }
     }
 
 

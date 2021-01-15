@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,14 +18,25 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.ModelListener;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
+import com.pos.priory.adapters.DataCountAdapter;
+import com.pos.priory.beans.DataAmountBean;
+import com.pos.priory.beans.DataCountBean;
+import com.pos.priory.beans.ProductCategoryBean;
+import com.pos.priory.networks.ApiService;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
 
 public class SaleCountDatasFragment extends BaseFragment {
     View view;
@@ -44,6 +57,15 @@ public class SaleCountDatasFragment extends BaseFragment {
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
 
+    DataCountAdapter dataCountAdapter;
+
+    List<DataCountBean.ResultsBean> dataCountBeanList = new ArrayList<>();
+
+    int selectCategoryId = 0;
+    List<ProductCategoryBean> productCategoryBeanList = new ArrayList<>();
+
+    int maxCount = 10;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -56,11 +78,32 @@ public class SaleCountDatasFragment extends BaseFragment {
 
     private void initViews() {
         storeNameTv.setText("銷售量(" + MyApplication.staffInfoBean.getShop() + ")");
+        dataCountAdapter = new DataCountAdapter(R.layout.sale_count_data_item, dataCountBeanList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setAdapter(dataCountAdapter);
+        getCategorys();
     }
 
-    @OnClick({R.id.date_tv,R.id.start_date_tv,R.id.end_date_tv,R.id.btn_search_type,R.id.btn_select_good_type,R.id.btn_select_count})
-    public void onClick(View v){
-        switch (v.getId()){
+    private void getCategorys() {
+        RetrofitManager.excute(RetrofitManager.createString(ApiService.class).getProductCategorys(), new ModelListener() {
+            @Override
+            public void onSuccess(String result) throws Exception {
+                productCategoryBeanList = gson.fromJson(result, new TypeToken<List<ProductCategoryBean>>() {
+                }.getType());
+                if (productCategoryBeanList.size() != 0)
+                    selectCategoryId = productCategoryBeanList.get(0).getId();
+            }
+
+            @Override
+            public void onFailed(String erromsg) {
+
+            }
+        });
+    }
+
+    @OnClick({R.id.date_tv, R.id.start_date_tv, R.id.end_date_tv, R.id.btn_search_type, R.id.btn_select_good_type, R.id.btn_select_count})
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.date_tv:
                 getDate(0);
                 break;
@@ -82,31 +125,69 @@ public class SaleCountDatasFragment extends BaseFragment {
         }
     }
 
-    public void showSelectGoodTypePopu(){
-        PopupMenu popupMenu = new PopupMenu(getActivity(),btnSelectGoodType);
+    private void getDatas() {
+        Observable observable = null;
+        if (dateTv.getVisibility() == View.VISIBLE) {
+            if (dateTv.getText().equals("選擇日期")) {
+                return;
+            }
+            observable = RetrofitManager.createString(ApiService.class).getSaleCountDatas
+                    (dateTv.getText().toString(), dateTv.getText().toString(), MyApplication.staffInfoBean.getShopid() + "",
+                            selectCategoryId + "", "asc", "asc", "asc");
+        } else {
+            if (startDateTv.getText().equals("開始日期") || endDateTv.getText().equals("結束日期")) {
+                return;
+            }
+            observable = RetrofitManager.createString(ApiService.class).getSaleCountDatas
+                    (startDateTv.getText().toString(), endDateTv.getText().toString(), MyApplication.staffInfoBean.getShopid() + "",
+                            selectCategoryId + "", "asc", "asc", "asc");
+        }
+        RetrofitManager.excute(observable,
+                new ModelListener() {
+                    @Override
+                    public void onSuccess(String result) throws Exception {
+                        Log.e("test", "sadatas:" + result);
+                        dataCountBeanList.clear();
+                        DataCountBean dataCountBean = gson.fromJson(result, DataCountBean.class);
+                        for (int i = 0; i < maxCount; i++) {
+                            if (i < dataCountBean.getResults().size())
+                                dataCountBeanList.add(dataCountBean.getResults().get(i));
+                        }
+                        dataCountAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        Log.e("test", "sadataserro:" + erromsg);
+                    }
+                });
+    }
+
+
+    public void showSelectGoodTypePopu() {
+        PopupMenu popupMenu = new PopupMenu(getActivity(), btnSelectGoodType);
         Menu menu = popupMenu.getMenu();
-        menu.add("黃金");
-        menu.add("玉石");
-        menu.add("晶石");
+        for (ProductCategoryBean productCategoryBean : productCategoryBeanList) {
+            menu.add(productCategoryBean.getName());
+        }
         popupMenu.show();
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                if(menuItem.getTitle().equals("黃金")){
-
-                }else if(menuItem.getTitle().equals("玉石")){
-
-                }else {
-
-                }
                 btnSelectGoodType.setText(menuItem.getTitle());
+                for (ProductCategoryBean productCategoryBean : productCategoryBeanList) {
+                    if (productCategoryBean.getName().equals(menuItem.getTitle())) {
+                        selectCategoryId = productCategoryBean.getId();
+                        getDatas();
+                    }
+                }
                 return true;
             }
         });
     }
 
-    public void showSelectCountPopu(){
-        PopupMenu popupMenu = new PopupMenu(getActivity(),btnSelectCount);
+    public void showSelectCountPopu() {
+        PopupMenu popupMenu = new PopupMenu(getActivity(), btnSelectCount);
         Menu menu = popupMenu.getMenu();
         menu.add("10");
         menu.add("20");
@@ -115,14 +196,9 @@ public class SaleCountDatasFragment extends BaseFragment {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                if(menuItem.getTitle().equals("10")){
-
-                }else if(menuItem.getTitle().equals("20")){
-
-                }else {
-
-                }
                 btnSelectCount.setText(menuItem.getTitle());
+                maxCount = Integer.parseInt(menuItem.getTitle().toString());
+                getDatas();
                 return true;
             }
         });
@@ -141,6 +217,7 @@ public class SaleCountDatasFragment extends BaseFragment {
                 } else if (num == 2) {
                     endDateTv.setText(DateFormat.format("yyy-MM-dd", c));
                 }
+                getDatas();
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         dialog.show();
@@ -169,6 +246,7 @@ public class SaleCountDatasFragment extends BaseFragment {
                         endDateTv.setVisibility(View.VISIBLE);
                         break;
                 }
+                getDatas();
                 btnSearchType.setText(item.getTitle());
                 return true;
             }

@@ -1,5 +1,7 @@
 package com.pos.priory.fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -27,25 +29,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.infitack.rxretorfit2library.ModelGsonListener;
+import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
+import com.pos.priory.activitys.BalanceActivity;
 import com.pos.priory.activitys.BillActivity;
 import com.pos.priory.activitys.EditPasswordActivity;
 import com.pos.priory.activitys.LoginActivity;
 import com.pos.priory.activitys.MemberActivity;
+import com.pos.priory.activitys.NfcActivity;
 import com.pos.priory.activitys.OrderDetialActivity;
 import com.pos.priory.adapters.OrderAdapter;
 import com.pos.priory.adapters.TablePrintGoodsAdapter;
+import com.pos.priory.beans.CreateOrderResultBean;
 import com.pos.priory.beans.DayReportBean;
 import com.pos.priory.beans.DayReportDataBean;
+import com.pos.priory.beans.DayReportDetailBean;
 import com.pos.priory.beans.GoldpriceBean;
 import com.pos.priory.beans.OrderBean;
+import com.pos.priory.beans.RollbackOrderParamBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.utils.ColseActivityUtils;
 import com.pos.priory.utils.DateUtils;
+import com.pos.priory.utils.LogicUtils;
 import com.pos.zxinglib.utils.DeviceUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -65,7 +76,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -139,7 +152,7 @@ public class OrderFragment extends BaseFragment {
         smartRefreshLayout.setOnLoadMoreListener(refreshLayout -> refreshRecyclerView(true));
         recyclerView.setSwipeMenuCreator((swipeLeftMenu, swipeRightMenu, viewType) -> {
             Log.e("viewtype", "viewtype:" + viewType);
-            if (viewType == 0 && MyApplication.staffInfoBean.getPermission().equals("店长")) {
+            if (viewType == 0 && MyApplication.staffInfoBean.getApppermit().equals("店长")) {
                 SwipeMenuItem cancelItem = new SwipeMenuItem(getActivity())
                         .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
                         .setImage(R.drawable.edit)
@@ -192,23 +205,29 @@ public class OrderFragment extends BaseFragment {
             customDialog = new CustomDialog(getActivity(), "正在撤回订单..");
             customDialog.setOnDismissListener(dialog -> customDialog = null);
             customDialog.show();
-            RetrofitManager.createString(ApiService.class)
-                    .deleteOrder(orderList.get(pos).getId())
-                    .compose(bindToLifecycle())
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(s -> {
-                        Log.e("test", "结算成功");
-                        customDialog.dismiss();
-                        orderList.remove(pos);
-                        orderAdapter.notifyItemRangeChanged(0, orderList.size());
-                        orderAdapter.notifyItemRemoved(pos);
-                        Toast.makeText(getActivity(), "撤回订单成功", Toast.LENGTH_SHORT).show();
-                    }, throwable -> {
-                        customDialog.dismiss();
-                        Log.e("test", "结算失败:" + throwable.getMessage());
-                        Toast.makeText(getActivity(), "撤回订单失败", Toast.LENGTH_SHORT).show();
-                    });
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("member", orderList.get(pos).getMember());
+            paramMap.put("order",orderList.get(pos).getId());
+            Log.e("test", "param:" + gson.toJson(paramMap));
+            RetrofitManager.excute(RetrofitManager.createString(ApiService.class)
+                    .rollbackOrder(paramMap), new ModelListener() {
+                @Override
+                public void onSuccess(String result) throws Exception {
+                    Log.e("test", "撤回成功");
+                    customDialog.dismiss();
+                    orderList.remove(pos);
+                    orderAdapter.notifyItemRangeChanged(0, orderList.size());
+                    orderAdapter.notifyItemRemoved(pos);
+                    Toast.makeText(getActivity(), "撤回订单成功", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailed(String erromsg) {
+                    customDialog.dismiss();
+                    Log.e("test", "撤回失败:" + erromsg);
+                    Toast.makeText(getActivity(), "撤回订单失败", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -299,7 +318,7 @@ public class OrderFragment extends BaseFragment {
                 // 控件每一个item的点击事件
                 switch (item.getItemId()) {
                     case R.id.menu0:
-                        getDayReport();
+                        getDayReport(DateUtils.getDateOfToday(),getActivity(),gson);
                         break;
                     case R.id.menu1:
                         startActivity(new Intent(getActivity(), EditPasswordActivity.class));
@@ -314,41 +333,168 @@ public class OrderFragment extends BaseFragment {
         });
     }
 
-    public void getDayReport() {
-        printGoldTable();
-//        RetrofitManager.createString(ApiService.class).getDayReport()
-//                .compose(this.<String>bindToLifecycle())
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<String>() {
-//                    @Override
-//                    public void accept(String s) throws Exception {
-//                        Log.e("test", "result:" + s);
-//                        DayReportBean dayReportBean = gson.fromJson(s, DayReportBean.class);
-//                        printGoldTable(dayReportBean);
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//                        Log.e("test", "throwable:" + gson.toJson(throwable));
-//                        Toast.makeText(getActivity(), "查不到日报表数据", Toast.LENGTH_SHORT).show();
-//                        DayReportBean dayReportBean = new DayReportBean();
-//                        printGoldTable(dayReportBean);
-//                    }
-//                });
+    public static void getDayReport(String date, Activity context, Gson gson) {
+        Log.e("test", "date:" + date + " shopid:" + MyApplication.staffInfoBean.getShopid());
+        RetrofitManager.createString(ApiService.class).getDayReport(MyApplication.staffInfoBean.getShopid(), date)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        Log.e("test", "result:" + s);
+                        DayReportBean dayReportBean = gson.fromJson(s, DayReportBean.class);
+                        RetrofitManager.createString(ApiService.class).getDayReportDetail(dayReportBean.getId())
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Consumer<String>() {
+                                    @Override
+                                    public void accept(String s) throws Exception {
+                                        DayReportDetailBean dayReportDetailBean = gson.fromJson(s, DayReportDetailBean.class);
+                                        Log.e("test", "result:" + s);
+
+                                        printGoldTable(context,dayReportDetailBean);
+
+                                    }
+                                }, new Consumer<Throwable>() {
+                                    @Override
+                                    public void accept(Throwable throwable) throws Exception {
+                                        Log.e("test", "throwable:" + gson.toJson(throwable));
+                                        Toast.makeText(context, "查不到日报表数据", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.e("test", "throwable:" + gson.toJson(throwable));
+                        Toast.makeText(context, "查不到日报表数据", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
-    public void printGoldTable() {
+    public static void printGoldTable(Activity context,DayReportDetailBean dayReportBean) {
         Log.e("test", "printGoldTable");
         List<View> views = new ArrayList<>();
-        String[] dataarry = new String[]{"標題","數據","數據","數據","標題","數據","數據","數據","標題","數據","數據","數據","標題","數據","數據","數據","標題","數據","數據","數據"};
+        List<DayReportDataBean> dataarry = new ArrayList<>();
+
+        DayReportDataBean goldTitle = new DayReportDataBean();
+        goldTitle.itemType = 0;
+        goldTitle.setTitle("黃金");
+        goldTitle.setAmount_total(dayReportBean.getGold_item().getAmount_total());
+        goldTitle.setQuantity_total(dayReportBean.getGold_item().getQuantity_total());
+        goldTitle.setWeight_total(dayReportBean.getGold_item().getWeight_total());
+        dataarry.add(goldTitle);
+        for(DayReportDetailBean.GoldItemBean.ItemBean itemBean : dayReportBean.getGold_item().getItem()){
+            DayReportDataBean golddataBean = new DayReportDataBean();
+            List<DayReportDataBean.ItemBean> golditemBeanList = new ArrayList<>();
+            DayReportDataBean.ItemBean goldItemBean = new DayReportDataBean.ItemBean();
+            goldItemBean.setCode(itemBean.getCode());
+            goldItemBean.setProduct_name(itemBean.getProduct_name());
+            goldItemBean.setQuantity(itemBean.getQuantity());
+            goldItemBean.setWeight(itemBean.getWeight());
+            golditemBeanList.add(goldItemBean);
+            golddataBean.setItem(golditemBeanList);
+
+            golddataBean.itemType = 1;
+            dataarry.add(golddataBean);
+        }
+
+        DayReportDataBean accessoryTitle = new DayReportDataBean();
+        accessoryTitle.setTitle("配件");
+        accessoryTitle.itemType = 0;
+        accessoryTitle.setAmount_total(dayReportBean.getAccessory_item().getAmount_total());
+        accessoryTitle.setQuantity_total(dayReportBean.getAccessory_item().getQuantity_total());
+        accessoryTitle.setWeight_total(dayReportBean.getAccessory_item().getWeight_total());
+        dataarry.add(accessoryTitle);
+        for(DayReportDetailBean.AccessoryItemBean.ItemBeanXX itemBean : dayReportBean.getAccessory_item().getItem()){
+            DayReportDataBean accessorydataBean = new DayReportDataBean();
+            List<DayReportDataBean.ItemBean> accessoryitemBeanList = new ArrayList<>();
+            DayReportDataBean.ItemBean accessoryItemBean = new DayReportDataBean.ItemBean();
+            accessoryItemBean.setCode(itemBean.getCode());
+            accessoryItemBean.setProduct_name(itemBean.getProduct_name());
+            accessoryItemBean.setQuantity(itemBean.getQuantity());
+            accessoryItemBean.setWeight(itemBean.getWeight());
+            accessoryitemBeanList.add(accessoryItemBean);
+            accessorydataBean.setItem(accessoryitemBeanList);
+
+            accessorydataBean.itemType = 1;
+            dataarry.add(accessorydataBean);
+        }
+
+        DayReportDataBean sparTitle = new DayReportDataBean();
+        sparTitle.itemType = 0;
+        sparTitle.setTitle("珠寶");
+        sparTitle.setAmount_total(dayReportBean.getSpar_item().getAmount_total());
+        sparTitle.setQuantity_total(dayReportBean.getSpar_item().getQuantity_total());
+        sparTitle.setWeight_total(dayReportBean.getSpar_item().getWeight_total());
+        dataarry.add(sparTitle);
+        for(DayReportDetailBean.SparItemBean.ItemBeanX itemBean : dayReportBean.getSpar_item().getItem()){
+            DayReportDataBean spardataBean = new DayReportDataBean();
+            List<DayReportDataBean.ItemBean> sparitemBeanList = new ArrayList<>();
+            DayReportDataBean.ItemBean sparItemBean = new DayReportDataBean.ItemBean();
+            sparItemBean.setCode(itemBean.getCode());
+            sparItemBean.setProduct_name(itemBean.getProduct_name());
+            sparItemBean.setQuantity(itemBean.getQuantity());
+            sparItemBean.setWeight(itemBean.getWeight());
+            sparitemBeanList.add(sparItemBean);
+            spardataBean.setItem(sparitemBeanList);
+
+            spardataBean.itemType = 1;
+            dataarry.add(spardataBean);
+        }
+
+        DayReportDataBean exTitle = new DayReportDataBean();
+        exTitle.itemType = 0;
+        exTitle.setTitle("換貨");
+        exTitle.setAmount_total(dayReportBean.getExchange_item().getAmount_total());
+        exTitle.setQuantity_total(dayReportBean.getExchange_item().getQuantity_total());
+        exTitle.setWeight_total(dayReportBean.getExchange_item().getWeight_total());
+        dataarry.add(exTitle);
+        for(DayReportDetailBean.ExchangeItemBean.ItemBeanXXX itemBean : dayReportBean.getExchange_item().getItem()){
+            DayReportDataBean exdataBean = new DayReportDataBean();
+            List<DayReportDataBean.ItemBean> exitemBeanList = new ArrayList<>();
+            DayReportDataBean.ItemBean exItemBean = new DayReportDataBean.ItemBean();
+            exItemBean.setCode(itemBean.getCode());
+            exItemBean.setProduct_name(itemBean.getProduct_name());
+            exItemBean.setQuantity(itemBean.getQuantity());
+            exItemBean.setWeight(itemBean.getWeight());
+            exitemBeanList.add(exItemBean);
+            exdataBean.setItem(exitemBeanList);
+
+            exdataBean.itemType = 1;
+            dataarry.add(exdataBean);
+        }
+
+        DayReportDataBean reurnTitle = new DayReportDataBean();
+        reurnTitle.itemType = 0;
+        reurnTitle.setTitle("回收");
+        reurnTitle.setAmount_total(dayReportBean.getReturned_item().getAmount_total());
+        reurnTitle.setQuantity_total(dayReportBean.getReturned_item().getQuantity_total());
+        reurnTitle.setWeight_total(dayReportBean.getReturned_item().getWeight_total());
+        dataarry.add(reurnTitle);
+        for(DayReportDetailBean.ReturnedItemBean.ItemBeanXXXX itemBean : dayReportBean.getReturned_item().getItem()){
+            DayReportDataBean returndataBean = new DayReportDataBean();
+            List<DayReportDataBean.ItemBean> returnitemBeanList = new ArrayList<>();
+            DayReportDataBean.ItemBean returnItemBean = new DayReportDataBean.ItemBean();
+            returnItemBean.setCode(itemBean.getCode());
+            returnItemBean.setProduct_name(itemBean.getProduct_name());
+            returnItemBean.setQuantity(itemBean.getQuantity());
+            returnItemBean.setWeight(itemBean.getWeight());
+            returnitemBeanList.add(returnItemBean);
+            returndataBean.setItem(returnitemBeanList);
+
+            returndataBean.itemType = 1;
+            dataarry.add(returndataBean);
+        }
+
+
         int perPageSize = 24;
-        int size = dataarry.length / perPageSize;
-        int a = dataarry.length % perPageSize;
+        int size = dataarry.size() / perPageSize;
+        int a = dataarry.size() % perPageSize;
         if (a != 0) {
             size++;
         }
-        Log.e("test", "size:" + size + " a:" + a + "templist.size():" + dataarry.length);
+        Log.e("test", "size:" + size + " a:" + a + "templist.size():" + dataarry.size());
         for (int i = 0; i < size; i++) {
             List<DayReportDataBean> extraList = new ArrayList<>();
             if (i == (size - 1)) {
@@ -356,18 +502,12 @@ public class OrderFragment extends BaseFragment {
                     a = perPageSize;
                 }
                 for (int t = 0; t < a; t++) {
-                    DayReportDataBean dayReportDataBean = new DayReportDataBean();
-                    String str = dataarry[t + perPageSize * i];
-                    dayReportDataBean.itemType = str.equals("標題")? 0 : 1;
-                    extraList.add(dayReportDataBean);
+                    extraList.add(dataarry.get(t + perPageSize * i));
                 }
 
             } else {
                 for (int t = 0; t < perPageSize; t++) {
-                    DayReportDataBean dayReportDataBean = new DayReportDataBean();
-                    String str = dataarry[t + perPageSize * i];
-                    dayReportDataBean.itemType = str.equals("標題")? 0 : 1;
-                    extraList.add(dayReportDataBean);
+                    extraList.add(dataarry.get(t + perPageSize * i));
                 }
             }
             int layoutid = 0;
@@ -376,23 +516,33 @@ public class OrderFragment extends BaseFragment {
 //            } else {
                 layoutid = R.layout.gold_daliy_table2;
 //            }
-            final View printView = LayoutInflater.from(getActivity()).inflate(layoutid, null);
+            final View printView = LayoutInflater.from(context).inflate(layoutid, null);
             ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.staffInfoBean.getShop());
-            ((TextView) printView.findViewById(R.id.date_tv)).setText(DateUtils.getDateOfToday());
-            ((TextView) printView.findViewById(R.id.time_tv)).setText(DateUtils.getCurrentTime());
+            ((TextView) printView.findViewById(R.id.date_tv)).setText(dayReportBean.getDayend_date());
+            ((TextView) printView.findViewById(R.id.time_tv)).setText(DateUtils.covertIso8601ToDate(dayReportBean.getCreated()));
             ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + size);
+
+            ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(dayReportBean.getInvoice_amount() + "");
+            ((TextView) printView.findViewById(R.id.cash_tv)).setText(dayReportBean.getCash() + "");
+            ((TextView) printView.findViewById(R.id.card_pay_tv)).setText(dayReportBean.getCredit_card() + "");
+            ((TextView) printView.findViewById(R.id.ali_pay_tv)).setText(dayReportBean.getAlipay() + "");
+            ((TextView) printView.findViewById(R.id.wechat_pay_tv)).setText(dayReportBean.getWechatpay() + "");
+            ((TextView) printView.findViewById(R.id.coupon_tv)).setText(dayReportBean.getCashcoupon() + "");
+            ((TextView) printView.findViewById(R.id.yingshou_tv)).setText(dayReportBean.getPay_amount() + "");
+            ((TextView) printView.findViewById(R.id.exchange_tv)).setText(dayReportBean.getExchange() + "");
+            ((TextView) printView.findViewById(R.id.return_tv)).setText(dayReportBean.getReturned() + "");
 
 
             RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
-            TablePrintGoodsAdapter adapter = new TablePrintGoodsAdapter(extraList);
-            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+            TablePrintGoodsAdapter adapter = new TablePrintGoodsAdapter(extraList,dayReportBean.getReturn_goldprice());
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(context);
             mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
             listview.setLayoutManager(mLayoutManager);
             listview.setAdapter(adapter);
             views.add(printView);
         }
         Log.e("test", "viewsize:" + views.size());
-        BillActivity.print(getActivity(), views);
+        BillActivity.print(context, views);
     }
 
 }

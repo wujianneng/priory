@@ -4,11 +4,12 @@ import java.util.List;
 
 public class FittingBean {
 
+
     /**
      * count : 3
      * next : null
      * previous : null
-     * results : [{"id":2,"status":true,"name":"測試配件1002","image":"http://annabella.infitack.cn/media/uploads/test_S4JJNon.jfif","category":2,"productcode":1002,"price":[{"price":50,"currencycode":"MOP","symbol":"$"}],"available":true,"whitem":[{"id":2,"whnumber":"201903170002","weight":1.1},{"id":9,"whnumber":"202003270003","weight":0}],"created":"2020-03-16 18:30:04","updated":"2020-03-26 17:54:19"},{"id":3,"status":true,"name":"回收產品1","image":"http://annabella.infitack.cn/media/uploads/test_S4JJNon_PyJosnu.jfif","category":1,"productcode":9999,"price":[],"available":true,"whitem":[],"created":"2020-04-10 08:01:46","updated":"2020-04-10 08:01:46"},{"id":1,"status":true,"name":"測試產品1001","image":"http://annabella.infitack.cn/media/uploads/test.jfif","category":1,"productcode":1001,"price":[{"price":100,"currencycode":"MOP","symbol":"$"}],"available":true,"whitem":[{"id":1,"whnumber":"201903170001","weight":1},{"id":3,"whnumber":"201903210001","weight":1.1},{"id":7,"whnumber":"202003270001","weight":1.1},{"id":8,"whnumber":"202003270002","weight":1.2},{"id":6,"whnumber":"","weight":0},{"id":5,"whnumber":"","weight":11}],"created":"2020-03-16 17:47:34","updated":"2020-04-23 04:59:40"}]
+     * results : [{"id":6,"status":true,"name":"幸運30","image":"http://annabella.infitack.cn/media/uploads/icon_gBCAzqN.jpg","category":"手繩","productcode":1996,"price":[{"price":30,"currencycode":"MOP","symbol":"$"}],"available":true,"whitem":[{"id":5,"whnumber":"","weight":0}],"accessory":true,"created":"2020-08-14 11:19:43","updated":"2020-08-14 11:19:43"},{"id":7,"status":true,"name":"幸運50","image":"http://annabella.infitack.cn/media/uploads/icon_gBCAzqN_kIOAfTx.jpg","category":"手繩","productcode":1997,"price":[{"price":50,"currencycode":"MOP","symbol":"$"}],"available":true,"whitem":[{"id":6,"whnumber":"","weight":0}],"accessory":true,"created":"2020-08-14 11:21:14","updated":"2020-08-14 11:21:14"},{"id":8,"status":true,"name":"幸運100","image":"http://annabella.infitack.cn/media/uploads/icon_gBCAzqN_9BsOINN.jpg","category":"手繩","productcode":1998,"price":[{"price":100,"currencycode":"MOP","symbol":"$"}],"available":true,"whitem":[],"accessory":true,"created":"2020-08-14 11:21:38","updated":"2020-08-14 11:21:38"}]
      */
 
     private int count;
@@ -50,40 +51,35 @@ public class FittingBean {
 
     public static class ResultsBean {
         /**
-         * id : 2
+         * id : 6
          * status : true
-         * name : 測試配件1002
-         * image : http://annabella.infitack.cn/media/uploads/test_S4JJNon.jfif
-         * category : 2
-         * productcode : 1002
-         * price : [{"price":50,"currencycode":"MOP","symbol":"$"}]
+         * name : 幸運30
+         * image : http://annabella.infitack.cn/media/uploads/icon_gBCAzqN.jpg
+         * category : 手繩
+         * productcode : 1996
+         * price : [{"price":30,"currencycode":"MOP","symbol":"$"}]
          * available : true
-         * whitem : [{"id":2,"whnumber":"201903170002","weight":1.1},{"id":9,"whnumber":"202003270003","weight":0}]
-         * created : 2020-03-16 18:30:04
-         * updated : 2020-03-26 17:54:19
+         * whitem : [{"id":5,"whnumber":"","weight":0}]
+         * accessory : true
+         * created : 2020-08-14 11:19:43
+         * updated : 2020-08-14 11:19:43
          */
 
         private int id;
         private boolean status;
         private String name;
         private String image;
-        private int category;
+        private String category;
+        private int categoryId;
         private int productcode;
         private boolean available;
+        private boolean accessory;
         private String created;
         private String updated;
         private List<PriceBean> price;
         private List<WhitemBean> whitem;
-        private boolean isSelected;
         private int buyCount = 1;
-
-        public int getBuyCount() {
-            return buyCount;
-        }
-
-        public void setBuyCount(int buyCount) {
-            this.buyCount = buyCount;
-        }
+        private boolean isSelected = false;
 
         public boolean isSelected() {
             return isSelected;
@@ -93,12 +89,28 @@ public class FittingBean {
             isSelected = selected;
         }
 
+        public int getBuyCount() {
+            return buyCount;
+        }
+
+        public void setBuyCount(int buyCount) {
+            this.buyCount = buyCount;
+        }
+
         public int getId() {
             return id;
         }
 
         public void setId(int id) {
             this.id = id;
+        }
+
+        public int getCategoryId() {
+            return categoryId;
+        }
+
+        public void setCategoryId(int categoryId) {
+            this.categoryId = categoryId;
         }
 
         public boolean isStatus() {
@@ -125,11 +137,11 @@ public class FittingBean {
             this.image = image;
         }
 
-        public int getCategory() {
+        public String getCategory() {
             return category;
         }
 
-        public void setCategory(int category) {
+        public void setCategory(String category) {
             this.category = category;
         }
 
@@ -147,6 +159,14 @@ public class FittingBean {
 
         public void setAvailable(boolean available) {
             this.available = available;
+        }
+
+        public boolean isAccessory() {
+            return accessory;
+        }
+
+        public void setAccessory(boolean accessory) {
+            this.accessory = accessory;
         }
 
         public String getCreated() {
@@ -183,7 +203,7 @@ public class FittingBean {
 
         public static class PriceBean {
             /**
-             * price : 50.0
+             * price : 30.0
              * currencycode : MOP
              * symbol : $
              */
@@ -219,9 +239,9 @@ public class FittingBean {
 
         public static class WhitemBean {
             /**
-             * id : 2
-             * whnumber : 201903170002
-             * weight : 1.1
+             * id : 5
+             * whnumber :
+             * weight : 0.0
              */
 
             private int id;

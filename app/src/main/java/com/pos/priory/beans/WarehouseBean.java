@@ -162,15 +162,15 @@ public class WarehouseBean {
             private int productcode;
             private ReturninfoBean returninfo;
             private SubtotalBean subtotal;
-            List<PriceBean> price;
+            PriceBean price;
             private String warehouse;
             private String shop;
 
-            public List<PriceBean> getPrice() {
+            public PriceBean getPrice() {
                 return price;
             }
 
-            public void setPrice(List<PriceBean> price) {
+            public void setPrice(PriceBean price) {
                 this.price = price;
             }
 

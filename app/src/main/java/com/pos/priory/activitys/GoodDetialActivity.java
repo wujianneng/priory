@@ -124,7 +124,7 @@ public class GoodDetialActivity extends BaseActivity {
                             try {
                                 stores.clear();
                                 storeIds.clear();
-                                for (TranferStoresBean.ResultBean resultBean : result.getResult()) {
+                                for (TranferStoresBean.ResultsBean resultBean : result.getResults()) {
                                     stores.add(resultBean.getName());
                                     storeIds.add(resultBean.getId());
                                 }
@@ -205,7 +205,7 @@ public class GoodDetialActivity extends BaseActivity {
                                 codeTv.setText(goodBean.getProductcode() + "");
                                 nameTv.setText(resultsBean.getName());
                                 repertoryTv.setText(resultsBean.getTotal().getQuantity() + "件");
-                                priceTv.setText(goodBean.getPrice().get(0).getSymbol() +  goodBean.getPrice().get(0).getPrice());
+                                priceTv.setText(goodBean.getPrice().getSymbol() +  goodBean.getPrice().getPrice());
                                 weightTv.setText(resultsBean.getTotal().getWeight() + "g");
                                 if (resultsBean.getTotal().getWeight() == 0) {
                                     weightTv.setVisibility(View.GONE);

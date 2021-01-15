@@ -1,9 +1,9 @@
 package com.pos.priory.activitys;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
-import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,25 +13,20 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-import com.infitack.rxretorfit2library.ModelListener;
+import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.CashCouponAdapter;
-import com.pos.priory.beans.CashCouponBean;
-import com.pos.priory.beans.CouponResultBean;
-import com.pos.priory.beans.FittingBean;
+import com.pos.priory.beans.CashCouponParamsBean;
+import com.pos.priory.beans.CashCouponResultBean;
+import com.pos.priory.beans.ExchangeCashCouponParamBean;
+import com.pos.priory.beans.ExchangeCashCouponReslutBean;
 import com.pos.priory.beans.MemberBean;
 import com.pos.priory.networks.ApiService;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -57,10 +52,11 @@ public class SelectCashCouponActivity extends BaseActivity {
     RecyclerView recyclerView;
 
     CashCouponAdapter adapter;
-    List<CouponResultBean.ResultBean> couponBeanList = new ArrayList<>();
+    List<CashCouponResultBean> couponBeanList = new ArrayList<>();
 
-    List<FittingBean.ResultsBean> goodList = new ArrayList<>();
     MemberBean.ResultsBean memberBean;
+
+    double sumAmount = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,10 +68,7 @@ public class SelectCashCouponActivity extends BaseActivity {
 
     private void initViews() {
         memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.ResultsBean.class);
-        goodList = gson.fromJson(getIntent().getStringExtra("goodlist"),
-                new TypeToken<List<FittingBean.ResultsBean>>() {
-                }.getType());
-
+        sumAmount = getIntent().getDoubleExtra("sumAmount",0);
         titleTv.setText("选择現金券");
         nextTv.setVisibility(View.VISIBLE);
         nextTv.setText("確定");
@@ -87,26 +80,14 @@ public class SelectCashCouponActivity extends BaseActivity {
     }
 
     private void exchangeCoupon() {
-        Map<String, Object> params = new HashMap<>();
-        params.put("type", 1);
-        params.put("member_id", memberBean.getId());
-        params.put("code", exchangeEdt.getText().toString());
-        JsonArray jsonArray = new JsonArray();
-        try {
-            for (FittingBean.ResultsBean resultsBean : goodList) {
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("itemid", resultsBean.getId());
-                jsonObject.addProperty("qty", resultsBean.getBuyCount());
-                jsonArray.add(jsonObject);
-            }
-        } catch (Exception e) {
-
-        }
-        params.put("items", jsonArray);
-        Log.e("test","params:" + gson.toJson(params));
-        RetrofitManager.excute(RetrofitManager.createString(ApiService.class).getCashCoupons(params), new ModelListener() {
+        ExchangeCashCouponParamBean cashCouponParamsBean = new ExchangeCashCouponParamBean();
+        cashCouponParamsBean.setCode(exchangeEdt.getText().toString());
+        cashCouponParamsBean.setMember_id(memberBean.getId());
+        Log.e("test","params:" + gson.toJson(cashCouponParamsBean));
+        RetrofitManager.excuteGson(RetrofitManager.createGson(ApiService.class).exchangeCashCoupons(cashCouponParamsBean),
+                new ModelGsonListener<ExchangeCashCouponReslutBean>() {
             @Override
-            public void onSuccess(String result) throws Exception {
+            public void onSuccess(ExchangeCashCouponReslutBean result) throws Exception {
                 hideLoadingDialog();
                 exchangeEdt.setText("");
                 handler.postDelayed(new Runnable() {
@@ -132,34 +113,24 @@ public class SelectCashCouponActivity extends BaseActivity {
     }
 
     private void getCoupons() {
-        Map<String, Object> params = new HashMap<>();
-        params.put("type", 2);
-        params.put("member_id", memberBean.getId());
-        JsonArray jsonArray = new JsonArray();
-        try {
-            for (FittingBean.ResultsBean resultsBean : goodList) {
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("itemid", resultsBean.getId());
-                jsonObject.addProperty("qty", resultsBean.getBuyCount());
-                jsonArray.add(jsonObject);
-            }
-        } catch (Exception e) {
-
-        }
-        params.put("items", jsonArray);
-        Log.e("test","params:" + gson.toJson(params));
-        RetrofitManager.excute(RetrofitManager.createString(ApiService.class).getCashCoupons(params), new ModelListener() {
+        CashCouponParamsBean cashCouponParamsBean = new CashCouponParamsBean();
+        cashCouponParamsBean.setTotal_amount(sumAmount);
+        cashCouponParamsBean.setMember_id(memberBean.getId());
+        cashCouponParamsBean.setShop_id(MyApplication.staffInfoBean.getShopid());
+        Log.e("test", "params:" + gson.toJson(cashCouponParamsBean));
+        RetrofitManager.excuteGson(RetrofitManager.createGson(ApiService.class).getCashCoupons(cashCouponParamsBean),
+                new ModelGsonListener<List<CashCouponResultBean>>() {
             @Override
-            public void onSuccess(String result) throws Exception {
+            public void onSuccess(List<CashCouponResultBean> result) throws Exception {
                 hideLoadingDialog();
-                CouponResultBean resultBean = gson.fromJson(result, CouponResultBean.class);
                 couponBeanList.clear();
-                couponBeanList.addAll(resultBean.getResult());
+                couponBeanList.addAll(result);
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailed(String erromsg) {
+                Log.e("test",erromsg);
                 hideLoadingDialog();
             }
         });

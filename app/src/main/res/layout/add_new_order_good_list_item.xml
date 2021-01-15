@@ -123,10 +123,10 @@
         <LinearLayout
             android:id="@+id/fitting_count_layout"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="33dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal"
             android:visibility="gone">
 

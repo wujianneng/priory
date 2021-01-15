@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
@@ -17,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:elevation="5dp"
+        android:layout_below="@+id/padding_layout"
         android:background="@color/colorAccent"
         android:gravity="center_vertical">
 
@@ -29,13 +31,22 @@
             android:textColor="#fff"
             android:textSize="20sp" />
 
+        <Button
+            android:id="@+id/otg_btn"
+            android:text="OTG盤點"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="16dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
     </FrameLayout>
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refresh_layout"
+        android:layout_below="@+id/title_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        >
 
 
         <android.support.v7.widget.RecyclerView
@@ -50,4 +61,18 @@
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/add"
+        app:backgroundTint="@color/colorAccent"
+        app:borderWidth="0dp"
+        app:elevation="5dp"
+        app:rippleColor="#a6a6a6" />
+
+</RelativeLayout>

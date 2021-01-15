@@ -127,8 +127,10 @@ public class LoginActivity extends BaseActivity {
             }, RetrofitManager.createString(ApiService.class).getStaffInfo(), new ModelListener() {
                 @Override
                 public void onSuccess(String result) throws Exception {
-                    StaffInfoBean staffInfoBean = gson.fromJson(result,StaffInfoBean.class);
+                    JSONObject jsonObject = new JSONObject(result);
+                    StaffInfoBean staffInfoBean = gson.fromJson(jsonObject.getString("result"),StaffInfoBean.class);
                     if (staffInfoBean != null) {
+                        Log.e("test","user:" + staffInfoBean.getUser());
                         MyApplication.staffInfoBean = staffInfoBean;
                         if (staffInfoBean.getUser().equals(edtUsename.getText().toString())) {
                             SharedPreferences.Editor editor = sharedPreferences.edit();

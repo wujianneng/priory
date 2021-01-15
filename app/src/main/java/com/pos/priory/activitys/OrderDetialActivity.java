@@ -1,6 +1,6 @@
 package com.pos.priory.activitys;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.infitack.rxretorfit2library.ModelListener;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.OrderDetailDiscountAdapter;
@@ -24,25 +27,33 @@ import com.pos.priory.adapters.OrderDetailPrintDiscountAdapter;
 import com.pos.priory.adapters.OrderDetailPrintGoodsAdapter;
 import com.pos.priory.adapters.OrderDetailPrintPayTypeAdapter;
 import com.pos.priory.adapters.OrderDetialGoodsAdapter;
-import com.pos.priory.beans.OrderBean;
+import com.pos.priory.beans.MemberBean;
+import com.pos.priory.beans.OrderDetailReslutBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.coustomViews.DisableReclyerView;
-import com.pos.priory.utils.LogicUtils;
+import com.pos.priory.fragments.OrderFragment;
+import com.pos.priory.networks.ApiService;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Lenovo on 2018/12/31.
  */
 
 public class OrderDetialActivity extends BaseActivity {
-    List<OrderBean.ResultsBean> goodList = new ArrayList<>();
-    List<OrderBean.ResultsBean> checkedGoodList = new ArrayList<>();
+    List<OrderDetailReslutBean.OrderItemsBean> goodList = new ArrayList<>();
+    List<OrderDetailReslutBean.OrderItemsBean> checkedGoodList = new ArrayList<>();
     OrderDetialGoodsAdapter goodsAdapter;
     @Bind(R.id.member_name_tv)
     TextView memberNameTv;
@@ -107,8 +118,8 @@ public class OrderDetialActivity extends BaseActivity {
     @Bind(R.id.operating_money_tv)
     TextView operatingMoneyTv;
 
-    List<String> discountList = new ArrayList<>();
-    List<String> paytypeList = new ArrayList<>();
+    List<OrderDetailReslutBean.PayDetailBean.CouponsBean> discountList = new ArrayList<>();
+    List<OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean> paytypeList = new ArrayList<>();
     OrderDetailDiscountAdapter discountAdapter;
     OrderDetailPayTypeAdapter payTypeAdapter;
 
@@ -124,20 +135,28 @@ public class OrderDetialActivity extends BaseActivity {
         rightImg.setVisibility(View.VISIBLE);
         rightImg.setImageResource(R.drawable.icon_print);
 
-        goodsAdapter = new OrderDetialGoodsAdapter(goodList,this);
-        goodRecyclerView.setLayoutManager(new LinearLayoutManager(OrderDetialActivity.this,LinearLayoutManager.VERTICAL,false));
+        goodsAdapter = new OrderDetialGoodsAdapter(goodList, this);
+        goodRecyclerView.setLayoutManager(new LinearLayoutManager(OrderDetialActivity.this, LinearLayoutManager.VERTICAL, false));
         goodRecyclerView.setAdapter(goodsAdapter);
+        goodsAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                if (goodList.get(position).isSelected())
+                    goodList.get(position).setSelected(false);
+                else
+                    goodList.get(position).setSelected(true);
+                goodList.get(position).setOprateCount(1);
+                adapter.notifyItemChanged(position);
+                resetCheckedGoodList();
+            }
+        });
 
-        discountList.add("");
-        discountList.add("");
-        discountAdapter = new OrderDetailDiscountAdapter(R.layout.order_detial_discount_list_item,discountList);
-        discountRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        discountAdapter = new OrderDetailDiscountAdapter(R.layout.order_detial_discount_list_item, discountList);
+        discountRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         discountRecyclerView.setAdapter(discountAdapter);
 
-        paytypeList.add("");
-        paytypeList.add("");
-        payTypeAdapter = new OrderDetailPayTypeAdapter(R.layout.order_detial_paytype_list_item,paytypeList);
-        paytypeRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        payTypeAdapter = new OrderDetailPayTypeAdapter(R.layout.order_detial_paytype_list_item, paytypeList);
+        paytypeRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         paytypeRecyclerView.setAdapter(payTypeAdapter);
 
         int orderid = getIntent().getIntExtra("orderId", 0);
@@ -145,24 +164,61 @@ public class OrderDetialActivity extends BaseActivity {
     }
 
     CustomDialog customDialog;
+    OrderDetailReslutBean orderDetailReslutBean;
 
     private void getOrderBean(int orderid) {
-//        if (customDialog == null) {
-//            customDialog = new CustomDialog(this, "正在查询订单信息..");
-//            customDialog.setOnDismissListener((dialogInterface) -> customDialog = null);
-//            customDialog.show();
-//            RetrofitManager.createString(ApiService.class).getOrderByOrderId(orderid)
-//                    .compose(this.<String>bindToLifecycle())
-//                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-//                    .subscribe(resluts -> {
-//                        customDialog.dismiss();
-//                    }, throwable -> {
-//                        customDialog.dismiss();
-//                    });
-//        }
-        for(int i = 0 ; i < 33 ; i++) {
-            OrderBean.ResultsBean itemsBean = new OrderBean.ResultsBean();
-            goodList.add(itemsBean);
+        if (customDialog == null) {
+            customDialog = new CustomDialog(this, "正在查询订单信息..");
+            customDialog.setOnDismissListener((dialogInterface) -> customDialog = null);
+            customDialog.show();
+            RetrofitManager.createGson(ApiService.class).getOrderByOrderId(orderid)
+                    .compose(this.<OrderDetailReslutBean>bindToLifecycle())
+                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(resluts -> {
+                        customDialog.dismiss();
+                        orderDetailReslutBean = resluts;
+                        goodList.clear();
+                        goodList.addAll(orderDetailReslutBean.getOrder_items());
+                        for(OrderDetailReslutBean.OrderItemsBean resultsBean : goodList){
+                           resultsBean.itemType = resultsBean.isIs_gold() ? 0 : 1;
+                        }
+                        goodsAdapter.notifyDataSetChanged();
+
+                        discountList.addAll(orderDetailReslutBean.getPay_detail().getCoupons());
+                        discountAdapter.notifyDataSetChanged();
+
+                        paytypeList.addAll(orderDetailReslutBean.getPay_detail().getPay_methods().getCash_coupon());
+                        for(OrderDetailReslutBean.PayDetailBean.PayMethodsBean.OtherBean otherBean : orderDetailReslutBean.getPay_detail().getPay_methods().getOther()){
+                            OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean cashCouponBean = new OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean();
+                            cashCouponBean.setAmount(otherBean.getAmount());
+                            cashCouponBean.setPaymethod(otherBean.getPaymethod());
+                            paytypeList.add(cashCouponBean);
+                        }
+                        for(OrderDetailReslutBean.PayDetailBean.PayMethodsBean.ExchangeOrRefundBean exchangeOrRefundBean : orderDetailReslutBean.getPay_detail().getPay_methods().getExchange_or_refund()){
+                            OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean cashCouponBean = new OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean();
+                            cashCouponBean.setAmount(exchangeOrRefundBean.getAmount());
+                            paytypeList.add(cashCouponBean);
+                        }
+                        payTypeAdapter.notifyDataSetChanged();
+
+                        memberNameTv.setText("會員：" + orderDetailReslutBean.getMember_detail().getFirstname()
+                                + orderDetailReslutBean.getMember_detail().getLastname());
+                        memberPhoneTv.setText("手機號碼：" + orderDetailReslutBean.getMember_detail().getMobile());
+                        needMoneyTv.setText(orderDetailReslutBean.getAmount_payable() + "");
+                        payedMoneyTv.setText(orderDetailReslutBean.getAmount_paid() + "");
+
+                        updateTimeTv.setText("更新時間：" + orderDetailReslutBean.getUpdated());
+                        trasitionTimeTv.setText("交易時間：" + orderDetailReslutBean.getCreated());
+
+                        orderNumberTv.setText("訂單編號：" + orderDetailReslutBean.getOrderno());
+
+                        goldCountTv.setText("黃金：" + orderDetailReslutBean.getGold_info().getQuantity() + "件|"
+                                + orderDetailReslutBean.getGold_info().getWeight() + "克");
+                        fittingCountTv.setText("配件：" + orderDetailReslutBean.getQuantity_accessory() + "件");
+
+                    }, throwable -> {
+                        customDialog.dismiss();
+                    });
         }
         goodsAdapter.notifyDataSetChanged();
 
@@ -170,7 +226,7 @@ public class OrderDetialActivity extends BaseActivity {
 
     public void printViews() {
         List<View> views = new ArrayList<>();
-        List<OrderBean.ResultsBean> templist = new ArrayList<>();
+        List<OrderDetailReslutBean.OrderItemsBean> templist = new ArrayList<>();
         templist.addAll(goodList);
         int perPageSize = 13;
         int lastPageSize = 7;
@@ -178,9 +234,9 @@ public class OrderDetialActivity extends BaseActivity {
         int pageCount = sumSize / perPageSize;
         int remainder = sumSize % perPageSize;//餘數
         if (remainder != 0) {
-            if(remainder > lastPageSize){
+            if (remainder > lastPageSize) {
                 pageCount = pageCount + 2;
-            }else {
+            } else {
                 pageCount++;
             }
         } else {
@@ -191,11 +247,11 @@ public class OrderDetialActivity extends BaseActivity {
 
         Log.e("test", "pageCount:" + pageCount + " remainder:" + remainder);
         for (int i = 0; i < pageCount; i++) {
-            List<OrderBean.ResultsBean> extraList = new ArrayList<>();
-            if(remainder > lastPageSize){
+            List<OrderDetailReslutBean.OrderItemsBean> extraList = new ArrayList<>();
+            if (remainder > lastPageSize) {
                 if (i == (pageCount - 1)) {
-                   //最後一頁放匯總
-                }else if (i == (pageCount - 2)) {
+                    //最後一頁放匯總
+                } else if (i == (pageCount - 2)) {
                     for (int t = 0; t < remainder; t++) {
                         extraList.add(templist.get(t + perPageSize * i));
                     }
@@ -205,7 +261,7 @@ public class OrderDetialActivity extends BaseActivity {
                         extraList.add(templist.get(t + perPageSize * i));
                     }
                 }
-            }else {
+            } else {
                 if (i == (pageCount - 1)) {
                     for (int t = 0; t < remainder; t++) {
                         extraList.add(templist.get(t + perPageSize * i));
@@ -220,57 +276,47 @@ public class OrderDetialActivity extends BaseActivity {
 //            if (MyApplication.getContext().region.equals("中国大陆")) {
 //                layoutid = R.layout.dialog_preview;
 //            } else {
-                layoutid = R.layout.dialog_preview2;
+            layoutid = R.layout.dialog_preview2;
 //            }
             final View printView = LayoutInflater.from(this).inflate(layoutid, null);
             ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.getContext().staffInfoBean.getShop());
             ((TextView) printView.findViewById(R.id.address_tv)).setText(MyApplication.getContext().staffInfoBean.getShop());
             ((TextView) printView.findViewById(R.id.tel_tv)).setText(MyApplication.getContext().staffInfoBean.getMobile());
             ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + pageCount);
+            ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderDetailReslutBean.getOrderno());
+            ((TextView) printView.findViewById(R.id.count_tv)).setText("合計(" + orderDetailReslutBean.getQuantity_accessory()
+                    + orderDetailReslutBean.getGold_info().getQuantity() + "件)");
+            ((TextView) printView.findViewById(R.id.date_tv)).setText(orderDetailReslutBean.getCreated());
+            ((TextView) printView.findViewById(R.id.amount_tv)).setText(orderDetailReslutBean.getAmount_payable() + "元");
+            ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(orderDetailReslutBean.getAmount_paid() + "元");
             RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
             OrderDetailPrintGoodsAdapter adapter = new OrderDetailPrintGoodsAdapter(R.layout.bill_print_good_list_item, extraList);
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
             mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
             listview.setLayoutManager(mLayoutManager);
             listview.setAdapter(adapter);
-            if(i == pageCount - 1){
-                List<String> dclist = new ArrayList<>();
-                dclist.add("千足金滿1000元95折");
-                dclist.add("關閘店新店開張千足金額外95折");
-                dclist.add("95折");
-                dclist.add("千足金滿1000元98折");
-                dclist.add("關閘店新店開張千足金額外98折");
-                dclist.add("98折");
-                dclist.add("千足金滿1000元66折");
-                dclist.add("關閘店新店開張千足金額外66折");
-                dclist.add("66折");
+            if (i == pageCount - 1) {
                 RecyclerView dcListview = (RecyclerView) printView.findViewById(R.id.discount_list);
                 OrderDetailPrintDiscountAdapter dcmLayoutManageradapter = new OrderDetailPrintDiscountAdapter
-                        (R.layout.order_detail_print_discount_list_item, dclist);
+                        (R.layout.order_detail_print_discount_list_item, discountList);
                 LinearLayoutManager dcmLayoutManager = new LinearLayoutManager(this);
                 dcmLayoutManager.setOrientation(OrientationHelper.VERTICAL);
                 dcListview.setLayoutManager(dcmLayoutManager);
                 dcListview.setAdapter(dcmLayoutManageradapter);
 
-                List<String> ptlist = new ArrayList<>();
-                ptlist.add("現金券 #201287410084");
-                ptlist.add("信用卡");
-                ptlist.add("現金");
-                ptlist.add("支付寶");
-                ptlist.add("微信支付");
                 RecyclerView ptListview = (RecyclerView) printView.findViewById(R.id.pay_type_list);
                 OrderDetailPrintPayTypeAdapter ptmLayoutManageradapter = new OrderDetailPrintPayTypeAdapter
-                        (R.layout.order_detail_print_discount_list_item, ptlist);
+                        (R.layout.order_detail_print_discount_list_item, paytypeList);
                 LinearLayoutManager ptmLayoutManager = new LinearLayoutManager(this);
                 ptmLayoutManager.setOrientation(OrientationHelper.VERTICAL);
                 ptListview.setLayoutManager(ptmLayoutManager);
                 ptListview.setAdapter(ptmLayoutManageradapter);
             }
-            printView.findViewById(R.id.sum_data_layout).setVisibility(i == pageCount - 1 ? View.VISIBLE :View.GONE);
-            if(remainder > lastPageSize){
-                printView.findViewById(R.id.line0).setVisibility(i == pageCount - 1 ? View.GONE :View.VISIBLE);
-                printView.findViewById(R.id.title_layout).setVisibility(i == pageCount - 1 ? View.GONE :View.VISIBLE);
-                listview.setVisibility(i == pageCount - 1 ? View.GONE :View.VISIBLE);
+            printView.findViewById(R.id.sum_data_layout).setVisibility(i == pageCount - 1 ? View.VISIBLE : View.GONE);
+            if (remainder > lastPageSize) {
+                printView.findViewById(R.id.line0).setVisibility(i == pageCount - 1 ? View.GONE : View.VISIBLE);
+                printView.findViewById(R.id.title_layout).setVisibility(i == pageCount - 1 ? View.GONE : View.VISIBLE);
+                listview.setVisibility(i == pageCount - 1 ? View.GONE : View.VISIBLE);
             }
             views.add(printView);
         }
@@ -278,6 +324,37 @@ public class OrderDetialActivity extends BaseActivity {
         BillActivity.print(this, views);
     }
 
+
+    private void cancelOrder() {
+        if (customDialog == null) {
+            customDialog = new CustomDialog(this, "正在撤回订单..");
+            customDialog.setOnDismissListener(dialog -> customDialog = null);
+            customDialog.show();
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("member",orderDetailReslutBean.getMember());
+            paramMap.put("order",orderDetailReslutBean.getId());
+            Log.e("test", "param:" + gson.toJson(paramMap));
+            RetrofitManager.excute(RetrofitManager.createString(ApiService.class)
+                    .rollbackOrder(paramMap), new ModelListener() {
+                @Override
+                public void onSuccess(String result) throws Exception {
+                    Log.e("test", "撤回成功");
+                    customDialog.dismiss();
+                    EventBus.getDefault().post(OrderFragment.UPDATE_ORDER_LIST);
+                    EventBus.getDefault().post(MemberInfoActivity.UPDATE_ORDER_LIST);
+                    finish();
+                    Toast.makeText(OrderDetialActivity.this, "撤回订单成功", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailed(String erromsg) {
+                    customDialog.dismiss();
+                    Log.e("test", "撤回失败:" + erromsg);
+                    Toast.makeText(OrderDetialActivity.this, "撤回订单失败", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
 
     @OnClick({R.id.btn_change, R.id.btn_return, R.id.btn_cancel, R.id.back_btn, R.id.right_img, R.id.btn_operator})
     public void onClick(View v) {
@@ -289,34 +366,48 @@ public class OrderDetialActivity extends BaseActivity {
                 goodsAdapter.operatingStatus = 1;
                 goodsAdapter.notifyDataSetChanged();
                 changeBottomLayout();
-//                Intent intent = new Intent(OrderDetialActivity.this, ChangeGoodsActivity.class);
-//                intent.putExtra("checkedGoodList", gson.toJson(checkedGoodList));
-//                intent.putExtra("memberId", orderBean.getMember().getId());
-//                intent.putExtra("memberMobile", orderBean.getMember().getMobile());
-//                intent.putExtra("memberReward", orderBean.getMember().getReward());
-//                intent.putExtra("memberName", orderBean.getMember().getLast_name() +
-//                        orderBean.getMember().getFirst_name());
-//                intent.putExtra("ordernumber", orderBean.getOrdernumber());
-//                startActivity(intent);
                 break;
             case R.id.btn_return:
                 goodsAdapter.operatingStatus = 2;
                 goodsAdapter.notifyDataSetChanged();
                 changeBottomLayout();
-//                resetCheckedGoodList(true);
-//                if (checkedGoodList.size() == 0) {
-//                    Toast.makeText(OrderDetialActivity.this, "请选择退货商品", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-
                 break;
             case R.id.back_btn:
                 onBackPressed();
                 break;
             case R.id.btn_cancel:
-
+                cancelOrder();
                 break;
             case R.id.btn_operator:
+                if(checkedGoodList.size() == 0){
+                    Toast.makeText(this,"請先選擇商品",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(goodsAdapter.operatingStatus == 1){
+                    Intent intent = new Intent(OrderDetialActivity.this,AddNewOrderActivity.class);
+                    intent.putExtra("sumMoney",-1 * sumMoney * orderDetailReslutBean.getExchange_rate());
+                    intent.putExtra("orderId",orderDetailReslutBean.getId());
+                    intent.putExtra("changeGoodList",gson.toJson(checkedGoodList));
+                    MemberBean.ResultsBean member = new MemberBean.ResultsBean();
+                    member.setName(orderDetailReslutBean.getMember_detail().getFirstname() + orderDetailReslutBean.getMember_detail().getLastname());
+                    member.setReward(orderDetailReslutBean.getMember_detail().getReward());
+                    member.setMobile(orderDetailReslutBean.getMember_detail().getMobile());
+                    member.setId(orderDetailReslutBean.getMember_detail().getId());
+                    intent.putExtra("memberInfo", gson.toJson(member));
+                    startActivity(intent);
+                }else if(goodsAdapter.operatingStatus == 2){
+                    Intent intent = new Intent(OrderDetialActivity.this,ReturnBalanceActivity.class);
+                    intent.putExtra("sumMoney",-1 * orderDetailReslutBean.getGoldprice() * sumWeight);
+                    intent.putExtra("orderId",orderDetailReslutBean.getId());
+                    intent.putExtra("changeGoodList",gson.toJson(checkedGoodList));
+                    MemberBean.ResultsBean member = new MemberBean.ResultsBean();
+                    member.setName(orderDetailReslutBean.getMember_detail().getFirstname() + orderDetailReslutBean.getMember_detail().getLastname());
+                    member.setReward(orderDetailReslutBean.getMember_detail().getReward());
+                    member.setMobile(orderDetailReslutBean.getMember_detail().getMobile());
+                    member.setId(orderDetailReslutBean.getMember_detail().getId());
+                    intent.putExtra("memberInfo", gson.toJson(member));
+                    startActivity(intent);
+                }
                 break;
         }
     }
@@ -327,11 +418,12 @@ public class OrderDetialActivity extends BaseActivity {
             finish();
         else {
             goodsAdapter.operatingStatus = 0;
+            goodsAdapter.notifyDataSetChanged();
             changeBottomLayout();
         }
     }
 
-    private void changeBottomLayout() {
+    public void changeBottomLayout() {
         switch (goodsAdapter.operatingStatus) {
             case 0:
                 detailLayout.setVisibility(View.VISIBLE);
@@ -339,35 +431,46 @@ public class OrderDetialActivity extends BaseActivity {
                 backBtn.setImageResource(R.drawable.icon_back);
                 break;
             case 1://change
+                resetCheckedGoodList();
                 detailLayout.setVisibility(View.GONE);
                 operatingLayout.setVisibility(View.VISIBLE);
                 goldPriceTv.setVisibility(View.GONE);
-                operatingMoneyTv.setText("换货金额：" + "$666");
+                operatingWeightTv.setVisibility(View.GONE);
                 btnOperator.setText("确认换货");
                 backBtn.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
                 break;
             case 2://return
+                resetCheckedGoodList();
                 detailLayout.setVisibility(View.GONE);
                 operatingLayout.setVisibility(View.VISIBLE);
                 goldPriceTv.setVisibility(View.VISIBLE);
-                operatingMoneyTv.setText("回收金额：" + "$666");
+                operatingWeightTv.setVisibility(View.VISIBLE);
+                goldPriceTv.setText("回收金價：" + orderDetailReslutBean.getGoldprice() + "/克");
                 btnOperator.setText("确认回收");
                 backBtn.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
                 break;
         }
     }
 
-    private void resetCheckedGoodList(boolean isReturn) {
+    double sumMoney = 0,sumWeight = 0;
+    public void resetCheckedGoodList() {
         checkedGoodList.clear();
-//        for (OrderBean.ItemsBean bean : goodList) {
-//            if (bean.isSelected()) {
-//                if (bean.getStock().getProduct().getCatalog().equals("其他") && isReturn) {
-//                    Toast.makeText(OrderDetialActivity.this, "只有黄金类型商品才能进行回收", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                checkedGoodList.add(bean);
-//            }
-//        }
+        sumMoney = 0;
+        sumWeight = 0;
+        for (OrderDetailReslutBean.OrderItemsBean bean : goodList) {
+            if (bean.isSelected()) {
+                checkedGoodList.add(bean);
+                sumMoney += bean.getPrice();
+                sumWeight += bean.getWeight();
+            }
+            Log.e("itemweight", "itemweight1:" + bean.getWeight());
+        }
+        if(goodsAdapter.operatingStatus == 1){
+            operatingMoneyTv.setText("换货金额：" + sumMoney);
+        }else {
+            operatingMoneyTv.setText("回收金额：" + orderDetailReslutBean.getGoldprice() * sumWeight);
+            operatingWeightTv.setText("回收金重：" + sumWeight + "克");
+        }
     }
 
 

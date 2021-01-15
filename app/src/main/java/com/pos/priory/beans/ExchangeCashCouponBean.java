@@ -4,111 +4,138 @@ import java.util.List;
 
 public class ExchangeCashCouponBean {
 
+
     /**
-     * count : 1
-     * next : null
-     * previous : null
-     * results : [{"id":1,"name":"积分现金1粉300减10000分换取","reducereward":10000,"value":"300.00"}]
+     * code : 200
+     * msg : OK
+     * level : info
+     * result : {"member_reward":6,"reward_list":[{"id":1,"name":"100分換100元","reducereward":100,"value":"100.00"}]}
      */
 
-    private int count;
-    private Object next;
-    private Object previous;
-    private List<ResultsBean> results;
+    private int code;
+    private String msg;
+    private String level;
+    private ResultBean result;
 
-    public int getCount() {
-        return count;
+    public int getCode() {
+        return code;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public Object getNext() {
-        return next;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setNext(Object next) {
-        this.next = next;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public Object getPrevious() {
-        return previous;
+    public String getLevel() {
+        return level;
     }
 
-    public void setPrevious(Object previous) {
-        this.previous = previous;
+    public void setLevel(String level) {
+        this.level = level;
     }
 
-    public List<ResultsBean> getResults() {
-        return results;
+    public ResultBean getResult() {
+        return result;
     }
 
-    public void setResults(List<ResultsBean> results) {
-        this.results = results;
+    public void setResult(ResultBean result) {
+        this.result = result;
     }
 
-    public static class ResultsBean {
+    public static class ResultBean {
         /**
-         * id : 1
-         * name : 积分现金1粉300减10000分换取
-         * reducereward : 10000
-         * value : 300.00
+         * member_reward : 6
+         * reward_list : [{"id":1,"name":"100分換100元","reducereward":100,"value":"100.00"}]
          */
 
-        private int id;
-        private String name;
-        private int reducereward;
-        private String value;
-        int count = 1;
-        boolean isSelected;
+        private int member_reward;
+        private List<RewardListBean> reward_list;
 
-        public int getCount() {
-            return count;
+        public int getMember_reward() {
+            return member_reward;
         }
 
-        public void setCount(int count) {
-            this.count = count;
+        public void setMember_reward(int member_reward) {
+            this.member_reward = member_reward;
         }
 
-        public boolean isSelected() {
-            return isSelected;
+        public List<RewardListBean> getReward_list() {
+            return reward_list;
         }
 
-        public void setSelected(boolean selected) {
-            isSelected = selected;
+        public void setReward_list(List<RewardListBean> reward_list) {
+            this.reward_list = reward_list;
         }
 
-        public int getId() {
-            return id;
-        }
+        public static class RewardListBean {
+            /**
+             * id : 1
+             * name : 100分換100元
+             * reducereward : 100
+             * value : 100.00
+             */
 
-        public void setId(int id) {
-            this.id = id;
-        }
+            private int id;
+            private String name;
+            private int reducereward;
+            private String value;
+            boolean isSelected = false;
+            int count = 0;
 
-        public String getName() {
-            return name;
-        }
+            public int getCount() {
+                return count;
+            }
 
-        public void setName(String name) {
-            this.name = name;
-        }
+            public void setCount(int count) {
+                this.count = count;
+            }
 
-        public int getReducereward() {
-            return reducereward;
-        }
+            public boolean isSelected() {
+                return isSelected;
+            }
 
-        public void setReducereward(int reducereward) {
-            this.reducereward = reducereward;
-        }
+            public void setSelected(boolean selected) {
+                isSelected = selected;
+            }
 
-        public String getValue() {
-            return value;
-        }
+            public int getId() {
+                return id;
+            }
 
-        public void setValue(String value) {
-            this.value = value;
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public int getReducereward() {
+                return reducereward;
+            }
+
+            public void setReducereward(int reducereward) {
+                this.reducereward = reducereward;
+            }
+
+            public String getValue() {
+                return value;
+            }
+
+            public void setValue(String value) {
+                this.value = value;
+            }
         }
     }
 }

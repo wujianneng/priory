@@ -190,15 +190,15 @@ public class QueryFragment extends BaseFragment {
 
     Disposable dateCall;
 
-    private void refreshDateRecyclerView(String date) {
+    private void refreshDateRecyclerView(String sd,String ed) {
         if (dateCall != null)
             dateCall.dispose();
         orderList.clear();
         orderAdapter.notifyDataSetChanged();
-        if (date.equals(""))
+        if (sd.equals("") || ed.equals(""))
             return;
         dateCall = RetrofitManager.createString(ApiService.class)
-                .getOrdersByDate(date)
+                .getOrdersByDate(sd,ed)
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
@@ -333,11 +333,13 @@ public class QueryFragment extends BaseFragment {
                 c.set(year, monthOfYear, dayOfMonth);
                 if (num == 0) {
                     dateTv.setText(DateFormat.format("yyy-MM-dd", c));
-                    refreshDateRecyclerView(dateTv.getText().toString());
+                    refreshDateRecyclerView(dateTv.getText().toString(),dateTv.getText().toString());
                 } else if (num == 1) {
                     startDateTv.setText(DateFormat.format("yyy-MM-dd", c));
+                    refreshDateRecyclerView(startDateTv.getText().toString(),endDateTv.getText().toString());
                 } else if (num == 2) {
                     endDateTv.setText(DateFormat.format("yyy-MM-dd", c));
+                    refreshDateRecyclerView(startDateTv.getText().toString(),endDateTv.getText().toString());
                 }
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));

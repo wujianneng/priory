@@ -1,3 +1,192 @@
 <resources>
     <string name="app_name">Annabella</string>
+
+
+    <string name="menu_clear">Clear</string>
+
+    <string name="nav_header_name">Reader Utility</string>
+    <string name="nav_header_version">v2.2  2018/7/20</string>
+
+    <string name="menu_item_demo">Multi(U)</string>
+    <string name="menu_item_demoUR">Multi&amp;Read(UR)</string>
+    <string name="menu_item_common">Common(Q,T,P,R,W,L,K)</string>
+    <string name="menu_item_regular">Reader Configure</string>
+    <string name="menu_item_ble_handheld_mode">RFID Mode Set</string>
+    <string name="menu_item_ble_handheld_demo">RFID/IR Code Demo</string>
+    <string name="menu_item_pager">Pager</string>
+    <string name="menu_item_communication_interface">Communication Interface</string>
+    <string name="menu_item_ble_handheld_field">BLE Handheld Project</string>
+    <string name="menu_item_otg">OTG</string>
+    <string name="menu_item_ble">BLE</string>
+    <string name="menu_item_wifi">Wi-Fi</string>
+
+    <!-- Toolbar titles when navigation menu item is selected -->
+    <string-array name="nav_item_activity_titles">
+        <item>Multi(U)</item>
+        <item>Multi&amp;Read(UR)</item>
+        <item>Common(Q,T,P,R,W,L,K)</item>
+        <item>Reader Configure</item>
+        <item>Communication interface</item>
+        <item>OTG</item>
+        <item>BLE</item>
+        <item>Wi-Fi</item>
+        <item>BLE Handheld Project</item>
+        <item>RFID Mode Set</item>
+        <item>RFID/IR Demo</item>
+    </string-array>
+
+    <!-- fragment_demo -->
+    <string name="demo_tvtitle">Tag List:</string>
+    <string name="demo_tvcount">Tag&#x0A;Count:</string>
+    <string name="demo_tv_select">Select command(T):</string>
+    <string name="demo_tv_access">Access command(P):</string>
+    <string name="demo_tv_read">Read command(R):</string>
+    <string name="demo_tv_write">Write command(W):</string>
+    <string name="demo_tv_lock">Lock command(L):</string>
+    <string name="demo_tv_kill">KilL command(K):</string>
+    <string name="demo_tv_slot">Slot Q:</string>
+    <string name="demo_btnStart">Start</string>
+    <string name="demo_btnClear">Clear</string>
+    <string name="demo_adapter_pc">PC</string>
+    <string name="demo_adapter_epc">EPC</string>
+    <string name="demo_adapter_crc">CRC16</string>
+    <string name="demo_adapter_count">Count</string>
+    <string name="demo_adapter_percentage">Percentage</string>
+    <string name="demo_adapter_r">Read</string>
+
+    <string-array name="slot_q">
+        <item>--</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <!-- fragment_ble -->
+    <string name="ble_action_search">Search</string>
+    <string name="ble_msg_support_ble"> does support Bluetooth Low Energy</string>
+    <string name="ble_msg_no_support_ble"> does not support Bluetooth Low Energy</string>
+    <string name="ble_msg_version_low">, Build.VERSION &lt; 18</string>
+    <string name="ble_msg_disenable">Bluetooth is not enable</string>
+    <string name="ble_msg_start_scan">Start scan devices, Please wait...</string>
+    <string name="ble_msg_stop_scan">Stop scan devices.</string>
+    <string name="ble_msg_stop_service">Stop Bluetooth Low Energy service.</string>
+
+    <!-- fragment_ble_handheld -->
+    <string name="ble_handheld_msg">For BLE Handheld Project Demo Only</string>
+    <string name="ble_handheld_title">UHF RFID模式設定</string>
+    <string name="ble_handheld_title_mode">模式:</string>
+    <string name="ble_handheld_title_time">時間:</string>
+    <string name="ble_handheld_hint_btime"><font size="13"><i>10~300s</i></font></string>
+    <string name="ble_handheld_set">設定</string>
+
+    <!-- fragment_otg -->
+    <string name="otg_action_enumerate">Enumerate</string>
+    <string name="otg_msg_support"> does support USB host</string>
+    <string name="otg_msg_no_support"> does not support USB host</string>
+    <string name="otg_msg_driver_no_support">driver not support this device.</string>
+    <string name="otg_msg_start_enumerate">Start enumerate devices, Please wait...</string>
+    <string name="otg_msg_stop_enumerate">Stop enumerate devices.</string>
+    <string name="otg_msg_stop_enumerate_no_device">Stop enumerate and no found device.</string>
+    <string name="otg_msg_stop_service">Stop OTG service.</string>
+    <string name="otg_adapter_vendorId_title">VID:</string>
+    <string name="otg_adapter_productId_title">PID:</string>
+
+    <!-- fragment_net -->
+    <string name="net_title_search">Search Net Device: </string>
+    <string name="net_title_assign">Assign Net Device</string>
+    <string name="net_action_search">Search</string>
+    <string name="net_action_connect">Connect</string>
+    <string name="net_action_connect_device">Connect Device:</string>
+    <string name="net_action_disconnect">Cancel</string>
+
+    <string name="net_hint_device_name">Device Name</string>
+    <string name="net_hint_tx_port">Tx Port</string>
+    <string name="net_hint_rx_port">Rx Port</string>
+    <string name="net_hint_address">Address</string>
+    <string name="net_hint_port">Port</string>
+    <string name="net_msg_stop_service">Stop Net service.</string>
+    <string name="net_adapter_port_title">Port:</string>
+    <string name="net_adapter_name_title">Name:</string>
+    <string name="net_adapter_ip_title">IP:</string>
+    <string name="net_adapter_mac_title">MAC:</string>
+
+    <!-- fragment_common -->
+    <string name="common_tvtitle">Message:</string>
+    <string name="common_adapter_tx">[TX]</string>
+    <string name="common_adapter_rx">[RX]</string>
+    <string name="common_adapter_hint_access_password"><font size="14"><i>Access Password</i></font></string>
+    <string name="common_adapter_hint_address"><font size="13"><i>Address</i></font></string>
+    <string name="common_adapter_hint_length"><font size="13"><i>Length</i></font></string>
+    <string name="common_adapter_hint_baddress"><font size="13"><i>bit Address</i></font></string>
+    <string name="common_adapter_hint_blength"><font size="13"><i>bit Length</i></font></string>
+    <string name="common_adapter_hint_data"><font size="14"><i>Data</i></font></string>
+    <string name="common_adapter_hint_bdata"><font size="14"><i>bit Data</i></font></string>
+    <string name="common_adapter_hint_kill_password"><font size="14"><i>Kill Password</i></font></string>
+    <string name="common_adapter_pager1_epc">EPC</string>
+    <string name="common_adapter_pager1_repeat">repeat</string>
+    <string name="common_adapter_pager2_tid">TID</string>
+    <string name="common_adapter_pager3_read">Read</string>
+    <string name="common_adapter_pager3_check">access password</string>
+    <string name="common_adapter_pager4_write">Write</string>
+    <string name="common_adapter_pager5_lock">Lock</string>
+    <string name="common_adapter_pager6_kill">Kill</string>
+
+    <string-array name="ble_handheld_rfid_mode">
+        <item>0:Default</item>
+        <item>1:Continue</item>
+    </string-array>
+    <string-array name="common_memory_bank">
+        <item>Reserved</item>
+        <item>EPC</item>
+        <item>TID</item>
+        <item>USER</item>
+    </string-array>
+    <string-array name="common_lock_kill_pwd">
+        <item>-- Kill Password --</item>
+        <item>Readable and writable</item>
+        <item>Permanently readable and writable</item>
+        <item>Need password to readable and writable</item>
+        <item>Need password to permanently readable and writable</item>
+    </string-array>
+    <string-array name="common_lock_access_pwd">
+        <item>-- Access Password --</item>
+        <item>Readable and writable</item>
+        <item>Permanently readable and writable</item>
+        <item>Need password to readable and writable</item>
+        <item>Need password to permanently readable and writable</item>
+    </string-array>
+    <string-array name="common_lock_epc_bank">
+        <item>-- EPC Bank --</item>
+        <item>Writable</item>
+        <item>Permanently writable</item>
+        <item>Need password to writable</item>
+        <item>Need password to permanently writable</item>
+    </string-array>
+    <string-array name="common_lock_user_bank">
+        <item>-- USER Bank --</item>
+        <item>Writable</item>
+        <item>Permanently writable</item>
+        <item>Need password to writable</item>
+        <item>Need password to permanently writable</item>
+    </string-array>
+    <string-array name="common_lock_tid_bank">
+        <item>-- TID Bank --</item>
+        <item>Writable</item>
+        <item>Permanently writable</item>
+        <item>Need password to writable</item>
+        <item>Need password to permanently writable</item>
+    </string-array>
+
+    <!-- fragment_regular -->
+    <string name="regular_info_title">Reader Status: </string>
+    <string name="regular_power_title">Set Power(dBm):</string>
+    <string name="regular_action_update">Update</string>
+    <string name="regular_action_power_set">Set</string>
 </resources>

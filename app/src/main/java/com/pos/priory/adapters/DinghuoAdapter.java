@@ -28,7 +28,7 @@ public class DinghuoAdapter extends BaseQuickAdapter<WarehouseBean.ResultsBean.I
         helper.setText(R.id.name_tv, item.getName());
         helper.setText(R.id.weight_tv, item.getSubtotal().getWeight() + "g");
         helper.setText(R.id.code_tv, item.getProductcode() + "");
-        helper.setText(R.id.price_tv, item.getPrice().get(0).getSymbol() +  item.getPrice().get(0).getPrice());
+        helper.setText(R.id.price_tv, item.getPrice().getSymbol() +  item.getPrice().getPrice());
         Glide.with(helper.getConvertView().getContext()).load(item.getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)

@@ -82,12 +82,13 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:layout_width="0dp"
+                    android:visibility="gone"
                     android:text="積分換現金券" />
 
                 <android.support.design.button.MaterialButton
                     android:id="@+id/use_coupon_btn"
                     android:layout_height="@dimen/dp_40"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginLeft="15dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="1"
                     android:layout_width="0dp"

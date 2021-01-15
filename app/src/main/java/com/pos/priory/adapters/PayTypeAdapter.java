@@ -9,6 +9,7 @@ import android.widget.EditText;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
+import com.pos.priory.activitys.BalanceActivity;
 import com.pos.priory.beans.PayTypeBean;
 import com.pos.priory.beans.PayTypesResultBean;
 
@@ -16,8 +17,11 @@ import java.util.List;
 
 public class PayTypeAdapter extends BaseQuickAdapter<PayTypesResultBean.ResultsBean, BaseViewHolder> {
 
-    public PayTypeAdapter(int layoutResId, @Nullable List<PayTypesResultBean.ResultsBean> data) {
+    BalanceActivity balanceActivity;
+
+    public PayTypeAdapter(int layoutResId, @Nullable List<PayTypesResultBean.ResultsBean> data,BalanceActivity balanceActivity) {
         super(layoutResId, data);
+        this.balanceActivity = balanceActivity;
     }
 
     @Override
@@ -37,6 +41,7 @@ public class PayTypeAdapter extends BaseQuickAdapter<PayTypesResultBean.ResultsB
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         String str = s.toString();
                         item.setPayAmount(TextUtils.isEmpty(str) ? 0 : Double.parseDouble(str));
+                        balanceActivity.updatePayList(false);
                     }
 
                     @Override

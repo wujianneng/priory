@@ -6,4 +6,170 @@
     <color name="drag_btn_green">#71C671</color>
     <color name="drag_btn_red">#FF8D8D</color>
     <color name="blue_text">#000000</color>
+
+
+    <color name="colorLightGrey">#B0B0B0</color>
+    <color name="colorGrey">#808080</color>
+
+    <color name="colorMidnightBlue">#191970</color>
+    <color name="colorNavyBlue">#000080</color>
+    <color name="colorCornflowerBlue">#6495ED</color>
+    <color name="colorDarkSlateBlue">#483D8B</color>
+    <color name="colorSlateBlue">#6A5ACD</color>
+    <color name="colorMediumSlateBlue">#7B68EE</color>
+    <color name="colorLightSlateBlue">#8470FF</color>
+    <color name="colorMediumBlue">#0000CD</color>
+    <color name="colorRoyalBlue">#4169E1</color>
+    <color name="colorBlue">#0000FF</color>
+    <color name="colorDodgerBlue">#1E90FF</color>
+    <color name="colorDeepSkyBlue">#00BFFF</color>
+    <color name="colorSkyBlue">#87CEEB</color>
+    <color name="colorLightSkyBlue">#87CEFA</color>
+    <color name="colorSteelBlue">#4682B4</color>
+    <color name="colorLightSteelBlue">#B0C4DE</color>
+    <color name="colorLightBlue">#ADD8E6</color>
+    <color name="colorPowderBlue">#B0E0E6</color>
+    <color name="colorPaleTurquoise">#AFEEEE</color>
+    <color name="colorDarkTurquoise">#00CED1</color>
+    <color name="colorMediumTurquoise">#48D1CC</color>
+    <color name="colorTurquoise">#40E0D0</color>
+    <color name="colorCyan">#00FFFF</color>
+    <color name="colorLightCyan">#E0FFFF</color>
+    <color name="colorCadetBlue">#5F9EA0</color>
+    <color name="colorMediumAquamarine">#66CDAA</color>
+    <color name="colorOliveDrab">#6B8E23</color>
+    <color name="colorDarkKhaki">#BDB76B</color>
+    <color name="colorPaleGoldenrod">#EEE8AA</color>
+    <color name="colorLtGoldenrodYello">#FAFAD2</color>
+    <color name="colorLightYellow">#FFFFE0</color>
+    <color name="colorLightGoldenrod">#EEDD82</color>
+    <color name="colorIndianRed">#CD5C5C</color>
+    <color name="colorSaddleBrown">#8B4513</color>
+    <color name="colorBurlywood">#DEB887</color>
+    <color name="colorTan">#D2B48C</color>
+    <color name="colorChocolate">#D2691E</color>
+    <color name="colorLightSalmon">#FFA07A</color>
+
+    <color name="colorLightPink">#FFB6C1</color>
+
+    <color name="colorSnow1">#FFFAFA</color>
+    <color name="colorSnow2">#EEE9E9</color>
+    <color name="colorSnow3">#CDC9C9</color>
+
+    <color name="colorCornsilk1">#FFF8DC</color>
+    <color name="colorCornsilk2">#EEE8CD</color>
+    <color name="colorCornsilk3">#CDC8B1</color>
+    <color name="colorCornsilk4">#8B8878</color>
+
+    <color name="colorSeashell1">#FFF5EE</color>
+    <color name="colorSeashell2">#EEE5DE</color>
+    <color name="colorSeashell3">#CDC5BF</color>
+    <color name="colorSeashell4">#8B8682</color>
+
+    <color name="colorIvory1">#FFFFF0</color>
+    <color name="colorIvory2">#EEEEE0</color>
+    <color name="colorIvory3">#CDCDC1</color>
+
+    <color name="colorSlateGray1">#C6E2FF</color>
+    <color name="colorSlateGray2">#B9D3EE</color>
+    <color name="colorSlateGray3">#9FB6CD</color>
+
+
+
+    <color name="colorPaleTurquoise3">#96CDCD</color>
+    <color name="colorPaleTurquoise4">#668B8B</color>
+
+    <color name="colorDarkSeaGreen2">#B4EEB4</color>
+    <color name="colorDarkSeaGreen3">#9BCD9B</color>
+
+    <color name="colorDarkOliveGreen3">#A2CD5A</color>
+    <color name="colorDarkOliveGreen4">#6E8B3D</color>
+
+    <color name="colorLightYellow2">#EEEED1</color>
+    <color name="colorLightYellow3">#CDCDB4</color>
+
+    <color name="colorLightBlue4">#68838B</color>
+    <color name="colorLightBlue3">#9AC0CD</color>
+
+    <!-- Indigo -->
+    <color name="colorIndigo050">#E8EAF6</color>
+    <color name="colorIndigo100">#C5CAE9</color>
+    <color name="colorIndigo200">#9FA8DA</color>
+    <color name="colorIndigo300">#7986CB</color>
+    <color name="colorIndigo400">#5C6BC0</color>
+    <color name="colorIndigo500">#3F51B5</color>
+    <color name="colorIndigoA100">#8C9EFF</color>
+    <color name="colorIndigoA200">#536DFE</color>
+    <color name="colorIndigoA400">#3D5AFE</color>
+    <color name="colorIndigoA700">#304FFE</color>
+
+    <!-- Blue -->
+    <color name="colorBlue050">#E3F2FD</color>
+    <color name="colorBlue100">#BBDEFB</color>
+    <color name="colorBlue200">#90CAF9</color>
+    <color name="colorBlue300">#64B5F6</color>
+    <color name="colorBlue400">#42A5F5</color>
+    <color name="colorBlue500">#2196F3</color>
+    <color name="colorBlueA100">#82B1FF</color>
+    <color name="colorBlueA200">#448AFF</color>
+    <color name="colorBlueA400">#2979FF</color>
+    <color name="colorBlueA700">#2962FF</color>
+
+    <!-- Pink-->
+    <color name="colorPink050">#FCE4EC</color>
+    <color name="colorPink100">#F8BBD0</color>
+    <color name="colorPink200">#F48FB1</color>
+    <color name="colorPink300">#F06292</color>
+    <color name="colorPink400">#EC407A</color>
+    <color name="colorPink500">#E91E63</color>
+    <color name="colorPinkA100">#FF80AB</color>
+    <color name="colorPinkA200">#FF4081</color>
+    <color name="colorPinkA400">#F50057</color>
+    <color name="colorPinkA700">#C51162</color>
+
+    <!-- Teal -->
+    <color name="colorTeal050">#E0F2F1</color>
+    <color name="colorTeal100">#B2DFDB</color>
+    <color name="colorTeal200">#80CBC4</color>
+    <color name="colorTeal300">#4DB6AC</color>
+    <color name="colorTeal400">#26A69A</color>
+    <color name="colorTeal500">#009688</color>
+    <color name="colorTealA100">#A7FFEB</color>
+    <color name="colorTealA200">#64FFDA</color>
+    <color name="colorTealA400">#1DE9B6</color>
+    <color name="colorTealA700">#00BFA5</color>
+
+    <!--Lime -->
+    <color name="colorLime050">#F9FBE7</color>
+    <color name="colorLime100">#F0F4C3</color>
+    <color name="colorLime200">#E6EE9C</color>
+
+    <!-- Amber -->
+    <color name="colorAmber050">#FFF8E1</color>
+    <color name="colorAmber100">#FFECB3</color>
+    <color name="colorAmber200">#FFE082</color>
+    <color name="colorAmber300">#FFD54F</color>
+    <color name="colorAmber400">#FFCA28</color>
+    <color name="colorAmber500">#FFC107</color>
+    <color name="colorAmber600">#FFB300</color>
+    <color name="colorAmber700">#FFA000</color>
+    <color name="colorAmber800">#FF8F00</color>
+    <color name="colorAmber900">#FF6F00</color>
+    <color name="colorAmberA100">#FFE57F</color>
+    <color name="colorAmberA200">#FFD740</color>
+    <color name="colorAmberA400">#FFC400</color>
+    <color name="colorAmberA700">#FFAB00</color>
+
+    <!-- Gray -->
+    <color name="colorGray050">#FAFAFA</color>
+    <color name="colorGray100">#F5F5F5</color>
+    <color name="colorGray200">#EEEEEE</color>
+    <color name="colorGray300">#E0E0E0</color>
+    <color name="colorGray350">#D6D6D6</color>
+    <color name="colorGray400">#BDBDBD</color>
+    <color name="colorGray500">#9E9E9E</color>
+    <color name="colorGray600">#757575</color>
+    <color name="colorGray700">#616161</color>
+    <color name="colorGray800">#424242</color>
+    <color name="colorGray900">#212121</color>
 </resources>

@@ -1,6 +1,8 @@
 package com.pos.priory.adapters;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.widget.CheckBox;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -10,43 +12,36 @@ import com.pos.priory.beans.CouponResultBean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DiscountAdapter extends BaseQuickAdapter<CouponResultBean.ResultBean, BaseViewHolder> {
-    public List<CouponResultBean.ResultBean> selectList = new ArrayList<>();
+public class DiscountAdapter extends BaseQuickAdapter<CouponResultBean, BaseViewHolder> {
+    public List<CouponResultBean> selectList = new ArrayList<>();
 
-    public DiscountAdapter(int layoutResId, @Nullable List<CouponResultBean.ResultBean> data) {
+    public DiscountAdapter(int layoutResId, @Nullable List<CouponResultBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, CouponResultBean.ResultBean item) {
+    protected void convert(BaseViewHolder helper, CouponResultBean item) {
         helper.setText(R.id.name_tv, item.getName());
-        helper.setText(R.id.detial_tv, item.getDescription());
+        helper.setText(R.id.detial_tv, item.getTerms());
         helper.setGone(R.id.detail_layout, item.isShowDetail());
         helper.setImageResource(R.id.down_img, item.isShowDetail() ? R.drawable.go_top : R.drawable.go_bottom);
         helper.setChecked(R.id.checkbox, item.isSelected());
-
         if (selectList.size() != 0) {
-            if (selectList.get(0).isMultiple()) {
-                helper.getView(R.id.checkbox).setEnabled(item.isMultiple() ? true : false);
-            } else {
+            if (selectList.get(0).isWith_another_coupon()) {
+                Log.e("test", "多張");
                 if (!item.isSelected())
-                    helper.getView(R.id.checkbox).setEnabled(false);
+                    helper.getView(R.id.checkbox).setEnabled(item.isWith_another_coupon() ? item.isIs_usable() : false);
+            } else {
+                Log.e("test", item.isSelected() + item.getName() + "單張" + item.isIs_usable());
+                helper.getView(R.id.checkbox).setEnabled(item.isIs_usable());
             }
         } else {
-            helper.getView(R.id.checkbox).setEnabled(true);
+            Log.e("test", "沒選中");
+            helper.getView(R.id.checkbox).setEnabled(item.isIs_usable());
         }
 
-        helper.setOnCheckedChangeListener(R.id.checkbox, (buttonView, isChecked) -> {
-            if (isChecked) selectList.add(item);
-            else selectList.remove(item);
-            item.setSelected(isChecked);
-            try {
-                notifyDataSetChanged();
-            } catch (Exception e) {
+        helper.addOnClickListener(R.id.checkbox);
 
-            }
-
-        });
         helper.setOnClickListener(R.id.down_img, v -> {
             item.setShowDetail(!item.isShowDetail());
             notifyItemChanged(helper.getAdapterPosition());

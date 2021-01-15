@@ -25,7 +25,7 @@
             android:layout_toRightOf="@+id/checkbox"
             android:text="优惠券名"
             android:textColor="@color/blue_text"
-            android:textSize="15sp" />
+            android:textSize="13sp" />
 
         <LinearLayout
             android:id="@+id/count_layout"
@@ -34,7 +34,7 @@
             android:visibility="gone"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="15dp"
             android:orientation="horizontal">
 
             <TextView

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/content_fragment_otg">
+    <TextView
+        android:id="@+id/otg_tvMsgStatus"
+        android:layout_width="match_parent"
+        android:layout_height="26dp"
+        android:layout_margin="@dimen/layout_xl_margin"
+        android:gravity="center"
+        android:background="@drawable/gradient_groupbox"
+        android:textStyle="italic" />
+    <ListView
+        android:id="@+id/otg_lvDevice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/layout_xl_margin"
+        android:layout_below="@+id/otg_tvMsgStatus"
+        android:layout_above="@+id/otg_tvMsg"
+        android:background="@drawable/gradient_color_below"/>
+    <TextView
+        android:id="@+id/otg_tvMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/layout_xl_margin"
+        android:textStyle="italic"
+        android:layout_above="@+id/otg_btnEnumerate"/>
+    <ProgressBar
+        android:id="@+id/otg_progressBar"
+        android:layout_centerInParent="true"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/progressbar_48_holo"/>
+    <Button
+        android:id="@+id/otg_btnEnumerate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/otg_action_enumerate"/>
+
+</RelativeLayout>

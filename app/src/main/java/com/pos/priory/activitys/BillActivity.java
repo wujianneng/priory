@@ -2,19 +2,9 @@ package com.pos.priory.activitys;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
-import android.support.v4.print.PrintHelper;
-import android.support.v4.util.LruCache;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -31,7 +21,7 @@ import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.BillGoodsAdapter;
 import com.pos.priory.adapters.BillPrintGoodsAdapter;
-import com.pos.priory.beans.GoodBean;
+import com.pos.priory.beans.FittingBean;
 import com.pos.priory.fragments.OrderFragment;
 import com.pos.priory.utils.BitmapUtils;
 import com.pos.priory.utils.DateUtils;
@@ -80,7 +70,7 @@ public class BillActivity extends BaseActivity {
     @Bind(R.id.btn_print)
     MaterialButton btnPrint;
 
-    List<GoodBean> goodList;
+    List<FittingBean.ResultsBean> goodList;
     BillGoodsAdapter goodsAdapter;
     @Bind(R.id.order_number_tv)
     TextView orderNumberTv;
@@ -106,7 +96,7 @@ public class BillActivity extends BaseActivity {
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(getIntent().getDoubleExtra("sumMoney", 0)));
         edtCashMoney.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(getIntent().getDoubleExtra("receiveMoney", 0)));
         smallChangeTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(getIntent().getDoubleExtra("returnMoney", 0)));
-        goodList = gson.fromJson(getIntent().getStringExtra("goodlist"), new TypeToken<List<GoodBean>>() {
+        goodList = gson.fromJson(getIntent().getStringExtra("goodlist"), new TypeToken<List<FittingBean.ResultsBean>>() {
         }.getType());
 
         goodsAdapter = new BillGoodsAdapter(this, R.layout.bill_good_list_item, goodList);
@@ -131,10 +121,10 @@ public class BillActivity extends BaseActivity {
     }
 
 
-    public static void printViews(final Activity activity, List<GoodBean> goodList, String orderNumber,
+    public static void printViews(final Activity activity, List<FittingBean.ResultsBean> goodList, String orderNumber,
                                   String memberName, String createDate, double sumMoney, int storeid) {
         List<View> views = new ArrayList<>();
-        List<GoodBean> templist = new ArrayList<>();
+        List<FittingBean.ResultsBean> templist = new ArrayList<>();
         templist.addAll(goodList);
         int perPageSize = 8;
         int size = templist.size() / perPageSize;
@@ -149,7 +139,7 @@ public class BillActivity extends BaseActivity {
 
         Log.e("test", "size:" + size + " a:" + a);
         for (int i = 0; i < size; i++) {
-            List<GoodBean> extraList = new ArrayList<>();
+            List<FittingBean.ResultsBean> extraList = new ArrayList<>();
             if (i == (size - 1)) {
                 for (int t = 0; t < a; t++) {
                     extraList.add(templist.get(t + perPageSize * i));
@@ -170,11 +160,11 @@ public class BillActivity extends BaseActivity {
             ((TextView) printView.findViewById(R.id.address_tv)).setText(MyApplication.getContext().staffInfoBean.getShop());
             ((TextView) printView.findViewById(R.id.tel_tv)).setText(MyApplication.getContext().staffInfoBean.getMobile());
             ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderNumber);
-            ((TextView) printView.findViewById(R.id.buyer_name_tv)).setText(memberName);
+            ((TextView) printView.findViewById(R.id.count_tv)).setText("合計(" + goodList.size() + "件)");
+            ((TextView) printView.findViewById(R.id.amount_tv)).setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney) + "元");
+            ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney) + "元");
             ((TextView) printView.findViewById(R.id.date_tv)).setText(createDate);
             ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + size);
-            ((TextView) printView.findViewById(R.id.good_size_tv)).setText(templist.size() + "");
-            ((TextView) printView.findViewById(R.id.sum_money_tv)).setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney));
             RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
             BillPrintGoodsAdapter adapter = new BillPrintGoodsAdapter(R.layout.bill_print_good_list_item, extraList);
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);

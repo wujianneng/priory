@@ -38,7 +38,7 @@ public class ExchangeCashCouponActivity extends BaseActivity {
     @Bind(R.id.title_layout)
     CardView titleLayout;
     @Bind(R.id.recycler_view)
-    RecyclerView recyclerView;
+    public RecyclerView recyclerView;
     @Bind(R.id.usable_integal_tv)
     TextView usableIntegalTv;
     @Bind(R.id.used_integal_tv)
@@ -47,7 +47,8 @@ public class ExchangeCashCouponActivity extends BaseActivity {
     TextView ownIntegalTv;
 
     ExchangeCashCouponAdapter adapter;
-    List<ExchangeCashCouponBean.ResultsBean> datalist = new ArrayList<>();
+    ExchangeCashCouponBean.ResultBean resultBean;
+    List<ExchangeCashCouponBean.ResultBean.RewardListBean> datalist = new ArrayList<>();
     MemberBean.ResultsBean memberBean;
     public double enableReward = 0, usedReward = 0, lastReward = 0;
 
@@ -61,15 +62,13 @@ public class ExchangeCashCouponActivity extends BaseActivity {
 
     private void initViews() {
         memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.ResultsBean.class);
-        enableReward = memberBean.getReward();
-        lastReward = memberBean.getReward();
         titleTv.setText("積分兌換");
         nextTv.setText("確定");
         nextTv.setVisibility(View.VISIBLE);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new ExchangeCashCouponAdapter(this, R.layout.exchange_coupon_list_item, datalist);
         adapter.setOnItemChildClickListener(((adapter1, view, position) -> {
-            ExchangeCashCouponBean.ResultsBean item = datalist.get(position);
+            ExchangeCashCouponBean.ResultBean.RewardListBean item = datalist.get(position);
             if (view.getId() == R.id.decrease_btn) {
                 if (item.getCount() == 1)
                     return;
@@ -85,13 +84,12 @@ public class ExchangeCashCouponActivity extends BaseActivity {
             }
         }));
         recyclerView.setAdapter(adapter);
-        resetRewardTvs();
         getDatas();
     }
 
     public void resetRewardTvs() {
         usedReward = 0;
-        for (ExchangeCashCouponBean.ResultsBean resultsBean : adapter.selectList) {
+        for (ExchangeCashCouponBean.ResultBean.RewardListBean resultsBean : adapter.selectList) {
             usedReward += resultsBean.getReducereward() * resultsBean.getCount();
         }
         lastReward = enableReward - usedReward;
@@ -104,13 +102,17 @@ public class ExchangeCashCouponActivity extends BaseActivity {
 
     private void getDatas() {
         showLoadingDialog("正在獲取積分兌換列表...");
-        RetrofitManager.excute(RetrofitManager.createString(ApiService.class).getRewardExList(), new ModelListener() {
+        RetrofitManager.excute(RetrofitManager.createString(ApiService.class).getRewardExList(memberBean.getId()), new ModelListener() {
             @Override
             public void onSuccess(String result) throws Exception {
                 hideLoadingDialog();
                 ExchangeCashCouponBean bean = gson.fromJson(result, ExchangeCashCouponBean.class);
-                datalist.addAll(bean.getResults());
+                resultBean = bean.getResult();
+                enableReward = resultBean.getMember_reward();
+                lastReward = resultBean.getMember_reward();
+                datalist.addAll(bean.getResult().getReward_list());
                 adapter.notifyDataSetChanged();
+                resetRewardTvs();
             }
 
             @Override

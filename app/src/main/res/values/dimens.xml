@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="fixed_height_bottom_padding">5dp</dimen>
+
+    <dimen name="layout_xxl_margin">2dp</dimen>
+    <dimen name="layout_xl_margin">3dp</dimen>
+    <dimen name="layout_l_margin">6dp</dimen>
+    <dimen name="layout_h_margin">10dp</dimen>
+    <dimen name="layout_xh_margin">16dp</dimen>
+    <dimen name="layout_lxh_margin">20dp</dimen>
+    <dimen name="layout_xxh_margin">24dp</dimen>
 </resources>

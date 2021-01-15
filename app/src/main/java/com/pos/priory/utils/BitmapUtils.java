@@ -2,9 +2,12 @@ package com.pos.priory.utils;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -15,7 +18,7 @@ import android.view.WindowManager;
 public class BitmapUtils {
 
     public static Bitmap activityShot(Activity activity) {
-    /*获取windows中最顶层的view*/
+        /*获取windows中最顶层的view*/
         View view = activity.getWindow().getDecorView();
 
         //允许当前窗口保存缓存信息
@@ -46,20 +49,25 @@ public class BitmapUtils {
         return bitmap;
     }
 
-    public static Bitmap loadBitmapFromViewBySystem(View v,int width,int height) {
+    public static Bitmap loadBitmapFromViewBySystem(View v, int width, int height) {
         if (v == null) {
             return null;
         }
-        v.layout(0, 0, width, height);
+        Log.e("test", "loadBitmapFromViewBySystem:" + 1);
+        //测量使得view指定大小
         int measuredWidth = View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY);
         int measuredHeight = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
-        // validate view.measurewidth and view.measureheight
+        Log.e("test", "loadBitmapFromViewBySystem:" + 2);
         v.measure(measuredWidth, measuredHeight);
+        Log.e("test", "loadBitmapFromViewBySystem:" + 3 + (v == null));
+        //调用layout方法布局后，可以得到view的尺寸大小
         v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
-        v.setDrawingCacheEnabled(true);
-        v.buildDrawingCache();
-        Bitmap bitmap = v.getDrawingCache();
-        return bitmap;
+        Log.e("test", "loadBitmapFromViewBySystem:" + 4);
+        Bitmap bmp = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmp);
+        c.drawColor(Color.WHITE);
+        v.draw(c);
+        return bmp;
     }
 
 }

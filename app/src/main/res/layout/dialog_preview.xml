@@ -319,7 +319,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text0"
                 android:layout_marginLeft="20dp"
-                android:text="1.黄金货品可凭公司收据售回本公司,回售计算方式:重量 x 购入金价 x 0.95;"
+                android:text="1. 购买起计7内无人为损坏，无受化妆品化学作用，可慿收据按本公司的规定换货（不提供退款服务）。"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -329,7 +329,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text1"
                 android:layout_marginLeft="20dp"
-                android:text="2.黄金货品可凭公司收据可享有8折换货服务(不包括手绳製作,水晶,k金和玉器类产品);"
+                android:text="2. 只有黄金货品慿本公司的收据，可按本公司的当天黄金回收金价及规定售回本公司，或享有8折换货服务（不包括手绳制作、水晶、K金和玉石和其它类产品等）。"
                 android:textColor="#333"
                 android:textSize="8sp" />
 
@@ -339,7 +339,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/text2"
                 android:layout_marginLeft="20dp"
-                android:text="3.更换皮绳或编制手绳本公司收取材料费手工费$50;"
+                android:text="3. 更换皮绳或编制手绳，需要收取材费及手工费。"
                 android:textColor="#333"
                 android:textSize="8sp" />
 

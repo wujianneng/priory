@@ -9,10 +9,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
-import com.pos.priory.beans.GoodBean;
 import com.pos.priory.beans.WarehouseBean;
-import com.pos.priory.utils.Constants;
-import com.pos.priory.utils.OkImageLoader;
 
 import java.util.List;
 
@@ -34,13 +31,14 @@ public class RepertoryAdapter extends BaseQuickAdapter<WarehouseBean.ResultsBean
                 : item.getSubtotal().getWeight() + "g");
         helper.setText(R.id.code_tv, item.getProductcode() + "");
         helper.setGone(R.id.img_go, item.getReturninfo() != null && item.getReturninfo().getDate() != null ? false : true);
-        helper.setGone(R.id.edit_btn, item.getReturninfo() != null && item.getReturninfo().getDate() != null ? true : false);
+//        helper.setGone(R.id.edit_btn, item.getReturninfo() != null && item.getReturninfo().getDate() != null ? true : false);
+        helper.setGone(R.id.edit_btn, false);
         if (item.getReturninfo() != null && item.getReturninfo().getDate() != null) {
             helper.setText(R.id.price_tv, "$" + item.getReturninfo().getCost());
             helper.setText(R.id.name_tv, item.getName() + "(" + item.getReturninfo().getType() + ")");
         } else {
             helper.setText(R.id.name_tv, item.getName());
-            helper.setText(R.id.price_tv, item.getPrice().get(0).getSymbol() +  item.getPrice().get(0).getPrice());
+            helper.setText(R.id.price_tv, item.getPrice().getSymbol() +  item.getPrice().getPrice());
         }
         Glide.with(context).load(item.getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
