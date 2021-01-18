@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.infitack.rxretorfit2library.RetrofitManager;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.beans.MemberBean;
 import com.pos.priory.coustomViews.CustomDialog;
@@ -92,6 +94,7 @@ public class RegisterMemberActivity extends BaseActivity {
                                 btnSex.setText(items[yourChoice]);
                             }
                             choiceSexDialog.dismiss();
+                            Log.e("test","sex:" + btnSex.getText().toString());
                         }
                     });
             choiceSexDialog = singleChoiceDialog.create();
@@ -143,10 +146,12 @@ public class RegisterMemberActivity extends BaseActivity {
         });
         customDialog.show();
         Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("shop", MyApplication.staffInfoBean.getShopid());
         paramMap.put("lastname", edtFirstName.getText().toString());
         paramMap.put("firstname", edtName.getText().toString());
         paramMap.put("mobile", edtPhone.getText().toString());
-        paramMap.put("gender", btnSex.getText().toString());
+        paramMap.put("gender", btnSex.getText().toString().equals("男") ? 1 : 2);
+        Log.e("test","params:" + gson.toJson(paramMap));
         RetrofitManager.createString(ApiService.class)
                 .registerMember(paramMap)
                 .compose(this.<String>bindToLifecycle())

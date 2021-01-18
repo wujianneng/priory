@@ -28,6 +28,7 @@ import com.pos.priory.beans.ReturnFilterBean;
 import com.pos.priory.beans.RollbackOrderParamBean;
 import com.pos.priory.beans.TranferStoresBean;
 import com.pos.priory.beans.WarehouseBean;
+import com.pos.priory.beans.WhitemDetailResultBean;
 
 import java.util.List;
 import java.util.Map;
@@ -134,12 +135,12 @@ public interface ApiService {
     @GET("/api/warehouses/filter")
     Observable<RepertoryFiltersBean> getRepertoryFilters();
 
-    @GET("/api/warehouses/record")
-    Observable<RepertoryRecordBean> getRepertoryRecords(@Query("wh_id") int whname, @Query("whfrom_id") int whfrom_id, @Query("type") int type, @Query("purpose") int purpose,
+    @GET("/api/warehouses/wahrecord_list/")
+    Observable<RepertoryRecordBean> getRepertoryRecords(@Query("warehouse_type") String warehouse_type, @Query("whfrom_id") int whfrom_id, @Query("type") int type, @Query("purpose") int purpose,
                                                         @Query("startdate") String startdate, @Query("enddate") String enddate);
 
-    @GET("/api/warehouses/record")
-    Observable<RepertoryRecordBean> getRepertoryRecordsWithSearch(@Query("wh_id") int whname, @Query("whfrom_id") int whfrom_id, @Query("type") int type, @Query("purpose") int purpose,
+    @GET("/api/warehouses/wahrecord_list/")
+    Observable<RepertoryRecordBean> getRepertoryRecordsWithSearch(@Query("warehouse_type") String warehouse_type, @Query("whfrom_id") int whfrom_id, @Query("type") int type, @Query("purpose") int purpose,
                                                                   @Query("startdate") String startdate, @Query("enddate") String enddate, @Query("search") String search);
 
     @GET("/api/warehouses/record/filter")
@@ -178,6 +179,9 @@ public interface ApiService {
     @GET("/api/warehouses/list")
     Observable<WarehouseBean> getStockListByParam(@Query("search") String param);
 
+    @GET("/api/warehouses/whitem_detail/{id}/")
+    Observable<WhitemDetailResultBean> getStockDetail(@Path("id") int id);
+
     @GET("/api/warehouses/purchase")
     Observable<DinghuoGoodBean> getDinghuoList();
 
@@ -186,7 +190,7 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("/api/warehouses/purchase/done")
-    Observable<String> submitDinghuoList(@Field("id") String purchaseid);//调货
+    Observable<String> submitDinghuoList(@Field("id") String purchaseid);//提交訂貨清單
 
     @FormUrlEncoded
     @PUT("/api/warehouses/purchase/item/{id}")

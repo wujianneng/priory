@@ -146,7 +146,7 @@ public class BalanceActivity extends BaseActivity {
                     .setImage(R.drawable.icon_delete)
                     .setText("删除")
                     .setTextColor(Color.WHITE)
-                    .setHeight(DeviceUtil.dip2px(BalanceActivity.this, 91))//设置高，这里使用match_parent，就是与item的高相同
+                    .setHeight(DeviceUtil.dip2px(BalanceActivity.this, 61))//设置高，这里使用match_parent，就是与item的高相同
                     .setWidth(DeviceUtil.dip2px(BalanceActivity.this, 100));//设置宽
             swipeRightMenu.addMenuItem(deleteItem);//设置右边的侧滑
         });
@@ -253,6 +253,11 @@ public class BalanceActivity extends BaseActivity {
                 for (int i = 0; i < payTypesResultBean.getResults().size(); i++) {
                     payType[i] = payTypesResultBean.getResults().get(i).getName();
                     booleans[i] = false;
+                    for(PayTypesResultBean.ResultsBean resultsBean : orderPayTypeList){
+                        if(resultsBean.getName().equals(payType[i])){
+                            booleans[i] = true;
+                        }
+                    }
                 }
                 new AlertDialog.Builder(BalanceActivity.this).setTitle("請選擇付款方式")
                         .setMultiChoiceItems(payType, booleans, (dialog, which, isChecked) -> {
@@ -281,7 +286,7 @@ public class BalanceActivity extends BaseActivity {
     }
 
     public void updatePayList(boolean isUpdateList) {
-        if (isUpdateList)
+        if(isUpdateList)
             orderPayTypeList.clear();
         payedMoney = new BigDecimal(0);
         for (PayTypesResultBean.ResultsBean resultsBean : selectedPayTypeList) {
@@ -348,7 +353,7 @@ public class BalanceActivity extends BaseActivity {
                 for (PayTypesResultBean.ResultsBean resultsBean : selectedPayTypeList) {
                     CreateOrderParamsBean.PaymethodsBean paymentsBean = new CreateOrderParamsBean.PaymethodsBean();
                     paymentsBean.setId(resultsBean.getId());
-                    paymentsBean.setAmount(resultsBean.getPayAmount());
+                    paymentsBean.setAmount(resultsBean.getPayAmount() == -1 ? 0 : resultsBean.getPayAmount());
                     paymentsBeanList.add(paymentsBean);
                 }
             }

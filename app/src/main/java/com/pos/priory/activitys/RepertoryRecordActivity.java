@@ -1,7 +1,6 @@
 package com.pos.priory.activitys;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
@@ -16,6 +15,7 @@ import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,12 +23,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
-import com.pos.priory.adapters.RepertoryAdapter;
 import com.pos.priory.adapters.RepertoryRecordAdapter;
-import com.pos.priory.beans.RepertoryFiltersBean;
 import com.pos.priory.beans.RepertoryRecordBean;
 import com.pos.priory.beans.RepertoryRecordFiltersBean;
-import com.pos.priory.beans.WarehouseBean;
 import com.pos.priory.networks.ApiService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
@@ -89,6 +86,8 @@ public class RepertoryRecordActivity extends BaseActivity {
     RepertoryRecordAdapter repertoryAdapter;
 
     String currentStr = "";
+    @Bind(R.id.left_layout)
+    FrameLayout leftLayout;
 
     private List<RepertoryRecordFiltersBean.ResultBean.WarehouseBean> warehouse;
     private List<RepertoryRecordFiltersBean.ResultBean.TypeBean> type;
@@ -246,6 +245,10 @@ public class RepertoryRecordActivity extends BaseActivity {
     Disposable call;
 
     private void refreshRecyclerView() {
+        if(startDateTv.getText().toString().equals("请选择开始日期") || endDateTv.getText().toString().equals("请选择结束日期")){
+            refreshLayout.finishRefresh();
+            return;
+        }
         if (call != null)
             call.dispose();
         dataList.clear();
@@ -266,12 +269,9 @@ public class RepertoryRecordActivity extends BaseActivity {
                             dataList.clear();
                             dataList.addAll(result.getResults());
                             repertoryAdapter.notifyDataSetChanged();
-                            double sumCount = 0, sumWeight = 0;
-                            for (RepertoryRecordBean.ResultsBean resultsBean : result.getResults()) {
-                                sumCount += resultsBean.getWhitem().getSubtotal().getQuantity();
-                                sumWeight += resultsBean.getWhitem().getSubtotal().getWeight();
-                            }
-                            leftTv.setText("數量：" + sumCount + "件，" + "重量：" + sumWeight + "g");
+                            leftTv.setText("數量：" + result.getQuantity_total() + "件，" + "重量：" + result.getWeight_total() + "g");
+                            leftLayout.setVisibility(View.VISIBLE);
+                            sizeTv.setText("記錄:" + dataList.size());
                         }
                         refreshLayout.finishRefresh();
                     }

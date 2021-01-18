@@ -35,7 +35,7 @@ public class DataAmountAdapter extends BaseQuickAdapter<DataAmountBean.DataBean,
             sum += paymentBean.getAmount();
         }
         helper.setText(R.id.amount_tv, sum + currency);
-        helper.setImageResource(R.id.right_img, item.isExpand() ? android.R.drawable.arrow_up_float : R.drawable.icon_right);
+        helper.setImageResource(R.id.right_img, item.isExpand() ? R.drawable.baseline_expand_less_black_48dp : R.drawable.baseline_expand_more_black_48dp);
 
         helper.setGone(R.id.product_title_tv,item.isExpand());
         helper.setGone(R.id.product_listview,item.isExpand());

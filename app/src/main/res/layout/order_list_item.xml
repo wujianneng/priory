@@ -92,7 +92,7 @@
             android:layout_alignParentRight="true"
             android:layout_gravity="right"
             android:visibility="gone"
-            android:background="@color/drag_btn_green" />
+            android:background="@color/drag_btn_red" />
     </RelativeLayout>
 
 

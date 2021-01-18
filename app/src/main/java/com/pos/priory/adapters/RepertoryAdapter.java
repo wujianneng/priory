@@ -30,6 +30,7 @@ public class RepertoryAdapter extends BaseQuickAdapter<WarehouseBean.ResultsBean
         helper.setText(R.id.weight_tv, item.getReturninfo() != null && item.getReturninfo().getDate() != null ? item.getReturninfo().getWeight() + "g"
                 : item.getSubtotal().getWeight() + "g");
         helper.setText(R.id.code_tv, item.getProductcode() + "");
+        helper.setText(R.id.count_tv, item.getSubtotal().getQuantity() + "件");
         helper.setGone(R.id.img_go, item.getReturninfo() != null && item.getReturninfo().getDate() != null ? false : true);
 //        helper.setGone(R.id.edit_btn, item.getReturninfo() != null && item.getReturninfo().getDate() != null ? true : false);
         helper.setGone(R.id.edit_btn, false);

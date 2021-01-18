@@ -6,91 +6,75 @@ public class DinghuoGoodBean {
 
 
     /**
-     * count : 0
-     * next : string
-     * previous : string
-     * results : [{"id":0,"purchase_id":"string","name":"string","productcode":"string","category":"string","image":"string","quantity":0,"weight":"string","created":"2020-03-27T04:36:54.085Z","updated":"2020-03-27T04:36:54.085Z"}]
+     * code : 200
+     * msg : OK
+     * level : info
+     * result : [{"id":5,"purchase_id":14,"name":"千足金閃閃生輝D","productcode":1004,"price":299,"category":"黃金","image":"http://annabella.infitack.cn/media/uploads/0004.jpg","quantity":5,"weight":0.87,"created":"2021-01-15 16:28:01","updated":"2021-01-15 16:30:55"},{"id":6,"purchase_id":14,"name":"測試","productcode":1009,"price":299,"category":"黃金","image":"http://annabella.infitack.cn/media/uploads/0a508d0a-b3c1-4f92-a3ae-f190210db52f.jpg","quantity":1,"weight":4,"created":"2021-01-15 16:31:08","updated":"2021-01-15 16:31:08"}]
      */
 
-    private int count;
-    private String next;
-    private String previous;
-    private List<ResultsBean> results;
+    private int code;
+    private String msg;
+    private String level;
+    private List<ResultBean> result;
 
-    public int getCount() {
-        return count;
+    public int getCode() {
+        return code;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setCode(int code) {
+        this.code = code;
     }
 
-    public String getNext() {
-        return next;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setNext(String next) {
-        this.next = next;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
-    public String getPrevious() {
-        return previous;
+    public String getLevel() {
+        return level;
     }
 
-    public void setPrevious(String previous) {
-        this.previous = previous;
+    public void setLevel(String level) {
+        this.level = level;
     }
 
-    public List<ResultsBean> getResults() {
-        return results;
+    public List<ResultBean> getResult() {
+        return result;
     }
 
-    public void setResults(List<ResultsBean> results) {
-        this.results = results;
+    public void setResult(List<ResultBean> result) {
+        this.result = result;
     }
 
-    public static class ResultsBean {
+    public static class ResultBean {
         /**
-         * id : 0
-         * purchase_id : string
-         * name : string
-         * productcode : string
-         * category : string
-         * image : string
-         * quantity : 0
-         * weight : string
-         * created : 2020-03-27T04:36:54.085Z
-         * updated : 2020-03-27T04:36:54.085Z
+         * id : 5
+         * purchase_id : 14
+         * name : 千足金閃閃生輝D
+         * productcode : 1004
+         * price : 299.0
+         * category : 黃金
+         * image : http://annabella.infitack.cn/media/uploads/0004.jpg
+         * quantity : 5
+         * weight : 0.87
+         * created : 2021-01-15 16:28:01
+         * updated : 2021-01-15 16:30:55
          */
 
-        private double price;
-        private boolean isSelected = false;
         private int id;
-        private String purchase_id;
+        private int purchase_id;
         private String name;
-        private String productcode;
+        private int productcode;
+        private double price;
         private String category;
         private String image;
         private int quantity;
-        private String weight;
+        private double weight;
         private String created;
         private String updated;
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        public boolean isSelected() {
-            return isSelected;
-        }
-
-        public void setSelected(boolean selected) {
-            isSelected = selected;
-        }
 
         public int getId() {
             return id;
@@ -100,11 +84,11 @@ public class DinghuoGoodBean {
             this.id = id;
         }
 
-        public String getPurchase_id() {
+        public int getPurchase_id() {
             return purchase_id;
         }
 
-        public void setPurchase_id(String purchase_id) {
+        public void setPurchase_id(int purchase_id) {
             this.purchase_id = purchase_id;
         }
 
@@ -116,12 +100,20 @@ public class DinghuoGoodBean {
             this.name = name;
         }
 
-        public String getProductcode() {
+        public int getProductcode() {
             return productcode;
         }
 
-        public void setProductcode(String productcode) {
+        public void setProductcode(int productcode) {
             this.productcode = productcode;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
         }
 
         public String getCategory() {
@@ -148,11 +140,11 @@ public class DinghuoGoodBean {
             this.quantity = quantity;
         }
 
-        public String getWeight() {
+        public double getWeight() {
             return weight;
         }
 
-        public void setWeight(String weight) {
+        public void setWeight(double weight) {
             this.weight = weight;
         }
 

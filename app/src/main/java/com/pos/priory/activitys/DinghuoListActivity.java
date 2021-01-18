@@ -55,7 +55,7 @@ public class DinghuoListActivity extends BaseActivity {
 
     DinghuoListAdapter adapter;
 
-    List<DinghuoGoodBean.ResultsBean> goodBeanList = new ArrayList<>();
+    List<DinghuoGoodBean.ResultBean> goodBeanList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,12 +99,12 @@ public class DinghuoListActivity extends BaseActivity {
                     int quantity = goodBeanList.get(position).getQuantity();
                     if (quantity > 1) {
                         quantity -= 1;
-                        editOneItem(position, quantity, goodBeanList.get(position).getWeight());
+                        editOneItem(position, quantity, goodBeanList.get(position).getWeight() + "");
                     }
                 } else if (view.getId() == R.id.increase_btn) {
-                    int quantity = 0;
+                    int quantity = goodBeanList.get(position).getQuantity();
                     quantity += 1;
-                    editOneItem(position, quantity, goodBeanList.get(position).getWeight());
+                    editOneItem(position, quantity, goodBeanList.get(position).getWeight() + "");
                 } else if (view.getId() == R.id.weight_edt) {
                     showEditItemWeightDialog(position);
                 }
@@ -116,7 +116,7 @@ public class DinghuoListActivity extends BaseActivity {
 
     private void showEditItemWeightDialog(int position) {
         EditText editText = new EditText(this);
-        editText.setText(goodBeanList.get(position).getWeight());
+        editText.setText(goodBeanList.get(position).getWeight() + "");
         editText.setInputType(InputType.TYPE_CLASS_NUMBER);
         new AlertDialog.Builder(this).setTitle("修改重量")
                 .setView(editText)
@@ -132,6 +132,7 @@ public class DinghuoListActivity extends BaseActivity {
     }
 
     private void editOneItem(int position, int quantity, String weight) {
+        Log.e("test","quantity：" + quantity);
         if (customDialog == null)
             customDialog = new CustomDialog(this, "更改中..");
         customDialog.setOnDismissListener(dialog -> customDialog = null);
@@ -144,7 +145,7 @@ public class DinghuoListActivity extends BaseActivity {
                         customDialog.dismiss();
                         showToast("更改成功！");
                         goodBeanList.get(position).setQuantity(quantity);
-                        goodBeanList.get(position).setWeight(weight);
+                        goodBeanList.get(position).setWeight(Double.parseDouble(weight));
                         adapter.notifyItemChanged(position);
                     }
 
@@ -185,7 +186,7 @@ public class DinghuoListActivity extends BaseActivity {
                     @Override
                     public void onSuccess(DinghuoGoodBean result) throws Exception {
                         goodBeanList.clear();
-                        goodBeanList.addAll(result.getResults());
+                        goodBeanList.addAll(result.getResult());
                         adapter.notifyDataSetChanged();
                         refreshLayout.finishRefresh();
                     }
@@ -214,7 +215,7 @@ public class DinghuoListActivity extends BaseActivity {
             customDialog = new CustomDialog(this, "提交訂貨列表中..");
         customDialog.setOnDismissListener(dialog -> customDialog = null);
         customDialog.show();
-        RetrofitManager.excute(bindToLifecycle(), RetrofitManager.createString(ApiService.class).submitDinghuoList(goodBeanList.get(0).getPurchase_id()),
+        RetrofitManager.excute(bindToLifecycle(), RetrofitManager.createString(ApiService.class).submitDinghuoList(goodBeanList.get(0).getPurchase_id() + ""),
                 new ModelListener() {
                     @Override
                     public void onSuccess(String result) throws Exception {

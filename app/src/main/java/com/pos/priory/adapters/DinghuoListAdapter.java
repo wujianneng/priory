@@ -6,8 +6,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
@@ -20,16 +22,16 @@ import java.util.List;
  * Created by Lenovo on 2018/12/29.
  */
 
-public class DinghuoListAdapter extends BaseQuickAdapter<DinghuoGoodBean.ResultsBean, BaseViewHolder> {
+public class DinghuoListAdapter extends BaseQuickAdapter<DinghuoGoodBean.ResultBean, BaseViewHolder> {
 
-    public DinghuoListAdapter(@LayoutRes int layoutResId, @Nullable List<DinghuoGoodBean.ResultsBean> data) {
+    public DinghuoListAdapter(@LayoutRes int layoutResId, @Nullable List<DinghuoGoodBean.ResultBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, DinghuoGoodBean.ResultsBean item) {
+    protected void convert(BaseViewHolder helper, DinghuoGoodBean.ResultBean item) {
         helper.setText(R.id.name_tv, item.getName());
-        helper.setText(R.id.code_tv, item.getProductcode());
+        helper.setText(R.id.code_tv, item.getProductcode() + "");
         helper.setText(R.id.price_tv,"$" + item.getPrice());
         helper.setText(R.id.fitting_count_tv, item.getQuantity() + "");
         helper.setText(R.id.weight_edt,item.getWeight() + "g");
@@ -38,5 +40,9 @@ public class DinghuoListAdapter extends BaseQuickAdapter<DinghuoGoodBean.Results
         helper.addOnClickListener(R.id.decrease_btn);
         helper.addOnClickListener(R.id.increase_btn);
         helper.addOnClickListener(R.id.weight_edt);
+        Glide.with(helper.getConvertView().getContext()).load(item.getImage())
+                .placeholder(android.R.drawable.ic_menu_gallery)
+                .error(android.R.drawable.ic_menu_gallery)
+                .into((ImageView) helper.getView(R.id.icon_good));
     }
 }

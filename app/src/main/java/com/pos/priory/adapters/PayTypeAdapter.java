@@ -29,7 +29,7 @@ public class PayTypeAdapter extends BaseQuickAdapter<PayTypesResultBean.ResultsB
         helper.setText(R.id.name_tv, item.getName());
         final EditText edtWeight = helper.getView(R.id.edt_view);
         edtWeight.removeTextChangedListener((TextWatcher) edtWeight.getTag());
-        edtWeight.setText(item.getPayAmount() + "");
+        edtWeight.setText(item.getPayAmount() == -1 ? "" : (item.getPayAmount() + ""));
         edtWeight.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 TextWatcher textWatcher = new TextWatcher() {
@@ -52,7 +52,7 @@ public class PayTypeAdapter extends BaseQuickAdapter<PayTypesResultBean.ResultsB
                 edtWeight.addTextChangedListener(textWatcher);
             } else {
                 edtWeight.removeTextChangedListener((TextWatcher) edtWeight.getTag());
-                edtWeight.setText(item.getPayAmount() + "");
+                edtWeight.setText(item.getPayAmount() == -1 ? "" : (item.getPayAmount() + ""));
             }
         });
     }

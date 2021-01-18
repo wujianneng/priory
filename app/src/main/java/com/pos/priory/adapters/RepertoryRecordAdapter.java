@@ -29,12 +29,12 @@ public class RepertoryRecordAdapter extends BaseQuickAdapter<RepertoryRecordBean
     @Override
     protected void convert(BaseViewHolder helper, RepertoryRecordBean.ResultsBean item) {
         helper.setText(R.id.date_tv, item.getCreated());
-        helper.setText(R.id.name_tv, item.getWhitem().getName());
-        helper.setText(R.id.code_tv, item.getWhitem().getProductcode() + "");
-        helper.setText(R.id.weight_tv, item.getWhitem().getSubtotal().getWeight() + "g");
-        helper.setText(R.id.user_tv, item.getWhitem().getWhnumber());
-        helper.setText(R.id.inout_tv, item.getPurpose());
-        helper.setText(R.id.type_tv, item.getType());
-        helper.setText(R.id.whform_tv, item.getWhitem().getShop());
+        helper.setText(R.id.name_tv, item.getPrd_name());
+        helper.setText(R.id.code_tv, item.getPrd_no() + "");
+        helper.setText(R.id.weight_tv, item.getPrd_weight() + "g");
+        helper.setText(R.id.user_tv, item.getUsername());
+        helper.setText(R.id.inout_tv, item.getPurpose_display() + "");
+        helper.setText(R.id.type_tv, item.getType_display() + "");
+        helper.setText(R.id.whform_tv, item.getShop_from() + "");
     }
 }

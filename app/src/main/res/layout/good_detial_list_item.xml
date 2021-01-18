@@ -37,7 +37,7 @@
             android:layout_toRightOf="@+id/radio"
             android:text="102420190315"
             android:textColor="#000000"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/weight_tv"
@@ -48,7 +48,7 @@
             android:layout_centerVertical="true"
             android:text="1.02g"
             android:textColor="#333333"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
     </RelativeLayout>
 

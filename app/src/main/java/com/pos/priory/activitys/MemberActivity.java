@@ -96,6 +96,12 @@ public class MemberActivity extends BaseActivity {
 
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         refreshMemberRecyclerView("");
     }
 

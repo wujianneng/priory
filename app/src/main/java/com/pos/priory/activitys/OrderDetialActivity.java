@@ -283,10 +283,10 @@ public class OrderDetialActivity extends BaseActivity {
             ((TextView) printView.findViewById(R.id.address_tv)).setText(MyApplication.getContext().staffInfoBean.getShop());
             ((TextView) printView.findViewById(R.id.tel_tv)).setText(MyApplication.getContext().staffInfoBean.getMobile());
             ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + pageCount);
-            ((TextView) printView.findViewById(R.id.order_number_tv)).setText(orderDetailReslutBean.getOrderno());
+            ((TextView) printView.findViewById(R.id.order_number_tv)).setText("收據編號: " + orderDetailReslutBean.getOrderno());
             ((TextView) printView.findViewById(R.id.count_tv)).setText("合計(" + orderDetailReslutBean.getQuantity_accessory()
                     + orderDetailReslutBean.getGold_info().getQuantity() + "件)");
-            ((TextView) printView.findViewById(R.id.date_tv)).setText(orderDetailReslutBean.getCreated());
+            ((TextView) printView.findViewById(R.id.date_tv)).setText(("購買日期: " + orderDetailReslutBean.getCreated()));
             ((TextView) printView.findViewById(R.id.amount_tv)).setText(orderDetailReslutBean.getAmount_payable() + "元");
             ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(orderDetailReslutBean.getAmount_paid() + "元");
             RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);

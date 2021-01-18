@@ -4,17 +4,38 @@ import java.util.List;
 
 public class RepertoryRecordBean {
 
+
     /**
-     * count : 3
-     * next : null
-     * previous : null
-     * results : [{"id":5,"whitem":{"id":8,"product_id":1,"name":"測試產品1001","image":"http://annabella.infitack.cn/media/uploads/test.jfif","productcode":1001,"whnumber":"202003270002","returninfo":{},"subtotal":{"weight":6.5,"quantity":7},"price":100,"warehouse":"主倉庫","shop":"測試店"},"quantity":1,"type":"入庫","purpose":"入貨","created":"2020-03-30 01:01:04","updated":"2020-03-30 16:00:33"},{"id":4,"whitem":{"id":7,"product_id":1,"name":"測試產品1001","image":"http://annabella.infitack.cn/media/uploads/test.jfif","productcode":1001,"whnumber":"202003270001","returninfo":{},"subtotal":{"weight":6.5,"quantity":7},"price":100,"warehouse":"主倉庫","shop":"測試店"},"quantity":1,"type":"入庫","purpose":"入貨","created":"2020-03-30 00:44:52","updated":"2020-03-30 16:00:37"},{"id":6,"whitem":{"id":9,"product_id":2,"name":"測試配件1002","image":"http://annabella.infitack.cn/media/uploads/test_S4JJNon.jfif","productcode":1002,"whnumber":"202003270003","returninfo":{},"subtotal":{"weight":1.1,"quantity":2},"price":50,"warehouse":"主倉庫","shop":"測試店"},"quantity":1,"type":"入庫","purpose":"入貨","created":"2020-03-30 01:01:11","updated":"2020-03-30 16:00:49"}]
+     * quantity_total : 0
+     * weight_total : 0
+     * count : 0
+     * next : string
+     * previous : string
+     * results : [{"id":0,"created":"2021-01-18T06:59:17.447Z","prd_name":"string","prd_no":"string","prd_weight":0,"shop_from":"string","type_display":"string","purpose_display":"string","username":"string","status":true,"updated":"2021-01-18T06:59:17.447Z","quantity":0,"type":1,"purpose":1,"user":0,"whitem":0,"warehouse":0,"whfrom":0}]
      */
 
+    private int quantity_total;
+    private double weight_total;
     private int count;
-    private Object next;
-    private Object previous;
+    private String next;
+    private String previous;
     private List<ResultsBean> results;
+
+    public int getQuantity_total() {
+        return quantity_total;
+    }
+
+    public void setQuantity_total(int quantity_total) {
+        this.quantity_total = quantity_total;
+    }
+
+    public double getWeight_total() {
+        return weight_total;
+    }
+
+    public void setWeight_total(double weight_total) {
+        this.weight_total = weight_total;
+    }
 
     public int getCount() {
         return count;
@@ -24,19 +45,19 @@ public class RepertoryRecordBean {
         this.count = count;
     }
 
-    public Object getNext() {
+    public String getNext() {
         return next;
     }
 
-    public void setNext(Object next) {
+    public void setNext(String next) {
         this.next = next;
     }
 
-    public Object getPrevious() {
+    public String getPrevious() {
         return previous;
     }
 
-    public void setPrevious(Object previous) {
+    public void setPrevious(String previous) {
         this.previous = previous;
     }
 
@@ -50,22 +71,44 @@ public class RepertoryRecordBean {
 
     public static class ResultsBean {
         /**
-         * id : 5
-         * whitem : {"id":8,"product_id":1,"name":"測試產品1001","image":"http://annabella.infitack.cn/media/uploads/test.jfif","productcode":1001,"whnumber":"202003270002","returninfo":{},"subtotal":{"weight":6.5,"quantity":7},"price":100,"warehouse":"主倉庫","shop":"測試店"}
-         * quantity : 1
-         * type : 入庫
-         * purpose : 入貨
-         * created : 2020-03-30 01:01:04
-         * updated : 2020-03-30 16:00:33
+         * id : 0
+         * created : 2021-01-18T06:59:17.447Z
+         * prd_name : string
+         * prd_no : string
+         * prd_weight : 0
+         * shop_from : string
+         * type_display : string
+         * purpose_display : string
+         * username : string
+         * status : true
+         * updated : 2021-01-18T06:59:17.447Z
+         * quantity : 0
+         * type : 1
+         * purpose : 1
+         * user : 0
+         * whitem : 0
+         * warehouse : 0
+         * whfrom : 0
          */
 
         private int id;
-        private WhitemBean whitem;
-        private int quantity;
-        private String type;
-        private String purpose;
         private String created;
+        private String prd_name;
+        private String prd_no;
+        private int prd_weight;
+        private String shop_from;
+        private String type_display;
+        private String purpose_display;
+        private String username;
+        private boolean status;
         private String updated;
+        private int quantity;
+        private int type;
+        private int purpose;
+        private int user;
+        private int whitem;
+        private int warehouse;
+        private int whfrom;
 
         public int getId() {
             return id;
@@ -73,38 +116,6 @@ public class RepertoryRecordBean {
 
         public void setId(int id) {
             this.id = id;
-        }
-
-        public WhitemBean getWhitem() {
-            return whitem;
-        }
-
-        public void setWhitem(WhitemBean whitem) {
-            this.whitem = whitem;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getPurpose() {
-            return purpose;
-        }
-
-        public void setPurpose(String purpose) {
-            this.purpose = purpose;
         }
 
         public String getCreated() {
@@ -115,6 +126,70 @@ public class RepertoryRecordBean {
             this.created = created;
         }
 
+        public String getPrd_name() {
+            return prd_name;
+        }
+
+        public void setPrd_name(String prd_name) {
+            this.prd_name = prd_name;
+        }
+
+        public String getPrd_no() {
+            return prd_no;
+        }
+
+        public void setPrd_no(String prd_no) {
+            this.prd_no = prd_no;
+        }
+
+        public int getPrd_weight() {
+            return prd_weight;
+        }
+
+        public void setPrd_weight(int prd_weight) {
+            this.prd_weight = prd_weight;
+        }
+
+        public String getShop_from() {
+            return shop_from;
+        }
+
+        public void setShop_from(String shop_from) {
+            this.shop_from = shop_from;
+        }
+
+        public String getType_display() {
+            return type_display;
+        }
+
+        public void setType_display(String type_display) {
+            this.type_display = type_display;
+        }
+
+        public String getPurpose_display() {
+            return purpose_display;
+        }
+
+        public void setPurpose_display(String purpose_display) {
+            this.purpose_display = purpose_display;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public boolean isStatus() {
+            return status;
+        }
+
+        public void setStatus(boolean status) {
+            this.status = status;
+        }
+
         public String getUpdated() {
             return updated;
         }
@@ -123,149 +198,60 @@ public class RepertoryRecordBean {
             this.updated = updated;
         }
 
-        public static class WhitemBean {
-            /**
-             * id : 8
-             * product_id : 1
-             * name : 測試產品1001
-             * image : http://annabella.infitack.cn/media/uploads/test.jfif
-             * productcode : 1001
-             * whnumber : 202003270002
-             * returninfo : {}
-             * subtotal : {"weight":6.5,"quantity":7}
-             * price : 100.0
-             * warehouse : 主倉庫
-             * shop : 測試店
-             */
+        public int getQuantity() {
+            return quantity;
+        }
 
-            private int id;
-            private int product_id;
-            private String name;
-            private String image;
-            private int productcode;
-            private String whnumber;
-            private ReturninfoBean returninfo;
-            private SubtotalBean subtotal;
-            private double price;
-            private String warehouse;
-            private String shop;
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
+        }
 
-            public int getId() {
-                return id;
-            }
+        public int getType() {
+            return type;
+        }
 
-            public void setId(int id) {
-                this.id = id;
-            }
+        public void setType(int type) {
+            this.type = type;
+        }
 
-            public int getProduct_id() {
-                return product_id;
-            }
+        public int getPurpose() {
+            return purpose;
+        }
 
-            public void setProduct_id(int product_id) {
-                this.product_id = product_id;
-            }
+        public void setPurpose(int purpose) {
+            this.purpose = purpose;
+        }
 
-            public String getName() {
-                return name;
-            }
+        public int getUser() {
+            return user;
+        }
 
-            public void setName(String name) {
-                this.name = name;
-            }
+        public void setUser(int user) {
+            this.user = user;
+        }
 
-            public String getImage() {
-                return image;
-            }
+        public int getWhitem() {
+            return whitem;
+        }
 
-            public void setImage(String image) {
-                this.image = image;
-            }
+        public void setWhitem(int whitem) {
+            this.whitem = whitem;
+        }
 
-            public int getProductcode() {
-                return productcode;
-            }
+        public int getWarehouse() {
+            return warehouse;
+        }
 
-            public void setProductcode(int productcode) {
-                this.productcode = productcode;
-            }
+        public void setWarehouse(int warehouse) {
+            this.warehouse = warehouse;
+        }
 
-            public String getWhnumber() {
-                return whnumber;
-            }
+        public int getWhfrom() {
+            return whfrom;
+        }
 
-            public void setWhnumber(String whnumber) {
-                this.whnumber = whnumber;
-            }
-
-            public ReturninfoBean getReturninfo() {
-                return returninfo;
-            }
-
-            public void setReturninfo(ReturninfoBean returninfo) {
-                this.returninfo = returninfo;
-            }
-
-            public SubtotalBean getSubtotal() {
-                return subtotal;
-            }
-
-            public void setSubtotal(SubtotalBean subtotal) {
-                this.subtotal = subtotal;
-            }
-
-            public double getPrice() {
-                return price;
-            }
-
-            public void setPrice(double price) {
-                this.price = price;
-            }
-
-            public String getWarehouse() {
-                return warehouse;
-            }
-
-            public void setWarehouse(String warehouse) {
-                this.warehouse = warehouse;
-            }
-
-            public String getShop() {
-                return shop;
-            }
-
-            public void setShop(String shop) {
-                this.shop = shop;
-            }
-
-            public static class ReturninfoBean {
-            }
-
-            public static class SubtotalBean {
-                /**
-                 * weight : 6.5
-                 * quantity : 7
-                 */
-
-                private double weight;
-                private int quantity;
-
-                public double getWeight() {
-                    return weight;
-                }
-
-                public void setWeight(double weight) {
-                    this.weight = weight;
-                }
-
-                public int getQuantity() {
-                    return quantity;
-                }
-
-                public void setQuantity(int quantity) {
-                    this.quantity = quantity;
-                }
-            }
+        public void setWhfrom(int whfrom) {
+            this.whfrom = whfrom;
         }
     }
 }

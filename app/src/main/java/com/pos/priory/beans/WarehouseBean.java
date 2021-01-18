@@ -164,7 +164,16 @@ public class WarehouseBean {
             private SubtotalBean subtotal;
             PriceBean price;
             private String warehouse;
+            private String whnumber;
             private String shop;
+
+            public String getWhnumber() {
+                return whnumber;
+            }
+
+            public void setWhnumber(String whnumber) {
+                this.whnumber = whnumber;
+            }
 
             public PriceBean getPrice() {
                 return price;

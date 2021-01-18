@@ -56,7 +56,7 @@ public class PayTypesResultBean {
 
         private int id;
         private String name;
-        double payAmount = 0;
+        double payAmount = -1;
 
         public double getPayAmount() {
             return payAmount;

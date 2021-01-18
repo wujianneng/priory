@@ -16,6 +16,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -83,6 +85,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -154,7 +157,7 @@ public class OrderFragment extends BaseFragment {
             Log.e("viewtype", "viewtype:" + viewType);
             if (viewType == 0 && MyApplication.staffInfoBean.getApppermit().equals("店长")) {
                 SwipeMenuItem cancelItem = new SwipeMenuItem(getActivity())
-                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_green))
+                        .setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.drag_btn_red))
                         .setImage(R.drawable.edit)
                         .setText("撤回")
                         .setTextColor(Color.WHITE)
@@ -182,6 +185,23 @@ public class OrderFragment extends BaseFragment {
             intent.putExtra("orderId", orderList.get(position).getId());
             startActivity(intent);
         });
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                refreshRecyclerView(false);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
         smartRefreshLayout.autoRefresh();
     }
 
@@ -207,7 +227,7 @@ public class OrderFragment extends BaseFragment {
             customDialog.show();
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("member", orderList.get(pos).getMember());
-            paramMap.put("order",orderList.get(pos).getId());
+            paramMap.put("order", orderList.get(pos).getId());
             Log.e("test", "param:" + gson.toJson(paramMap));
             RetrofitManager.excute(RetrofitManager.createString(ApiService.class)
                     .rollbackOrder(paramMap), new ModelListener() {
@@ -261,7 +281,10 @@ public class OrderFragment extends BaseFragment {
             orderAdapter.notifyDataSetChanged();
             getCurrentGoldPrice();
         }
-        RetrofitManager.createString(ApiService.class).getTodayOrders(currentPage)
+        Observable<String> observable = edtSearch.getText().toString().isEmpty() ?
+                RetrofitManager.createString(ApiService.class).getTodayOrders(currentPage)
+                : RetrofitManager.createString(ApiService.class).getOrdersByOrdernumber(edtSearch.getText().toString());
+        observable
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -269,7 +292,7 @@ public class OrderFragment extends BaseFragment {
                     @Override
                     public void accept(String results) throws Exception {
                         currentPage++;
-                        OrderBean orderBean = gson.fromJson(results,OrderBean.class);
+                        OrderBean orderBean = gson.fromJson(results, OrderBean.class);
                         if (orderBean != null) {
                             orderList.addAll(orderBean.getResults());
                             orderAdapter.notifyDataSetChanged();
@@ -318,7 +341,7 @@ public class OrderFragment extends BaseFragment {
                 // 控件每一个item的点击事件
                 switch (item.getItemId()) {
                     case R.id.menu0:
-                        getDayReport(DateUtils.getDateOfToday(),getActivity(),gson);
+                        getDayReport(DateUtils.getDateOfToday(), getActivity(), gson);
                         break;
                     case R.id.menu1:
                         startActivity(new Intent(getActivity(), EditPasswordActivity.class));
@@ -352,7 +375,7 @@ public class OrderFragment extends BaseFragment {
                                         DayReportDetailBean dayReportDetailBean = gson.fromJson(s, DayReportDetailBean.class);
                                         Log.e("test", "result:" + s);
 
-                                        printGoldTable(context,dayReportDetailBean);
+                                        printGoldTable(context, dayReportDetailBean);
 
                                     }
                                 }, new Consumer<Throwable>() {
@@ -372,7 +395,7 @@ public class OrderFragment extends BaseFragment {
                 });
     }
 
-    public static void printGoldTable(Activity context,DayReportDetailBean dayReportBean) {
+    public static void printGoldTable(Activity context, DayReportDetailBean dayReportBean) {
         Log.e("test", "printGoldTable");
         List<View> views = new ArrayList<>();
         List<DayReportDataBean> dataarry = new ArrayList<>();
@@ -384,7 +407,7 @@ public class OrderFragment extends BaseFragment {
         goldTitle.setQuantity_total(dayReportBean.getGold_item().getQuantity_total());
         goldTitle.setWeight_total(dayReportBean.getGold_item().getWeight_total());
         dataarry.add(goldTitle);
-        for(DayReportDetailBean.GoldItemBean.ItemBean itemBean : dayReportBean.getGold_item().getItem()){
+        for (DayReportDetailBean.GoldItemBean.ItemBean itemBean : dayReportBean.getGold_item().getItem()) {
             DayReportDataBean golddataBean = new DayReportDataBean();
             List<DayReportDataBean.ItemBean> golditemBeanList = new ArrayList<>();
             DayReportDataBean.ItemBean goldItemBean = new DayReportDataBean.ItemBean();
@@ -406,7 +429,7 @@ public class OrderFragment extends BaseFragment {
         accessoryTitle.setQuantity_total(dayReportBean.getAccessory_item().getQuantity_total());
         accessoryTitle.setWeight_total(dayReportBean.getAccessory_item().getWeight_total());
         dataarry.add(accessoryTitle);
-        for(DayReportDetailBean.AccessoryItemBean.ItemBeanXX itemBean : dayReportBean.getAccessory_item().getItem()){
+        for (DayReportDetailBean.AccessoryItemBean.ItemBeanXX itemBean : dayReportBean.getAccessory_item().getItem()) {
             DayReportDataBean accessorydataBean = new DayReportDataBean();
             List<DayReportDataBean.ItemBean> accessoryitemBeanList = new ArrayList<>();
             DayReportDataBean.ItemBean accessoryItemBean = new DayReportDataBean.ItemBean();
@@ -428,7 +451,7 @@ public class OrderFragment extends BaseFragment {
         sparTitle.setQuantity_total(dayReportBean.getSpar_item().getQuantity_total());
         sparTitle.setWeight_total(dayReportBean.getSpar_item().getWeight_total());
         dataarry.add(sparTitle);
-        for(DayReportDetailBean.SparItemBean.ItemBeanX itemBean : dayReportBean.getSpar_item().getItem()){
+        for (DayReportDetailBean.SparItemBean.ItemBeanX itemBean : dayReportBean.getSpar_item().getItem()) {
             DayReportDataBean spardataBean = new DayReportDataBean();
             List<DayReportDataBean.ItemBean> sparitemBeanList = new ArrayList<>();
             DayReportDataBean.ItemBean sparItemBean = new DayReportDataBean.ItemBean();
@@ -450,7 +473,7 @@ public class OrderFragment extends BaseFragment {
         exTitle.setQuantity_total(dayReportBean.getExchange_item().getQuantity_total());
         exTitle.setWeight_total(dayReportBean.getExchange_item().getWeight_total());
         dataarry.add(exTitle);
-        for(DayReportDetailBean.ExchangeItemBean.ItemBeanXXX itemBean : dayReportBean.getExchange_item().getItem()){
+        for (DayReportDetailBean.ExchangeItemBean.ItemBeanXXX itemBean : dayReportBean.getExchange_item().getItem()) {
             DayReportDataBean exdataBean = new DayReportDataBean();
             List<DayReportDataBean.ItemBean> exitemBeanList = new ArrayList<>();
             DayReportDataBean.ItemBean exItemBean = new DayReportDataBean.ItemBean();
@@ -472,7 +495,7 @@ public class OrderFragment extends BaseFragment {
         reurnTitle.setQuantity_total(dayReportBean.getReturned_item().getQuantity_total());
         reurnTitle.setWeight_total(dayReportBean.getReturned_item().getWeight_total());
         dataarry.add(reurnTitle);
-        for(DayReportDetailBean.ReturnedItemBean.ItemBeanXXXX itemBean : dayReportBean.getReturned_item().getItem()){
+        for (DayReportDetailBean.ReturnedItemBean.ItemBeanXXXX itemBean : dayReportBean.getReturned_item().getItem()) {
             DayReportDataBean returndataBean = new DayReportDataBean();
             List<DayReportDataBean.ItemBean> returnitemBeanList = new ArrayList<>();
             DayReportDataBean.ItemBean returnItemBean = new DayReportDataBean.ItemBean();
@@ -514,7 +537,7 @@ public class OrderFragment extends BaseFragment {
 //            if (MyApplication.getContext().region.equals("中国大陆")) {
 //                layoutid = R.layout.gold_daliy_table;
 //            } else {
-                layoutid = R.layout.gold_daliy_table2;
+            layoutid = R.layout.gold_daliy_table2;
 //            }
             final View printView = LayoutInflater.from(context).inflate(layoutid, null);
             ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.staffInfoBean.getShop());
@@ -534,7 +557,7 @@ public class OrderFragment extends BaseFragment {
 
 
             RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
-            TablePrintGoodsAdapter adapter = new TablePrintGoodsAdapter(extraList,dayReportBean.getReturn_goldprice());
+            TablePrintGoodsAdapter adapter = new TablePrintGoodsAdapter(extraList, dayReportBean.getReturn_goldprice());
             LinearLayoutManager mLayoutManager = new LinearLayoutManager(context);
             mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
             listview.setLayoutManager(mLayoutManager);

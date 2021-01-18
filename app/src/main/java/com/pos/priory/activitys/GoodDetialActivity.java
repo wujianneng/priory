@@ -24,6 +24,7 @@ import com.pos.priory.R;
 import com.pos.priory.adapters.GoodDetialAdapter;
 import com.pos.priory.beans.TranferStoresBean;
 import com.pos.priory.beans.WarehouseBean;
+import com.pos.priory.beans.WhitemDetailResultBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -63,7 +64,7 @@ public class GoodDetialActivity extends BaseActivity {
     SmartRefreshLayout smartRefreshLayout;
 
     GoodDetialAdapter goodDetialAdapter;
-    List<WarehouseBean.ResultsBean.ItemBean> orderList = new ArrayList<>();
+    List<WhitemDetailResultBean.WhitemBean> orderList = new ArrayList<>();
     @Bind(R.id.price_tv)
     TextView priceTv;
     @Bind(R.id.weight_tv)
@@ -154,7 +155,7 @@ public class GoodDetialActivity extends BaseActivity {
     }
 
     private boolean hasSelected() {
-        for (WarehouseBean.ResultsBean.ItemBean itemBean : orderList) {
+        for (WhitemDetailResultBean.WhitemBean itemBean : orderList) {
             if (itemBean.isSelected())
                 return true;
         }
@@ -167,10 +168,11 @@ public class GoodDetialActivity extends BaseActivity {
         customDialog.setOnDismissListener(dialog -> customDialog = null);
         customDialog.show();
         List<Integer> items = new ArrayList<>();
-        for (WarehouseBean.ResultsBean.ItemBean resultsBean : orderList) {
+        for (WhitemDetailResultBean.WhitemBean resultsBean : orderList) {
             if (resultsBean.isSelected())
                 items.add(resultsBean.getId());
         }
+        Log.e("test","shopid:" + storeid + " items:" + gson.toJson(items));
         RetrofitManager.createString(ApiService.class)
                 .tranferGoods(storeid, items)
                 .compose(this.<String>bindToLifecycle())
@@ -192,25 +194,19 @@ public class GoodDetialActivity extends BaseActivity {
             goodDetialAdapter.notifyDataSetChanged();
         }
         RetrofitManager.createGson(ApiService.class)
-                .getStockListByParam(productcode)
+                .getStockDetail(goodBean.getId())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(warehouseBean -> {
                     if (warehouseBean != null) {
-                        for (WarehouseBean.ResultsBean resultsBean : warehouseBean.getResults()) {
-                            Log.e("test","resultsBean.getId():" + resultsBean.getId()
-                                    + "goodBean.getId():" + goodBean.getId());
-                            if (resultsBean.getName().equals(goodBean.getWarehouse())) {
-                                orderList.addAll(resultsBean.getItem());
-                                goodDetialAdapter.notifyDataSetChanged();
-                                codeTv.setText(goodBean.getProductcode() + "");
-                                nameTv.setText(resultsBean.getName());
-                                repertoryTv.setText(resultsBean.getTotal().getQuantity() + "件");
-                                priceTv.setText(goodBean.getPrice().getSymbol() +  goodBean.getPrice().getPrice());
-                                weightTv.setText(resultsBean.getTotal().getWeight() + "g");
-                                if (resultsBean.getTotal().getWeight() == 0) {
-                                    weightTv.setVisibility(View.GONE);
-                                }
-                            }
+                        orderList.addAll(warehouseBean.getWhitem());
+                        goodDetialAdapter.notifyDataSetChanged();
+                        codeTv.setText(goodBean.getProductcode() + "");
+                        nameTv.setText(warehouseBean.getPrd_name());
+                        repertoryTv.setText(warehouseBean.getQuantity_total() + "件");
+                        priceTv.setText(goodBean.getPrice().getSymbol() +  goodBean.getPrice().getPrice());
+                        weightTv.setText(warehouseBean.getPrd_weight() + "g");
+                        if (warehouseBean.getPrd_weight() == 0) {
+                            weightTv.setVisibility(View.GONE);
                         }
                     }
                     smartRefreshLayout.finishLoadMore();
