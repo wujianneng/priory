@@ -85,7 +85,7 @@ public interface ApiService {
 
     //Orders
     @GET("/api/orders/order_list/")
-    Observable<String> getTodayOrders(@Query("page") int page);//獲取當天所有訂單
+    Observable<String> getTodayOrders(@Query("page") int page,@Query("today") String today);//獲取當天所有訂單
 
     @GET("/api/orders/order_list")
     Observable<String> getOrdersByOrdernumber(@Query("search") String ordernumber);//通过订单号码查询订单

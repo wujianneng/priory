@@ -282,7 +282,7 @@ public class OrderFragment extends BaseFragment {
             getCurrentGoldPrice();
         }
         Observable<String> observable = edtSearch.getText().toString().isEmpty() ?
-                RetrofitManager.createString(ApiService.class).getTodayOrders(currentPage)
+                RetrofitManager.createString(ApiService.class).getTodayOrders(currentPage,"true")
                 : RetrofitManager.createString(ApiService.class).getOrdersByOrdernumber(edtSearch.getText().toString());
         observable
                 .compose(this.<String>bindToLifecycle())

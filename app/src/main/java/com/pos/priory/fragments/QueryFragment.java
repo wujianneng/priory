@@ -153,10 +153,17 @@ public class QueryFragment extends BaseFragment {
             }
         });
 
-        refreshMemberRecyclerView("");
 //        showKeyBord();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (btnSearchType.getText().toString().equals("搜索会员"))
+            refreshMemberRecyclerView(edtSearch.getText().toString());
+        else
+            refreshOrderRecyclerView(edtSearch.getText().toString());
+    }
 
     Disposable memberCall;
 
