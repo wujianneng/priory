@@ -11,10 +11,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.beans.MemberBean;
+import com.pos.priory.beans.MemberDetailResultBean;
 import com.pos.priory.networks.ApiService;
 
 import java.util.HashMap;
@@ -74,15 +76,29 @@ public class MemberInfoActivity extends BaseActivity {
         titleTv.setText("会员信息");
         rightImg.setVisibility(View.GONE);
         memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.ResultsBean.class);
-        edtFirstName.setText(memberBean.getName()
-        );
-        edtName.setText(memberBean.getName());
-        sexTv.setText(memberBean.getGender());
-        phoneTv.setText(memberBean.getMobile());
-        scoutTv.setText(memberBean.getReward() + "");
-        registerAddressTv.setText("注冊地點：" + memberBean.getShop());
-        orderTitle.setText("注冊時間：" + memberBean.getCreated());
 
+        getMembeDetail();
+    }
+
+    private void getMembeDetail(){
+        RetrofitManager.excuteGson(RetrofitManager.createGson(ApiService.class).getMemberDetail(memberBean.getId()),new ModelGsonListener<MemberDetailResultBean>(){
+            @Override
+            public void onSuccess(MemberDetailResultBean result) throws Exception {
+                edtFirstName.setText(result.getFirstname()
+                );
+                edtName.setText(result.getLastname());
+                sexTv.setText(memberBean.getGender());
+                phoneTv.setText(memberBean.getMobile());
+                scoutTv.setText(memberBean.getReward() + "");
+                registerAddressTv.setText("注冊地點：" + memberBean.getShop());
+                orderTitle.setText("注冊時間：" + memberBean.getCreated());
+            }
+
+            @Override
+            public void onFailed(String erromsg) {
+
+            }
+        });
     }
 
 

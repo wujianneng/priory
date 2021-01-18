@@ -18,6 +18,7 @@ import com.pos.priory.beans.InventoryBean;
 import com.pos.priory.beans.InventoryDetialBean;
 import com.pos.priory.beans.InventoryTypeDetialBean;
 import com.pos.priory.beans.MemberBean;
+import com.pos.priory.beans.MemberDetailResultBean;
 import com.pos.priory.beans.OrderCalculationParamBean;
 import com.pos.priory.beans.OrderCalculationResultBean;
 import com.pos.priory.beans.OrderDetailReslutBean;
@@ -111,6 +112,9 @@ public interface ApiService {
     //Members
     @GET("/api/members/list")
     Observable<MemberBean> getMembers(@Query("search") String mobile);//根據電話號碼查詢會員信息
+
+    @GET("/api/members/detail/{id}")
+    Observable<MemberDetailResultBean> getMemberDetail(@Path("id") int id);//根據電話號碼查詢會員信息
 
     @FormUrlEncoded
     @POST("/api/members/create")
