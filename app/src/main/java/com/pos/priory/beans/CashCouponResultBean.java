@@ -28,6 +28,7 @@ public class CashCouponResultBean {
      */
 
     private int id;
+    int paymethod_id;
     private String name;
     private String terms;
     private double value;
@@ -50,6 +51,14 @@ public class CashCouponResultBean {
 
     boolean isSelected = false;
     boolean isShowDetail = false;
+
+    public int getPaymethod_id() {
+        return paymethod_id;
+    }
+
+    public void setPaymethod_id(int paymethod_id) {
+        this.paymethod_id = paymethod_id;
+    }
 
     public boolean isSelected() {
         return isSelected;

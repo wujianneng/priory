@@ -56,7 +56,25 @@ public class PayTypesResultBean {
 
         private int id;
         private String name;
-        double payAmount = -1;
+        double payAmount = 0;
+        private int couponId = 0;
+        boolean isCashCoupon = false;
+
+        public int getCouponId() {
+            return couponId;
+        }
+
+        public void setCouponId(int couponId) {
+            this.couponId = couponId;
+        }
+
+        public boolean isCashCoupon() {
+            return isCashCoupon;
+        }
+
+        public void setCashCoupon(boolean cashCoupon) {
+            isCashCoupon = cashCoupon;
+        }
 
         public double getPayAmount() {
             return payAmount;

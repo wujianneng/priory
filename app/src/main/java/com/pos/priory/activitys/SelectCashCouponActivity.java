@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.reflect.TypeToken;
 import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.MyApplication;
@@ -125,6 +126,23 @@ public class SelectCashCouponActivity extends BaseActivity {
                 hideLoadingDialog();
                 couponBeanList.clear();
                 couponBeanList.addAll(result);
+
+                adapter.selectList.clear();
+
+
+                List<CashCouponResultBean> selectedDiscountBeans = gson.fromJson(getIntent().
+                        getStringExtra("selectCashCouponList"), new TypeToken<List<CashCouponResultBean>>() {
+                }.getType());
+                if(selectedDiscountBeans != null){
+                    for(CashCouponResultBean oldresultBean : selectedDiscountBeans){
+                        for(CashCouponResultBean resultBean : couponBeanList){
+                            if(oldresultBean.getId() == resultBean.getId()){
+                                resultBean.setSelected(true);
+                                adapter.selectList.add(resultBean);
+                            }
+                        }
+                    }
+                }
                 adapter.notifyDataSetChanged();
             }
 

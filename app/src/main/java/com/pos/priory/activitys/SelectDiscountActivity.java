@@ -83,8 +83,9 @@ public class SelectDiscountActivity extends BaseActivity {
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter ad, View view, int position) {
-                if(view.getId() == R.id.checkbox){
-                    if (((CheckBox) view).isChecked()) adapter.selectList.add(discountList.get(position));
+                if (view.getId() == R.id.checkbox) {
+                    if (((CheckBox) view).isChecked())
+                        adapter.selectList.add(discountList.get(position));
                     else adapter.selectList.remove(discountList.get(position));
                     discountList.get(position).setSelected(((CheckBox) view).isChecked());
                     try {
@@ -92,7 +93,7 @@ public class SelectDiscountActivity extends BaseActivity {
                     } catch (Exception e) {
 
                     }
-                    Log.e("test","isChecked：" + ((CheckBox) view).isChecked() + " size:" + adapter.selectList.size());
+                    Log.e("test", "isChecked：" + ((CheckBox) view).isChecked() + " size:" + adapter.selectList.size());
                 }
             }
         });
@@ -103,6 +104,7 @@ public class SelectDiscountActivity extends BaseActivity {
         showLoadingDialog("正在兌換...");
         ExchangeCouponParamBean exchangeCouponParamBean = new ExchangeCouponParamBean();
         exchangeCouponParamBean.setCode(exchangeEdt.getText().toString());
+        exchangeCouponParamBean.setMember(memberBean.getId());
         Log.e("test", "params:" + gson.toJson(exchangeCouponParamBean));
         RetrofitManager.excuteGson(RetrofitManager.createGson(ApiService.class).exchangeCoupon(exchangeCouponParamBean), new ModelGsonListener<ExchangeCouponReslutBean>() {
             @Override
@@ -157,6 +159,21 @@ public class SelectDiscountActivity extends BaseActivity {
                 discountList.clear();
                 discountList.addAll(result);
                 adapter.selectList.clear();
+
+
+                List<CouponResultBean> selectedDiscountBeans = gson.fromJson(getIntent().
+                        getStringExtra("couponList"), new TypeToken<List<CouponResultBean>>() {
+                }.getType());
+                if(selectedDiscountBeans != null){
+                    for(CouponResultBean oldresultBean : selectedDiscountBeans){
+                        for(CouponResultBean resultBean : discountList){
+                            if(oldresultBean.getId() == resultBean.getId()){
+                                resultBean.setSelected(true);
+                                adapter.selectList.add(resultBean);
+                            }
+                        }
+                    }
+                }
                 adapter.notifyDataSetChanged();
             }
 

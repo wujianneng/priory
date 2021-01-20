@@ -27,7 +27,7 @@ public class AddNewOrderGoodsAdapter extends BaseQuickAdapter<FittingBean.Result
 
     @Override
     protected void convert(BaseViewHolder helper, FittingBean.ResultsBean item) {
-        helper.setText(R.id.code_tv, item.getProductcode() + "");
+        helper.setText(R.id.code_tv, item.getProductcode() + item.getWhitem().get(0).getWhnumber());
         helper.setText(R.id.name_tv, item.getName());
         if (item.getWhitem().size() != 0)
             helper.setText(R.id.weight_tv, item.getWhitem().get(0).getWeight() + "g");

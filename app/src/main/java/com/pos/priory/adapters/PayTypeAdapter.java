@@ -28,8 +28,9 @@ public class PayTypeAdapter extends BaseQuickAdapter<PayTypesResultBean.ResultsB
     protected void convert(BaseViewHolder helper, PayTypesResultBean.ResultsBean item) {
         helper.setText(R.id.name_tv, item.getName());
         final EditText edtWeight = helper.getView(R.id.edt_view);
+        edtWeight.setEnabled(!item.isCashCoupon());
         edtWeight.removeTextChangedListener((TextWatcher) edtWeight.getTag());
-        edtWeight.setText(item.getPayAmount() == -1 ? "" : (item.getPayAmount() + ""));
+        edtWeight.setText(item.getPayAmount() == 0 ? "" : (item.getPayAmount() + ""));
         edtWeight.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 TextWatcher textWatcher = new TextWatcher() {
@@ -41,7 +42,7 @@ public class PayTypeAdapter extends BaseQuickAdapter<PayTypesResultBean.ResultsB
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         String str = s.toString();
                         item.setPayAmount(TextUtils.isEmpty(str) ? 0 : Double.parseDouble(str));
-                        balanceActivity.updatePayList(false);
+                        balanceActivity.retCaculationMoneys();
                     }
 
                     @Override
@@ -52,7 +53,7 @@ public class PayTypeAdapter extends BaseQuickAdapter<PayTypesResultBean.ResultsB
                 edtWeight.addTextChangedListener(textWatcher);
             } else {
                 edtWeight.removeTextChangedListener((TextWatcher) edtWeight.getTag());
-                edtWeight.setText(item.getPayAmount() == -1 ? "" : (item.getPayAmount() + ""));
+                edtWeight.setText(item.getPayAmount() == 0 ? "" : (item.getPayAmount() + ""));
             }
         });
     }

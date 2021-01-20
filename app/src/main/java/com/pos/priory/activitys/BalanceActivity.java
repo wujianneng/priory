@@ -95,10 +95,8 @@ public class BalanceActivity extends BaseActivity {
     PayTypeAdapter adapter;
 
     List<FittingBean.ResultsBean> goodList = new ArrayList<>();
-    List<ExchangeCashCouponBean.ResultBean.RewardListBean> exchangCashList = new ArrayList<>();
-    List<CashCouponResultBean> couponBeanList = new ArrayList<>();
-    List<PayTypesResultBean.ResultsBean> selectedPayTypeList = new ArrayList<>();
     List<PayTypesResultBean.ResultsBean> orderPayTypeList = new ArrayList<>();
+    List<CouponResultBean> discountBeans = new ArrayList<>();
     MemberBean.ResultsBean memberBean;
 
     String cache_token;
@@ -116,14 +114,16 @@ public class BalanceActivity extends BaseActivity {
     }
 
     protected void initViews() {
-        pay_spread = getIntent().getDoubleExtra("pay_spread",0);
+        pay_spread = getIntent().getDoubleExtra("pay_spread", 0);
         cache_token = getIntent().getStringExtra("cache_token");
-        order_type = getIntent().getIntExtra("order_type",0);
+        order_type = getIntent().getIntExtra("order_type", 0);
         memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.ResultsBean.class);
         goodList = gson.fromJson(getIntent().getStringExtra("goodlist"),
                 new TypeToken<List<FittingBean.ResultsBean>>() {
                 }.getType());
-
+        discountBeans = gson.fromJson(getIntent().getStringExtra("couponList"),
+                new TypeToken<List<CouponResultBean>>() {
+                }.getType());
         titleTv.setText("合計付款");
         nextTv.setVisibility(View.VISIBLE);
         nextTv.setText("結算");
@@ -156,7 +156,7 @@ public class BalanceActivity extends BaseActivity {
             int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             if (menuPosition == 0) {
-                deleteOrderItem(adapterPosition);
+                removePayListItem(adapterPosition);
             }
         });
         adapter = new PayTypeAdapter(R.layout.pay_type_list_item, orderPayTypeList, this);
@@ -164,30 +164,6 @@ public class BalanceActivity extends BaseActivity {
                 false));
         goodRecyclerView.setAdapter(adapter);
     }
-
-    private void deleteOrderItem(int adapterPosition) {
-        if (orderPayTypeList.get(adapterPosition).getId() == -1) {//现金券
-            CashCouponResultBean deleteBean = null;
-            for (CashCouponResultBean resultsBean : couponBeanList) {
-                if (resultsBean.getName().equals(orderPayTypeList.get(adapterPosition).getName())) {
-                    deleteBean = resultsBean;
-                }
-            }
-            couponBeanList.remove(deleteBean);
-        } else if (orderPayTypeList.get(adapterPosition).getId() == -2) {//积分兑换
-            exchangCashList.clear();
-        } else {//付款方式
-            PayTypesResultBean.ResultsBean deletePaytype = null;
-            for (PayTypesResultBean.ResultsBean resultsBean : selectedPayTypeList) {
-                if (resultsBean.getId() == orderPayTypeList.get(adapterPosition).getId()) {
-                    deletePaytype = resultsBean;
-                }
-            }
-            selectedPayTypeList.remove(deletePaytype);
-        }
-        adapter.remove(adapterPosition);
-    }
-
 
     @OnClick({R.id.next_tv, R.id.back_btn, R.id.add_pay_btn, R.id.exchange_coupon_btn, R.id.use_coupon_btn})
     public void onClick(View v) {
@@ -197,7 +173,7 @@ public class BalanceActivity extends BaseActivity {
                     Toast.makeText(BalanceActivity.this, "还需付" +
                             LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney.doubleValue() - payedMoney.doubleValue()), Toast.LENGTH_SHORT).show();
                     return;
-                }else if((needPayMoney.doubleValue() - payedMoney.doubleValue()) < -1 * pay_spread){
+                } else if ((needPayMoney.doubleValue() - payedMoney.doubleValue()) < -1 * pay_spread) {
                     Toast.makeText(BalanceActivity.this, "支付金額大於應付金額！", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -218,25 +194,55 @@ public class BalanceActivity extends BaseActivity {
                 Intent intent1 = new Intent(BalanceActivity.this, SelectCashCouponActivity.class);
                 intent1.putExtra("memberInfo", gson.toJson(memberBean));
                 intent1.putExtra("goodlist", gson.toJson(goodList));
+                intent1.putExtra("selectCashCouponList", gson.toJson(selectCashCouponList));
                 startActivityForResult(intent1, 100);
                 break;
         }
     }
+
+    List<CashCouponResultBean> selectCashCouponList = new ArrayList<>();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 1) {
             Log.e("test", "list:" + data.getStringExtra("selectCashCouponList"));
-            couponBeanList = gson.fromJson(data.getStringExtra("selectCashCouponList"),
+            List<CashCouponResultBean> couponBeanList = gson.fromJson(data.getStringExtra("selectCashCouponList"),
                     new TypeToken<List<CashCouponResultBean>>() {
                     }.getType());
-            updatePayList(true);
+            if (couponBeanList != null) {
+                selectCashCouponList.clear();
+                selectCashCouponList.addAll(couponBeanList);
+                for (CashCouponResultBean resultsBean : selectCashCouponList) {
+                    if (isPayListContainsCoupon(resultsBean.getId()) == -1) {
+                        PayTypesResultBean.ResultsBean paybean = new PayTypesResultBean.ResultsBean();
+                        paybean.setId(resultsBean.getPaymethod_id());
+                        paybean.setName(resultsBean.getName());
+                        paybean.setPayAmount(resultsBean.getValue());
+                        paybean.setCouponId(resultsBean.getId());
+                        paybean.setCashCoupon(true);
+                        addPayListItem(paybean);
+                    }
+                }
+                List<Integer> needDeleteList = new ArrayList<>();
+                for (int i = 0; i < orderPayTypeList.size(); i++) {
+                    if(orderPayTypeList.get(i).isCashCoupon()) {
+                        if(!isCouponListContains(selectCashCouponList,orderPayTypeList.get(i).getCouponId())){
+                            needDeleteList.add(i);
+                        }
+                    }
+                }
+                for(Integer index : needDeleteList){
+                    removePayListItem(index);
+                }
+
+            }
+
         } else if (resultCode == 2) {
-            exchangCashList = gson.fromJson(data.getStringExtra("selectExchangeCashCouponList"),
-                    new TypeToken<List<ExchangeCashCouponBean.ResultBean.RewardListBean>>() {
-                    }.getType());
-            updatePayList(true);
+//            exchangCashList = gson.fromJson(data.getStringExtra("selectExchangeCashCouponList"),
+//                    new TypeToken<List<ExchangeCashCouponBean.ResultBean.RewardListBean>>() {
+//                    }.getType());
+//            updatePayList(true);
         }
     }
 
@@ -253,8 +259,8 @@ public class BalanceActivity extends BaseActivity {
                 for (int i = 0; i < payTypesResultBean.getResults().size(); i++) {
                     payType[i] = payTypesResultBean.getResults().get(i).getName();
                     booleans[i] = false;
-                    for(PayTypesResultBean.ResultsBean resultsBean : orderPayTypeList){
-                        if(resultsBean.getName().equals(payType[i])){
+                    for (PayTypesResultBean.ResultsBean resultsBean : orderPayTypeList) {
+                        if (resultsBean.getName().equals(payType[i])) {
                             booleans[i] = true;
                         }
                     }
@@ -266,13 +272,17 @@ public class BalanceActivity extends BaseActivity {
                         .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
                         .setPositiveButton("確定", (dialog, which) -> {
                             dialog.dismiss();
-                            selectedPayTypeList.clear();
                             for (int i = 0; i < booleans.length; i++) {
+                                int isContain = isPayListContains(payType[i]);
                                 if (booleans[i]) {
-                                    selectedPayTypeList.add(payTypesResultBean.getResults().get(i));
+                                    if (isContain == -1)
+                                        addPayListItem(payTypesResultBean.getResults().get(i));
+                                } else {
+                                    if (isContain != -1)
+                                        removePayListItem(isContain);
                                 }
                             }
-                            updatePayList(true);
+
                         })
                         .create().show();
             }
@@ -285,30 +295,62 @@ public class BalanceActivity extends BaseActivity {
         });
     }
 
-    public void updatePayList(boolean isUpdateList) {
-        if(isUpdateList)
-            orderPayTypeList.clear();
-        payedMoney = new BigDecimal(0);
-        for (PayTypesResultBean.ResultsBean resultsBean : selectedPayTypeList) {
-            if (isUpdateList) {
-                orderPayTypeList.add(resultsBean);
+    private boolean isCouponListContains(List<CashCouponResultBean> list,int id) {
+        boolean result = false;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getId() == id) {
+                result = true;
             }
+        }
+        return result;
+    }
+
+    private int isPayListContainsCoupon(int id) {
+        int result = -1;
+        for (int i = 0; i < orderPayTypeList.size(); i++) {
+            if (orderPayTypeList.get(i).getCouponId() == id) {
+                result = i;
+            }
+        }
+        return result;
+    }
+
+    private int isPayListContains(String name) {
+        int result = -1;
+        for (int i = 0; i < orderPayTypeList.size(); i++) {
+            if (orderPayTypeList.get(i).getName().equals(name)) {
+                result = i;
+            }
+        }
+        return result;
+    }
+
+    public void addPayListItem(PayTypesResultBean.ResultsBean resultsBean) {
+        orderPayTypeList.add(resultsBean);
+        adapter.notifyDataSetChanged();
+        retCaculationMoneys();
+    }
+
+    public void removePayListItem(int position) {
+        if(orderPayTypeList.get(position).isCashCoupon()){
+            int removeIndex = 0;
+            for(int i = 0 ; i < selectCashCouponList.size() ; i++){
+                if(orderPayTypeList.get(position).getId() == selectCashCouponList.get(i).getId()){
+                    removeIndex = i;
+                }
+            }
+            selectCashCouponList.remove(removeIndex);
+        }
+        orderPayTypeList.remove(position);
+        adapter.notifyDataSetChanged();
+        retCaculationMoneys();
+    }
+
+    public void retCaculationMoneys() {
+        payedMoney = new BigDecimal(0);
+        for (PayTypesResultBean.ResultsBean resultsBean : orderPayTypeList) {
             payedMoney = new BigDecimal(payedMoney.doubleValue() + resultsBean.getPayAmount());
         }
-        for (CashCouponResultBean resultsBean : couponBeanList) {
-            if(isUpdateList) {
-                PayTypesResultBean.ResultsBean paybean = new PayTypesResultBean.ResultsBean();
-                paybean.setId(-1);
-                paybean.setName(resultsBean.getName());
-                paybean.setPayAmount(resultsBean.getValue());
-                orderPayTypeList.add(paybean);
-            }
-            payedMoney = new BigDecimal(payedMoney.doubleValue() + resultsBean.getValue());
-        }
-        if (isUpdateList)
-            adapter.notifyDataSetChanged();
-
-
         paymentTv.setText("客戶應付：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney.doubleValue()));
         payedTv.setText("已付款：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(payedMoney.doubleValue()));
         needTv.setText("馀额: " + LogicUtils.getKeepLastOneNumberAfterLittlePoint(needPayMoney.doubleValue() - payedMoney.doubleValue()));
@@ -335,25 +377,12 @@ public class BalanceActivity extends BaseActivity {
 
 
             List<CreateOrderParamsBean.PaymethodsBean> paymentsBeanList = new ArrayList<>();
-            if (couponBeanList.size() != 0) {
-                List<Integer> cashcouponIds = new ArrayList<>();
-                for (CashCouponResultBean resultsBean : couponBeanList) {
-                    cashcouponIds.add(resultsBean.getId());
-
-                    CreateOrderParamsBean.PaymethodsBean paymentsBean = new CreateOrderParamsBean.PaymethodsBean();
-                    paymentsBean.setId(resultsBean.getId());
-                    paymentsBean.setAmount(resultsBean.getValue());
-                    paymentsBean.setCash_coupon_id(resultsBean.getId());
-                    paymentsBeanList.add(paymentsBean);
-                }
-                paramsBean.setCash_coupons(cashcouponIds);
-            }
-
-            if (selectedPayTypeList.size() != 0) {
-                for (PayTypesResultBean.ResultsBean resultsBean : selectedPayTypeList) {
+            if (orderPayTypeList.size() != 0) {
+                for (PayTypesResultBean.ResultsBean resultsBean : orderPayTypeList) {
                     CreateOrderParamsBean.PaymethodsBean paymentsBean = new CreateOrderParamsBean.PaymethodsBean();
                     paymentsBean.setId(resultsBean.getId());
                     paymentsBean.setAmount(resultsBean.getPayAmount() == -1 ? 0 : resultsBean.getPayAmount());
+                    paymentsBean.setCash_coupon_id(resultsBean.getCouponId());
                     paymentsBeanList.add(paymentsBean);
                 }
             }
@@ -367,6 +396,8 @@ public class BalanceActivity extends BaseActivity {
                     customDialog.dismiss();
                     Intent intent = new Intent(BalanceActivity.this, BillActivity.class);
                     intent.putExtra("goodlist", getIntent().getStringExtra("goodlist"));
+                    intent.putExtra("orderPayTypeList", gson.toJson(orderPayTypeList));
+                    intent.putExtra("couponList", gson.toJson(discountBeans));
                     intent.putExtra("sumMoney", getIntent().getDoubleExtra("newOrderSumMoney", 0));
                     intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
                     intent.putExtra("receiveMoney", sumMoney.doubleValue());

@@ -95,7 +95,7 @@ public class RepertoryRecordBean {
         private String created;
         private String prd_name;
         private String prd_no;
-        private int prd_weight;
+        private double prd_weight;
         private String shop_from;
         private String type_display;
         private String purpose_display;
@@ -142,11 +142,11 @@ public class RepertoryRecordBean {
             this.prd_no = prd_no;
         }
 
-        public int getPrd_weight() {
+        public double getPrd_weight() {
             return prd_weight;
         }
 
-        public void setPrd_weight(int prd_weight) {
+        public void setPrd_weight(double prd_weight) {
             this.prd_weight = prd_weight;
         }
 

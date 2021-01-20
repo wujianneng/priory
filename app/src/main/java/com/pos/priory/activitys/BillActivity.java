@@ -21,7 +21,12 @@ import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.BillGoodsAdapter;
 import com.pos.priory.adapters.BillPrintGoodsAdapter;
+import com.pos.priory.adapters.OrderDetailPrintDiscountAdapter;
+import com.pos.priory.adapters.OrderDetailPrintPayTypeAdapter;
+import com.pos.priory.beans.CouponResultBean;
 import com.pos.priory.beans.FittingBean;
+import com.pos.priory.beans.OrderDetailReslutBean;
+import com.pos.priory.beans.PayTypesResultBean;
 import com.pos.priory.fragments.OrderFragment;
 import com.pos.priory.utils.BitmapUtils;
 import com.pos.priory.utils.DateUtils;
@@ -79,6 +84,9 @@ public class BillActivity extends BaseActivity {
     @Bind(R.id.right_img)
     ImageView rightImg;
 
+    List<PayTypesResultBean.ResultsBean> orderPayTypeList = new ArrayList<>();
+    List<CouponResultBean> discountBeans = new ArrayList<>();
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,12 +99,17 @@ public class BillActivity extends BaseActivity {
     protected void initViews() {
         titleTv.setText("账单");
         rightImg.setVisibility(View.GONE);
+        discountBeans = gson.fromJson(getIntent().getStringExtra("couponList"),
+                new TypeToken<List<CouponResultBean>>() {
+                }.getType());
         orderNumberTv.setText(getIntent().getStringExtra("ordernumber"));
         createDateTv.setText(DateUtils.getCurrentTime());
         moneyTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(getIntent().getDoubleExtra("sumMoney", 0)));
         edtCashMoney.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(getIntent().getDoubleExtra("receiveMoney", 0)));
         smallChangeTv.setText(LogicUtils.getKeepLastOneNumberAfterLittlePoint(getIntent().getDoubleExtra("returnMoney", 0)));
         goodList = gson.fromJson(getIntent().getStringExtra("goodlist"), new TypeToken<List<FittingBean.ResultsBean>>() {
+        }.getType());
+        orderPayTypeList = gson.fromJson(getIntent().getStringExtra("orderPayTypeList"), new TypeToken<List<PayTypesResultBean.ResultsBean>>() {
         }.getType());
 
         goodsAdapter = new BillGoodsAdapter(this, R.layout.bill_good_list_item, goodList);
@@ -110,7 +123,7 @@ public class BillActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_print:
-                printViews(this, goodList, orderNumberTv.getText().toString(), getIntent().getStringExtra("memberName"),
+                printViews(this, goodList, orderPayTypeList,discountBeans,orderNumberTv.getText().toString(), getIntent().getStringExtra("memberName"),
                         createDateTv.getText().toString(), getIntent().getDoubleExtra("sumMoney", 0), MyApplication.staffInfoBean.getShopid());
                 break;
             case R.id.back_btn:
@@ -121,7 +134,8 @@ public class BillActivity extends BaseActivity {
     }
 
 
-    public static void printViews(final Activity activity, List<FittingBean.ResultsBean> goodList, String orderNumber,
+    public static void printViews(final Activity activity, List<FittingBean.ResultsBean> goodList,
+                                  List<PayTypesResultBean.ResultsBean> orderPayTypeList,List<CouponResultBean> discountBeans, String orderNumber,
                                   String memberName, String createDate, double sumMoney, int storeid) {
         List<View> views = new ArrayList<>();
         List<FittingBean.ResultsBean> templist = new ArrayList<>();
@@ -171,6 +185,39 @@ public class BillActivity extends BaseActivity {
             mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
             listview.setLayoutManager(mLayoutManager);
             listview.setAdapter(adapter);
+
+            if (i == size - 1) {
+                List<OrderDetailReslutBean.PayDetailBean.CouponsBean> couponsBeans = new ArrayList<>();
+                for(CouponResultBean bean : discountBeans){
+                    OrderDetailReslutBean.PayDetailBean.CouponsBean couponsBean = new OrderDetailReslutBean.PayDetailBean.CouponsBean();
+                    couponsBean.setCoupon_amount(Double.parseDouble(bean.getValue()));
+                    couponsBean.setName(bean.getName());
+                    couponsBeans.add(couponsBean);
+                }
+                RecyclerView dcListview = (RecyclerView) printView.findViewById(R.id.discount_list);
+                OrderDetailPrintDiscountAdapter dcmLayoutManageradapter = new OrderDetailPrintDiscountAdapter
+                        (R.layout.order_detail_print_discount_list_item, couponsBeans);
+                LinearLayoutManager dcmLayoutManager = new LinearLayoutManager(activity);
+                dcmLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+                dcListview.setLayoutManager(dcmLayoutManager);
+                dcListview.setAdapter(dcmLayoutManageradapter);
+
+                List<OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean> payTypeBeans = new ArrayList<>();
+                for(PayTypesResultBean.ResultsBean bean : orderPayTypeList){
+                    OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean payTypeBean = new OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean();
+                    payTypeBean.setPaymethod(bean.isCashCoupon() ? "現金券" : bean.getName());
+                    payTypeBean.setAmount(bean.getPayAmount());
+                    payTypeBean.setCash_coupon_name(bean.getName());
+                    payTypeBeans.add(payTypeBean);
+                }
+                RecyclerView ptListview = (RecyclerView) printView.findViewById(R.id.pay_type_list);
+                OrderDetailPrintPayTypeAdapter ptmLayoutManageradapter = new OrderDetailPrintPayTypeAdapter
+                        (R.layout.order_detail_print_discount_list_item, payTypeBeans);
+                LinearLayoutManager ptmLayoutManager = new LinearLayoutManager(activity);
+                ptmLayoutManager.setOrientation(OrientationHelper.VERTICAL);
+                ptListview.setLayoutManager(ptmLayoutManager);
+                ptListview.setAdapter(ptmLayoutManageradapter);
+            }
             views.add(printView);
         }
         Log.e("test", "viewsize:" + views.size());

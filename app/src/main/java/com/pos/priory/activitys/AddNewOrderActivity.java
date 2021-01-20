@@ -226,6 +226,7 @@ public class AddNewOrderActivity extends BaseActivity {
                 Intent intent1 = new Intent(AddNewOrderActivity.this, SelectDiscountActivity.class);
                 intent1.putExtra("memberInfo", gson.toJson(memberBean));
                 intent1.putExtra("goodlist", gson.toJson(goodList));
+                intent1.putExtra("couponList", gson.toJson(discountBeans));
                 startActivityForResult(intent1, 100);
                 break;
             case R.id.add_fitting_btn:
@@ -392,11 +393,11 @@ public class AddNewOrderActivity extends BaseActivity {
                         new TypeToken<List<CouponResultBean>>() {
                         }.getType());
                 String result = "";
-                if (discountList != null && discountList.size() != 0) {
+                if (discountList != null) {
                     discountBeans.clear();
                     discountBeans.addAll(discountList);
                     for (int i = 0; i < discountBeans.size(); i++) {
-                        result += discountBeans.get(i).getName() + "\n";
+                        result += ((i + 1) + ". " + discountBeans.get(i).getName() + "\n");
                     }
                 }
                 discountTv.setText(discountBeans.size() == 0 ? "不使用" : result);

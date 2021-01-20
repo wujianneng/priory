@@ -27,16 +27,11 @@ public class DiscountAdapter extends BaseQuickAdapter<CouponResultBean, BaseView
         helper.setImageResource(R.id.down_img, item.isShowDetail() ? R.drawable.go_top : R.drawable.go_bottom);
         helper.setChecked(R.id.checkbox, item.isSelected());
         if (selectList.size() != 0) {
-            if (selectList.get(0).isWith_another_coupon()) {
-                Log.e("test", "多張");
-                if (!item.isSelected())
-                    helper.getView(R.id.checkbox).setEnabled(item.isWith_another_coupon() ? item.isIs_usable() : false);
-            } else {
-                Log.e("test", item.isSelected() + item.getName() + "單張" + item.isIs_usable());
-                helper.getView(R.id.checkbox).setEnabled(item.isIs_usable());
-            }
+            if (!item.isSelected())
+                helper.getView(R.id.checkbox).setEnabled(item.isWith_another_coupon() ? item.isIs_usable() : false);
+            else
+                helper.getView(R.id.checkbox).setEnabled(true);
         } else {
-            Log.e("test", "沒選中");
             helper.getView(R.id.checkbox).setEnabled(item.isIs_usable());
         }
 

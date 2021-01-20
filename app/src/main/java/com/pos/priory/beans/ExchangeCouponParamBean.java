@@ -7,6 +7,15 @@ public class ExchangeCouponParamBean {
      */
 
     private String code;
+    int member;
+
+    public int getMember() {
+        return member;
+    }
+
+    public void setMember(int member) {
+        this.member = member;
+    }
 
     public String getCode() {
         return code;

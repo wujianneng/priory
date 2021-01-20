@@ -129,12 +129,12 @@ public class OrderCalculationResultBean {
 
         private int prd_id;
         private String prd_name;
-        private int prd_unitprice;
+        private double prd_unitprice;
         private int quantity;
         private int category;
         private String category_name;
-        private int total_price;
-        private int price;
+        private double total_price;
+        private double price;
         private List<CouponInfoBean> coupon_info;
         private List<YInfoBean> y_info;
 
@@ -154,11 +154,11 @@ public class OrderCalculationResultBean {
             this.prd_name = prd_name;
         }
 
-        public int getPrd_unitprice() {
+        public double getPrd_unitprice() {
             return prd_unitprice;
         }
 
-        public void setPrd_unitprice(int prd_unitprice) {
+        public void setPrd_unitprice(double prd_unitprice) {
             this.prd_unitprice = prd_unitprice;
         }
 
@@ -186,19 +186,19 @@ public class OrderCalculationResultBean {
             this.category_name = category_name;
         }
 
-        public int getTotal_price() {
+        public double getTotal_price() {
             return total_price;
         }
 
-        public void setTotal_price(int total_price) {
+        public void setTotal_price(double total_price) {
             this.total_price = total_price;
         }
 
-        public int getPrice() {
+        public double getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(double price) {
             this.price = price;
         }
 
@@ -225,7 +225,7 @@ public class OrderCalculationResultBean {
              */
 
             private int coupons_id;
-            private int coupon_amount;
+            private double coupon_amount;
 
             public int getCoupons_id() {
                 return coupons_id;
@@ -235,11 +235,11 @@ public class OrderCalculationResultBean {
                 this.coupons_id = coupons_id;
             }
 
-            public int getCoupon_amount() {
+            public double getCoupon_amount() {
                 return coupon_amount;
             }
 
-            public void setCoupon_amount(int coupon_amount) {
+            public void setCoupon_amount(double coupon_amount) {
                 this.coupon_amount = coupon_amount;
             }
         }
@@ -256,8 +256,8 @@ public class OrderCalculationResultBean {
             private int coupon_id;
             private int product_id;
             private int quantity;
-            private int origin_price;
-            private int price;
+            private double origin_price;
+            private double price;
 
             public int getCoupon_id() {
                 return coupon_id;
@@ -283,19 +283,19 @@ public class OrderCalculationResultBean {
                 this.quantity = quantity;
             }
 
-            public int getOrigin_price() {
+            public double getOrigin_price() {
                 return origin_price;
             }
 
-            public void setOrigin_price(int origin_price) {
+            public void setOrigin_price(double origin_price) {
                 this.origin_price = origin_price;
             }
 
-            public int getPrice() {
+            public double getPrice() {
                 return price;
             }
 
-            public void setPrice(int price) {
+            public void setPrice(double price) {
                 this.price = price;
             }
         }
@@ -314,7 +314,7 @@ public class OrderCalculationResultBean {
         private String product_id;
         private int quantity;
         private String origin_price;
-        private int price;
+        private double price;
 
         public int getCoupon_id() {
             return coupon_id;
@@ -348,11 +348,11 @@ public class OrderCalculationResultBean {
             this.origin_price = origin_price;
         }
 
-        public int getPrice() {
+        public double getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(double price) {
             this.price = price;
         }
     }
