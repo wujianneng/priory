@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,9 +32,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,6 +68,8 @@ public class DinghuoActivity extends BaseActivity {
     String currentStr = "";
     @Bind(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
+    @Bind(R.id.right_layout)
+    FrameLayout rightLayout;
 
     private List<RepertoryFiltersBean.ResultBean.CategoryBean> category;
 
@@ -82,10 +83,11 @@ public class DinghuoActivity extends BaseActivity {
     }
 
     int categoryId = 0;
+
     private void initViews() {
         category = gson.fromJson(getIntent().getStringExtra("categoryList"),
                 new TypeToken<List<RepertoryFiltersBean.ResultBean.CategoryBean>>() {
-        }.getType());
+                }.getType());
         btnSelectType.setText(category.get(0).getName());
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(refreshLayout -> {
@@ -123,6 +125,7 @@ public class DinghuoActivity extends BaseActivity {
     }
 
     AlertDialog actionDialog;
+
     private void showIsDingHuoDialog(WarehouseBean.ResultsBean.ItemBean goodBean) {
         if (actionDialog == null) {
             actionDialog = new AlertDialog.Builder(this).setTitle("確認要訂貨嗎？")
@@ -189,7 +192,7 @@ public class DinghuoActivity extends BaseActivity {
                 new ModelGsonListener<WarehouseBean>() {
                     @Override
                     public void onSuccess(WarehouseBean result) throws Exception {
-                        if(result != null && result.getResults().size() != 0) {
+                        if (result != null && result.getResults().size() != 0) {
                             goodBeanList.clear();
                             goodBeanList.addAll(result.getResults().get(0).getItem());
                             adapter.notifyDataSetChanged();
@@ -204,7 +207,7 @@ public class DinghuoActivity extends BaseActivity {
                 });
     }
 
-    @OnClick({R.id.back_btn,R.id.btn_select_type,R.id.right_img})
+    @OnClick({R.id.back_btn, R.id.btn_select_type, R.id.right_layout})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -213,8 +216,8 @@ public class DinghuoActivity extends BaseActivity {
             case R.id.btn_select_type:
                 showCategoryMenu();
                 break;
-            case R.id.right_img:
-                startActivity(new Intent(DinghuoActivity.this,DinghuoListActivity.class));
+            case R.id.right_layout:
+                startActivity(new Intent(DinghuoActivity.this, DinghuoListActivity.class));
                 break;
         }
     }

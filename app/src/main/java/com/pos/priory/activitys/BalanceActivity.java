@@ -387,7 +387,7 @@ public class BalanceActivity extends BaseActivity {
                 }
             }
             paramsBean.setPaymethods(paymentsBeanList);
-            paramsBean.setAmount_payable(needPayMoney);
+            paramsBean.setAmount_payable(payedMoney);
             Log.e("test", "paramMap:" + gson.toJson(paramsBean));
             RetrofitManager.excuteGson(RetrofitManager.createGson(ApiService.class)
                     .createOrder(paramsBean), new ModelGsonListener<CreateOrderResultBean>() {

@@ -117,7 +117,7 @@ public class DinghuoListActivity extends BaseActivity {
     private void showEditItemWeightDialog(int position) {
         EditText editText = new EditText(this);
         editText.setText(goodBeanList.get(position).getWeight() + "");
-        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         new AlertDialog.Builder(this).setTitle("修改重量")
                 .setView(editText)
                 .setNegativeButton("取消", ((dialog, which) -> dialog.dismiss()))

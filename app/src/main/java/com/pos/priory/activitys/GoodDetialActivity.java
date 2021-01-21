@@ -194,14 +194,14 @@ public class GoodDetialActivity extends BaseActivity {
             goodDetialAdapter.notifyDataSetChanged();
         }
         RetrofitManager.createGson(ApiService.class)
-                .getStockDetail(goodBean.getId())
+                .getStockDetail(goodBean.getProduct_id())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(warehouseBean -> {
                     if (warehouseBean != null) {
                         orderList.addAll(warehouseBean.getWhitem());
                         goodDetialAdapter.notifyDataSetChanged();
                         codeTv.setText(goodBean.getProductcode() + "");
-                        nameTv.setText(warehouseBean.getPrd_name());
+                        nameTv.setText(goodBean.getName());
                         repertoryTv.setText(warehouseBean.getQuantity_total() + "件");
                         priceTv.setText(goodBean.getPrice().getSymbol() +  goodBean.getPrice().getPrice());
                         weightTv.setText(warehouseBean.getPrd_weight() + "g");

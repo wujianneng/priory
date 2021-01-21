@@ -76,10 +76,19 @@ public class FittingBean {
         private boolean accessory;
         private String created;
         private String updated;
+        private int prd_stock_quantity;
         private List<PriceBean> price;
         private List<WhitemBean> whitem;
         private int buyCount = 1;
         private boolean isSelected = false;
+
+        public int getPrd_stock_quantity() {
+            return prd_stock_quantity;
+        }
+
+        public void setPrd_stock_quantity(int prd_stock_quantity) {
+            this.prd_stock_quantity = prd_stock_quantity;
+        }
 
         public boolean isSelected() {
             return isSelected;
@@ -247,6 +256,24 @@ public class FittingBean {
             private int id;
             private String whnumber;
             private double weight;
+            private String prd_no;
+            private int prd_stock_quantity;
+
+            public String getPrd_no() {
+                return prd_no;
+            }
+
+            public void setPrd_no(String prd_no) {
+                this.prd_no = prd_no;
+            }
+
+            public int getPrd_stock_quantity() {
+                return prd_stock_quantity;
+            }
+
+            public void setPrd_stock_quantity(int prd_stock_quantity) {
+                this.prd_stock_quantity = prd_stock_quantity;
+            }
 
             public int getId() {
                 return id;

@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -71,6 +72,10 @@ public class BigInventoryDetialActivity extends BaseActivity {
     TabLayout tabLayout;
 
     boolean counted = false;
+    @Bind(R.id.right_layout)
+    FrameLayout rightLayout;
+    @Bind(R.id.title_layout)
+    FrameLayout titleLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +89,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
         inventoryId = getIntent().getIntExtra("inventoryId", 0);
         status = getIntent().getBooleanExtra("status", false);
         categoryId = getIntent().getIntExtra("categoryId", 0);
-        scanBtn.setVisibility(!status ? View.VISIBLE : View.GONE);
+        rightLayout.setVisibility(!status ? View.VISIBLE : View.GONE);
         titleTv.setText("盘点分类详情");
         scanBtn.setImageResource(R.drawable.scan);
         refreshLayout.setEnableLoadMore(false);
@@ -141,15 +146,16 @@ public class BigInventoryDetialActivity extends BaseActivity {
     }
 
     Disposable disposable;
+
     private void refreshRecyclerView() {
-        if(disposable != null && !disposable.isDisposed()) disposable.dispose();
+        if (disposable != null && !disposable.isDisposed()) disposable.dispose();
         Observable<InventoryDetialBean> observable;
         if (edtSearch.getText().toString().isEmpty())
             observable = RetrofitManager.createGson(ApiService.class)
                     .getBigInventoryDetail(inventoryId, categoryId, counted);
         else
             observable = RetrofitManager.createGson(ApiService.class)
-                    .getBigInventoryDetailWithSearch(inventoryId, categoryId, counted,edtSearch.getText().toString());
+                    .getBigInventoryDetailWithSearch(inventoryId, categoryId, counted, edtSearch.getText().toString());
         disposable = RetrofitManager.excuteGson(this.<String>bindToLifecycle(), observable, new ModelGsonListener<InventoryDetialBean>() {
             @Override
             public void onSuccess(InventoryDetialBean result) throws Exception {
@@ -207,15 +213,15 @@ public class BigInventoryDetialActivity extends BaseActivity {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String s) throws Exception {
-                        Log.e("test","s:" + s);
+                        Log.e("test", "s:" + s);
                         refreshLayout.autoRefresh();
                         showInventorySuccessDialog(bean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Log.e("test","throwable:" + throwable.getMessage());
-                        if(throwable.getMessage().contains("204")){
+                        Log.e("test", "throwable:" + throwable.getMessage());
+                        if (throwable.getMessage().contains("204")) {
                             showInventoryedDialog(bean);
                         }
                     }
@@ -225,7 +231,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
     private void showInventoryedDialog(InventoryDetialBean.ItemBean bean) {
         new AlertDialog.Builder(this).setTitle("已盤點過")
                 .setMessage(bean.getName() + "   " + bean.getCode())
-                .setPositiveButton("繼續掃描",((dialog, which) -> {
+                .setPositiveButton("繼續掃描", ((dialog, which) -> {
                     onClickScan();
                     dialog.dismiss();
                 })).create().show();
@@ -234,7 +240,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
     private void showInventorySuccessDialog(InventoryDetialBean.ItemBean bean) {
         new AlertDialog.Builder(this).setTitle("盤點成功")
                 .setMessage(bean.getName() + "   " + bean.getCode())
-                .setPositiveButton("繼續掃描",((dialog, which) -> {
+                .setPositiveButton("繼續掃描", ((dialog, which) -> {
                     onClickScan();
                     dialog.dismiss();
                 })).create().show();

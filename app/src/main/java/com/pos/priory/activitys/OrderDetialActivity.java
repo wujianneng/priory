@@ -122,6 +122,8 @@ public class OrderDetialActivity extends BaseActivity {
     List<OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean> paytypeList = new ArrayList<>();
     OrderDetailDiscountAdapter discountAdapter;
     OrderDetailPayTypeAdapter payTypeAdapter;
+    @Bind(R.id.right_layout)
+    FrameLayout rightLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +134,7 @@ public class OrderDetialActivity extends BaseActivity {
     }
 
     protected void initViews() {
-        rightImg.setVisibility(View.VISIBLE);
+        rightLayout.setVisibility(View.VISIBLE);
         rightImg.setImageResource(R.drawable.icon_print);
 
         goodsAdapter = new OrderDetialGoodsAdapter(goodList, this);
@@ -179,8 +181,8 @@ public class OrderDetialActivity extends BaseActivity {
                         orderDetailReslutBean = resluts;
                         goodList.clear();
                         goodList.addAll(orderDetailReslutBean.getOrder_items());
-                        for(OrderDetailReslutBean.OrderItemsBean resultsBean : goodList){
-                           resultsBean.itemType = resultsBean.isIs_gold() ? 0 : 1;
+                        for (OrderDetailReslutBean.OrderItemsBean resultsBean : goodList) {
+                            resultsBean.itemType = resultsBean.isIs_gold() ? 0 : 1;
                         }
                         goodsAdapter.notifyDataSetChanged();
 
@@ -188,13 +190,13 @@ public class OrderDetialActivity extends BaseActivity {
                         discountAdapter.notifyDataSetChanged();
 
                         paytypeList.addAll(orderDetailReslutBean.getPay_detail().getPay_methods().getCash_coupon());
-                        for(OrderDetailReslutBean.PayDetailBean.PayMethodsBean.OtherBean otherBean : orderDetailReslutBean.getPay_detail().getPay_methods().getOther()){
+                        for (OrderDetailReslutBean.PayDetailBean.PayMethodsBean.OtherBean otherBean : orderDetailReslutBean.getPay_detail().getPay_methods().getOther()) {
                             OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean cashCouponBean = new OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean();
                             cashCouponBean.setAmount(otherBean.getAmount());
                             cashCouponBean.setPaymethod(otherBean.getPaymethod());
                             paytypeList.add(cashCouponBean);
                         }
-                        for(OrderDetailReslutBean.PayDetailBean.PayMethodsBean.ExchangeOrRefundBean exchangeOrRefundBean : orderDetailReslutBean.getPay_detail().getPay_methods().getExchange_or_refund()){
+                        for (OrderDetailReslutBean.PayDetailBean.PayMethodsBean.ExchangeOrRefundBean exchangeOrRefundBean : orderDetailReslutBean.getPay_detail().getPay_methods().getExchange_or_refund()) {
                             OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean cashCouponBean = new OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean();
                             cashCouponBean.setAmount(exchangeOrRefundBean.getAmount());
                             paytypeList.add(cashCouponBean);
@@ -331,8 +333,8 @@ public class OrderDetialActivity extends BaseActivity {
             customDialog.setOnDismissListener(dialog -> customDialog = null);
             customDialog.show();
             Map<String, Object> paramMap = new HashMap<>();
-            paramMap.put("member",orderDetailReslutBean.getMember());
-            paramMap.put("order",orderDetailReslutBean.getId());
+            paramMap.put("member", orderDetailReslutBean.getMember());
+            paramMap.put("order", orderDetailReslutBean.getId());
             Log.e("test", "param:" + gson.toJson(paramMap));
             RetrofitManager.excute(RetrofitManager.createString(ApiService.class)
                     .rollbackOrder(paramMap), new ModelListener() {
@@ -356,10 +358,10 @@ public class OrderDetialActivity extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.btn_change, R.id.btn_return, R.id.btn_cancel, R.id.back_btn, R.id.right_img, R.id.btn_operator})
+    @OnClick({R.id.btn_change, R.id.btn_return, R.id.btn_cancel, R.id.back_btn, R.id.right_layout, R.id.btn_operator})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.right_img:
+            case R.id.right_layout:
                 printViews();
                 break;
             case R.id.btn_change:
@@ -379,15 +381,15 @@ public class OrderDetialActivity extends BaseActivity {
                 cancelOrder();
                 break;
             case R.id.btn_operator:
-                if(checkedGoodList.size() == 0){
-                    Toast.makeText(this,"請先選擇商品",Toast.LENGTH_SHORT).show();
+                if (checkedGoodList.size() == 0) {
+                    Toast.makeText(this, "請先選擇商品", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if(goodsAdapter.operatingStatus == 1){
-                    Intent intent = new Intent(OrderDetialActivity.this,AddNewOrderActivity.class);
-                    intent.putExtra("sumMoney",-1 * sumMoney * orderDetailReslutBean.getExchange_rate());
-                    intent.putExtra("orderId",orderDetailReslutBean.getId());
-                    intent.putExtra("changeGoodList",gson.toJson(checkedGoodList));
+                if (goodsAdapter.operatingStatus == 1) {
+                    Intent intent = new Intent(OrderDetialActivity.this, AddNewOrderActivity.class);
+                    intent.putExtra("sumMoney", -1 * sumMoney * orderDetailReslutBean.getExchange_rate());
+                    intent.putExtra("orderId", orderDetailReslutBean.getId());
+                    intent.putExtra("changeGoodList", gson.toJson(checkedGoodList));
                     MemberBean.ResultsBean member = new MemberBean.ResultsBean();
                     member.setName(orderDetailReslutBean.getMember_detail().getFirstname() + orderDetailReslutBean.getMember_detail().getLastname());
                     member.setReward(orderDetailReslutBean.getMember_detail().getReward());
@@ -395,11 +397,11 @@ public class OrderDetialActivity extends BaseActivity {
                     member.setId(orderDetailReslutBean.getMember_detail().getId());
                     intent.putExtra("memberInfo", gson.toJson(member));
                     startActivity(intent);
-                }else if(goodsAdapter.operatingStatus == 2){
-                    Intent intent = new Intent(OrderDetialActivity.this,ReturnBalanceActivity.class);
-                    intent.putExtra("sumMoney",-1 * orderDetailReslutBean.getGoldprice() * sumWeight);
-                    intent.putExtra("orderId",orderDetailReslutBean.getId());
-                    intent.putExtra("changeGoodList",gson.toJson(checkedGoodList));
+                } else if (goodsAdapter.operatingStatus == 2) {
+                    Intent intent = new Intent(OrderDetialActivity.this, ReturnBalanceActivity.class);
+                    intent.putExtra("sumMoney", -1 * orderDetailReslutBean.getGoldprice() * sumWeight);
+                    intent.putExtra("orderId", orderDetailReslutBean.getId());
+                    intent.putExtra("changeGoodList", gson.toJson(checkedGoodList));
                     MemberBean.ResultsBean member = new MemberBean.ResultsBean();
                     member.setName(orderDetailReslutBean.getMember_detail().getFirstname() + orderDetailReslutBean.getMember_detail().getLastname());
                     member.setReward(orderDetailReslutBean.getMember_detail().getReward());
@@ -452,7 +454,8 @@ public class OrderDetialActivity extends BaseActivity {
         }
     }
 
-    double sumMoney = 0,sumWeight = 0;
+    double sumMoney = 0, sumWeight = 0;
+
     public void resetCheckedGoodList() {
         checkedGoodList.clear();
         sumMoney = 0;
@@ -465,9 +468,9 @@ public class OrderDetialActivity extends BaseActivity {
             }
             Log.e("itemweight", "itemweight1:" + bean.getWeight());
         }
-        if(goodsAdapter.operatingStatus == 1){
+        if (goodsAdapter.operatingStatus == 1) {
             operatingMoneyTv.setText("换货金额：" + sumMoney);
-        }else {
+        } else {
             operatingMoneyTv.setText("回收金额：" + orderDetailReslutBean.getGoldprice() * sumWeight);
             operatingWeightTv.setText("回收金重：" + sumWeight + "克");
         }

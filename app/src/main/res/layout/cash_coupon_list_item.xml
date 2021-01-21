@@ -67,6 +67,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:padding="5dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/go_bottom" />
 

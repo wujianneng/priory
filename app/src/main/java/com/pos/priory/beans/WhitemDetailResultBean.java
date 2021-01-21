@@ -15,7 +15,7 @@ public class WhitemDetailResultBean {
      */
 
     private int id;
-    private String prd_code;
+    private String productcode;
     private String prd_image;
     private String prd_name;
     private double prd_weight;
@@ -31,11 +31,11 @@ public class WhitemDetailResultBean {
     }
 
     public String getPrd_code() {
-        return prd_code;
+        return productcode;
     }
 
     public void setPrd_code(String prd_code) {
-        this.prd_code = prd_code;
+        this.productcode = prd_code;
     }
 
     public String getPrd_image() {

@@ -166,7 +166,8 @@ public class AddNewOrderActivity extends BaseActivity {
                     goodList.get(position).setBuyCount(goodList.get(position).getBuyCount() == 1 ? 1 : goodList.get(position).getBuyCount() - 1);
                     adapter.notifyItemChanged(position);
                 } else if (view.getId() == R.id.increase_btn) {
-                    goodList.get(position).setBuyCount(goodList.get(position).getBuyCount() + 1);
+                    if (goodList.get(position).getBuyCount() + 1 <= goodList.get(position).getPrd_stock_quantity())
+                        goodList.get(position).setBuyCount(goodList.get(position).getBuyCount() + 1);
                     adapter.notifyItemChanged(position);
                 }
                 refreshSumMoney();
@@ -281,7 +282,7 @@ public class AddNewOrderActivity extends BaseActivity {
             if (calculationParamBean.getOrder_type() == 1) {
                 calculationParamBean.setOld_order(oldOrderId);
                 List<OrderCalculationParamBean.OldOrderItemBean> old_order_items = new ArrayList<>();
-                for(OrderDetailReslutBean.OrderItemsBean orderItemsBean : changeGoodList){
+                for (OrderDetailReslutBean.OrderItemsBean orderItemsBean : changeGoodList) {
                     OrderCalculationParamBean.OldOrderItemBean oldOrderItemBean = new OrderCalculationParamBean.OldOrderItemBean();
                     oldOrderItemBean.setId(orderItemsBean.getId());
                     oldOrderItemBean.setWeight(orderItemsBean.getWeight());

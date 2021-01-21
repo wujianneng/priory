@@ -30,22 +30,30 @@
         android:textColor="#fff"
         android:textSize="20sp" />
 
-    <ImageView
-        android:id="@+id/right_img"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+    <FrameLayout
+        android:id="@+id/right_layout"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_gravity="center_vertical|right"
         android:layout_marginRight="16dp"
         android:visibility="gone"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/scan" />
+        android:foreground="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/right_img"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:src="@drawable/scan" />
+    </FrameLayout>
+
 
     <TextView
         android:id="@+id/next_tv"
         android:textSize="14sp"
         android:text="下一步"
         android:layout_gravity="center_vertical|right"
-        android:layout_marginRight="16dp"
+       android:padding="16dp"
         android:visibility="gone"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:textColor="@android:color/white"
