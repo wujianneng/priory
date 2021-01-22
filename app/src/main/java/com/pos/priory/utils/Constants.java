@@ -10,6 +10,8 @@ public class Constants {
 
     //开发环境域名
 //    public static final String BASE_URL = "http://192.168.50.237:8000";
+
+//    public static final String BASE_URL = "http://192.168.50.77:8000";
     public static final String BASE_URL = "http://annabella.infitack.cn";
 
     public static final String BASE_URL_HTTP = BASE_URL;

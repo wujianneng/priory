@@ -327,7 +327,6 @@ public class AddNewOrderActivity extends BaseActivity {
                     intent.putExtra("cache_token", result.getCache_token());
                     intent.putExtra("order_type", changeGoodsMoeny == 0 ? 0 : 1);
                     intent.putExtra("checkedGoodList", getIntent().getStringExtra("checkedGoodList"));
-                    intent.putExtra("couponList", gson.toJson(discountBeans));
                     startActivity(intent);
                 }
 

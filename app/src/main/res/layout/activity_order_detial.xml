@@ -69,9 +69,9 @@
                         android:layout_below="@+id/member_phone_tv"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="3dp"
-                        android:text="客户应付: "
+                        android:text="客户应付:"
                         android:textColor="@color/blue_text"
-                        android:textSize="18sp" />
+                        android:textSize="17sp" />
 
                     <TextView
                         android:id="@+id/need_money_tv"
@@ -83,7 +83,7 @@
                         android:layout_toRightOf="@+id/need_money_title"
                         android:text="$2305"
                         android:textColor="#DB2D43"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -93,9 +93,9 @@
                         android:layout_below="@+id/need_money_title"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="3dp"
-                        android:text="客户付款: "
+                        android:text="客户付款:"
                         android:textColor="@color/blue_text"
-                        android:textSize="18sp" />
+                        android:textSize="17sp" />
 
                     <TextView
                         android:id="@+id/payed_money_tv"
@@ -107,7 +107,7 @@
                         android:layout_toRightOf="@+id/need_money_title"
                         android:text="$2305"
                         android:textColor="#DB2D43"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
 
                     <TextView

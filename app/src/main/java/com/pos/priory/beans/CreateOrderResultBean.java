@@ -12,6 +12,16 @@ public class CreateOrderResultBean {
 
     private String orderno;
 
+    private int orderid;
+
+    public int getOrderId() {
+        return orderid;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderid = orderId;
+    }
+
     public String getOrderno() {
         return orderno;
     }

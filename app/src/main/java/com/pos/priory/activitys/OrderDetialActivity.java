@@ -1,5 +1,6 @@
 package com.pos.priory.activitys;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
@@ -206,8 +207,8 @@ public class OrderDetialActivity extends BaseActivity {
                         memberNameTv.setText("會員：" + orderDetailReslutBean.getMember_detail().getFirstname()
                                 + orderDetailReslutBean.getMember_detail().getLastname());
                         memberPhoneTv.setText("手機號碼：" + orderDetailReslutBean.getMember_detail().getMobile());
-                        needMoneyTv.setText(orderDetailReslutBean.getAmount_payable() + "");
-                        payedMoneyTv.setText(orderDetailReslutBean.getAmount_paid() + "");
+                        needMoneyTv.setText(orderDetailReslutBean.getAmount_payable() + "元");
+                        payedMoneyTv.setText(orderDetailReslutBean.getAmount_paid() + "元");
 
                         updateTimeTv.setText("更新時間：" + orderDetailReslutBean.getUpdated());
                         trasitionTimeTv.setText("交易時間：" + orderDetailReslutBean.getCreated());
@@ -226,10 +227,10 @@ public class OrderDetialActivity extends BaseActivity {
 
     }
 
-    public void printViews() {
+    public static void printViews(Activity activity, OrderDetailReslutBean orderDetailReslutBean,List<OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean> paytypeList) {
         List<View> views = new ArrayList<>();
         List<OrderDetailReslutBean.OrderItemsBean> templist = new ArrayList<>();
-        templist.addAll(goodList);
+        templist.addAll(orderDetailReslutBean.getOrder_items());
         int perPageSize = 13;
         int lastPageSize = 7;
         int sumSize = templist.size();
@@ -280,7 +281,7 @@ public class OrderDetialActivity extends BaseActivity {
 //            } else {
             layoutid = R.layout.dialog_preview2;
 //            }
-            final View printView = LayoutInflater.from(this).inflate(layoutid, null);
+            final View printView = LayoutInflater.from(activity).inflate(layoutid, null);
             ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.getContext().staffInfoBean.getShop());
             ((TextView) printView.findViewById(R.id.address_tv)).setText(MyApplication.getContext().staffInfoBean.getShop());
             ((TextView) printView.findViewById(R.id.tel_tv)).setText(MyApplication.getContext().staffInfoBean.getMobile());
@@ -293,15 +294,15 @@ public class OrderDetialActivity extends BaseActivity {
             ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(orderDetailReslutBean.getAmount_paid() + "元");
             RecyclerView listview = (RecyclerView) printView.findViewById(R.id.good_list);
             OrderDetailPrintGoodsAdapter adapter = new OrderDetailPrintGoodsAdapter(R.layout.bill_print_good_list_item, extraList);
-            LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(activity);
             mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
             listview.setLayoutManager(mLayoutManager);
             listview.setAdapter(adapter);
             if (i == pageCount - 1) {
                 RecyclerView dcListview = (RecyclerView) printView.findViewById(R.id.discount_list);
                 OrderDetailPrintDiscountAdapter dcmLayoutManageradapter = new OrderDetailPrintDiscountAdapter
-                        (R.layout.order_detail_print_discount_list_item, discountList);
-                LinearLayoutManager dcmLayoutManager = new LinearLayoutManager(this);
+                        (R.layout.order_detail_print_discount_list_item, orderDetailReslutBean.getPay_detail().getCoupons());
+                LinearLayoutManager dcmLayoutManager = new LinearLayoutManager(activity);
                 dcmLayoutManager.setOrientation(OrientationHelper.VERTICAL);
                 dcListview.setLayoutManager(dcmLayoutManager);
                 dcListview.setAdapter(dcmLayoutManageradapter);
@@ -309,7 +310,7 @@ public class OrderDetialActivity extends BaseActivity {
                 RecyclerView ptListview = (RecyclerView) printView.findViewById(R.id.pay_type_list);
                 OrderDetailPrintPayTypeAdapter ptmLayoutManageradapter = new OrderDetailPrintPayTypeAdapter
                         (R.layout.order_detail_print_discount_list_item, paytypeList);
-                LinearLayoutManager ptmLayoutManager = new LinearLayoutManager(this);
+                LinearLayoutManager ptmLayoutManager = new LinearLayoutManager(activity);
                 ptmLayoutManager.setOrientation(OrientationHelper.VERTICAL);
                 ptListview.setLayoutManager(ptmLayoutManager);
                 ptListview.setAdapter(ptmLayoutManageradapter);
@@ -323,7 +324,7 @@ public class OrderDetialActivity extends BaseActivity {
             views.add(printView);
         }
         Log.e("test", "viewsize:" + views.size());
-        BillActivity.print(this, views);
+        BillActivity.print(activity, views);
     }
 
 
@@ -362,7 +363,7 @@ public class OrderDetialActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.right_layout:
-                printViews();
+                printViews(OrderDetialActivity.this,orderDetailReslutBean,paytypeList);
                 break;
             case R.id.btn_change:
                 goodsAdapter.operatingStatus = 1;

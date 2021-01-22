@@ -101,6 +101,8 @@ public class SelectDiscountActivity extends BaseActivity {
     }
 
     private void exchangeCoupon() {
+        if(exchangeEdt.getText().toString().isEmpty())
+            return;
         showLoadingDialog("正在兌換...");
         ExchangeCouponParamBean exchangeCouponParamBean = new ExchangeCouponParamBean();
         exchangeCouponParamBean.setCode(exchangeEdt.getText().toString());

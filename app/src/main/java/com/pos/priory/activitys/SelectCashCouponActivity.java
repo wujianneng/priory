@@ -81,6 +81,8 @@ public class SelectCashCouponActivity extends BaseActivity {
     }
 
     private void exchangeCoupon() {
+        if(exchangeEdt.getText().toString().isEmpty())
+            return;
         ExchangeCashCouponParamBean cashCouponParamsBean = new ExchangeCashCouponParamBean();
         cashCouponParamsBean.setCode(exchangeEdt.getText().toString());
         cashCouponParamsBean.setMember_id(memberBean.getId());

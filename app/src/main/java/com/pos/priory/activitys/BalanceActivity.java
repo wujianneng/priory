@@ -96,7 +96,6 @@ public class BalanceActivity extends BaseActivity {
 
     List<FittingBean.ResultsBean> goodList = new ArrayList<>();
     List<PayTypesResultBean.ResultsBean> orderPayTypeList = new ArrayList<>();
-    List<CouponResultBean> discountBeans = new ArrayList<>();
     MemberBean.ResultsBean memberBean;
 
     String cache_token;
@@ -120,9 +119,6 @@ public class BalanceActivity extends BaseActivity {
         memberBean = gson.fromJson(getIntent().getStringExtra("memberInfo"), MemberBean.ResultsBean.class);
         goodList = gson.fromJson(getIntent().getStringExtra("goodlist"),
                 new TypeToken<List<FittingBean.ResultsBean>>() {
-                }.getType());
-        discountBeans = gson.fromJson(getIntent().getStringExtra("couponList"),
-                new TypeToken<List<CouponResultBean>>() {
                 }.getType());
         titleTv.setText("合計付款");
         nextTv.setVisibility(View.VISIBLE);
@@ -395,14 +391,7 @@ public class BalanceActivity extends BaseActivity {
                 public void onSuccess(CreateOrderResultBean result) throws Exception {
                     customDialog.dismiss();
                     Intent intent = new Intent(BalanceActivity.this, BillActivity.class);
-                    intent.putExtra("goodlist", getIntent().getStringExtra("goodlist"));
-                    intent.putExtra("orderPayTypeList", gson.toJson(orderPayTypeList));
-                    intent.putExtra("couponList", gson.toJson(discountBeans));
-                    intent.putExtra("sumMoney", getIntent().getDoubleExtra("newOrderSumMoney", 0));
-                    intent.putExtra("memberName", getIntent().getStringExtra("memberName"));
-                    intent.putExtra("receiveMoney", sumMoney.doubleValue());
-                    intent.putExtra("returnMoney", 0);
-                    intent.putExtra("ordernumber", result.getOrderno());
+                    intent.putExtra("orderId", result.getOrderId());
                     startActivity(intent);
                     ColseActivityUtils.finishWholeFuntionActivitys();
                     finish();

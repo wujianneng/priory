@@ -22,6 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
+            android:layout_toLeftOf="@+id/down_img"
             android:layout_toRightOf="@+id/checkbox"
             android:text="优惠券名"
             android:textColor="@color/blue_text"

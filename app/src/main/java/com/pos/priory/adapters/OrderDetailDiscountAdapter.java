@@ -18,5 +18,6 @@ public class OrderDetailDiscountAdapter extends BaseQuickAdapter<OrderDetailResl
     @Override
     protected void convert(BaseViewHolder helper, OrderDetailReslutBean.PayDetailBean.CouponsBean item) {
         helper.setText(R.id.name_tv,item.getName());
+        helper.setText(R.id.amount_tv,"-" + item.getCoupon_amount() + "元");
     }
 }

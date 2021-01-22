@@ -24,6 +24,6 @@ public class OrderDetailPrintDiscountAdapter extends BaseQuickAdapter<OrderDetai
     @Override
     protected void convert(BaseViewHolder helper, OrderDetailReslutBean.PayDetailBean.CouponsBean item) {
         helper.setText(R.id.title_text,item.getName());
-        helper.setText(R.id.money_text,item.getCoupon_amount() + "元");
+        helper.setText(R.id.money_text,"-" + item.getCoupon_amount() + "元");
     }
 }
