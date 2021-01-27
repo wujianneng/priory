@@ -1,23 +1,22 @@
 package com.pos.priory.beans;
 
+import com.chad.library.adapter.base.entity.MultiItemEntity;
+
 import java.util.List;
 
 public class DayReportDetailBean {
 
     /**
      * id : 0
-     * gold_item : {"amount_total":0,"quantity_total":0,"weight_total":0,"item":[{"product_name":"string","code":"string","weight":0,"quantity":0}],"price":0,"price_total":0}
-     * spar_item : {"amount_total":0,"quantity_total":0,"weight_total":0,"item":[{"product_name":"string","code":"string","weight":0,"quantity":0}],"price":0,"price_total":0}
-     * accessory_item : {"amount_total":0,"quantity_total":0,"weight_total":0,"item":[{"product_name":"string","code":"string","weight":0,"quantity":0}],"price":0,"price_total":0}
-     * exchange_item : {"amount_total":0,"quantity_total":0,"weight_total":0,"item":[{"product_name":"string","code":"string","weight":0,"quantity":0}],"price":0,"price_total":0}
-     * returned_item : {"amount_total":0,"quantity_total":0,"weight_total":0,"item":[{"product_name":"string","code":"string","weight":0,"quantity":0}],"price":0,"return_goldpricd":0,"price_total":0}
      * pay_amount : 0
+     * shop_name : string
+     * product_items : [{"category_name":0,"amount_total":0,"quantity_total":0,"weight_total":0,"return_goldpricd":0,"item":[{"product_name":"string","code":"string","weight":0,"quantity":0,"price_total":0}]}]
      * status : true
-     * created : 2021-01-14T09:47:08.561Z
-     * updated : 2021-01-14T09:47:08.561Z
+     * created : 2021-01-25T09:16:00.318Z
+     * updated : 2021-01-25T09:16:00.318Z
      * dayend_no : string
      * dayendno_num : 0
-     * dayend_date : 2021-01-14
+     * dayend_date : 2021-01-25
      * invoice_amount : 0
      * cash : 0
      * credit_card : 0
@@ -32,12 +31,8 @@ public class DayReportDetailBean {
      */
 
     private int id;
-    private GoldItemBean gold_item;
-    private SparItemBean spar_item;
-    private AccessoryItemBean accessory_item;
-    private ExchangeItemBean exchange_item;
-    private ReturnedItemBean returned_item;
     private double pay_amount;
+    private String shop_name;
     private boolean status;
     private String created;
     private String updated;
@@ -55,6 +50,7 @@ public class DayReportDetailBean {
     private double returned;
     private double return_goldprice;
     private int shop;
+    private List<ProductItemsBean> product_items;
 
     public int getId() {
         return id;
@@ -64,52 +60,20 @@ public class DayReportDetailBean {
         this.id = id;
     }
 
-    public GoldItemBean getGold_item() {
-        return gold_item;
-    }
-
-    public void setGold_item(GoldItemBean gold_item) {
-        this.gold_item = gold_item;
-    }
-
-    public SparItemBean getSpar_item() {
-        return spar_item;
-    }
-
-    public void setSpar_item(SparItemBean spar_item) {
-        this.spar_item = spar_item;
-    }
-
-    public AccessoryItemBean getAccessory_item() {
-        return accessory_item;
-    }
-
-    public void setAccessory_item(AccessoryItemBean accessory_item) {
-        this.accessory_item = accessory_item;
-    }
-
-    public ExchangeItemBean getExchange_item() {
-        return exchange_item;
-    }
-
-    public void setExchange_item(ExchangeItemBean exchange_item) {
-        this.exchange_item = exchange_item;
-    }
-
-    public ReturnedItemBean getReturned_item() {
-        return returned_item;
-    }
-
-    public void setReturned_item(ReturnedItemBean returned_item) {
-        this.returned_item = returned_item;
-    }
-
     public double getPay_amount() {
         return pay_amount;
     }
 
     public void setPay_amount(double pay_amount) {
         this.pay_amount = pay_amount;
+    }
+
+    public String getShop_name() {
+        return shop_name;
+    }
+
+    public void setShop_name(String shop_name) {
+        this.shop_name = shop_name;
     }
 
     public boolean isStatus() {
@@ -248,22 +212,46 @@ public class DayReportDetailBean {
         this.shop = shop;
     }
 
-    public static class GoldItemBean {
+    public List<ProductItemsBean> getProduct_items() {
+        return product_items;
+    }
+
+    public void setProduct_items(List<ProductItemsBean> product_items) {
+        this.product_items = product_items;
+    }
+
+    public static class ProductItemsBean implements MultiItemEntity {
         /**
+         * category_name : 0
          * amount_total : 0
          * quantity_total : 0
          * weight_total : 0
-         * item : [{"product_name":"string","code":"string","weight":0,"quantity":0}]
-         * price : 0
-         * price_total : 0
+         * return_goldpricd : 0
+         * item : [{"product_name":"string","code":"string","weight":0,"quantity":0,"price_total":0}]
          */
 
+        public int itemType = 0;
+
+        @Override
+        public int getItemType() {
+            return itemType;
+        }
+
+
+        private String category_name;
         private double amount_total;
         private int quantity_total;
         private double weight_total;
-        private double price;
-        private double price_total;
+        private double return_goldpricd;
         private List<ItemBean> item;
+
+        public String getCategory_name() {
+            return category_name;
+        }
+
+        public void setCategory_name(String category_name) {
+            this.category_name = category_name;
+        }
 
         public double getAmount_total() {
             return amount_total;
@@ -289,20 +277,12 @@ public class DayReportDetailBean {
             this.weight_total = weight_total;
         }
 
-        public double getPrice() {
-            return price;
+        public double getReturn_goldpricd() {
+            return return_goldpricd;
         }
 
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        public double getPrice_total() {
-            return price_total;
-        }
-
-        public void setPrice_total(int price_total) {
-            this.price_total = price_total;
+        public void setReturn_goldpricd(double return_goldpricd) {
+            this.return_goldpricd = return_goldpricd;
         }
 
         public List<ItemBean> getItem() {
@@ -319,12 +299,14 @@ public class DayReportDetailBean {
              * code : string
              * weight : 0
              * quantity : 0
+             * price_total : 0
              */
 
             private String product_name;
             private String code;
             private double weight;
             private int quantity;
+            private double price_total;
 
             public String getProduct_name() {
                 return product_name;
@@ -357,463 +339,13 @@ public class DayReportDetailBean {
             public void setQuantity(int quantity) {
                 this.quantity = quantity;
             }
-        }
-    }
 
-    public static class SparItemBean {
-        /**
-         * amount_total : 0
-         * quantity_total : 0
-         * weight_total : 0
-         * item : [{"product_name":"string","code":"string","weight":0,"quantity":0}]
-         * price : 0
-         * price_total : 0
-         */
-
-        private double amount_total;
-        private int quantity_total;
-        private double weight_total;
-        private double price;
-        private double price_total;
-        private List<ItemBeanX> item;
-
-        public double getAmount_total() {
-            return amount_total;
-        }
-
-        public void setAmount_total(double amount_total) {
-            this.amount_total = amount_total;
-        }
-
-        public int getQuantity_total() {
-            return quantity_total;
-        }
-
-        public void setQuantity_total(int quantity_total) {
-            this.quantity_total = quantity_total;
-        }
-
-        public double getWeight_total() {
-            return weight_total;
-        }
-
-        public void setWeight_total(double weight_total) {
-            this.weight_total = weight_total;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        public double getPrice_total() {
-            return price_total;
-        }
-
-        public void setPrice_total(double price_total) {
-            this.price_total = price_total;
-        }
-
-        public List<ItemBeanX> getItem() {
-            return item;
-        }
-
-        public void setItem(List<ItemBeanX> item) {
-            this.item = item;
-        }
-
-        public static class ItemBeanX {
-            /**
-             * product_name : string
-             * code : string
-             * weight : 0
-             * quantity : 0
-             */
-
-            private String product_name;
-            private String code;
-            private double weight;
-            private int quantity;
-
-            public String getProduct_name() {
-                return product_name;
+            public double getPrice_total() {
+                return price_total;
             }
 
-            public void setProduct_name(String product_name) {
-                this.product_name = product_name;
-            }
-
-            public String getCode() {
-                return code;
-            }
-
-            public void setCode(String code) {
-                this.code = code;
-            }
-
-            public double getWeight() {
-                return weight;
-            }
-
-            public void setWeight(double weight) {
-                this.weight = weight;
-            }
-
-            public int getQuantity() {
-                return quantity;
-            }
-
-            public void setQuantity(int quantity) {
-                this.quantity = quantity;
-            }
-        }
-    }
-
-    public static class AccessoryItemBean {
-        /**
-         * amount_total : 0
-         * quantity_total : 0
-         * weight_total : 0
-         * item : [{"product_name":"string","code":"string","weight":0,"quantity":0}]
-         * price : 0
-         * price_total : 0
-         */
-
-        private double amount_total;
-        private int quantity_total;
-        private double weight_total;
-        private double price;
-        private double price_total;
-        private List<ItemBeanXX> item;
-
-        public double getAmount_total() {
-            return amount_total;
-        }
-
-        public void setAmount_total(double amount_total) {
-            this.amount_total = amount_total;
-        }
-
-        public int getQuantity_total() {
-            return quantity_total;
-        }
-
-        public void setQuantity_total(int quantity_total) {
-            this.quantity_total = quantity_total;
-        }
-
-        public double getWeight_total() {
-            return weight_total;
-        }
-
-        public void setWeight_total(double weight_total) {
-            this.weight_total = weight_total;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        public double getPrice_total() {
-            return price_total;
-        }
-
-        public void setPrice_total(double price_total) {
-            this.price_total = price_total;
-        }
-
-        public List<ItemBeanXX> getItem() {
-            return item;
-        }
-
-        public void setItem(List<ItemBeanXX> item) {
-            this.item = item;
-        }
-
-        public static class ItemBeanXX {
-            /**
-             * product_name : string
-             * code : string
-             * weight : 0
-             * quantity : 0
-             */
-
-            private String product_name;
-            private String code;
-            private double weight;
-            private int quantity;
-
-            public String getProduct_name() {
-                return product_name;
-            }
-
-            public void setProduct_name(String product_name) {
-                this.product_name = product_name;
-            }
-
-            public String getCode() {
-                return code;
-            }
-
-            public void setCode(String code) {
-                this.code = code;
-            }
-
-            public double getWeight() {
-                return weight;
-            }
-
-            public void setWeight(double weight) {
-                this.weight = weight;
-            }
-
-            public int getQuantity() {
-                return quantity;
-            }
-
-            public void setQuantity(int quantity) {
-                this.quantity = quantity;
-            }
-        }
-    }
-
-    public static class ExchangeItemBean {
-        /**
-         * amount_total : 0
-         * quantity_total : 0
-         * weight_total : 0
-         * item : [{"product_name":"string","code":"string","weight":0,"quantity":0}]
-         * price : 0
-         * price_total : 0
-         */
-
-        private double amount_total;
-        private int quantity_total;
-        private double weight_total;
-        private double price;
-        private double price_total;
-        private List<ItemBeanXXX> item;
-
-        public double getAmount_total() {
-            return amount_total;
-        }
-
-        public void setAmount_total(double amount_total) {
-            this.amount_total = amount_total;
-        }
-
-        public int getQuantity_total() {
-            return quantity_total;
-        }
-
-        public void setQuantity_total(int quantity_total) {
-            this.quantity_total = quantity_total;
-        }
-
-        public double getWeight_total() {
-            return weight_total;
-        }
-
-        public void setWeight_total(double weight_total) {
-            this.weight_total = weight_total;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        public double getPrice_total() {
-            return price_total;
-        }
-
-        public void setPrice_total(double price_total) {
-            this.price_total = price_total;
-        }
-
-        public List<ItemBeanXXX> getItem() {
-            return item;
-        }
-
-        public void setItem(List<ItemBeanXXX> item) {
-            this.item = item;
-        }
-
-        public static class ItemBeanXXX {
-            /**
-             * product_name : string
-             * code : string
-             * weight : 0
-             * quantity : 0
-             */
-
-            private String product_name;
-            private String code;
-            private double weight;
-            private int quantity;
-
-            public String getProduct_name() {
-                return product_name;
-            }
-
-            public void setProduct_name(String product_name) {
-                this.product_name = product_name;
-            }
-
-            public String getCode() {
-                return code;
-            }
-
-            public void setCode(String code) {
-                this.code = code;
-            }
-
-            public double getWeight() {
-                return weight;
-            }
-
-            public void setWeight(double weight) {
-                this.weight = weight;
-            }
-
-            public int getQuantity() {
-                return quantity;
-            }
-
-            public void setQuantity(int quantity) {
-                this.quantity = quantity;
-            }
-        }
-    }
-
-    public static class ReturnedItemBean {
-        /**
-         * amount_total : 0
-         * quantity_total : 0
-         * weight_total : 0
-         * item : [{"product_name":"string","code":"string","weight":0,"quantity":0}]
-         * price : 0
-         * return_goldpricd : 0
-         * price_total : 0
-         */
-
-        private double amount_total;
-        private int quantity_total;
-        private double weight_total;
-        private double price;
-        private double return_goldpricd;
-        private double price_total;
-        private List<ItemBeanXXXX> item;
-
-        public double getAmount_total() {
-            return amount_total;
-        }
-
-        public void setAmount_total(double amount_total) {
-            this.amount_total = amount_total;
-        }
-
-        public int getQuantity_total() {
-            return quantity_total;
-        }
-
-        public void setQuantity_total(int quantity_total) {
-            this.quantity_total = quantity_total;
-        }
-
-        public double getWeight_total() {
-            return weight_total;
-        }
-
-        public void setWeight_total(double weight_total) {
-            this.weight_total = weight_total;
-        }
-
-        public double getPrice() {
-            return price;
-        }
-
-        public void setPrice(double price) {
-            this.price = price;
-        }
-
-        public double getReturn_goldpricd() {
-            return return_goldpricd;
-        }
-
-        public void setReturn_goldpricd(double return_goldpricd) {
-            this.return_goldpricd = return_goldpricd;
-        }
-
-        public double getPrice_total() {
-            return price_total;
-        }
-
-        public void setPrice_total(int price_total) {
-            this.price_total = price_total;
-        }
-
-        public List<ItemBeanXXXX> getItem() {
-            return item;
-        }
-
-        public void setItem(List<ItemBeanXXXX> item) {
-            this.item = item;
-        }
-
-        public static class ItemBeanXXXX {
-            /**
-             * product_name : string
-             * code : string
-             * weight : 0
-             * quantity : 0
-             */
-
-            private String product_name;
-            private String code;
-            private double weight;
-            private int quantity;
-
-            public String getProduct_name() {
-                return product_name;
-            }
-
-            public void setProduct_name(String product_name) {
-                this.product_name = product_name;
-            }
-
-            public String getCode() {
-                return code;
-            }
-
-            public void setCode(String code) {
-                this.code = code;
-            }
-
-            public double getWeight() {
-                return weight;
-            }
-
-            public void setWeight(double weight) {
-                this.weight = weight;
-            }
-
-            public int getQuantity() {
-                return quantity;
-            }
-
-            public void setQuantity(int quantity) {
-                this.quantity = quantity;
+            public void setPrice_total(double price_total) {
+                this.price_total = price_total;
             }
         }
     }

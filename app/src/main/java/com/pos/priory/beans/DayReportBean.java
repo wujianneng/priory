@@ -34,16 +34,16 @@ public class DayReportBean {
     private String dayend_no;
     private int dayendno_num;
     private String dayend_date;
-    private int invoice_amount;
-    private int cash;
-    private int credit_card;
-    private int alipay;
-    private int wechatpay;
-    private int cashcoupon;
-    private int other_pay;
-    private int exchange;
-    private int returned;
-    private int return_goldprice;
+    private double invoice_amount;
+    private double cash;
+    private double credit_card;
+    private double alipay;
+    private double wechatpay;
+    private double cashcoupon;
+    private double other_pay;
+    private double exchange;
+    private double returned;
+    private double return_goldprice;
     private int shop;
     private List<DayendItemBean> dayend_item;
 
@@ -103,83 +103,83 @@ public class DayReportBean {
         this.dayend_date = dayend_date;
     }
 
-    public int getInvoice_amount() {
+    public double getInvoice_amount() {
         return invoice_amount;
     }
 
-    public void setInvoice_amount(int invoice_amount) {
+    public void setInvoice_amount(double invoice_amount) {
         this.invoice_amount = invoice_amount;
     }
 
-    public int getCash() {
+    public double getCash() {
         return cash;
     }
 
-    public void setCash(int cash) {
+    public void setCash(double cash) {
         this.cash = cash;
     }
 
-    public int getCredit_card() {
+    public double getCredit_card() {
         return credit_card;
     }
 
-    public void setCredit_card(int credit_card) {
+    public void setCredit_card(double credit_card) {
         this.credit_card = credit_card;
     }
 
-    public int getAlipay() {
+    public double getAlipay() {
         return alipay;
     }
 
-    public void setAlipay(int alipay) {
+    public void setAlipay(double alipay) {
         this.alipay = alipay;
     }
 
-    public int getWechatpay() {
+    public double getWechatpay() {
         return wechatpay;
     }
 
-    public void setWechatpay(int wechatpay) {
+    public void setWechatpay(double wechatpay) {
         this.wechatpay = wechatpay;
     }
 
-    public int getCashcoupon() {
+    public double getCashcoupon() {
         return cashcoupon;
     }
 
-    public void setCashcoupon(int cashcoupon) {
+    public void setCashcoupon(double cashcoupon) {
         this.cashcoupon = cashcoupon;
     }
 
-    public int getOther_pay() {
+    public double getOther_pay() {
         return other_pay;
     }
 
-    public void setOther_pay(int other_pay) {
+    public void setOther_pay(double other_pay) {
         this.other_pay = other_pay;
     }
 
-    public int getExchange() {
+    public double getExchange() {
         return exchange;
     }
 
-    public void setExchange(int exchange) {
+    public void setExchange(double exchange) {
         this.exchange = exchange;
     }
 
-    public int getReturned() {
+    public double getReturned() {
         return returned;
     }
 
-    public void setReturned(int returned) {
+    public void setReturned(double returned) {
         this.returned = returned;
     }
 
-    public int getReturn_goldprice() {
+    public double getReturn_goldprice() {
         return return_goldprice;
     }
 
-    public void setReturn_goldprice(int return_goldprice) {
+    public void setReturn_goldprice(double return_goldprice) {
         this.return_goldprice = return_goldprice;
     }
 
@@ -218,10 +218,10 @@ public class DayReportBean {
         private String created;
         private String updated;
         private int dayend_type;
-        private int price;
+        private double price;
         private int quantity;
-        private int weight;
-        private int dayend_table;
+        private double weight;
+        private double dayend_table;
         private int whitem;
 
         public int getId() {
@@ -264,11 +264,11 @@ public class DayReportBean {
             this.dayend_type = dayend_type;
         }
 
-        public int getPrice() {
+        public double getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(double price) {
             this.price = price;
         }
 
@@ -280,19 +280,19 @@ public class DayReportBean {
             this.quantity = quantity;
         }
 
-        public int getWeight() {
+        public double getWeight() {
             return weight;
         }
 
-        public void setWeight(int weight) {
+        public void setWeight(double weight) {
             this.weight = weight;
         }
 
-        public int getDayend_table() {
+        public double getDayend_table() {
             return dayend_table;
         }
 
-        public void setDayend_table(int dayend_table) {
+        public void setDayend_table(double dayend_table) {
             this.dayend_table = dayend_table;
         }
 

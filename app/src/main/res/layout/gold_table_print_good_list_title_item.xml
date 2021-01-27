@@ -11,7 +11,8 @@
 
         <TextView
             android:id="@+id/title_tv"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
             android:layout_height="wrap_content"
             android:text="黃金"
             android:textColor="@color/blue_text"
@@ -19,7 +20,8 @@
 
         <TextView
             android:id="@+id/money_tv"
-            android:layout_width="70dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
             android:layout_height="wrap_content"
             android:text="金額  300000"
             android:textColor="@color/blue_text"
@@ -27,7 +29,8 @@
 
         <TextView
             android:id="@+id/count_tv"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
             android:layout_height="wrap_content"
             android:text="數量  300"
             android:textColor="@color/blue_text"
@@ -35,9 +38,30 @@
 
         <TextView
             android:id="@+id/gold_price_tv"
-            android:layout_width="120dp"
+            android:layout_width="0dp"
+            android:layout_weight="1.6"
             android:layout_height="wrap_content"
             android:text="回收金價（元/克）  3260"
+            android:gravity="left|center_vertical"
+            android:textColor="@color/blue_text"
+            android:textSize="8sp" />
+
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="售價"
+            android:gravity="center"
+            android:textColor="@color/blue_text"
+            android:textSize="8sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="折扣價"
+            android:gravity="center"
             android:textColor="@color/blue_text"
             android:textSize="8sp" />
 

@@ -23,6 +23,8 @@ public class DiscountAdapter extends BaseQuickAdapter<CouponResultBean, BaseView
     protected void convert(BaseViewHolder helper, CouponResultBean item) {
         helper.setText(R.id.name_tv, item.getName());
         helper.setText(R.id.detial_tv, item.getTerms());
+        helper.setText(R.id.start_time_tv, "開始時間：" + item.getStarttime());
+        helper.setText(R.id.end_time_tv, "結束時間：" + item.getEndtime());
         helper.setGone(R.id.detail_layout, item.isShowDetail());
         helper.setImageResource(R.id.down_img, item.isShowDetail() ? R.drawable.go_top : R.drawable.go_bottom);
         helper.setChecked(R.id.checkbox, item.isSelected());

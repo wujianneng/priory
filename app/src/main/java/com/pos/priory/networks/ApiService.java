@@ -22,6 +22,7 @@ import com.pos.priory.beans.MemberDetailResultBean;
 import com.pos.priory.beans.OrderCalculationParamBean;
 import com.pos.priory.beans.OrderCalculationResultBean;
 import com.pos.priory.beans.OrderDetailReslutBean;
+import com.pos.priory.beans.ProductSelectResultBean;
 import com.pos.priory.beans.RepertoryFiltersBean;
 import com.pos.priory.beans.RepertoryRecordBean;
 import com.pos.priory.beans.RepertoryRecordFiltersBean;
@@ -29,6 +30,7 @@ import com.pos.priory.beans.ReturnFilterBean;
 import com.pos.priory.beans.RollbackOrderParamBean;
 import com.pos.priory.beans.TranferStoresBean;
 import com.pos.priory.beans.WarehouseBean;
+import com.pos.priory.beans.WarehouseReturnBean;
 import com.pos.priory.beans.WhitemDetailResultBean;
 
 import java.util.List;
@@ -67,7 +69,7 @@ public interface ApiService {
     Observable<String> refreshToken(@FieldMap Map<String,Object> map);//刷新token接口
 
     @FormUrlEncoded
-    @POST("/api/users/password/change")
+    @POST("/api/users/password/change/")
     Observable<String> resetPassword(@FieldMap Map<String, Object> map);//修改密碼接口
 
     @GET("/api/users/profile")
@@ -134,6 +136,9 @@ public interface ApiService {
     @GET("/api/products/list")
     Observable<String> getProductBySearch(@Query("search") String search);//搜索單個產品
 
+    @GET("/api/products/productselect_list/")
+    Observable<String> getProductSelectList(@Query("category_id") int category_id, @Query("search") String search);//獲取訂貨待選商品列表
+
 
     //Warehouses
     @GET("/api/warehouses/filter")
@@ -166,22 +171,13 @@ public interface ApiService {
     Observable<WarehouseBean> getStockListsReturn(@Query("warehouse_id") int whname, @Query("returntype") String returntype,
                                                   @Query("ordering") String ordering);//获取所有商品
 
-    @GET("/api/warehouses/list")
-    Observable<WarehouseBean> getStockListByParamReturn(@Query("search") String param, @Query("warehouse_id") int whname
-            , @Query("returntype") String returntype, @Query("ordering") String ordering);
+    @GET("/api/warehouses/warehouse/returned/list/")
+    Observable<WarehouseReturnBean> getStockListByParamReturn(
+            @Query("search") String param, @Query("returntype") String returntype, @Query("ordering") String ordering);
 
-    @GET("/api/warehouses/list")
-    Observable<WarehouseBean> getStockListByParam(@Query("search") String param, @Query("warehouse_id") int whname
-            , @Query("category_id") int category, @Query("ordering") String ordering);
-
-    @GET("/api/warehouses/list")
-    Observable<WarehouseBean> getStockLists2(@Query("warehouse_id") int whname, @Query("category_id") int category);//获
-
-    @GET("/api/warehouses/list")
-    Observable<WarehouseBean> getStockListByParam2(@Query("warehouse_id") int whname, @Query("category_id") int category, @Query("search") String search);//获
-
-    @GET("/api/warehouses/list")
-    Observable<WarehouseBean> getStockListByParam(@Query("search") String param);
+    @GET("/api/warehouses/warehouse/primary/list/")
+    Observable<WarehouseBean> getStockListByParam(
+            @Query("search") String param , @Query("category_id") int category, @Query("ordering") String ordering);
 
     @GET("/api/warehouses/whitem_detail/{id}/")
     Observable<WhitemDetailResultBean> getStockDetail(@Path("id") int id);

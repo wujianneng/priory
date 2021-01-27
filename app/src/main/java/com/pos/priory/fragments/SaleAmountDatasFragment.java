@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -59,7 +60,11 @@ public class SaleAmountDatasFragment extends BaseFragment {
     DataAmountAdapter dataAmountAdapter;
     List<DataAmountBean.DataBean> dataAmountBeanList = new ArrayList<>();
 
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
+
     double sum = 0;
+    boolean isFirstCreate = true;
 
     @Nullable
     @Override
@@ -96,6 +101,10 @@ public class SaleAmountDatasFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(isFirstCreate){
+            dateTv.setText(DateUtils.getDateOfToday());
+            isFirstCreate = false;
+        }
         getDatas();
     }
 
@@ -202,23 +211,32 @@ public class SaleAmountDatasFragment extends BaseFragment {
                     @Override
                     public void onSuccess(String result) throws Exception {
                         Log.e("test","sadatas:" + result);
-                        dataAmountBeanList.clear();
                         DataAmountBean dataAmountBean = gson.fromJson(result,DataAmountBean.class);
-                        dataAmountBeanList.addAll(dataAmountBean.getData());
-                        dataAmountAdapter.currency = dataAmountBean.getCurrency();
-                        sum = 0;
-                        for(DataAmountBean.DataBean dataBean : dataAmountBean.getData()) {
-                            for (DataAmountBean.DataBean.PaymentBean paymentBean : dataBean.getPayment()) {
-                                sum += paymentBean.getAmount();
+                        if(dataAmountBean != null && dataAmountBean.getData().size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            dataAmountBeanList.clear();
+                            dataAmountBeanList.addAll(dataAmountBean.getData());
+                            dataAmountAdapter.currency = dataAmountBean.getCurrency();
+                            sum = 0;
+                            for (DataAmountBean.DataBean dataBean : dataAmountBean.getData()) {
+                                for (DataAmountBean.DataBean.PaymentBean paymentBean : dataBean.getPayment()) {
+                                    sum += paymentBean.getAmount();
+                                }
                             }
+                            amountTv.setText("總數：" + sum + dataAmountBean.getCurrency());
+                            dataAmountAdapter.notifyDataSetChanged();
+                        }else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
                         }
-                        amountTv.setText("總數：" + sum + dataAmountBean.getCurrency());
-                        dataAmountAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
                         Log.e("test","sadataserro:" + erromsg);
+                        empty_layout.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
                     }
                 });
     }

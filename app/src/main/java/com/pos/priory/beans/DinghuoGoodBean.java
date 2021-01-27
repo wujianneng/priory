@@ -67,7 +67,7 @@ public class DinghuoGoodBean {
         private int id;
         private int purchase_id;
         private String name;
-        private int productcode;
+        private String productcode;
         private double price;
         private String category;
         private String image;
@@ -100,11 +100,11 @@ public class DinghuoGoodBean {
             this.name = name;
         }
 
-        public int getProductcode() {
+        public String getProductcode() {
             return productcode;
         }
 
-        public void setProductcode(int productcode) {
+        public void setProductcode(String productcode) {
             this.productcode = productcode;
         }
 

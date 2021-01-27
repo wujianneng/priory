@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
@@ -101,8 +102,10 @@ public class SelectDiscountActivity extends BaseActivity {
     }
 
     private void exchangeCoupon() {
-        if(exchangeEdt.getText().toString().isEmpty())
+        if(exchangeEdt.getText().toString().isEmpty()) {
+            Toast.makeText(this, "請輸入兌換碼", Toast.LENGTH_SHORT).show();
             return;
+        }
         showLoadingDialog("正在兌換...");
         ExchangeCouponParamBean exchangeCouponParamBean = new ExchangeCouponParamBean();
         exchangeCouponParamBean.setCode(exchangeEdt.getText().toString());
@@ -145,8 +148,6 @@ public class SelectDiscountActivity extends BaseActivity {
                 CouponParamBean.ProductsItemsBean itemsBean = new CouponParamBean.ProductsItemsBean();
                 itemsBean.setId(resultsBean.getId());
                 itemsBean.setQuantity(resultsBean.getBuyCount());
-                itemsBean.setCategory(resultsBean.getCategoryId());
-                itemsBean.setAmount((int) (resultsBean.getBuyCount() * resultsBean.getPrice().get(0).getPrice()));
                 items.add(itemsBean);
             }
         } catch (Exception e) {

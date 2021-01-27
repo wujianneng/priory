@@ -60,6 +60,9 @@ public class InventoryFragment extends BaseFragment {
     @Bind(R.id.otg_btn)
     Button otgBtn;
 
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
+
     @Bind(R.id.fab)
     FloatingActionButton fab;
 
@@ -133,23 +136,31 @@ public class InventoryFragment extends BaseFragment {
     }
 
     private void refreshRecyclerView() {
+        dataList.clear();
+        adapter.notifyDataSetChanged();
         RetrofitManager.excuteGson(this.bindToLifecycle(),
                 RetrofitManager.createGson(ApiService.class).getInventorys(),
                 new ModelGsonListener<InventoryBean>() {
                     @Override
                     public void onSuccess(InventoryBean result) throws Exception {
-                        refreshLayout.finishRefresh();
-                        if (result.getResults() != null) {
-                            dataList.clear();
+                        if (result != null && result.getResults().size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
                             dataList.addAll(result.getResults());
                             adapter.notifyDataSetChanged();
+                        }else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
                         }
+                        refreshLayout.finishRefresh();
                         Log.e("test", "size:" + dataList.size());
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
                         Log.e("test", "throwable:" + erromsg);
+                        empty_layout.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
                         refreshLayout.finishRefresh();
                     }
                 });

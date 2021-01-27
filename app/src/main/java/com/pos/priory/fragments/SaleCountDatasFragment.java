@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.google.gson.reflect.TypeToken;
@@ -63,6 +64,9 @@ public class SaleCountDatasFragment extends BaseFragment {
 
     int selectCategoryId = 0;
     List<ProductCategoryBean> productCategoryBeanList = new ArrayList<>();
+
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
 
     int maxCount = 10;
 
@@ -133,32 +137,42 @@ public class SaleCountDatasFragment extends BaseFragment {
             }
             observable = RetrofitManager.createString(ApiService.class).getSaleCountDatas
                     (dateTv.getText().toString(), dateTv.getText().toString(), MyApplication.staffInfoBean.getShopid() + "",
-                            selectCategoryId + "", "asc", "asc", "asc");
+                            selectCategoryId + "", "desc", "asc", "asc");
         } else {
             if (startDateTv.getText().equals("開始日期") || endDateTv.getText().equals("結束日期")) {
                 return;
             }
             observable = RetrofitManager.createString(ApiService.class).getSaleCountDatas
                     (startDateTv.getText().toString(), endDateTv.getText().toString(), MyApplication.staffInfoBean.getShopid() + "",
-                            selectCategoryId + "", "asc", "asc", "asc");
+                            selectCategoryId + "", "desc", "asc", "asc");
         }
         RetrofitManager.excute(observable,
                 new ModelListener() {
                     @Override
                     public void onSuccess(String result) throws Exception {
                         Log.e("test", "sadatas:" + result);
-                        dataCountBeanList.clear();
                         DataCountBean dataCountBean = gson.fromJson(result, DataCountBean.class);
-                        for (int i = 0; i < maxCount; i++) {
-                            if (i < dataCountBean.getResults().size())
-                                dataCountBeanList.add(dataCountBean.getResults().get(i));
+                        if(dataCountBean != null && dataCountBean.getResults().size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            dataCountBeanList.clear();
+
+                            for (int i = 0; i < maxCount; i++) {
+                                if (i < dataCountBean.getResults().size())
+                                    dataCountBeanList.add(dataCountBean.getResults().get(i));
+                            }
+                            dataCountAdapter.notifyDataSetChanged();
+                        }else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
                         }
-                        dataCountAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
                         Log.e("test", "sadataserro:" + erromsg);
+                        empty_layout.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
                     }
                 });
     }

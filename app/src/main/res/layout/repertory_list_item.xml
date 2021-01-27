@@ -24,12 +24,12 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp" />
+             />
 
         <LinearLayout
             android:id="@+id/text_layout"
             android:orientation="vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="7dp"
             android:layout_toRightOf="@+id/icon_good"
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
@@ -73,9 +73,9 @@
             android:id="@+id/price_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="7dp"
             android:layout_centerVertical="true"
-            android:layout_marginRight="75dp"
+            android:layout_marginRight="35dp"
             android:layout_alignParentRight="true"
             android:text="$999"
             android:textColor="@color/drag_btn_green"
@@ -90,17 +90,6 @@
             android:layout_marginRight="15dp"
             android:visibility="gone"
             android:src="@drawable/icon_right" />
-
-        <Button
-            android:id="@+id/edit_btn"
-            android:layout_width="60dp"
-            android:layout_alignParentRight="true"
-            android:textSize="11sp"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
-            android:layout_height="45dp"
-            android:text="编辑"/>
-
 
 
     </RelativeLayout>

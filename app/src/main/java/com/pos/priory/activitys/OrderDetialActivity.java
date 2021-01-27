@@ -197,9 +197,16 @@ public class OrderDetialActivity extends BaseActivity {
                             cashCouponBean.setPaymethod(otherBean.getPaymethod());
                             paytypeList.add(cashCouponBean);
                         }
-                        for (OrderDetailReslutBean.PayDetailBean.PayMethodsBean.ExchangeOrRefundBean exchangeOrRefundBean : orderDetailReslutBean.getPay_detail().getPay_methods().getExchange_or_refund()) {
+                        for (OrderDetailReslutBean.PayDetailBean.PayMethodsBean.ExchangeBean exchangeBean : orderDetailReslutBean.getPay_detail().getPay_methods().getExchange()) {
                             OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean cashCouponBean = new OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean();
-                            cashCouponBean.setAmount(exchangeOrRefundBean.getAmount());
+                            cashCouponBean.setAmount(exchangeBean.getAmount());
+                            cashCouponBean.setPaymethod("換貨抵扣");
+                            paytypeList.add(cashCouponBean);
+                        }
+                        for (OrderDetailReslutBean.PayDetailBean.PayMethodsBean.RefundBean refundBean : orderDetailReslutBean.getPay_detail().getPay_methods().getRefund()) {
+                            OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean cashCouponBean = new OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean();
+                            cashCouponBean.setAmount(refundBean.getAmount());
+                            cashCouponBean.setPaymethod("回收");
                             paytypeList.add(cashCouponBean);
                         }
                         payTypeAdapter.notifyDataSetChanged();
@@ -227,7 +234,7 @@ public class OrderDetialActivity extends BaseActivity {
 
     }
 
-    public static void printViews(Activity activity, OrderDetailReslutBean orderDetailReslutBean,List<OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean> paytypeList) {
+    public static void printViews(Activity activity, OrderDetailReslutBean orderDetailReslutBean, List<OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean> paytypeList) {
         List<View> views = new ArrayList<>();
         List<OrderDetailReslutBean.OrderItemsBean> templist = new ArrayList<>();
         templist.addAll(orderDetailReslutBean.getOrder_items());
@@ -363,7 +370,7 @@ public class OrderDetialActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.right_layout:
-                printViews(OrderDetialActivity.this,orderDetailReslutBean,paytypeList);
+                printViews(OrderDetialActivity.this, orderDetailReslutBean, paytypeList);
                 break;
             case R.id.btn_change:
                 goodsAdapter.operatingStatus = 1;

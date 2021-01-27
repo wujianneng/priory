@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.NetworkUtils;
 import com.google.gson.reflect.TypeToken;
 import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
@@ -101,6 +102,9 @@ public class LoginActivity extends BaseActivity {
     CustomDialog customDialog;
 
     private void login() {
+        if(!NetworkUtils.isConnected()){
+            Toast.makeText(this,"請檢查網絡",Toast.LENGTH_LONG).show();
+        }
         if (customDialog == null) {
             customDialog = new CustomDialog(this, "登录中..");
             customDialog.setOnDismissListener(dialogInterface -> customDialog = null);

@@ -48,6 +48,7 @@
         android:id="@+id/tip_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:background="@color/colorAccent"
         android:elevation="5dp">
 

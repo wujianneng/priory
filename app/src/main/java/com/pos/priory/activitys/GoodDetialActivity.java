@@ -88,11 +88,11 @@ public class GoodDetialActivity extends BaseActivity {
         initViews();
     }
 
-    WarehouseBean.ResultsBean.ItemBean goodBean;
+    WarehouseBean.ResultsBean goodBean;
     String productcode = "";
 
     protected void initViews() {
-        goodBean = gson.fromJson(getIntent().getStringExtra("goodbean"), WarehouseBean.ResultsBean.ItemBean.class);
+        goodBean = gson.fromJson(getIntent().getStringExtra("goodbean"), WarehouseBean.ResultsBean.class);
         String goodname = goodBean.getName();
         productcode = goodBean.getProductcode() + "";
         titleTv.setText(goodname);
@@ -194,7 +194,7 @@ public class GoodDetialActivity extends BaseActivity {
             goodDetialAdapter.notifyDataSetChanged();
         }
         RetrofitManager.createGson(ApiService.class)
-                .getStockDetail(goodBean.getProduct_id())
+                .getStockDetail(goodBean.getId())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(warehouseBean -> {
                     if (warehouseBean != null) {
@@ -203,7 +203,7 @@ public class GoodDetialActivity extends BaseActivity {
                         codeTv.setText(goodBean.getProductcode() + "");
                         nameTv.setText(goodBean.getName());
                         repertoryTv.setText(warehouseBean.getQuantity_total() + "件");
-                        priceTv.setText(goodBean.getPrice().getSymbol() +  goodBean.getPrice().getPrice());
+                        priceTv.setText(goodBean.getName());
                         weightTv.setText(warehouseBean.getPrd_weight() + "g");
                         if (warehouseBean.getPrd_weight() == 0) {
                             weightTv.setVisibility(View.GONE);
@@ -218,12 +218,12 @@ public class GoodDetialActivity extends BaseActivity {
     }
 
 
-    private void doDingHuo(final WarehouseBean.ResultsBean.ItemBean bean) {
+    private void doDingHuo(final WarehouseBean.ResultsBean bean) {
         if (customDialog == null)
             customDialog = new CustomDialog(this, "订货中..");
         customDialog.setOnDismissListener(dialog -> customDialog = null);
         customDialog.show();
-        RetrofitManager.createString(ApiService.class).createPurchasingitem(bean.getProduct_id())
+        RetrofitManager.createString(ApiService.class).createPurchasingitem(bean.getId())
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {

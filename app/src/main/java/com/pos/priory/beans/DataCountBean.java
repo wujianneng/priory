@@ -78,7 +78,7 @@ public class DataCountBean {
         private String name;
         private String namezh;
         private String image;
-        private int productcode;
+        private String productcode;
         private double weight;
         private boolean returned;
         private boolean available;
@@ -165,11 +165,11 @@ public class DataCountBean {
             this.image = image;
         }
 
-        public int getProductcode() {
+        public String getProductcode() {
             return productcode;
         }
 
-        public void setProductcode(int productcode) {
+        public void setProductcode(String productcode) {
             this.productcode = productcode;
         }
 

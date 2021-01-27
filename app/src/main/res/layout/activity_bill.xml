@@ -17,7 +17,7 @@
             android:layout_height="100dp"
             android:background="@color/colorAccent" />
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/data_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -119,10 +119,10 @@
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/good_recycler_view"
             android:layout_marginTop="5dp"
             android:layout_below="@+id/data_layout"
@@ -130,9 +130,9 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/receive_layout"
             android:layout_above="@+id/small_change_layout"
             android:layout_width="match_parent"
@@ -174,9 +174,9 @@
             </LinearLayout>
 
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:id="@+id/small_change_layout"
             android:layout_above="@+id/btn_print"
             android:layout_width="match_parent"
@@ -219,9 +219,9 @@
             </LinearLayout>
 
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
-        <android.support.design.button.MaterialButton
+        <Button
             android:id="@+id/btn_print"
             android:layout_width="230dp"
             android:layout_height="56dp"
@@ -235,8 +235,6 @@
             android:textColor="#ffffff"
             android:textSize="20sp"
             app:cornerRadius="28dp"
-            app:additionalPaddingStartForIcon="40dp"
-            app:additionalPaddingEndForIcon="5dp"
             app:iconPadding="1dp"
             android:layout_gravity="center_horizontal|bottom"
             />

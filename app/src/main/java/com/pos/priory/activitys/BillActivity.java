@@ -97,7 +97,7 @@ public class BillActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill);
         ButterKnife.bind(this);
-        getOrderBean(getIntent().getIntExtra("orderId",0));
+        getOrderBean(getIntent().getIntExtra("orderId", 0));
     }
 
     protected void initViews() {
@@ -135,9 +135,16 @@ public class BillActivity extends BaseActivity {
                             cashCouponBean.setPaymethod(otherBean.getPaymethod());
                             paytypeList.add(cashCouponBean);
                         }
-                        for (OrderDetailReslutBean.PayDetailBean.PayMethodsBean.ExchangeOrRefundBean exchangeOrRefundBean : orderDetailReslutBean.getPay_detail().getPay_methods().getExchange_or_refund()) {
+                        for (OrderDetailReslutBean.PayDetailBean.PayMethodsBean.ExchangeBean exchangeBean : orderDetailReslutBean.getPay_detail().getPay_methods().getExchange()) {
                             OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean cashCouponBean = new OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean();
-                            cashCouponBean.setAmount(exchangeOrRefundBean.getAmount());
+                            cashCouponBean.setAmount(exchangeBean.getAmount());
+                            cashCouponBean.setPaymethod("換貨");
+                            paytypeList.add(cashCouponBean);
+                        }
+                        for (OrderDetailReslutBean.PayDetailBean.PayMethodsBean.RefundBean refundBean : orderDetailReslutBean.getPay_detail().getPay_methods().getRefund()) {
+                            OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean cashCouponBean = new OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean();
+                            cashCouponBean.setAmount(refundBean.getAmount());
+                            cashCouponBean.setPaymethod("回收");
                             paytypeList.add(cashCouponBean);
                         }
                         initViews();
@@ -153,7 +160,7 @@ public class BillActivity extends BaseActivity {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_print:
-                OrderDetialActivity.printViews(BillActivity.this,orderDetailReslutBean,paytypeList);
+                OrderDetialActivity.printViews(BillActivity.this, orderDetailReslutBean, paytypeList);
                 break;
             case R.id.back_btn:
                 onBackPressed();
@@ -161,7 +168,6 @@ public class BillActivity extends BaseActivity {
                 break;
         }
     }
-
 
 
     public static void print(final Activity activity, List<View> views) {

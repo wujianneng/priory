@@ -169,8 +169,8 @@ public class RegisterMemberActivity extends BaseActivity {
                         resultsBean.setId(jsonObject.getInt("id"));
                         resultsBean.setMobile(jsonObject.getString("mobile"));
                         resultsBean.setGender(jsonObject.getInt("gender") == 1 ? "男" : "女");
-                        resultsBean.setName(jsonObject.getString("last_name") +
-                                jsonObject.getString("first_name"));
+                        resultsBean.setName(jsonObject.getString("lastname") +
+                                jsonObject.getString("firstname"));
                         resultsBean.setReward(jsonObject.getInt("reward"));
                         resultsBean.setCreated(jsonObject.getString("created"));
                         intent.putExtra("memberInfo", gson.toJson(resultsBean));
@@ -180,6 +180,7 @@ public class RegisterMemberActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
+
                         if (throwable.getMessage().contains("400")) {
                             Toast.makeText(RegisterMemberActivity.this, "该手机号已经注册", Toast.LENGTH_SHORT).show();
                         } else

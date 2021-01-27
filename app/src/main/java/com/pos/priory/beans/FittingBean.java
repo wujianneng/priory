@@ -71,7 +71,7 @@ public class FittingBean {
         private String image;
         private String category;
         private int categoryId;
-        private int productcode;
+        private String productcode;
         private boolean available;
         private boolean accessory;
         private String created;
@@ -154,11 +154,11 @@ public class FittingBean {
             this.category = category;
         }
 
-        public int getProductcode() {
+        public String getProductcode() {
             return productcode;
         }
 
-        public void setProductcode(int productcode) {
+        public void setProductcode(String productcode) {
             this.productcode = productcode;
         }
 

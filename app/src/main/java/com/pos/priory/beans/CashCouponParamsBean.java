@@ -1,17 +1,17 @@
 package com.pos.priory.beans;
 
+import java.util.List;
+
 public class CashCouponParamsBean {
 
 
     /**
      * member_id : 0
-     * total_amount : string
-     * shop_id : 0
+     * products_items : [{"id":0,"quantity":0}]
      */
 
     private int member_id;
-    private double total_amount;
-    private int shop_id;
+    private List<ProductsItemsBean> products_items;
 
     public int getMember_id() {
         return member_id;
@@ -21,19 +21,37 @@ public class CashCouponParamsBean {
         this.member_id = member_id;
     }
 
-    public double getTotal_amount() {
-        return total_amount;
+    public List<ProductsItemsBean> getProducts_items() {
+        return products_items;
     }
 
-    public void setTotal_amount(double total_amount) {
-        this.total_amount = total_amount;
+    public void setProducts_items(List<ProductsItemsBean> products_items) {
+        this.products_items = products_items;
     }
 
-    public int getShop_id() {
-        return shop_id;
-    }
+    public static class ProductsItemsBean {
+        /**
+         * id : 0
+         * quantity : 0
+         */
 
-    public void setShop_id(int shop_id) {
-        this.shop_id = shop_id;
+        private int id;
+        private int quantity;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
+        }
     }
 }

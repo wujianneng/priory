@@ -10,6 +10,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -56,6 +57,9 @@ public class MemberActivity extends BaseActivity {
 
     QueryMemberAdapter memberAdapter;
     List<MemberBean.ResultsBean> memberList = new ArrayList<>();
+
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -119,20 +123,26 @@ public class MemberActivity extends BaseActivity {
                     .subscribe(new Consumer<MemberBean>() {
                         @Override
                         public void accept(MemberBean s) throws Exception {
-                            if (s != null) {
+                            if (s != null && s.getResults().size() != 0) {
                                 new RunOnUiThreadSafe(MemberActivity.this) {
                                     @Override
                                     public void runOnUiThread() {
+                                        empty_layout.setVisibility(View.GONE);
+                                        memberRecyclerView.setVisibility(View.VISIBLE);
                                         memberList.addAll(s.getResults());
                                         memberAdapter.notifyDataSetChanged();
                                     }
                                 };
+                            }else {
+                                empty_layout.setVisibility(View.VISIBLE);
+                                memberRecyclerView.setVisibility(View.GONE);
                             }
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-
+                            empty_layout.setVisibility(View.VISIBLE);
+                            memberRecyclerView.setVisibility(View.GONE);
                         }
                     });
     }

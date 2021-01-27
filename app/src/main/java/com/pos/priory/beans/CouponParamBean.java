@@ -3,9 +3,10 @@ package com.pos.priory.beans;
 import java.util.List;
 
 public class CouponParamBean {
+
     /**
      * member : 0
-     * products_items : [{"id":1,"quantity":1,"amount":399,"category":1}]
+     * products_items : [{"id":0,"quantity":0}]
      */
 
     private int member;
@@ -29,16 +30,12 @@ public class CouponParamBean {
 
     public static class ProductsItemsBean {
         /**
-         * id : 1
-         * quantity : 1
-         * amount : 399
-         * category : 1
+         * id : 0
+         * quantity : 0
          */
 
         private int id;
         private int quantity;
-        private int amount;
-        private int category;
 
         public int getId() {
             return id;
@@ -54,22 +51,6 @@ public class CouponParamBean {
 
         public void setQuantity(int quantity) {
             this.quantity = quantity;
-        }
-
-        public int getAmount() {
-            return amount;
-        }
-
-        public void setAmount(int amount) {
-            this.amount = amount;
-        }
-
-        public int getCategory() {
-            return category;
-        }
-
-        public void setCategory(int category) {
-            this.category = category;
         }
     }
 }

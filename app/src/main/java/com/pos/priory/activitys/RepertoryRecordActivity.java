@@ -89,6 +89,9 @@ public class RepertoryRecordActivity extends BaseActivity {
     @Bind(R.id.left_layout)
     FrameLayout leftLayout;
 
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
+
     private List<RepertoryRecordFiltersBean.ResultBean.WarehouseBean> warehouse;
     private List<RepertoryRecordFiltersBean.ResultBean.TypeBean> type;
     private List<RepertoryRecordFiltersBean.ResultBean.PurposeBean> purpose;
@@ -265,19 +268,26 @@ public class RepertoryRecordActivity extends BaseActivity {
                 new ModelGsonListener<RepertoryRecordBean>() {
                     @Override
                     public void onSuccess(RepertoryRecordBean result) throws Exception {
-                        if (result != null) {
+                        if (result != null && result.getResults().size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            refreshLayout.setVisibility(View.VISIBLE);
                             dataList.clear();
                             dataList.addAll(result.getResults());
                             repertoryAdapter.notifyDataSetChanged();
                             leftTv.setText("數量：" + result.getQuantity_total() + "件，" + "重量：" + result.getWeight_total() + "g");
                             leftLayout.setVisibility(View.VISIBLE);
                             sizeTv.setText("記錄:" + dataList.size());
+                        }else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            refreshLayout.setVisibility(View.GONE);
                         }
                         refreshLayout.finishRefresh();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
+                        empty_layout.setVisibility(View.VISIBLE);
+                        refreshLayout.setVisibility(View.GONE);
                         refreshLayout.finishRefresh();
                     }
                 });

@@ -353,7 +353,7 @@ public class OrderDetailReslutBean {
          * coupons : [{"name":"手繩類 滿500 9折","coupon_amount":0},{"name":"手繩類 滿500 9折","coupon_amount":0}]
          * coupons_amount : 0.0
          * payable_amount : 978.0
-         * pay_methods : {"cash_coupon":[{"paymethod":"現金券","amount":100,"cash_coupon_name":"現金券100"}],"other":[{"paymethod":"信用卡","amount":900},{"paymethod":"現金","amount":48}],"exchange_or_refund":[{"amount":-48}]}
+         * pay_methods : {"cash_coupon":[{"paymethod":"現金券","amount":100,"cash_coupon_name":"現金券100"}],"other":[{"paymethod":"信用卡","amount":900},{"paymethod":"現金","amount":48}],"exchange":[{"amount":-48},"refund":[{"amount":-48}]}
          * pay_total : 948.0
          */
 
@@ -451,7 +451,8 @@ public class OrderDetailReslutBean {
         public static class PayMethodsBean {
             private List<CashCouponBean> cash_coupon;
             private List<OtherBean> other;
-            private List<ExchangeOrRefundBean> exchange_or_refund;
+            private List<ExchangeBean> exchange;
+            private List<RefundBean> refund;
 
             public List<CashCouponBean> getCash_coupon() {
                 return cash_coupon;
@@ -469,12 +470,20 @@ public class OrderDetailReslutBean {
                 this.other = other;
             }
 
-            public List<ExchangeOrRefundBean> getExchange_or_refund() {
-                return exchange_or_refund;
+            public List<ExchangeBean> getExchange() {
+                return exchange;
             }
 
-            public void setExchange_or_refund(List<ExchangeOrRefundBean> exchange_or_refund) {
-                this.exchange_or_refund = exchange_or_refund;
+            public void setExchange(List<ExchangeBean> exchange) {
+                this.exchange = exchange;
+            }
+
+            public List<RefundBean> getRefund() {
+                return refund;
+            }
+
+            public void setRefund(List<RefundBean> refund) {
+                this.refund = refund;
             }
 
             public static class CashCouponBean {
@@ -487,6 +496,15 @@ public class OrderDetailReslutBean {
                 private String paymethod;
                 private double amount;
                 private String cash_coupon_name;
+                private String cash_coupon_code;
+
+                public String getCash_coupon_code() {
+                    return cash_coupon_code;
+                }
+
+                public void setCash_coupon_code(String cash_coupon_code) {
+                    this.cash_coupon_code = cash_coupon_code;
+                }
 
                 public String getPaymethod() {
                     return paymethod;
@@ -539,12 +557,44 @@ public class OrderDetailReslutBean {
                 }
             }
 
-            public static class ExchangeOrRefundBean {
+            public static class ExchangeBean {
                 /**
                  * amount : -48.0
                  */
-
+                private String paymethod = "換貨";
                 private double amount;
+
+                public String getPaymethod() {
+                    return paymethod;
+                }
+
+                public void setPaymethod(String paymethod) {
+                    this.paymethod = paymethod;
+                }
+
+                public double getAmount() {
+                    return amount;
+                }
+
+                public void setAmount(double amount) {
+                    this.amount = amount;
+                }
+            }
+
+            public static class RefundBean {
+                /**
+                 * amount : -48.0
+                 */
+                private String paymethod = "回收";
+                private double amount;
+
+                public String getPaymethod() {
+                    return paymethod;
+                }
+
+                public void setPaymethod(String paymethod) {
+                    this.paymethod = paymethod;
+                }
 
                 public double getAmount() {
                     return amount;

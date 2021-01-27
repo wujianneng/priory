@@ -11,6 +11,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,9 @@ public class DinghuoListActivity extends BaseActivity {
     SmartRefreshLayout refreshLayout;
 
     DinghuoListAdapter adapter;
+
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
 
     List<DinghuoGoodBean.ResultBean> goodBeanList = new ArrayList<>();
 
@@ -185,14 +189,23 @@ public class DinghuoListActivity extends BaseActivity {
                 new ModelGsonListener<DinghuoGoodBean>() {
                     @Override
                     public void onSuccess(DinghuoGoodBean result) throws Exception {
-                        goodBeanList.clear();
-                        goodBeanList.addAll(result.getResult());
-                        adapter.notifyDataSetChanged();
+                        if(result != null && result.getResult().size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            refreshLayout.setVisibility(View.VISIBLE);
+                            goodBeanList.clear();
+                            goodBeanList.addAll(result.getResult());
+                            adapter.notifyDataSetChanged();
+                        }else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            refreshLayout.setVisibility(View.GONE);
+                        }
                         refreshLayout.finishRefresh();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
+                        empty_layout.setVisibility(View.VISIBLE);
+                        refreshLayout.setVisibility(View.GONE);
                         refreshLayout.finishRefresh();
                     }
                 });
@@ -211,6 +224,10 @@ public class DinghuoListActivity extends BaseActivity {
     }
 
     private void doSubmit() {
+        if(goodBeanList.size() == 0){
+            showToast("請選擇要提交的數據！");
+            return;
+        }
         if (customDialog == null)
             customDialog = new CustomDialog(this, "提交訂貨列表中..");
         customDialog.setOnDismissListener(dialog -> customDialog = null);

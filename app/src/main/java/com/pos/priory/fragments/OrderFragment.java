@@ -128,7 +128,8 @@ public class OrderFragment extends BaseFragment {
     ImageView settingImg;
     @Bind(R.id.title_layout)
     FrameLayout titleLayout;
-
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
 
     @Nullable
     @Override
@@ -167,6 +168,9 @@ public class OrderFragment extends BaseFragment {
             }
         });
         orderAdapter = new OrderAdapter(R.layout.order_list_item, orderList);
+
+
+
         //设置侧滑菜单的点击事件
         recyclerView.setSwipeMenuItemClickListener(menuBridge -> {
             menuBridge.closeMenu();
@@ -180,6 +184,7 @@ public class OrderFragment extends BaseFragment {
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(orderAdapter);
+
         orderAdapter.setOnItemClickListener((adapter, view, position) -> {
             Intent intent = new Intent(getActivity(), OrderDetialActivity.class);
             intent.putExtra("orderId", orderList.get(position).getId());
@@ -268,7 +273,8 @@ public class OrderFragment extends BaseFragment {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        goldPriceLayout.setVisibility(View.GONE);
+//                        goldPriceLayout.setVisibility(View.GONE);
+                        goldPriceLayout.setVisibility(View.VISIBLE);
                     }
                 });
     }
@@ -293,9 +299,14 @@ public class OrderFragment extends BaseFragment {
                     public void accept(String results) throws Exception {
                         currentPage++;
                         OrderBean orderBean = gson.fromJson(results, OrderBean.class);
-                        if (orderBean != null) {
+                        if (orderBean != null && orderBean.getResults().size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
                             orderList.addAll(orderBean.getResults());
                             orderAdapter.notifyDataSetChanged();
+                        }else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
                         }
                         smartRefreshLayout.finishLoadMore();
                         smartRefreshLayout.finishRefresh();
@@ -303,6 +314,8 @@ public class OrderFragment extends BaseFragment {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        empty_layout.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
                         smartRefreshLayout.finishLoadMore();
                         smartRefreshLayout.finishRefresh();
                     }
@@ -374,7 +387,6 @@ public class OrderFragment extends BaseFragment {
                                     public void accept(String s) throws Exception {
                                         DayReportDetailBean dayReportDetailBean = gson.fromJson(s, DayReportDetailBean.class);
                                         Log.e("test", "result:" + s);
-
                                         printGoldTable(context, dayReportDetailBean);
 
                                     }
@@ -398,118 +410,40 @@ public class OrderFragment extends BaseFragment {
     public static void printGoldTable(Activity context, DayReportDetailBean dayReportBean) {
         Log.e("test", "printGoldTable");
         List<View> views = new ArrayList<>();
-        List<DayReportDataBean> dataarry = new ArrayList<>();
+        List<DayReportDetailBean.ProductItemsBean> dataarry = new ArrayList<>();
 
-        DayReportDataBean goldTitle = new DayReportDataBean();
-        goldTitle.itemType = 0;
-        goldTitle.setTitle("黃金");
-        goldTitle.setAmount_total(dayReportBean.getGold_item().getAmount_total());
-        goldTitle.setQuantity_total(dayReportBean.getGold_item().getQuantity_total());
-        goldTitle.setWeight_total(dayReportBean.getGold_item().getWeight_total());
-        dataarry.add(goldTitle);
-        for (DayReportDetailBean.GoldItemBean.ItemBean itemBean : dayReportBean.getGold_item().getItem()) {
-            DayReportDataBean golddataBean = new DayReportDataBean();
-            List<DayReportDataBean.ItemBean> golditemBeanList = new ArrayList<>();
-            DayReportDataBean.ItemBean goldItemBean = new DayReportDataBean.ItemBean();
-            goldItemBean.setCode(itemBean.getCode());
-            goldItemBean.setProduct_name(itemBean.getProduct_name());
-            goldItemBean.setQuantity(itemBean.getQuantity());
-            goldItemBean.setWeight(itemBean.getWeight());
-            golditemBeanList.add(goldItemBean);
-            golddataBean.setItem(golditemBeanList);
+        for(DayReportDetailBean.ProductItemsBean productItemsBean : dayReportBean.getProduct_items()){
+            DayReportDetailBean.ProductItemsBean goldTitle = new DayReportDetailBean.ProductItemsBean();
+            goldTitle.setAmount_total(productItemsBean.getAmount_total());
+            goldTitle.setCategory_name(productItemsBean.getCategory_name());
+            goldTitle.setQuantity_total(productItemsBean.getQuantity_total());
+            goldTitle.setReturn_goldpricd(productItemsBean.getReturn_goldpricd());
+            goldTitle.setWeight_total(productItemsBean.getWeight_total());
+            goldTitle.itemType = 0;
+            dataarry.add(goldTitle);
+            for (DayReportDetailBean.ProductItemsBean.ItemBean itemBean : productItemsBean.getItem()) {
+                DayReportDetailBean.ProductItemsBean golddataBean = new DayReportDetailBean.ProductItemsBean();
+                List<DayReportDetailBean.ProductItemsBean.ItemBean> golditemBeanList = new ArrayList<>();
+                DayReportDetailBean.ProductItemsBean.ItemBean goldItemBean = new DayReportDetailBean.ProductItemsBean.ItemBean();
+                goldItemBean.setCode(itemBean.getCode());
+                goldItemBean.setProduct_name(itemBean.getProduct_name());
+                goldItemBean.setQuantity(itemBean.getQuantity());
+                goldItemBean.setWeight(itemBean.getWeight());
+                goldItemBean.setPrice_total(itemBean.getPrice_total());
 
-            golddataBean.itemType = 1;
-            dataarry.add(golddataBean);
+                golditemBeanList.add(goldItemBean);
+
+                golddataBean.setItem(golditemBeanList);
+                golddataBean.setAmount_total(productItemsBean.getAmount_total());
+                golddataBean.setCategory_name(productItemsBean.getCategory_name());
+                golddataBean.setQuantity_total(productItemsBean.getQuantity_total());
+                golddataBean.setReturn_goldpricd(productItemsBean.getReturn_goldpricd());
+                golddataBean.setWeight_total(productItemsBean.getWeight_total());
+
+                golddataBean.itemType = 1;
+                dataarry.add(golddataBean);
+            }
         }
-
-        DayReportDataBean accessoryTitle = new DayReportDataBean();
-        accessoryTitle.setTitle("配件");
-        accessoryTitle.itemType = 0;
-        accessoryTitle.setAmount_total(dayReportBean.getAccessory_item().getAmount_total());
-        accessoryTitle.setQuantity_total(dayReportBean.getAccessory_item().getQuantity_total());
-        accessoryTitle.setWeight_total(dayReportBean.getAccessory_item().getWeight_total());
-        dataarry.add(accessoryTitle);
-        for (DayReportDetailBean.AccessoryItemBean.ItemBeanXX itemBean : dayReportBean.getAccessory_item().getItem()) {
-            DayReportDataBean accessorydataBean = new DayReportDataBean();
-            List<DayReportDataBean.ItemBean> accessoryitemBeanList = new ArrayList<>();
-            DayReportDataBean.ItemBean accessoryItemBean = new DayReportDataBean.ItemBean();
-            accessoryItemBean.setCode(itemBean.getCode());
-            accessoryItemBean.setProduct_name(itemBean.getProduct_name());
-            accessoryItemBean.setQuantity(itemBean.getQuantity());
-            accessoryItemBean.setWeight(itemBean.getWeight());
-            accessoryitemBeanList.add(accessoryItemBean);
-            accessorydataBean.setItem(accessoryitemBeanList);
-
-            accessorydataBean.itemType = 1;
-            dataarry.add(accessorydataBean);
-        }
-
-        DayReportDataBean sparTitle = new DayReportDataBean();
-        sparTitle.itemType = 0;
-        sparTitle.setTitle("珠寶");
-        sparTitle.setAmount_total(dayReportBean.getSpar_item().getAmount_total());
-        sparTitle.setQuantity_total(dayReportBean.getSpar_item().getQuantity_total());
-        sparTitle.setWeight_total(dayReportBean.getSpar_item().getWeight_total());
-        dataarry.add(sparTitle);
-        for (DayReportDetailBean.SparItemBean.ItemBeanX itemBean : dayReportBean.getSpar_item().getItem()) {
-            DayReportDataBean spardataBean = new DayReportDataBean();
-            List<DayReportDataBean.ItemBean> sparitemBeanList = new ArrayList<>();
-            DayReportDataBean.ItemBean sparItemBean = new DayReportDataBean.ItemBean();
-            sparItemBean.setCode(itemBean.getCode());
-            sparItemBean.setProduct_name(itemBean.getProduct_name());
-            sparItemBean.setQuantity(itemBean.getQuantity());
-            sparItemBean.setWeight(itemBean.getWeight());
-            sparitemBeanList.add(sparItemBean);
-            spardataBean.setItem(sparitemBeanList);
-
-            spardataBean.itemType = 1;
-            dataarry.add(spardataBean);
-        }
-
-        DayReportDataBean exTitle = new DayReportDataBean();
-        exTitle.itemType = 0;
-        exTitle.setTitle("換貨");
-        exTitle.setAmount_total(dayReportBean.getExchange_item().getAmount_total());
-        exTitle.setQuantity_total(dayReportBean.getExchange_item().getQuantity_total());
-        exTitle.setWeight_total(dayReportBean.getExchange_item().getWeight_total());
-        dataarry.add(exTitle);
-        for (DayReportDetailBean.ExchangeItemBean.ItemBeanXXX itemBean : dayReportBean.getExchange_item().getItem()) {
-            DayReportDataBean exdataBean = new DayReportDataBean();
-            List<DayReportDataBean.ItemBean> exitemBeanList = new ArrayList<>();
-            DayReportDataBean.ItemBean exItemBean = new DayReportDataBean.ItemBean();
-            exItemBean.setCode(itemBean.getCode());
-            exItemBean.setProduct_name(itemBean.getProduct_name());
-            exItemBean.setQuantity(itemBean.getQuantity());
-            exItemBean.setWeight(itemBean.getWeight());
-            exitemBeanList.add(exItemBean);
-            exdataBean.setItem(exitemBeanList);
-
-            exdataBean.itemType = 1;
-            dataarry.add(exdataBean);
-        }
-
-        DayReportDataBean reurnTitle = new DayReportDataBean();
-        reurnTitle.itemType = 0;
-        reurnTitle.setTitle("回收");
-        reurnTitle.setAmount_total(dayReportBean.getReturned_item().getAmount_total());
-        reurnTitle.setQuantity_total(dayReportBean.getReturned_item().getQuantity_total());
-        reurnTitle.setWeight_total(dayReportBean.getReturned_item().getWeight_total());
-        dataarry.add(reurnTitle);
-        for (DayReportDetailBean.ReturnedItemBean.ItemBeanXXXX itemBean : dayReportBean.getReturned_item().getItem()) {
-            DayReportDataBean returndataBean = new DayReportDataBean();
-            List<DayReportDataBean.ItemBean> returnitemBeanList = new ArrayList<>();
-            DayReportDataBean.ItemBean returnItemBean = new DayReportDataBean.ItemBean();
-            returnItemBean.setCode(itemBean.getCode());
-            returnItemBean.setProduct_name(itemBean.getProduct_name());
-            returnItemBean.setQuantity(itemBean.getQuantity());
-            returnItemBean.setWeight(itemBean.getWeight());
-            returnitemBeanList.add(returnItemBean);
-            returndataBean.setItem(returnitemBeanList);
-
-            returndataBean.itemType = 1;
-            dataarry.add(returndataBean);
-        }
-
 
         int perPageSize = 24;
         int size = dataarry.size() / perPageSize;
@@ -519,7 +453,7 @@ public class OrderFragment extends BaseFragment {
         }
         Log.e("test", "size:" + size + " a:" + a + "templist.size():" + dataarry.size());
         for (int i = 0; i < size; i++) {
-            List<DayReportDataBean> extraList = new ArrayList<>();
+            List<DayReportDetailBean.ProductItemsBean> extraList = new ArrayList<>();
             if (i == (size - 1)) {
                 if (a == 0) {
                     a = perPageSize;

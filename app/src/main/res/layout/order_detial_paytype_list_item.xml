@@ -21,7 +21,8 @@
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="10dp"
         android:text="网上客服赠送"
-        android:textColor="@color/blue_text" />
+        android:textSize="12sp"
+        android:textColor="@color/colorGrey" />
 
     <TextView
         android:id="@+id/money_tv"

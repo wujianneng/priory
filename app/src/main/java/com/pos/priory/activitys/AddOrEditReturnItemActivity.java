@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.text.format.DateFormat;
@@ -59,7 +58,7 @@ public class AddOrEditReturnItemActivity extends BaseActivity {
     EditText edtPrice;
 
     boolean isCreating = true;
-    WarehouseBean.ResultsBean.ItemBean editingBean;
+    WarehouseBean.ResultsBean editingBean;
 
     private List<ReturnFilterBean.ResultBean.TypeBean> type;
     private List<ReturnFilterBean.ResultBean.ProductBean> product;
@@ -82,10 +81,10 @@ public class AddOrEditReturnItemActivity extends BaseActivity {
         edtPrice.setEnabled(isCreating ? true : false);
         if (!isCreating) {
             editingBean = gson.fromJson(getIntent().getStringExtra("returnBean"),
-                    WarehouseBean.ResultsBean.ItemBean.class);
-            edtWeight.setText(editingBean.getReturninfo().getWeight() + "");
-            startDateTv.setText(editingBean.getReturninfo().getDate());
-            edtPrice.setText(editingBean.getReturninfo().getCost() + "");
+                    WarehouseBean.ResultsBean.class);
+//            edtWeight.setText(editingBean.getReturninfo().getWeight() + "");
+//            startDateTv.setText(editingBean.getReturninfo().getDate());
+//            edtPrice.setText(editingBean.getReturninfo().getCost() + "");
         }
     }
 

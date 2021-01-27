@@ -18,7 +18,7 @@ public class NewGoodTypeDataAdapter extends BaseQuickAdapter<NewGoodTypeDataBean
     @Override
     protected void convert(BaseViewHolder helper, NewGoodTypeDataBean item) {
         helper.setText(R.id.name_tv,item.getName());
-        helper.setText(R.id.weight_tv,item.getWeight() + "g");
+        helper.setText(R.id.weight_tv,item.getWeight() * item.getCount() + "g");
         helper.setText(R.id.count_tv,item.getCount() + "件");
     }
 }

@@ -200,6 +200,8 @@ public class AddNewOrderActivity extends BaseActivity {
             }
         }
         newGoodTypeDataAdapter.notifyDataSetChanged();
+        discountBeans.clear();
+        discountTv.setText("不使用");
         paymentTv.setText("客戶應付：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
         moneyTv.setText("合計：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney + changeGoodsMoeny));
     }
@@ -252,7 +254,7 @@ public class AddNewOrderActivity extends BaseActivity {
                         return;
                     }
                 }
-                orderCalculation();
+                orderCalculation(true);
 
                 break;
             case R.id.back_btn:
@@ -263,7 +265,7 @@ public class AddNewOrderActivity extends BaseActivity {
 
     CustomDialog customDialog;
 
-    public void orderCalculation() {
+    public void orderCalculation(boolean isNext) {
         if (customDialog == null) {
             customDialog = new CustomDialog(this, "正在計算客戶應付..");
             customDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -316,18 +318,21 @@ public class AddNewOrderActivity extends BaseActivity {
                 public void onSuccess(OrderCalculationResultBean result) throws Exception {
                     customDialog.dismiss();
                     double needMoney = result.getAmount_payable();
-                    Intent intent = new Intent(AddNewOrderActivity.this, BalanceActivity.class);
-                    intent.putExtra("pay_spread", result.getPay_spread());
-                    intent.putExtra("goodlist", gson.toJson(goodList));
-                    intent.putExtra("sumMoney", needMoney);
-                    intent.putExtra("newOrderSumMoney", needMoney + result.getExchange_amount());
-                    intent.putExtra("memberInfo", gson.toJson(memberBean));
-                    intent.putExtra("sumCount", goodList.size());
-                    intent.putExtra("sumWeight", sumWeight);
-                    intent.putExtra("cache_token", result.getCache_token());
-                    intent.putExtra("order_type", changeGoodsMoeny == 0 ? 0 : 1);
-                    intent.putExtra("checkedGoodList", getIntent().getStringExtra("checkedGoodList"));
-                    startActivity(intent);
+                    paymentTv.setText("客戶應付：" + needMoney);
+                    if(isNext) {
+                        Intent intent = new Intent(AddNewOrderActivity.this, BalanceActivity.class);
+                        intent.putExtra("pay_spread", result.getPay_spread());
+                        intent.putExtra("goodlist", gson.toJson(goodList));
+                        intent.putExtra("sumMoney", needMoney);
+                        intent.putExtra("newOrderSumMoney", needMoney + result.getExchange_amount());
+                        intent.putExtra("memberInfo", gson.toJson(memberBean));
+                        intent.putExtra("sumCount", goodList.size());
+                        intent.putExtra("sumWeight", sumWeight);
+                        intent.putExtra("cache_token", result.getCache_token());
+                        intent.putExtra("order_type", changeGoodsMoeny == 0 ? 0 : 1);
+                        intent.putExtra("checkedGoodList", getIntent().getStringExtra("checkedGoodList"));
+                        startActivity(intent);
+                    }
                 }
 
                 @Override
@@ -401,6 +406,7 @@ public class AddNewOrderActivity extends BaseActivity {
                     }
                 }
                 discountTv.setText(discountBeans.size() == 0 ? "不使用" : result);
+                orderCalculation(false);
                 break;
             case 3:
                 Log.e("test", "fittinglist:" + data.getStringExtra("selectFittingList"));
@@ -428,7 +434,16 @@ public class AddNewOrderActivity extends BaseActivity {
             public void onSuccess(String result) throws Exception {
                 hideLoadingDialog();
                 FittingBean fittingBean = gson.fromJson(result, FittingBean.class);
-                goodList.addAll(fittingBean.getResults());
+                if (fittingBean.getResults().size() == 0) {
+                    Toast.makeText(AddNewOrderActivity.this, "搜索不到該商品", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                FittingBean.ResultsBean resultsBean = fittingBean.getResults().get(0);
+                if (productExitInList(resultsBean.getWhitem().get(0).getWhnumber() + resultsBean.getProductcode())) {
+                    Toast.makeText(AddNewOrderActivity.this, "已增加该商品", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                goodList.add(resultsBean);
                 goodsAdapter.notifyDataSetChanged();
                 refreshSumMoney();
             }
@@ -436,6 +451,7 @@ public class AddNewOrderActivity extends BaseActivity {
             @Override
             public void onFailed(String erromsg) {
                 hideLoadingDialog();
+                Toast.makeText(AddNewOrderActivity.this, "搜索不到該商品", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -444,7 +460,7 @@ public class AddNewOrderActivity extends BaseActivity {
         boolean result = false;
         Log.e("test", "productcode:" + productcode);
         for (FittingBean.ResultsBean goodBean : goodList) {
-            if (String.valueOf(goodBean.getProductcode()).equals(productcode)) {
+            if ((goodBean.getWhitem().get(0).getWhnumber() + goodBean.getProductcode()).equals(productcode)) {
                 return true;
             }
         }
