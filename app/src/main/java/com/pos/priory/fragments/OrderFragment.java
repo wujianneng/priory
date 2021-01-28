@@ -257,35 +257,12 @@ public class OrderFragment extends BaseFragment {
     }
 
 
-    private void getCurrentGoldPrice() {
-        RetrofitManager.createGson(ApiService.class)
-                .getCurrentGoldPrice()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<GoldpriceBean>() {
-                    @Override
-                    public void accept(GoldpriceBean s) throws Exception {
-                        Log.e("okhttp", "getCurrentGoldPriceresult:" + s);
-                        goldPriceLayout.setVisibility(View.VISIBLE);
-                        dateTv.setText(DateUtils.getDateOfToday());
-                        goldPriceTv.setText("金價：" + s.getResults().get(0).getGramprice() + "/g，" + s.getResults().get(0).getTaelprice() + "/两");
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-//                        goldPriceLayout.setVisibility(View.GONE);
-                        goldPriceLayout.setVisibility(View.VISIBLE);
-                    }
-                });
-    }
-
 
     private void refreshRecyclerView(final boolean isLoadMore) {
         if (!isLoadMore) {
             currentPage = 1;
             orderList.clear();
             orderAdapter.notifyDataSetChanged();
-            getCurrentGoldPrice();
         }
         Observable<String> observable = edtSearch.getText().toString().isEmpty() ?
                 RetrofitManager.createString(ApiService.class).getTodayOrders(currentPage,"true")
@@ -308,6 +285,9 @@ public class OrderFragment extends BaseFragment {
                             empty_layout.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                         }
+                        goldPriceLayout.setVisibility(View.VISIBLE);
+                        dateTv.setText(orderBean.getDate());
+                        goldPriceTv.setText("金價：" + orderBean.getGram_goldprice() + "/g，" + orderBean.getTael_goldprice() + "/两");
                         smartRefreshLayout.finishLoadMore();
                         smartRefreshLayout.finishRefresh();
                     }

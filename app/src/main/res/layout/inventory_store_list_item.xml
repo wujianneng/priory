@@ -32,15 +32,27 @@
             android:id="@+id/count_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/date_tv"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:layout_below="@+id/date_tv"
             android:text="(50/100)"
             android:textColor="#000000"
             android:textSize="18sp" />
 
+        <TextView
+            android:id="@+id/status_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:layout_toLeftOf="@+id/right_img"
+            android:text="未完成"
+            android:textColor="@color/drag_btn_red"
+            android:textSize="18sp" />
+
 
         <ImageView
+            android:id="@+id/right_img"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_alignParentRight="true"

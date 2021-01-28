@@ -23,8 +23,8 @@ public class OrderBean{
     private Object next;
     private Object previous;
     private String date;
-    private int gold_price_gram;
-    private int gold_price;
+    private double gram_goldprice;
+    private double tael_goldprice;
     private List<ResultsBean> results;
 
     public int getCount() {
@@ -59,20 +59,20 @@ public class OrderBean{
         this.date = date;
     }
 
-    public int getGold_price_gram() {
-        return gold_price_gram;
+    public double getGram_goldprice() {
+        return gram_goldprice;
     }
 
-    public void setGold_price_gram(int gold_price_gram) {
-        this.gold_price_gram = gold_price_gram;
+    public void setGram_goldprice(double gram_goldprice) {
+        this.gram_goldprice = gram_goldprice;
     }
 
-    public int getGold_price() {
-        return gold_price;
+    public double getTael_goldprice() {
+        return tael_goldprice;
     }
 
-    public void setGold_price(int gold_price) {
-        this.gold_price = gold_price;
+    public void setTael_goldprice(double tael_goldprice) {
+        this.tael_goldprice = tael_goldprice;
     }
 
     public List<ResultsBean> getResults() {
