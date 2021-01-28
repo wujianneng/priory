@@ -212,9 +212,8 @@ public interface ApiService {
     @POST("/api/warehouses/inventory_create")
     Observable<String> createNewInventry(@Field("shop") int shopid);//新建盤點
 
-    @FormUrlEncoded
     @POST("/api/warehouses/transfer")
-    Observable<String> tranferGoods(@Field("id") int shopid, @Field("item") List<Integer> item);//调货
+    Observable<String> tranferGoods(@Body RequestBody requestBody);//调货
 
     @GET("/api/warehouses/inventory")
     Observable<InventoryBean> getInventorys();//獲取所有大盤點清單

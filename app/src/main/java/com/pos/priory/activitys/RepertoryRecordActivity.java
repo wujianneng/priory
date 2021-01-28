@@ -22,11 +22,13 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.RepertoryRecordAdapter;
 import com.pos.priory.beans.RepertoryRecordBean;
 import com.pos.priory.beans.RepertoryRecordFiltersBean;
 import com.pos.priory.networks.ApiService;
+import com.pos.priory.utils.DateUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
@@ -107,6 +109,9 @@ public class RepertoryRecordActivity extends BaseActivity {
 
     private void initViews() {
         titleTv.setText("倉庫記錄");
+        addressTv.setText(MyApplication.staffInfoBean.getShop());
+        startDateTv.setText(DateUtils.getDateOfToday());
+        endDateTv.setText(DateUtils.getDateOfToday());
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             refreshRecyclerView();
@@ -159,6 +164,7 @@ public class RepertoryRecordActivity extends BaseActivity {
                         btnSelectWhere.setText(currentPurpose.getName());
                         btnSelectType.setText(currentType.getName());
                         btnSelectAddress.setText(currentWhfrom.getName());
+                        refreshRecyclerView();
                     }
 
                     @Override

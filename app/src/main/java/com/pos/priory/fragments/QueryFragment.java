@@ -270,7 +270,7 @@ public class QueryFragment extends BaseFragment {
                     public void accept(String results) throws Exception {
                         OrderBean orderBean = gson.fromJson(results, OrderBean.class);
                         if (orderBean != null && orderBean.getResults().size() != 0) {
-                            empty_layout.setVisibility(View.VISIBLE);
+                            empty_layout.setVisibility(View.GONE);
                             memberRecyclerView.setVisibility(View.GONE);
                             orderRecyclerView.setVisibility(View.VISIBLE);
                             orderList.addAll(orderBean.getResults());

@@ -97,6 +97,23 @@
             app:iconTint="#333" />
 
         <android.support.design.button.MaterialButton
+            android:id="@+id/btn_select_type"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="10dp"
+            android:backgroundTint="#ffffff"
+            android:text="調貨"
+            android:textColor="#333333"
+            android:textSize="11sp"
+            android:singleLine="true"
+            android:ellipsize="middle"
+            app:cornerRadius="10dp"
+            app:icon="@drawable/go_bottom"
+            app:iconSize="7dp"
+            app:iconTint="#333" />
+
+        <android.support.design.button.MaterialButton
             android:id="@+id/btn_select_where"
             android:layout_width="80dp"
             android:layout_height="40dp"
@@ -113,22 +130,7 @@
             app:iconSize="7dp"
             app:iconTint="#333" />
 
-        <android.support.design.button.MaterialButton
-            android:id="@+id/btn_select_type"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:backgroundTint="#ffffff"
-            android:text="調貨"
-            android:textColor="#333333"
-            android:textSize="11sp"
-            android:singleLine="true"
-            android:ellipsize="middle"
-            app:cornerRadius="10dp"
-            app:icon="@drawable/go_bottom"
-            app:iconSize="7dp"
-            app:iconTint="#333" />
+
 
         <android.support.design.button.MaterialButton
             android:id="@+id/btn_select_address"

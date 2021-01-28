@@ -308,10 +308,10 @@ public class RepertoryFragment extends BaseFragment {
                 case R.id.menu0:
                     btnSelectReturnOrderParams.setText(item.getTitle());
                     break;
-                case R.id.menu1:
+                case R.id.menu3:
                     btnSelectReturnOrderParams.setText(item.getTitle());
                     break;
-                case R.id.menu2:
+                case R.id.menu4:
                     btnSelectReturnOrderParams.setText(item.getTitle());
                     break;
             }

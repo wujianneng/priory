@@ -83,7 +83,7 @@ public class LoginActivity extends BaseActivity {
             }, 300);
         }
         checkbox.setChecked(sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false));
-        RetrofitManager.changeBaseUrl(sharedPreferences.getString(Constants.LAST_BASE_URL_KEY, Constants.BASE_URL));
+//        RetrofitManager.changeBaseUrl(sharedPreferences.getString(Constants.LAST_BASE_URL_KEY, Constants.BASE_URL));
         Log.e("test", "MyApplication.hostName:" + RetrofitManager.hostname);
     }
 
@@ -144,8 +144,8 @@ public class LoginActivity extends BaseActivity {
                                         edtUsename.getText().toString());
                                 editor.putString(Constants.LAST_PASSWORD_KEY,
                                         edtPasswrod.getText().toString());
-                                editor.putString(Constants.LAST_BASE_URL_KEY,
-                                        RetrofitManager.hostname);
+//                                editor.putString(Constants.LAST_BASE_URL_KEY,
+//                                        RetrofitManager.hostname);
                             }
                             editor.putString(Constants.CURRENT_STAFF_INFO_KEY, result);
                             editor.commit();

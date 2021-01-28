@@ -45,6 +45,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * Created by Lenovo on 2018/12/31.
@@ -167,14 +169,17 @@ public class GoodDetialActivity extends BaseActivity {
             customDialog = new CustomDialog(this, "调货中..");
         customDialog.setOnDismissListener(dialog -> customDialog = null);
         customDialog.show();
+        Map<String, Object> paramMap = new HashMap<>();
         List<Integer> items = new ArrayList<>();
         for (WhitemDetailResultBean.WhitemBean resultsBean : orderList) {
             if (resultsBean.isSelected())
                 items.add(resultsBean.getId());
         }
-        Log.e("test","shopid:" + storeid + " items:" + gson.toJson(items));
+        paramMap.put("id", storeid);
+        paramMap.put("item", items);
+        Log.e("test","param:" + gson.toJson(paramMap));
         RetrofitManager.createString(ApiService.class)
-                .tranferGoods(storeid, items)
+                .tranferGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
