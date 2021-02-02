@@ -142,10 +142,10 @@ public class SelectDiscountActivity extends BaseActivity {
         showLoadingDialog("正在獲取優惠券列表...");
         CouponParamBean cashCouponParamsBean = new CouponParamBean();
         cashCouponParamsBean.setMember(memberBean.getId());
-        List<CouponParamBean.ProductsItemsBean> items = new ArrayList<>();
+        List<CouponParamBean.ProductItemBean> items = new ArrayList<>();
         try {
             for (FittingBean.ResultsBean resultsBean : goodList) {
-                CouponParamBean.ProductsItemsBean itemsBean = new CouponParamBean.ProductsItemsBean();
+                CouponParamBean.ProductItemBean itemsBean = new CouponParamBean.ProductItemBean();
                 itemsBean.setId(resultsBean.getId());
                 itemsBean.setQuantity(resultsBean.getBuyCount());
                 items.add(itemsBean);
@@ -153,7 +153,7 @@ public class SelectDiscountActivity extends BaseActivity {
         } catch (Exception e) {
 
         }
-        cashCouponParamsBean.setProducts_items(items);
+        cashCouponParamsBean.setProduct_item(items);
         Log.e("test", "params:" + gson.toJson(cashCouponParamsBean));
         RetrofitManager.excuteGson(RetrofitManager.createGson(ApiService.class).getCoupons(cashCouponParamsBean), new ModelGsonListener<List<CouponResultBean>>() {
             @Override

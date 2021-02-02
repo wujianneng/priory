@@ -208,7 +208,7 @@ public class GoodDetialActivity extends BaseActivity {
                         codeTv.setText(goodBean.getProductcode() + "");
                         nameTv.setText(goodBean.getName());
                         repertoryTv.setText(warehouseBean.getQuantity_total() + "件");
-                        priceTv.setText(goodBean.getName());
+                        priceTv.setText(goodBean.getSymbol() + warehouseBean.getPrice());
                         weightTv.setText(warehouseBean.getPrd_weight() + "g");
                         if (warehouseBean.getPrd_weight() == 0) {
                             weightTv.setVisibility(View.GONE);

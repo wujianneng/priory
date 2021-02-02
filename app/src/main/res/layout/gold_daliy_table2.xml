@@ -43,6 +43,16 @@
                 android:textSize="10sp" />
 
             <TextView
+                android:id="@+id/no_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="3dp"
+                android:text="日結表編號：3478347u3847398"
+                android:textColor="#333"
+                android:textSize="10sp" />
+
+            <TextView
                 android:id="@+id/date_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

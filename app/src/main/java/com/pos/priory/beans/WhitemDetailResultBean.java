@@ -18,9 +18,18 @@ public class WhitemDetailResultBean {
     private String productcode;
     private String prd_image;
     private String prd_name;
-    private double prd_weight;
+    private double weight;
+    private double price;
     private int quantity_total;
     private List<WhitemBean> whitem;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public int getId() {
         return id;
@@ -55,11 +64,11 @@ public class WhitemDetailResultBean {
     }
 
     public double getPrd_weight() {
-        return prd_weight;
+        return weight;
     }
 
-    public void setPrd_weight(double prd_weight) {
-        this.prd_weight = prd_weight;
+    public void setPrd_weight(double weight) {
+        this.weight = weight;
     }
 
     public int getQuantity_total() {

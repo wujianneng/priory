@@ -27,6 +27,7 @@ import com.pos.priory.activitys.NfcActivity;
 import com.pos.priory.adapters.InventoryStoreAdapter;
 import com.pos.priory.beans.CreateInventoryResultBean;
 import com.pos.priory.beans.InventoryBean;
+import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -68,6 +69,8 @@ public class InventoryFragment extends BaseFragment {
 
     boolean needRefresh = false;
 
+    CustomDialog customDialog;
+
 
     @Nullable
     @Override
@@ -107,29 +110,37 @@ public class InventoryFragment extends BaseFragment {
         otgBtn.setOnClickListener(view1 -> startActivity(new Intent(getActivity(), NfcActivity.class)));
 
         fab.setOnClickListener(view1 -> {
-            RetrofitManager.excute(RetrofitManager.createString(ApiService.class).createNewInventry(MyApplication.staffInfoBean.getShopid()), new ModelListener() {
-                @Override
-                public void onSuccess(String result) throws Exception {
-                    CreateInventoryResultBean createInventoryResultBean = gson.fromJson(result,CreateInventoryResultBean.class);
-                    Intent intent = new Intent(getActivity(), BigInventoryTypesDetialActivity.class);
-                    intent.putExtra("inventoryId", createInventoryResultBean.getId());
-                    intent.putExtra("status",createInventoryResultBean.isDone());
-                    startActivity(intent);
-                    needRefresh = true;
-                }
+            if (customDialog == null) {
+                customDialog = new CustomDialog(getActivity(), "創建盤點中..");
+                customDialog.setOnDismissListener(dialogInterface -> customDialog = null);
+                customDialog.show();
+                RetrofitManager.excute(RetrofitManager.createString(ApiService.class).createNewInventry(MyApplication.staffInfoBean.getShopid()), new ModelListener() {
+                    @Override
+                    public void onSuccess(String result) throws Exception {
+                        if (customDialog != null)
+                            customDialog.dismiss();
+                        CreateInventoryResultBean createInventoryResultBean = gson.fromJson(result, CreateInventoryResultBean.class);
+                        Intent intent = new Intent(getActivity(), BigInventoryTypesDetialActivity.class);
+                        intent.putExtra("inventoryId", createInventoryResultBean.getId());
+                        intent.putExtra("status", createInventoryResultBean.isDone());
+                        startActivity(intent);
+                        needRefresh = true;
+                    }
 
-                @Override
-                public void onFailed(String erromsg) {
-
-                }
-            });
+                    @Override
+                    public void onFailed(String erromsg) {
+                        if (customDialog != null)
+                            customDialog.dismiss();
+                    }
+                });
+            }
         });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(needRefresh){
+        if (needRefresh) {
             refreshRecyclerView();
             needRefresh = false;
         }
@@ -148,7 +159,7 @@ public class InventoryFragment extends BaseFragment {
                             recyclerView.setVisibility(View.VISIBLE);
                             dataList.addAll(result.getResults());
                             adapter.notifyDataSetChanged();
-                        }else {
+                        } else {
                             empty_layout.setVisibility(View.VISIBLE);
                             recyclerView.setVisibility(View.GONE);
                         }

@@ -127,10 +127,10 @@ public class SelectCashCouponActivity extends BaseActivity {
     private void getCoupons() {
         CashCouponParamsBean cashCouponParamsBean = new CashCouponParamsBean();
         cashCouponParamsBean.setMember_id(memberBean.getId());
-        List<CashCouponParamsBean.ProductsItemsBean> items = new ArrayList<>();
+        List<CashCouponParamsBean.ProductItemBean> items = new ArrayList<>();
         try {
             for (FittingBean.ResultsBean resultsBean : goodList) {
-                CashCouponParamsBean.ProductsItemsBean itemsBean = new CashCouponParamsBean.ProductsItemsBean();
+                CashCouponParamsBean.ProductItemBean itemsBean = new CashCouponParamsBean.ProductItemBean();
                 itemsBean.setId(resultsBean.getId());
                 itemsBean.setQuantity(resultsBean.getBuyCount());
                 items.add(itemsBean);
@@ -138,7 +138,7 @@ public class SelectCashCouponActivity extends BaseActivity {
         } catch (Exception e) {
 
         }
-        cashCouponParamsBean.setProducts_items(items);
+        cashCouponParamsBean.setProduct_item(items);
         Log.e("test", "params:" + gson.toJson(cashCouponParamsBean));
         RetrofitManager.excuteGson(RetrofitManager.createGson(ApiService.class).getCashCoupons(cashCouponParamsBean),
                 new ModelGsonListener<List<CashCouponResultBean>>() {

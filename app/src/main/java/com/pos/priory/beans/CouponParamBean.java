@@ -9,26 +9,26 @@ public class CouponParamBean {
      * products_items : [{"id":0,"quantity":0}]
      */
 
-    private int member;
-    private List<ProductsItemsBean> products_items;
+    private int member_id;
+    private List<ProductItemBean> product_item;
 
     public int getMember() {
-        return member;
+        return member_id;
     }
 
-    public void setMember(int member) {
-        this.member = member;
+    public void setMember(int member_id) {
+        this.member_id = member_id;
     }
 
-    public List<ProductsItemsBean> getProducts_items() {
-        return products_items;
+    public List<ProductItemBean> getProduct_item() {
+        return product_item;
     }
 
-    public void setProducts_items(List<ProductsItemsBean> products_items) {
-        this.products_items = products_items;
+    public void setProduct_item(List<ProductItemBean> product_item) {
+        this.product_item = product_item;
     }
 
-    public static class ProductsItemsBean {
+    public static class ProductItemBean {
         /**
          * id : 0
          * quantity : 0

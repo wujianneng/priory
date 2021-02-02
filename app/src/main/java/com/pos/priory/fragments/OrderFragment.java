@@ -455,8 +455,9 @@ public class OrderFragment extends BaseFragment {
 //            }
             final View printView = LayoutInflater.from(context).inflate(layoutid, null);
             ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.staffInfoBean.getShop());
-            ((TextView) printView.findViewById(R.id.date_tv)).setText(dayReportBean.getDayend_date());
-            ((TextView) printView.findViewById(R.id.time_tv)).setText(DateUtils.covertIso8601ToDate(dayReportBean.getCreated()));
+            ((TextView) printView.findViewById(R.id.no_tv)).setText("日結編號：" + dayReportBean.getDayend_no());
+            ((TextView) printView.findViewById(R.id.date_tv)).setText("日結日期：" + dayReportBean.getDayend_date());
+            ((TextView) printView.findViewById(R.id.time_tv)).setText("打印時間：" + DateUtils.covertIso8601ToDate(dayReportBean.getCreated()));
             ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + size);
 
             ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(dayReportBean.getInvoice_amount() + "");
