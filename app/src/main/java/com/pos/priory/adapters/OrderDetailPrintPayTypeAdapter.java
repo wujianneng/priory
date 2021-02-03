@@ -2,6 +2,7 @@ package com.pos.priory.adapters;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -22,7 +23,7 @@ public class OrderDetailPrintPayTypeAdapter extends BaseQuickAdapter<OrderDetail
 
     @Override
     protected void convert(BaseViewHolder helper, OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean item) {
-        helper.setText(R.id.title_text,item.getPaymethod());
+        helper.setText(R.id.title_text,item.getPaymethod() + (TextUtils.isEmpty(item.getCash_coupon_code()) ? "" : (" #" + item.getCash_coupon_code())));
         helper.setText(R.id.money_text,item.getAmount() + "元");
     }
 }
