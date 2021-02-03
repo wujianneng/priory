@@ -29,6 +29,8 @@ public class StaffInfoBean {
     private String shop;
     private int shopid;
     private String user;
+    private String shop_address;
+    private String shop_tel;
     private String apppermit;
     private String name;
     private String gender;
@@ -38,6 +40,22 @@ public class StaffInfoBean {
     private String created;
     private String updated;
     private List<?> backendpermit;
+
+    public String getShop_address() {
+        return shop_address;
+    }
+
+    public void setShop_address(String shop_address) {
+        this.shop_address = shop_address;
+    }
+
+    public String getShop_tel() {
+        return shop_tel;
+    }
+
+    public void setShop_tel(String shop_tel) {
+        this.shop_tel = shop_tel;
+    }
 
     public int getId() {
         return id;

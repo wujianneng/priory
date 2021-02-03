@@ -311,7 +311,8 @@
             android:layout_marginRight="20dp"
             android:text="$ 13,480.0"
             android:textColor="#333"
-            android:textSize="6sp" />
+            android:textSize="7sp"
+            />
 
     </RelativeLayout>
 

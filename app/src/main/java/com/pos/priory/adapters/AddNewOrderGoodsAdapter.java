@@ -30,7 +30,7 @@ public class AddNewOrderGoodsAdapter extends BaseQuickAdapter<FittingBean.Result
         helper.setText(R.id.code_tv, item.getProductcode() + item.getWhitem().get(0).getWhnumber());
         helper.setText(R.id.name_tv, item.getName());
         if (item.getWhitem().size() != 0)
-            helper.setText(R.id.weight_tv, item.getWhitem().get(0).getWeight() * item.getBuyCount() + "g");
+            helper.setText(R.id.weight_tv, item.getWhitem().get(0).getWeight() + "g");
         helper.setText(R.id.origin_price_tv, "售價：" + item.getPrice().get(0).getSymbol() + item.getPrice().get(0).getPrice());
         helper.setGone(R.id.price_tv,false);
         Glide.with(context).load(item.getImage())

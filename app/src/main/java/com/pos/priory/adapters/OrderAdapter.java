@@ -39,7 +39,7 @@ public class OrderAdapter extends BaseQuickAdapter<OrderBean.ResultsBean, BaseVi
         if(item != null) {
             helper.setVisible(R.id.right_line, "店长".equals(MyApplication.staffInfoBean.getApppermit()) ? true : false);
             helper.setText(R.id.detial_tv, item.getMember_mobile());
-            helper.setText(R.id.name_tv, item.getMember_firstname() + item.getMember_lastname());
+            helper.setText(R.id.name_tv, item.getMember_lastname() + " " + item.getMember_firstname());
             helper.setImageResource(R.id.sex_img, item.getMember_gender().equals("1") ? R.drawable.icon_boy : R.drawable.icon_girl);
             helper.setText(R.id.date_tv, item.getCreated());
             helper.setText(R.id.money_tv, "" + item.getAmount());

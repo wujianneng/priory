@@ -27,6 +27,6 @@ public class QueryOrderAdapter extends BaseQuickAdapter<OrderBean.ResultsBean,Ba
         helper.setText(R.id.detial_tv, item.getMember_mobile());
         helper.setText(R.id.date_tv,item.getCreated());
         helper.setText(R.id.money_tv, "$" + item.getAmount());
-        helper.setText(R.id.name_tv,item.getMember_firstname() + item.getMember_lastname());
+        helper.setText(R.id.name_tv,item.getMember_lastname() + " " + item.getMember_firstname());
     }
 }

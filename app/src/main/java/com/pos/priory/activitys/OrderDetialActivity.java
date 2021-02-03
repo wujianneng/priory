@@ -211,8 +211,8 @@ public class OrderDetialActivity extends BaseActivity {
                         }
                         payTypeAdapter.notifyDataSetChanged();
 
-                        memberNameTv.setText("會員：" + orderDetailReslutBean.getMember_detail().getFirstname()
-                                + orderDetailReslutBean.getMember_detail().getLastname());
+                        memberNameTv.setText("會員：" + orderDetailReslutBean.getMember_detail().getLastname() +
+                              " "  + orderDetailReslutBean.getMember_detail().getFirstname());
                         memberPhoneTv.setText("手機號碼：" + orderDetailReslutBean.getMember_detail().getMobile());
                         needMoneyTv.setText(orderDetailReslutBean.getAmount_payable() + "元");
                         payedMoneyTv.setText(orderDetailReslutBean.getAmount_paid() + "元");
@@ -290,12 +290,12 @@ public class OrderDetialActivity extends BaseActivity {
 //            }
             final View printView = LayoutInflater.from(activity).inflate(layoutid, null);
             ((TextView) printView.findViewById(R.id.store_tv)).setText(MyApplication.getContext().staffInfoBean.getShop());
-            ((TextView) printView.findViewById(R.id.address_tv)).setText(MyApplication.getContext().staffInfoBean.getShop());
-            ((TextView) printView.findViewById(R.id.tel_tv)).setText(MyApplication.getContext().staffInfoBean.getMobile());
+            ((TextView) printView.findViewById(R.id.address_tv)).setText(MyApplication.getContext().staffInfoBean.getShop_address());
+            ((TextView) printView.findViewById(R.id.tel_tv)).setText(MyApplication.getContext().staffInfoBean.getShop_tel());
             ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + pageCount);
             ((TextView) printView.findViewById(R.id.order_number_tv)).setText("收據編號: " + orderDetailReslutBean.getOrderno());
-            ((TextView) printView.findViewById(R.id.count_tv)).setText("合計(" + orderDetailReslutBean.getQuantity_accessory()
-                    + orderDetailReslutBean.getGold_info().getQuantity() + "件)");
+            ((TextView) printView.findViewById(R.id.count_tv)).setText("合計(" + (orderDetailReslutBean.getQuantity_accessory()
+                    + orderDetailReslutBean.getGold_info().getQuantity()) + "件)");
             ((TextView) printView.findViewById(R.id.date_tv)).setText(("購買日期: " + orderDetailReslutBean.getCreated()));
             ((TextView) printView.findViewById(R.id.amount_tv)).setText(orderDetailReslutBean.getAmount_payable() + "元");
             ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(orderDetailReslutBean.getAmount_paid() + "元");
@@ -399,7 +399,7 @@ public class OrderDetialActivity extends BaseActivity {
                     intent.putExtra("orderId", orderDetailReslutBean.getId());
                     intent.putExtra("changeGoodList", gson.toJson(checkedGoodList));
                     MemberBean.ResultsBean member = new MemberBean.ResultsBean();
-                    member.setName(orderDetailReslutBean.getMember_detail().getFirstname() + orderDetailReslutBean.getMember_detail().getLastname());
+                    member.setName(orderDetailReslutBean.getMember_detail().getLastname() + " " + orderDetailReslutBean.getMember_detail().getFirstname());
                     member.setReward(orderDetailReslutBean.getMember_detail().getReward());
                     member.setMobile(orderDetailReslutBean.getMember_detail().getMobile());
                     member.setId(orderDetailReslutBean.getMember_detail().getId());
@@ -411,7 +411,7 @@ public class OrderDetialActivity extends BaseActivity {
                     intent.putExtra("orderId", orderDetailReslutBean.getId());
                     intent.putExtra("changeGoodList", gson.toJson(checkedGoodList));
                     MemberBean.ResultsBean member = new MemberBean.ResultsBean();
-                    member.setName(orderDetailReslutBean.getMember_detail().getFirstname() + orderDetailReslutBean.getMember_detail().getLastname());
+                    member.setName(orderDetailReslutBean.getMember_detail().getLastname() + " " + orderDetailReslutBean.getMember_detail().getFirstname());
                     member.setReward(orderDetailReslutBean.getMember_detail().getReward());
                     member.setMobile(orderDetailReslutBean.getMember_detail().getMobile());
                     member.setId(orderDetailReslutBean.getMember_detail().getId());
