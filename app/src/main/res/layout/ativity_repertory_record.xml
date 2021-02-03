@@ -73,83 +73,95 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:orientation="horizontal">
+    <HorizontalScrollView
+        android:scrollbars="none"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <android.support.design.button.MaterialButton
-            android:id="@+id/btn_select_repertory"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:backgroundTint="#ffffff"
-            android:text="主倉庫"
-            android:singleLine="true"
-            android:ellipsize="middle"
-            android:textColor="#333333"
-            android:textSize="10sp"
-            app:cornerRadius="10dp"
-            app:icon="@drawable/go_bottom"
-            app:iconSize="7dp"
-            app:iconTint="#333" />
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/btn_select_type"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:backgroundTint="#ffffff"
-            android:text="調貨"
-            android:textColor="#333333"
-            android:textSize="11sp"
-            android:singleLine="true"
-            android:ellipsize="middle"
-            app:cornerRadius="10dp"
-            app:icon="@drawable/go_bottom"
-            app:iconSize="7dp"
-            app:iconTint="#333" />
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/btn_select_where"
-            android:layout_width="80dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="10dp"
-            android:backgroundTint="#ffffff"
-            android:text="所有"
-            android:textColor="#333333"
-            android:textSize="10sp"
-            android:singleLine="true"
-            android:ellipsize="middle"
-            app:cornerRadius="10dp"
-            app:icon="@drawable/go_bottom"
-            app:iconSize="7dp"
-            app:iconTint="#333" />
-
-
-
-        <android.support.design.button.MaterialButton
-            android:id="@+id/btn_select_address"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:backgroundTint="#ffffff"
-            android:text="地點名稱"
-            android:textColor="#333333"
-            android:textSize="11sp"
-            android:singleLine="true"
-            android:ellipsize="middle"
-            app:cornerRadius="10dp"
-            app:icon="@drawable/go_bottom"
-            app:iconSize="7dp"
-            app:iconTint="#333" />
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <android.support.design.button.MaterialButton
+                android:id="@+id/btn_select_repertory"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="#ffffff"
+                android:text="主倉庫"
+                android:layout_marginLeft="1dp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                android:textColor="#333333"
+                android:textSize="10sp"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/go_bottom"
+                app:iconSize="7dp"
+                app:iconTint="#333" />
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/btn_select_type"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:backgroundTint="#ffffff"
+                android:text="調貨"
+                android:textColor="#333333"
+                android:textSize="11sp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/go_bottom"
+                app:iconSize="7dp"
+                app:iconTint="#333" />
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/btn_select_where"
+                android:layout_width="80dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:backgroundTint="#ffffff"
+                android:text="所有"
+                android:textColor="#333333"
+                android:textSize="10sp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/go_bottom"
+                app:iconSize="7dp"
+                app:iconTint="#333" />
+
+
+
+            <android.support.design.button.MaterialButton
+                android:id="@+id/btn_select_address"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="30dp"
+                android:backgroundTint="#ffffff"
+                android:text="地點名稱"
+                android:visibility="gone"
+                android:textColor="#333333"
+                android:textSize="11sp"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                app:cornerRadius="10dp"
+                app:icon="@drawable/go_bottom"
+                app:iconSize="7dp"
+                app:iconTint="#333" />
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+
 
     <android.support.v7.widget.CardView
         android:id="@+id/search_card"

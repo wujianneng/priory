@@ -410,6 +410,7 @@ public class OrderFragment extends BaseFragment {
                 goldItemBean.setQuantity(itemBean.getQuantity());
                 goldItemBean.setWeight(itemBean.getWeight());
                 goldItemBean.setPrice_total(itemBean.getPrice_total());
+                goldItemBean.setPrice(itemBean.getPrice());
 
                 golditemBeanList.add(goldItemBean);
 
