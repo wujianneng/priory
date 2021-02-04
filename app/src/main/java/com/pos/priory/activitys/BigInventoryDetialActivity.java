@@ -90,7 +90,7 @@ public class BigInventoryDetialActivity extends BaseActivity {
         status = getIntent().getBooleanExtra("status", false);
         categoryId = getIntent().getIntExtra("categoryId", 0);
         rightLayout.setVisibility(!status ? View.VISIBLE : View.GONE);
-        titleTv.setText("盘点分类详情");
+        titleTv.setText(getIntent().getStringExtra("categoryName"));
         scanBtn.setImageResource(R.drawable.scan);
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {

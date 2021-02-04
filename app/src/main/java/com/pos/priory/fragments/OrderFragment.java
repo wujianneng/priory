@@ -461,13 +461,12 @@ public class OrderFragment extends BaseFragment {
             ((TextView) printView.findViewById(R.id.time_tv)).setText("打印時間：" + DateUtils.covertIso8601ToDate(dayReportBean.getCreated()));
             ((TextView) printView.findViewById(R.id.page_tv)).setText((i + 1) + "/" + size);
 
-            ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(dayReportBean.getInvoice_amount() + "");
+            ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(dayReportBean.getPay_amount() + "");
             ((TextView) printView.findViewById(R.id.cash_tv)).setText(dayReportBean.getCash() + "");
             ((TextView) printView.findViewById(R.id.card_pay_tv)).setText(dayReportBean.getCredit_card() + "");
-            ((TextView) printView.findViewById(R.id.ali_pay_tv)).setText(dayReportBean.getAlipay() + "");
-            ((TextView) printView.findViewById(R.id.wechat_pay_tv)).setText(dayReportBean.getWechatpay() + "");
+            ((TextView) printView.findViewById(R.id.e_pay_tv)).setText(dayReportBean.getE_pay() + "");
             ((TextView) printView.findViewById(R.id.coupon_tv)).setText(dayReportBean.getCashcoupon() + "");
-            ((TextView) printView.findViewById(R.id.yingshou_tv)).setText(dayReportBean.getPay_amount() + "");
+            ((TextView) printView.findViewById(R.id.yingshou_tv)).setText(dayReportBean.getInvoice_amount() + "");
             ((TextView) printView.findViewById(R.id.exchange_tv)).setText(dayReportBean.getExchange() + "");
             ((TextView) printView.findViewById(R.id.return_tv)).setText(dayReportBean.getReturned() + "");
 

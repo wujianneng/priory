@@ -19,8 +19,20 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/name_tv"
         android:layout_marginLeft="15dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="3dp"
         android:text="网上客服赠送"
+        android:textSize="12sp"
+        android:textColor="@color/colorGrey" />
+
+    <TextView
+        android:id="@+id/detail_code_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/detail_tv"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="10dp"
+        android:text="fheih343"
+        android:visibility="gone"
         android:textSize="12sp"
         android:textColor="@color/colorGrey" />
 

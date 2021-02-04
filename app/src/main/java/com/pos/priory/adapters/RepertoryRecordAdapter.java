@@ -35,6 +35,6 @@ public class RepertoryRecordAdapter extends BaseQuickAdapter<RepertoryRecordBean
         helper.setText(R.id.user_tv, item.getUsername());
         helper.setText(R.id.inout_tv, item.getPurpose_display() + "");
         helper.setText(R.id.type_tv, item.getType_display() + "");
-        helper.setText(R.id.whform_tv, item.getShop_from() + "");
+        helper.setText(R.id.whform_tv, item.getRelated_whname() + "");
     }
 }

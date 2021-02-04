@@ -34,6 +34,7 @@ import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.coustomViews.DisableReclyerView;
 import com.pos.priory.fragments.OrderFragment;
 import com.pos.priory.networks.ApiService;
+import com.pos.priory.utils.LogicUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -479,7 +480,7 @@ public class OrderDetialActivity extends BaseActivity {
         if (goodsAdapter.operatingStatus == 1) {
             operatingMoneyTv.setText("换货金额：" + sumMoney);
         } else {
-            operatingMoneyTv.setText("回收金额：" + orderDetailReslutBean.getGoldprice() * sumWeight);
+            operatingMoneyTv.setText("回收金额：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(orderDetailReslutBean.getGoldprice() * sumWeight));
             operatingWeightTv.setText("回收金重：" + sumWeight + "克");
         }
     }

@@ -64,6 +64,7 @@ public class BigInventoryTypesDetialActivity extends BaseActivity {
         endTimeTv.setVisibility(getIntent().getBooleanExtra("status",
                 false) ? View.VISIBLE : View.GONE);
 
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         inventoryTeypDetialAdapter = new InventoryTeypDetialAdapter(R.layout.big_inventory_detail_list_item, datalist);
@@ -71,9 +72,15 @@ public class BigInventoryTypesDetialActivity extends BaseActivity {
         inventoryTeypDetialAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                goTypeDetailActivity(datalist.get(position).getId());
+                goTypeDetailActivity(datalist.get(position).getId(),datalist.get(position).getCategory());
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getInventoryDetail();
     }
 
@@ -89,10 +96,11 @@ public class BigInventoryTypesDetialActivity extends BaseActivity {
         }
     }
 
-    public void goTypeDetailActivity(int categoryId) {
+    public void goTypeDetailActivity(int categoryId,String cateName) {
         Intent intent = new Intent(this, BigInventoryDetialActivity.class);
         intent.putExtra("inventoryId", getIntent().getIntExtra("inventoryId", 0));
         intent.putExtra("categoryId", categoryId);
+        intent.putExtra("categoryName", cateName);
         intent.putExtra("status", getIntent().getBooleanExtra("status", false));
         startActivity(intent);
     }
@@ -102,7 +110,8 @@ public class BigInventoryTypesDetialActivity extends BaseActivity {
                 getInventoryTypeDetailById(getIntent().getIntExtra("inventoryId", 0)), new ModelGsonListener<InventoryTypeDetialBean>() {
             @Override
             public void onSuccess(InventoryTypeDetialBean result) throws Exception {
-                startTimeTv.setText(result.getCreated());
+                startTimeTv.setText("開始時間：" + result.getCreated());
+                endTimeTv.setText("結束時間：" + result.getUpdated());
                 datalist.addAll(result.getCategory());
                 inventoryTeypDetialAdapter.notifyDataSetChanged();
                 finishBtn.setVisibility(result.isDone() ? View.GONE : View.VISIBLE);

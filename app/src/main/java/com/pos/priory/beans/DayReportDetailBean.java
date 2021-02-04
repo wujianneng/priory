@@ -20,8 +20,7 @@ public class DayReportDetailBean {
      * invoice_amount : 0
      * cash : 0
      * credit_card : 0
-     * alipay : 0
-     * wechatpay : 0
+     * e_pay : 0
      * cashcoupon : 0
      * other_pay : 0
      * exchange : 0
@@ -42,8 +41,7 @@ public class DayReportDetailBean {
     private double invoice_amount;
     private double cash;
     private double credit_card;
-    private double alipay;
-    private double wechatpay;
+    private double e_pay;
     private double cashcoupon;
     private double other_pay;
     private double exchange;
@@ -148,20 +146,12 @@ public class DayReportDetailBean {
         this.credit_card = credit_card;
     }
 
-    public double getAlipay() {
-        return alipay;
+    public double getE_pay() {
+        return e_pay;
     }
 
-    public void setAlipay(double alipay) {
-        this.alipay = alipay;
-    }
-
-    public double getWechatpay() {
-        return wechatpay;
-    }
-
-    public void setWechatpay(double wechatpay) {
-        this.wechatpay = wechatpay;
+    public void setE_pay(double e_pay) {
+        this.e_pay = e_pay;
     }
 
     public double getCashcoupon() {

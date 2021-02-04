@@ -100,6 +100,7 @@ public class RepertoryRecordBean {
         private String type_display;
         private String purpose_display;
         private String username;
+        private String related_whname;
         private boolean status;
         private String updated;
         private int quantity;
@@ -109,6 +110,14 @@ public class RepertoryRecordBean {
         private int whitem;
         private int warehouse;
         private int whfrom;
+
+        public String getRelated_whname() {
+            return related_whname;
+        }
+
+        public void setRelated_whname(String related_whname) {
+            this.related_whname = related_whname;
+        }
 
         public int getId() {
             return id;

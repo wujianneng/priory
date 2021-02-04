@@ -144,13 +144,10 @@ public interface ApiService {
     @GET("/api/warehouses/filter")
     Observable<RepertoryFiltersBean> getRepertoryFilters();
 
-    @GET("/api/warehouses/wahrecord_list/")
-    Observable<RepertoryRecordBean> getRepertoryRecords(@Query("warehouse_type") String warehouse_type, @Query("whfrom_id") int whfrom_id, @Query("type") int type, @Query("purpose") int purpose,
-                                                        @Query("startdate") String startdate, @Query("enddate") String enddate);
 
     @GET("/api/warehouses/wahrecord_list/")
     Observable<RepertoryRecordBean> getRepertoryRecordsWithSearch(@Query("warehouse_type") String warehouse_type, @Query("whfrom_id") int whfrom_id, @Query("type") int type, @Query("purpose") int purpose,
-                                                                  @Query("startdate") String startdate, @Query("enddate") String enddate, @Query("search") String search);
+                                                                  @Query("startdate") String startdate, @Query("enddate") String enddate, @Query("search") String search, @Query("page") int page);
 
     @GET("/api/warehouses/record/filter")
     Observable<RepertoryRecordFiltersBean> getRepertoryRecordFilters();

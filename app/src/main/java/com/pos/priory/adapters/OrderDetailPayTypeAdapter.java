@@ -17,8 +17,10 @@ public class OrderDetailPayTypeAdapter extends BaseQuickAdapter<OrderDetailReslu
 
     @Override
     protected void convert(BaseViewHolder helper, OrderDetailReslutBean.PayDetailBean.PayMethodsBean.CashCouponBean item) {
-       helper.setText(R.id.name_tv,item.getPaymethod());
-        helper.setText(R.id.detail_tv,item.getCash_coupon_name() == null ? "" : (item.getCash_coupon_name() + "(" + item.getCash_coupon_code() + ")"));
-        helper.setText(R.id.money_tv,item.getAmount() + "元");
+        helper.setText(R.id.name_tv, item.getPaymethod());
+        helper.setText(R.id.detail_tv, item.getCash_coupon_name() == null ? "" : item.getCash_coupon_name());
+        helper.setText(R.id.money_tv, item.getAmount() + "元");
+        helper.setGone(R.id.detail_code_tv,item.getCash_coupon_name() != null);
+        helper.setText(R.id.detail_code_tv, item.getCash_coupon_code());
     }
 }

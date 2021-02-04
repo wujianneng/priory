@@ -25,7 +25,7 @@ public class CashCouponAdapter extends BaseQuickAdapter<CashCouponResultBean, Ba
         helper.setText(R.id.detial_tv, item.getCode());
         helper.setText(R.id.name_tv, item.getName());
         helper.setText(R.id.start_time_tv, "開始時間：" + item.getStarttime());
-        helper.setText(R.id.end_time_tv, "結束時間：" + item.getEndtime());
+        helper.setText(R.id.end_time_tv, "結束時間：" + (item.getEndtime() == null ? "無限期" : item.getEndtime()));
         helper.setText(R.id.code_tv, item.getCode());
         helper.setText(R.id.date_tv, item.getUsed_datetime());
         helper.setText(R.id.amount_tv, "$" + item.getValue());
