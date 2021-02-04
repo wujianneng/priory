@@ -65,7 +65,6 @@
             android:id="@+id/weight_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
             android:layout_below="@+id/code_tv"
             android:layout_toRightOf="@+id/icon_good"

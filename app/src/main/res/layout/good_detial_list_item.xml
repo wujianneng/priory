@@ -31,6 +31,7 @@
         <TextView
             android:id="@+id/code_tv"
             android:layout_width="wrap_content"
+            android:typeface="sans"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
@@ -44,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:typeface="sans"
             android:layout_marginRight="10dp"
             android:layout_centerVertical="true"
             android:text="1.02g"

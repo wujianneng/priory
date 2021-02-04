@@ -42,7 +42,7 @@
             android:id="@+id/detial_tv"
             android:layout_below="@+id/name_tv"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3415019840934"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/detial_tv"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
             android:text="2019-10-10 10:10:10"
             android:textColor="#4a4a4a"
             android:textSize="13sp" />

@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
+        android:typeface="sans"
         android:text="銷售量"
         android:textColor="@color/blue_text"
         android:textSize="20sp"
@@ -27,6 +28,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
+            android:typeface="sans"
             android:background="#ffffff"
             android:elevation="5dp"
             android:foreground="?attr/selectableItemBackground"
@@ -47,6 +49,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:text="开始日期"
+            android:typeface="sans"
             android:textColor="#4a4a4a"
             android:textSize="13sp"
             android:visibility="gone" />
@@ -63,6 +66,7 @@
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:text="结束日期"
+            android:typeface="sans"
             android:textColor="#4a4a4a"
             android:textSize="13sp"
             android:visibility="gone" />
@@ -77,6 +81,7 @@
             android:backgroundTint="#ffffff"
             android:text="單日查詢"
             android:textColor="#333333"
+            android:typeface="sans"
             android:textSize="12sp"
             app:cornerRadius="1dp"
             app:icon="@drawable/go_bottom"
@@ -98,6 +103,7 @@
             android:layout_weight="1"
             android:backgroundTint="#ffffff"
             android:text="黃金"
+            android:typeface="sans"
             android:textColor="#333333"
             android:textSize="12sp"
             app:cornerRadius="1dp"
@@ -113,6 +119,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
+            android:typeface="sans"
             android:backgroundTint="#ffffff"
             android:text="10"
             android:textColor="#333333"
@@ -142,6 +149,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="暫無數據"
+            android:typeface="sans"
             android:textSize="20sp" />
 
     </FrameLayout>

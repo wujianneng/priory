@@ -478,7 +478,7 @@ public class OrderDetialActivity extends BaseActivity {
             Log.e("itemweight", "itemweight1:" + bean.getWeight());
         }
         if (goodsAdapter.operatingStatus == 1) {
-            operatingMoneyTv.setText("换货金额：" + sumMoney);
+            operatingMoneyTv.setText("换货金额：" +  LogicUtils.getKeepLastOneNumberAfterLittlePoint(sumMoney * orderDetailReslutBean.getExchange_rate()));
         } else {
             operatingMoneyTv.setText("回收金额：" + LogicUtils.getKeepLastOneNumberAfterLittlePoint(orderDetailReslutBean.getGoldprice() * sumWeight));
             operatingWeightTv.setText("回收金重：" + sumWeight + "克");

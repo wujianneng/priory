@@ -29,6 +29,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:typeface="sans"
                 android:layout_marginLeft="25dp"
                 android:text="Invoice No."
                 android:textColor="#333"
@@ -37,6 +38,7 @@
             <TextView
                 android:id="@+id/order_number_tv"
                 android:layout_width="match_parent"
+                android:typeface="sans"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
                 android:text="收据编号   S181123012"
@@ -46,6 +48,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:typeface="sans"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="8dp"
                 android:text="Name"
@@ -56,6 +59,7 @@
                 android:id="@+id/buyer_name_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:typeface="sans"
                 android:layout_marginLeft="25dp"
                 android:text="客户姓名   罗小姐"
                 android:textColor="#333"
@@ -64,6 +68,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:typeface="sans"
                 android:layout_marginLeft="25dp"
                 android:layout_marginTop="8dp"
                 android:text="Date"
@@ -72,6 +77,7 @@
 
             <TextView
                 android:id="@+id/date_tv"
+                android:typeface="sans"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="25dp"
@@ -97,6 +103,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:typeface="sans"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="40dp"
                     android:text="珠海安娜贝拉珠宝有限公司"
@@ -105,6 +112,7 @@
 
                 <TextView
                     android:id="@+id/store_tv"
+                    android:typeface="sans"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -115,6 +123,7 @@
                 <TextView
                     android:id="@+id/address_tv"
                     android:layout_width="match_parent"
+                    android:typeface="sans"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="10dp"
@@ -125,6 +134,7 @@
                 <TextView
                     android:id="@+id/tel_tv"
                     android:layout_width="match_parent"
+                    android:typeface="sans"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
                     android:text="+853 2892 0767"
@@ -152,6 +162,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:typeface="sans"
                             android:text="页数"
                             android:textColor="#333"
                             android:textSize="10sp" />
@@ -161,6 +172,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
+                            android:typeface="sans"
                             android:text="1/3"
                             android:textColor="#333"
                             android:textSize="10sp" />
@@ -178,6 +190,7 @@
                             android:layout_height="wrap_content"
                             android:text="总数量(件)"
                             android:textColor="#333"
+                            android:typeface="sans"
                             android:textSize="10sp" />
 
                         <TextView
@@ -186,6 +199,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:text="18"
+                            android:typeface="sans"
                             android:textColor="#333"
                             android:textSize="10sp" />
                     </LinearLayout>
@@ -201,11 +215,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="总金额"
+                            android:typeface="sans"
                             android:textColor="#333"
                             android:textSize="10sp" />
 
                         <TextView
                             android:id="@+id/sum_money_tv"
+                            android:typeface="sans"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
@@ -239,6 +255,7 @@
 
             <TextView
                 android:layout_width="0dp"
+                android:typeface="sans"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:text="货品（名称/条码）"

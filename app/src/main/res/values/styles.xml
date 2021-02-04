@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/colorAccent</item>
         <item name="colorControlHighlight">@color/drag_btn_green</item>
+        <item name="android:fontFamily">@font/font_style</item>
     </style>
 
     <style name="AppBarLayout" parent="ThemeOverlay.AppCompat.Dark.ActionBar">

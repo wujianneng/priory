@@ -12,6 +12,7 @@
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
+            android:typeface="sans"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="订货"
@@ -36,6 +37,7 @@
 
     <TextView
         android:id="@+id/code_tv"
+        android:typeface="sans"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -46,6 +48,7 @@
 
     <TextView
         android:id="@+id/name_tv"
+        android:typeface="sans"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

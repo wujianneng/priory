@@ -29,6 +29,7 @@ import com.pos.priory.beans.DataAmountBean;
 import com.pos.priory.beans.DataCountBean;
 import com.pos.priory.beans.ProductCategoryBean;
 import com.pos.priory.networks.ApiService;
+import com.pos.priory.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,6 +71,8 @@ public class SaleCountDatasFragment extends BaseFragment {
 
     int maxCount = 10;
 
+    boolean isFirstCreate = true;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -85,8 +88,22 @@ public class SaleCountDatasFragment extends BaseFragment {
         dataCountAdapter = new DataCountAdapter(R.layout.sale_count_data_item, dataCountBeanList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(dataCountAdapter);
-        getCategorys();
+
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(isFirstCreate){
+            dateTv.setText(DateUtils.getDateOfToday());
+            isFirstCreate = false;
+            getCategorys();
+        }else {
+            getDatas();
+        }
+
+    }
+
 
     private void getCategorys() {
         RetrofitManager.excute(RetrofitManager.createString(ApiService.class).getProductCategorys(), new ModelListener() {
@@ -96,6 +113,7 @@ public class SaleCountDatasFragment extends BaseFragment {
                 }.getType());
                 if (productCategoryBeanList.size() != 0)
                     selectCategoryId = productCategoryBeanList.get(0).getId();
+                getDatas();
             }
 
             @Override

@@ -5,6 +5,7 @@
     android:id="@+id/content_fragment_otg">
     <TextView
         android:id="@+id/otg_tvMsgStatus"
+        android:typeface="sans"
         android:layout_width="match_parent"
         android:layout_height="26dp"
         android:layout_margin="@dimen/layout_xl_margin"
@@ -22,6 +23,7 @@
     <TextView
         android:id="@+id/otg_tvMsg"
         android:layout_width="match_parent"
+        android:typeface="sans"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/layout_xl_margin"
         android:textStyle="italic"

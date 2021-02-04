@@ -120,11 +120,11 @@ public class MainActivity extends BaseActivity {
         navigation.setMode(BottomNavigationBar.MODE_FIXED);
         navigation.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
         navigation.setInActiveColor(R.color.blue_text);
-        navigation.addItem(new BottomNavigationItem(R.drawable.tab_order, "订单"))
-                .addItem(new BottomNavigationItem(R.drawable.tab_query, "查单"))
-                .addItem(new BottomNavigationItem(R.drawable.tab_repertory, "仓库"))
-                .addItem(new BottomNavigationItem(R.drawable.tab_inventory, "盘点"))
-                .addItem(new BottomNavigationItem(R.drawable.data, "数据"))
+        navigation.addItem(new BottomNavigationItem(R.drawable.tab_order, "訂單"))
+                .addItem(new BottomNavigationItem(R.drawable.tab_query, "查單"))
+                .addItem(new BottomNavigationItem(R.drawable.tab_repertory, "倉庫"))
+                .addItem(new BottomNavigationItem(R.drawable.tab_inventory, "盤點"))
+                .addItem(new BottomNavigationItem(R.drawable.data, "數據"))
                 .setFirstSelectedPosition(0)
                 .initialise();
         navigation.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
