@@ -74,31 +74,31 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initViews();
-//        getAppVersionFromServer();
+        getAppVersionFromServer();
 //        getStoreList();
     }
 
-    private void getStoreList() {
-        RetrofitManager.createString(ApiService.class).getAppStoreList()
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        JSONArray jsonArray = new JSONArray(s);
-                        if (jsonArray.length() != 0) {
-                            MyApplication.getContext().storeListJsonString = s;
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                if (jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getShop())) {
-                                }
-                            }
-                        }
-
-                    }
-                });
-    }
+//    private void getStoreList() {
+//        RetrofitManager.createString(ApiService.class).getAppStoreList()
+//                .compose(this.<String>bindToLifecycle())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String s) throws Exception {
+//                        JSONArray jsonArray = new JSONArray(s);
+//                        if (jsonArray.length() != 0) {
+//                            MyApplication.getContext().storeListJsonString = s;
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                                if (jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getShop())) {
+//                                }
+//                            }
+//                        }
+//
+//                    }
+//                });
+//    }
 
     private void getAppVersionFromServer() {
         RetrofitManager.createString(ApiService.class).getAppVersionCode()

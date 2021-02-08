@@ -186,7 +186,7 @@
                         android:layout_marginRight="15dp"
                         android:layout_weight="1"
                         android:backgroundTint="#ffffff"
-                        android:text="升序"
+                        android:text="降序"
                         android:textColor="#333333"
                         android:textSize="12sp"
                         app:cornerRadius="10dp"

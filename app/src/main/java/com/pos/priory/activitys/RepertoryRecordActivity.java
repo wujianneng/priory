@@ -288,6 +288,9 @@ public class RepertoryRecordActivity extends BaseActivity {
                         } else {
                             empty_layout.setVisibility(View.VISIBLE);
                             refreshLayout.setVisibility(View.GONE);
+                            leftTv.setText("數量：" + 0 + "件，" + "重量：" + 0 + "g");
+                            leftLayout.setVisibility(View.VISIBLE);
+                            sizeTv.setText("記錄:" + 0);
                         }
                         if(isRefresh) {
                             refreshLayout.finishRefresh();
