@@ -468,6 +468,7 @@ public class OrderFragment extends BaseFragment {
             ((TextView) printView.findViewById(R.id.coupon_tv)).setText(dayReportBean.getCashcoupon() + "");
             ((TextView) printView.findViewById(R.id.yingshou_tv)).setText(dayReportBean.getInvoice_amount() + "");
             ((TextView) printView.findViewById(R.id.exchange_tv)).setText(dayReportBean.getExchange() + "");
+            ((TextView) printView.findViewById(R.id.people_exchange_tv)).setText(dayReportBean.getManual_exchange() + "");
             ((TextView) printView.findViewById(R.id.return_tv)).setText(dayReportBean.getReturned() + "");
 
 

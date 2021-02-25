@@ -178,6 +178,24 @@
                     android:gravity="center"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
+                    android:text="人工換貨"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
+
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#333333" />
+
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
                     android:text="現金券"
                     android:textColor="#333"
                     android:textSize="10sp" />
@@ -295,6 +313,25 @@
 
                 <TextView
                     android:id="@+id/e_pay_tv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp"
+                    android:text="8"
+                    android:textColor="#333"
+                    android:textSize="10sp" />
+
+
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#333333" />
+
+                <TextView
+                    android:id="@+id/people_exchange_tv"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

@@ -46,9 +46,19 @@ public class DayReportDetailBean {
     private double other_pay;
     private double exchange;
     private double returned;
+    private double manual_exchange;
     private double return_goldprice;
     private int shop;
     private List<ProductItemsBean> product_items;
+
+
+    public double getManual_exchange() {
+        return manual_exchange;
+    }
+
+    public void setManual_exchange(double manual_exchange) {
+        this.manual_exchange = manual_exchange;
+    }
 
     public int getId() {
         return id;
