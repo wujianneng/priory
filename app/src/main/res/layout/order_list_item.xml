@@ -42,7 +42,7 @@
             android:id="@+id/detial_tv"
             android:layout_below="@+id/name_tv"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="3415019840934"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/detial_tv"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="3dp"
             android:text="2019-10-10 10:10:10"
             android:textColor="#4a4a4a"
             android:textSize="13sp" />
@@ -72,6 +72,19 @@
             android:textSize="25sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/status_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+           android:layout_alignParentBottom="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="5dp"
+            android:text="狀態：正常"
+            android:textColor="@color/drag_btn_green"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
         <View
             android:id="@+id/right_line"
             android:layout_width="1dp"
@@ -79,7 +92,7 @@
             android:layout_alignParentRight="true"
             android:layout_gravity="right"
             android:visibility="gone"
-            android:background="@color/drag_btn_green" />
+            android:background="@color/drag_btn_red" />
     </RelativeLayout>
 
 

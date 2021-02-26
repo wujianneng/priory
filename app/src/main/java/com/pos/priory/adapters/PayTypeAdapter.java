@@ -9,22 +9,28 @@ import android.widget.EditText;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
+import com.pos.priory.activitys.BalanceActivity;
 import com.pos.priory.beans.PayTypeBean;
+import com.pos.priory.beans.PayTypesResultBean;
 
 import java.util.List;
 
-public class PayTypeAdapter extends BaseQuickAdapter<PayTypeBean, BaseViewHolder> {
+public class PayTypeAdapter extends BaseQuickAdapter<PayTypesResultBean.ResultsBean, BaseViewHolder> {
 
-    public PayTypeAdapter(int layoutResId, @Nullable List<PayTypeBean> data) {
+    BalanceActivity balanceActivity;
+
+    public PayTypeAdapter(int layoutResId, @Nullable List<PayTypesResultBean.ResultsBean> data,BalanceActivity balanceActivity) {
         super(layoutResId, data);
+        this.balanceActivity = balanceActivity;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, PayTypeBean item) {
-        helper.setText(R.id.name_tv, item.getPayTypeName());
+    protected void convert(BaseViewHolder helper, PayTypesResultBean.ResultsBean item) {
+        helper.setText(R.id.name_tv, item.getName());
         final EditText edtWeight = helper.getView(R.id.edt_view);
+        edtWeight.setEnabled(!item.isCashCoupon());
         edtWeight.removeTextChangedListener((TextWatcher) edtWeight.getTag());
-        edtWeight.setText(item.getPayAmount() + "");
+        edtWeight.setText(item.getPayAmount() == 0 ? "" : (item.getPayAmount() + ""));
         edtWeight.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 TextWatcher textWatcher = new TextWatcher() {
@@ -36,6 +42,7 @@ public class PayTypeAdapter extends BaseQuickAdapter<PayTypeBean, BaseViewHolder
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         String str = s.toString();
                         item.setPayAmount(TextUtils.isEmpty(str) ? 0 : Double.parseDouble(str));
+                        balanceActivity.retCaculationMoneys();
                     }
 
                     @Override
@@ -46,7 +53,7 @@ public class PayTypeAdapter extends BaseQuickAdapter<PayTypeBean, BaseViewHolder
                 edtWeight.addTextChangedListener(textWatcher);
             } else {
                 edtWeight.removeTextChangedListener((TextWatcher) edtWeight.getTag());
-                edtWeight.setText(item.getPayAmount() + "");
+                edtWeight.setText(item.getPayAmount() == 0 ? "" : (item.getPayAmount() + ""));
             }
         });
     }

@@ -44,7 +44,7 @@
                         android:layout_height="10dp"
                         android:layout_gravity="bottom"
                         android:layout_marginBottom="2dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="20dp"
                         android:src="@drawable/icon_detail" />
 
                     <TextView
@@ -221,7 +221,7 @@
 
         </android.support.v7.widget.CardView>
 
-        <android.support.design.button.MaterialButton
+        <Button
             android:id="@+id/btn_print"
             android:layout_width="230dp"
             android:layout_height="56dp"
@@ -235,8 +235,6 @@
             android:textColor="#ffffff"
             android:textSize="20sp"
             app:cornerRadius="28dp"
-            app:additionalPaddingStartForIcon="40dp"
-            app:additionalPaddingEndForIcon="5dp"
             app:iconPadding="1dp"
             android:layout_gravity="center_horizontal|bottom"
             />

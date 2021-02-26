@@ -149,7 +149,7 @@ public class UpgradeUtils {
                             intent.addCategory(Intent.CATEGORY_DEFAULT);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                Uri contentUri = FileProvider.getUriForFile(context, "com.pos.priory.fileprovider", file);
+                                Uri contentUri = FileProvider.getUriForFile(context, "com.pos.priory.fileprovider.test", file);
                                 intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
                             } else {
                                 intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");

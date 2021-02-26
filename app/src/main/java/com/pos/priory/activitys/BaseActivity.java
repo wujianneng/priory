@@ -87,7 +87,10 @@ public abstract class BaseActivity extends RxAppCompatActivity {
     }
 
     public void hideLoadingDialog() {
-        if (customDialog != null) customDialog.dismiss();
+        if (customDialog != null) {
+            customDialog.dismiss();
+            customDialog = null;
+        } ;
     }
 
     public void showToast(final String msg) {

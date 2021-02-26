@@ -5,6 +5,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/discount_item_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp">
 
@@ -17,10 +18,12 @@
 
         <TextView
             android:id="@+id/name_tv"
+            android:typeface="sans"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
+            android:layout_toLeftOf="@+id/down_img"
             android:layout_toRightOf="@+id/checkbox"
             android:text="优惠券名"
             android:textColor="@color/blue_text"
@@ -33,6 +36,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:padding="5dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/go_bottom" />
 
@@ -42,15 +46,46 @@
         android:id="@+id/detail_layout"
         android:layout_width="match_parent"
         android:background="#f3f3f3"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/detial_tv"
+            android:typeface="sans"
             android:textColor="@color/blue_text"
             android:textSize="15sp"
+            android:layout_alignParentTop="true"
             android:text="优惠券详细规则......"
-            android:layout_margin="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/start_time_tv"
+            android:textColor="@color/blue_text"
+            android:typeface="sans"
+            android:textSize="12sp"
+            android:layout_below="@+id/detial_tv"
+            android:text="dddd"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/end_time_tv"
+            android:textColor="@color/blue_text"
+            android:textSize="12sp"
+            android:typeface="sans"
+            android:text="aaaaa"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="62dp"
+            android:layout_marginRight="15dp"
+            android:layout_below="@+id/start_time_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </RelativeLayout>

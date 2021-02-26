@@ -24,6 +24,7 @@ import com.pos.priory.R;
 import com.pos.priory.adapters.GoodDetialAdapter;
 import com.pos.priory.beans.TranferStoresBean;
 import com.pos.priory.beans.WarehouseBean;
+import com.pos.priory.beans.WhitemDetailResultBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -44,6 +45,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * Created by Lenovo on 2018/12/31.
@@ -63,7 +66,7 @@ public class GoodDetialActivity extends BaseActivity {
     SmartRefreshLayout smartRefreshLayout;
 
     GoodDetialAdapter goodDetialAdapter;
-    List<WarehouseBean.ResultsBean.ItemBean> orderList = new ArrayList<>();
+    List<WhitemDetailResultBean.WhitemBean> orderList = new ArrayList<>();
     @Bind(R.id.price_tv)
     TextView priceTv;
     @Bind(R.id.weight_tv)
@@ -87,11 +90,11 @@ public class GoodDetialActivity extends BaseActivity {
         initViews();
     }
 
-    WarehouseBean.ResultsBean.ItemBean goodBean;
+    WarehouseBean.ResultsBean goodBean;
     String productcode = "";
 
     protected void initViews() {
-        goodBean = gson.fromJson(getIntent().getStringExtra("goodbean"), WarehouseBean.ResultsBean.ItemBean.class);
+        goodBean = gson.fromJson(getIntent().getStringExtra("goodbean"), WarehouseBean.ResultsBean.class);
         String goodname = goodBean.getName();
         productcode = goodBean.getProductcode() + "";
         titleTv.setText(goodname);
@@ -124,7 +127,7 @@ public class GoodDetialActivity extends BaseActivity {
                             try {
                                 stores.clear();
                                 storeIds.clear();
-                                for (TranferStoresBean.ResultBean resultBean : result.getResult()) {
+                                for (TranferStoresBean.ResultsBean resultBean : result.getResults()) {
                                     stores.add(resultBean.getName());
                                     storeIds.add(resultBean.getId());
                                 }
@@ -154,7 +157,7 @@ public class GoodDetialActivity extends BaseActivity {
     }
 
     private boolean hasSelected() {
-        for (WarehouseBean.ResultsBean.ItemBean itemBean : orderList) {
+        for (WhitemDetailResultBean.WhitemBean itemBean : orderList) {
             if (itemBean.isSelected())
                 return true;
         }
@@ -166,13 +169,17 @@ public class GoodDetialActivity extends BaseActivity {
             customDialog = new CustomDialog(this, "调货中..");
         customDialog.setOnDismissListener(dialog -> customDialog = null);
         customDialog.show();
+        Map<String, Object> paramMap = new HashMap<>();
         List<Integer> items = new ArrayList<>();
-        for (WarehouseBean.ResultsBean.ItemBean resultsBean : orderList) {
+        for (WhitemDetailResultBean.WhitemBean resultsBean : orderList) {
             if (resultsBean.isSelected())
                 items.add(resultsBean.getId());
         }
+        paramMap.put("id", storeid);
+        paramMap.put("item", items);
+        Log.e("test","param:" + gson.toJson(paramMap));
         RetrofitManager.createString(ApiService.class)
-                .tranferGoods(storeid, items)
+                .tranferGoods(RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap)))
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
@@ -192,25 +199,19 @@ public class GoodDetialActivity extends BaseActivity {
             goodDetialAdapter.notifyDataSetChanged();
         }
         RetrofitManager.createGson(ApiService.class)
-                .getStockListByParam(productcode)
+                .getStockDetail(goodBean.getId())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(warehouseBean -> {
                     if (warehouseBean != null) {
-                        for (WarehouseBean.ResultsBean resultsBean : warehouseBean.getResults()) {
-                            Log.e("test","resultsBean.getId():" + resultsBean.getId()
-                                    + "goodBean.getId():" + goodBean.getId());
-                            if (resultsBean.getName().equals(goodBean.getWarehouse())) {
-                                orderList.addAll(resultsBean.getItem());
-                                goodDetialAdapter.notifyDataSetChanged();
-                                codeTv.setText(goodBean.getProductcode() + "");
-                                nameTv.setText(resultsBean.getName());
-                                repertoryTv.setText(resultsBean.getTotal().getQuantity() + "件");
-                                priceTv.setText(goodBean.getPrice().get(0).getSymbol() +  goodBean.getPrice().get(0).getPrice());
-                                weightTv.setText(resultsBean.getTotal().getWeight() + "g");
-                                if (resultsBean.getTotal().getWeight() == 0) {
-                                    weightTv.setVisibility(View.GONE);
-                                }
-                            }
+                        orderList.addAll(warehouseBean.getWhitem());
+                        goodDetialAdapter.notifyDataSetChanged();
+                        codeTv.setText(goodBean.getProductcode() + "");
+                        nameTv.setText(goodBean.getName());
+                        repertoryTv.setText(warehouseBean.getQuantity_total() + "件");
+                        priceTv.setText(goodBean.getSymbol() + warehouseBean.getPrice());
+                        weightTv.setText(warehouseBean.getPrd_weight() + "g");
+                        if (warehouseBean.getPrd_weight() == 0) {
+                            weightTv.setVisibility(View.GONE);
                         }
                     }
                     smartRefreshLayout.finishLoadMore();
@@ -222,12 +223,12 @@ public class GoodDetialActivity extends BaseActivity {
     }
 
 
-    private void doDingHuo(final WarehouseBean.ResultsBean.ItemBean bean) {
+    private void doDingHuo(final WarehouseBean.ResultsBean bean) {
         if (customDialog == null)
             customDialog = new CustomDialog(this, "订货中..");
         customDialog.setOnDismissListener(dialog -> customDialog = null);
         customDialog.show();
-        RetrofitManager.createString(ApiService.class).createPurchasingitem(bean.getProduct_id())
+        RetrofitManager.createString(ApiService.class).createPurchasingitem(bean.getId())
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {

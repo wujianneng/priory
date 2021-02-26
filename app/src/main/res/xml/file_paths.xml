@@ -2,6 +2,6 @@
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
     <external-path
         name="download"
-        path="/data/data/com.pos.priory" />
+        path="/data/data/com.pos.priory.test" />
     <files-path path="." name="download" />
 </paths>

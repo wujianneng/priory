@@ -11,6 +11,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:text="營業額"
+        android:typeface="sans"
         android:textColor="@color/blue_text"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -27,11 +28,12 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
+            android:typeface="sans"
             android:background="#ffffff"
             android:elevation="5dp"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            android:text="请选择日期"
+            android:text="選擇日期"
             android:textColor="#4a4a4a"
             android:textSize="15sp" />
 
@@ -42,11 +44,12 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
+            android:typeface="sans"
             android:background="#ffffff"
             android:elevation="5dp"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            android:text="请选择开始日期"
+            android:text="開始日期"
             android:textColor="#4a4a4a"
             android:textSize="13sp"
             android:visibility="gone" />
@@ -58,11 +61,12 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
+            android:typeface="sans"
             android:background="#ffffff"
             android:elevation="5dp"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            android:text="请选择结束日期"
+            android:text="結束日期"
             android:textColor="#4a4a4a"
             android:textSize="13sp"
             android:visibility="gone" />
@@ -74,6 +78,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:typeface="sans"
             android:backgroundTint="#ffffff"
             android:text="單日查詢"
             android:textColor="#333333"
@@ -89,16 +94,34 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
-        android:text="總數：1000"
+        android:text="總數：0"
+        android:typeface="sans"
         android:textColor="@color/blue_text"
         android:textSize="20sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
-        android:layout_height="wrap_content" />
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="暫無數據"
+            android:typeface="sans"
+            android:textSize="20sp" />
+
+    </FrameLayout>
 
 </LinearLayout>

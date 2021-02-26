@@ -75,7 +75,7 @@ public class PurchasingItemBean {
 
         private int id;
         private String name;
-        private int productcode;
+        private String productcode;
         private String price;
         private String image;
         private CatalogBean catalog;
@@ -96,11 +96,11 @@ public class PurchasingItemBean {
             this.name = name;
         }
 
-        public int getProductcode() {
+        public String getProductcode() {
             return productcode;
         }
 
-        public void setProductcode(int productcode) {
+        public void setProductcode(String productcode) {
             this.productcode = productcode;
         }
 

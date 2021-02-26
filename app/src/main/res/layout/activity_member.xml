@@ -35,6 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="会员"
+            android:typeface="sans"
             android:textColor="#fff"
             android:textSize="20sp" />
 
@@ -46,6 +47,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:layout_gravity="center_vertical|right"
             android:text="注册"
+            android:typeface="sans"
             android:textColor="#fff"
             android:textSize="18sp" />
 
@@ -82,6 +84,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:text="电话"
+                android:typeface="sans"
                 android:textColor="@color/blue_text"
                 android:textSize="13sp" />
 
@@ -105,6 +108,7 @@
         android:textSize="13sp"
         android:textColor="@color/blue_text"
         android:text="请选择"
+        android:typeface="sans"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_width="wrap_content"
@@ -115,8 +119,25 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"></android.support.v7.widget.RecyclerView>
+
+    <FrameLayout
+        android:id="@+id/empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="暫無數據"
+            android:typeface="sans"
+            android:textSize="20sp" />
+
+    </FrameLayout>
 
 </LinearLayout>

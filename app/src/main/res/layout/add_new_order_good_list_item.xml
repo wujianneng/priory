@@ -123,10 +123,11 @@
         <LinearLayout
             android:id="@+id/fitting_count_layout"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="33dp"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="8dp"
             android:orientation="horizontal"
             android:visibility="gone">
 
@@ -143,7 +144,7 @@
 
             <TextView
                 android:id="@+id/fitting_count_tv"
-                android:layout_width="70dp"
+                android:layout_width="55dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/border_gray"
                 android:gravity="center"

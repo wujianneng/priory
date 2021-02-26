@@ -2,7 +2,6 @@ package com.pos.priory.activitys;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.button.MaterialButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -75,32 +74,31 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initViews();
-//        getAppVersionFromServer();
+        getAppVersionFromServer();
 //        getStoreList();
     }
 
-    private void getStoreList() {
-        RetrofitManager.createString(ApiService.class).getAppStoreList()
-                .compose(this.<String>bindToLifecycle())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        JSONArray jsonArray = new JSONArray(s);
-                        if (jsonArray.length() != 0) {
-                            MyApplication.getContext().storeListJsonString = s;
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                if (jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getShop())) {
-
-                                }
-                            }
-                        }
-
-                    }
-                });
-    }
+//    private void getStoreList() {
+//        RetrofitManager.createString(ApiService.class).getAppStoreList()
+//                .compose(this.<String>bindToLifecycle())
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String s) throws Exception {
+//                        JSONArray jsonArray = new JSONArray(s);
+//                        if (jsonArray.length() != 0) {
+//                            MyApplication.getContext().storeListJsonString = s;
+//                            for (int i = 0; i < jsonArray.length(); i++) {
+//                                JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                                if (jsonObject.getString("name").equals(MyApplication.getContext().staffInfoBean.getShop())) {
+//                                }
+//                            }
+//                        }
+//
+//                    }
+//                });
+//    }
 
     private void getAppVersionFromServer() {
         RetrofitManager.createString(ApiService.class).getAppVersionCode()
@@ -122,11 +120,11 @@ public class MainActivity extends BaseActivity {
         navigation.setMode(BottomNavigationBar.MODE_FIXED);
         navigation.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
         navigation.setInActiveColor(R.color.blue_text);
-        navigation.addItem(new BottomNavigationItem(R.drawable.tab_order, "订单"))
-                .addItem(new BottomNavigationItem(R.drawable.tab_query, "查单"))
-                .addItem(new BottomNavigationItem(R.drawable.tab_repertory, "仓库"))
-                .addItem(new BottomNavigationItem(R.drawable.tab_inventory, "盘点"))
-                .addItem(new BottomNavigationItem(R.drawable.data, "数据"))
+        navigation.addItem(new BottomNavigationItem(R.drawable.tab_order, "訂單"))
+                .addItem(new BottomNavigationItem(R.drawable.tab_query, "查單"))
+                .addItem(new BottomNavigationItem(R.drawable.tab_repertory, "倉庫"))
+                .addItem(new BottomNavigationItem(R.drawable.tab_inventory, "盤點"))
+                .addItem(new BottomNavigationItem(R.drawable.data, "數據"))
                 .setFirstSelectedPosition(0)
                 .initialise();
         navigation.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {

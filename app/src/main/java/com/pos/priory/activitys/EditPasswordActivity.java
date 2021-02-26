@@ -1,6 +1,7 @@
 package com.pos.priory.activitys;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
@@ -8,6 +9,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
 import android.text.style.AbsoluteSizeSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +20,7 @@ import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
+import com.pos.priory.utils.ColseActivityUtils;
 import com.pos.priory.utils.LogicUtils;
 
 import java.util.HashMap;
@@ -87,6 +90,7 @@ public class EditPasswordActivity extends BaseActivity {
         Map<String, Object> map = new HashMap<>();
         map.put("new_password1", edtNewPassword.getText().toString());
         map.put("new_password2", edtRepeatNewPassword.getText().toString());
+        Log.e("test","param:" + gson.toJson(map));
         RetrofitManager.createString(ApiService.class)
                 .resetPassword(map)
                 .compose(this.<String>bindToLifecycle())
@@ -96,13 +100,18 @@ public class EditPasswordActivity extends BaseActivity {
                     @Override
                     public void accept(String s) throws Exception {
                         Toast.makeText(EditPasswordActivity.this, "修改密码成功", Toast.LENGTH_SHORT).show();
-                        finish();
+                        ColseActivityUtils.closeAllAcitivty();
+                        startActivity(new Intent(EditPasswordActivity.this, LoginActivity.class));
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
-                        Toast.makeText(EditPasswordActivity.this, "修改密码失败", Toast.LENGTH_SHORT).show();
+                        Log.e("test","throwable:" + throwable.getMessage());
+                        if (throwable.getMessage().contains("400")) {
+                            Toast.makeText(EditPasswordActivity.this, "密碼太普通", Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(EditPasswordActivity.this, "修改密码失败", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -124,6 +133,10 @@ public class EditPasswordActivity extends BaseActivity {
                 if (LogicUtils.isNumeric(edtNewPassword.getText().toString()) ||
                         LogicUtils.isNumeric(edtRepeatNewPassword.getText().toString())) {
                     Toast.makeText(EditPasswordActivity.this, "新密码和确认密码都不能为纯数字", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!edtNewPassword.getText().toString().equals(edtRepeatNewPassword.getText().toString())) {
+                    Toast.makeText(EditPasswordActivity.this, "新密码和确认密码不一致", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 editPassword();

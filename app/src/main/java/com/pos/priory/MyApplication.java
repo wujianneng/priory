@@ -17,10 +17,6 @@ public class MyApplication extends Application {
     private static MyApplication mContext;
     public static StaffInfoBean staffInfoBean;
     public static String authorization = "";
-    public static String storeName = "";
-    public static String storeAddress = "";
-    public static String storeTel = "";
-    public static String region = "";
     public static String storeListJsonString = "";
 
     @Override
@@ -29,7 +25,7 @@ public class MyApplication extends Application {
         mContext = this;
         Utils.init(this);
 
-        RetrofitManager.init(this,Constants.SENTRY_DNS,Constants.MACAL_BASE_URL,new Cache(getCacheDir(),
+        RetrofitManager.init(this,Constants.SENTRY_DNS,Constants.BASE_URL,new Cache(getCacheDir(),
                 1024 * 1024 * 10),"",Constants.Authorization_KEY,authorization);
     }
 

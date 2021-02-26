@@ -30,5 +30,6 @@ public class InventoryStoreAdapter extends BaseQuickAdapter<InventoryBean.Result
     protected void convert(BaseViewHolder helper, InventoryBean.ResultsBean item) {
         helper.setText(R.id.date_tv, item.getCreated());
         helper.setText(R.id.count_tv,"(" + item.getCount() + ")");
+        helper.setText(R.id.status_tv,item.isDone() ? "已完成" : "未完成");
     }
 }

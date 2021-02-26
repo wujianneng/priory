@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.NetworkUtils;
 import com.google.gson.reflect.TypeToken;
 import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
@@ -58,8 +59,6 @@ public class LoginActivity extends BaseActivity {
     MaterialButton btnCardview;
     @Bind(R.id.checkbox)
     CheckBox checkbox;
-    @Bind(R.id.location_tv)
-    TextView locationTv;
     @Bind(R.id.select_location_btn)
     LinearLayout selectLocationBtn;
 
@@ -84,63 +83,28 @@ public class LoginActivity extends BaseActivity {
             }, 300);
         }
         checkbox.setChecked(sharedPreferences.getBoolean(Constants.IS_SAVE_PASSWORD_KEY, false));
-        RetrofitManager.changeBaseUrl(sharedPreferences.getString(Constants.LAST_BASE_URL_KEY, Constants.BASE_URL));
+//        RetrofitManager.changeBaseUrl(sharedPreferences.getString(Constants.LAST_BASE_URL_KEY, Constants.BASE_URL));
         Log.e("test", "MyApplication.hostName:" + RetrofitManager.hostname);
-        locationTv.setText(RetrofitManager.hostname.equals(Constants.BASE_URL) ? "中国大陆" : "澳门");
     }
 
-    @OnClick({R.id.btn_cardview, R.id.select_location_btn})
+    @OnClick({R.id.btn_cardview})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_cardview:
                 login();
                 break;
-            case R.id.select_location_btn:
-                showSelectLocationPop(v);
-                break;
         }
     }
 
-    PopupMenu popupMenu;
 
-    private void showSelectLocationPop(View view) {
-        // 这里的view代表popupMenu需要依附的view
-        if (popupMenu == null) {
-            popupMenu = new PopupMenu(LoginActivity.this, view);
-            // 获取布局文件
-            popupMenu.getMenuInflater().inflate(R.menu.location_menu, popupMenu.getMenu());
-            popupMenu.show();
-            popupMenu.setOnDismissListener(new PopupMenu.OnDismissListener() {
-                @Override
-                public void onDismiss(PopupMenu popupMenu1) {
-                    popupMenu = null;
-                }
-            });
-            // 通过上面这几行代码，就可以把控件显示出来了
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    // 控件每一个item的点击事件
-                    switch (item.getItemId()) {
-                        case R.id.menu0:
-                            locationTv.setText(item.getTitle());
-                            RetrofitManager.changeBaseUrl(Constants.BASE_URL);
-                            break;
-                        case R.id.menu1:
-                            locationTv.setText(item.getTitle());
-                            RetrofitManager.changeBaseUrl(Constants.MACAL_BASE_URL);
-                            break;
-                    }
-                    return true;
-                }
-            });
-        }
-    }
 
 
     CustomDialog customDialog;
 
     private void login() {
+        if(!NetworkUtils.isConnected()){
+            Toast.makeText(this,"請檢查網絡",Toast.LENGTH_LONG).show();
+        }
         if (customDialog == null) {
             customDialog = new CustomDialog(this, "登录中..");
             customDialog.setOnDismissListener(dialogInterface -> customDialog = null);
@@ -153,8 +117,8 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onSuccess(String result) throws Exception {
                     Log.e("test", "doOnNext:" + result);
-                    String token = new JSONObject(result).getString("key");
-                    MyApplication.authorization = "Token " + token;
+                    String token = new JSONObject(result).getString("token");
+                    MyApplication.authorization = "JWT " + token;
                     RetrofitManager.initHeader(Constants.Authorization_KEY, MyApplication.authorization);
                 }
 
@@ -167,26 +131,30 @@ public class LoginActivity extends BaseActivity {
             }, RetrofitManager.createString(ApiService.class).getStaffInfo(), new ModelListener() {
                 @Override
                 public void onSuccess(String result) throws Exception {
-                    StaffInfoBean staffInfoBean = gson.fromJson(result, StaffInfoBean.class);
-                    MyApplication.staffInfoBean = staffInfoBean;
-                    if (staffInfoBean.getUser().equals(edtUsename.getText().toString())) {
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
-                        if (checkbox.isChecked()) {
-                            editor.putString(Constants.LAST_USERNAME_KEY,
-                                    edtUsename.getText().toString());
-                            editor.putString(Constants.LAST_PASSWORD_KEY,
-                                    edtPasswrod.getText().toString());
-                            editor.putString(Constants.LAST_BASE_URL_KEY,
-                                    RetrofitManager.hostname);
+                    JSONObject jsonObject = new JSONObject(result);
+                    StaffInfoBean staffInfoBean = gson.fromJson(jsonObject.getString("result"),StaffInfoBean.class);
+                    if (staffInfoBean != null) {
+                        Log.e("test","user:" + staffInfoBean.getUser());
+                        MyApplication.staffInfoBean = staffInfoBean;
+                        if (staffInfoBean.getUser().equals(edtUsename.getText().toString())) {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putBoolean(Constants.IS_SAVE_PASSWORD_KEY, checkbox.isChecked());
+                            if (checkbox.isChecked()) {
+                                editor.putString(Constants.LAST_USERNAME_KEY,
+                                        edtUsename.getText().toString());
+                                editor.putString(Constants.LAST_PASSWORD_KEY,
+                                        edtPasswrod.getText().toString());
+//                                editor.putString(Constants.LAST_BASE_URL_KEY,
+//                                        RetrofitManager.hostname);
+                            }
+                            editor.putString(Constants.CURRENT_STAFF_INFO_KEY, result);
+                            editor.commit();
+                            if (customDialog != null)
+                                customDialog.dismiss();
+                            RetrofitManager.initSentry(edtUsename.getText().toString());
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
                         }
-                        editor.putString(Constants.CURRENT_STAFF_INFO_KEY, result);
-                        editor.commit();
-                        if (customDialog != null)
-                            customDialog.dismiss();
-                        RetrofitManager.initSentry(edtUsename.getText().toString());
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        finish();
                     }
                 }
 

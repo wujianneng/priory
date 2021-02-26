@@ -4,64 +4,65 @@ import java.util.List;
 
 public class TranferStoresBean {
 
+
     /**
-     * code : 202
-     * msg : 成功
-     * level : info
-     * result : [{"id":9,"status":true,"storeno":"12344","name":"內測分店","tel":"","address":"","starttime":"09:00:00","endtime":"21:00:00","currency":{"id":1,"status":true,"name":"MOP","symbol":"$"},"region":{"id":1,"status":true,"name":"中國澳門"},"created":"2020-03-26 04:23:27","updated":"2020-03-26 04:23:36"}]
+     * count : 1
+     * next : null
+     * previous : null
+     * results : [{"id":3,"status":true,"storeno":"","name":"澳門測試分店","tel":"","address":"","starttime":"09:00:00","endtime":"17:00:00","currency":{"id":1,"status":true,"name":"MOP","symbol":"$"},"region":{"id":1,"status":true,"name":"澳門"},"created":"2020-08-13 16:18:42","updated":"2020-08-14 10:35:33"}]
      */
 
-    private int code;
-    private String msg;
-    private String level;
-    private List<ResultBean> result;
+    private int count;
+    private Object next;
+    private Object previous;
+    private List<ResultsBean> results;
 
-    public int getCode() {
-        return code;
+    public int getCount() {
+        return count;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    public void setCount(int count) {
+        this.count = count;
     }
 
-    public String getMsg() {
-        return msg;
+    public Object getNext() {
+        return next;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setNext(Object next) {
+        this.next = next;
     }
 
-    public String getLevel() {
-        return level;
+    public Object getPrevious() {
+        return previous;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setPrevious(Object previous) {
+        this.previous = previous;
     }
 
-    public List<ResultBean> getResult() {
-        return result;
+    public List<ResultsBean> getResults() {
+        return results;
     }
 
-    public void setResult(List<ResultBean> result) {
-        this.result = result;
+    public void setResults(List<ResultsBean> results) {
+        this.results = results;
     }
 
-    public static class ResultBean {
+    public static class ResultsBean {
         /**
-         * id : 9
+         * id : 3
          * status : true
-         * storeno : 12344
-         * name : 內測分店
+         * storeno :
+         * name : 澳門測試分店
          * tel :
          * address :
          * starttime : 09:00:00
-         * endtime : 21:00:00
+         * endtime : 17:00:00
          * currency : {"id":1,"status":true,"name":"MOP","symbol":"$"}
-         * region : {"id":1,"status":true,"name":"中國澳門"}
-         * created : 2020-03-26 04:23:27
-         * updated : 2020-03-26 04:23:36
+         * region : {"id":1,"status":true,"name":"澳門"}
+         * created : 2020-08-13 16:18:42
+         * updated : 2020-08-14 10:35:33
          */
 
         private int id;
@@ -223,7 +224,7 @@ public class TranferStoresBean {
             /**
              * id : 1
              * status : true
-             * name : 中國澳門
+             * name : 澳門
              */
 
             private int id;

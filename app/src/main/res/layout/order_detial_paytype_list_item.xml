@@ -6,6 +6,7 @@
     <TextView
         android:id="@+id/name_tv"
         android:layout_width="wrap_content"
+        android:typeface="sans"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
@@ -16,18 +17,21 @@
     <TextView
         android:id="@+id/detail_tv"
         android:layout_width="wrap_content"
+        android:typeface="sans"
         android:layout_height="wrap_content"
         android:layout_below="@+id/name_tv"
         android:layout_marginLeft="15dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="3dp"
         android:text="网上客服赠送"
-        android:textColor="@color/blue_text" />
+        android:textSize="12sp"
+        android:textColor="@color/colorGrey" />
 
     <TextView
         android:id="@+id/money_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
+        android:typeface="sans"
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="10dp"

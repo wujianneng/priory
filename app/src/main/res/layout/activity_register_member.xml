@@ -221,7 +221,7 @@
 
         </android.support.v7.widget.CardView>
 
-        <android.support.design.button.MaterialButton
+        <Button
             android:id="@+id/btn_commit"
             android:layout_width="230dp"
             android:layout_height="56dp"
@@ -231,8 +231,6 @@
             android:textColor="#ffffff"
             android:textSize="20sp"
             app:cornerRadius="28dp"
-            app:additionalPaddingStartForIcon="40dp"
-            app:additionalPaddingEndForIcon="5dp"
             app:iconPadding="1dp"
             android:layout_gravity="center_horizontal|bottom"
             android:layout_marginBottom="30dp"

@@ -8,38 +8,19 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="37dp">
+        android:layout_height="0dp"
+        android:layout_weight="10">
 
         <LinearLayout
             android:id="@+id/select_location_btn"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
+            android:layout_gravity="right"
             android:layout_marginRight="-2dp"
             android:background="@drawable/location_bg"
-            android:layout_gravity="right"
-            android:foreground="?attr/selectableItemBackground">
-
-            <TextView
-                android:id="@+id/location_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="14dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:text="中国大陆"
-                android:textColor="#FF3A3939"
-                android:textSize="13sp" />
-
-            <ImageView
-                android:src="@drawable/go_bottom"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="16dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" />
 
     </FrameLayout>
 
@@ -48,7 +29,6 @@
         android:layout_width="260dp"
         android:layout_height="116dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="200dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -123,23 +103,31 @@
             android:background="#000000" />
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
     <android.support.design.button.MaterialButton
         android:id="@+id/btn_cardview"
         android:layout_width="230dp"
         android:layout_height="56dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
         android:background="@color/colorAccent"
         android:text="登  录"
         android:textColor="#ffffff"
         android:textSize="20sp"
         app:cornerRadius="28dp" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
     <LinearLayout
         android:layout_width="230dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <CheckBox
@@ -162,13 +150,23 @@
     </LinearLayout>
 
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2" />
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="80dp"
         android:text="copyright(c)2015-2018 AnnaBella ip"
         android:textColor="@color/colorAccent"
         android:textSize="13sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5" />
 
 </LinearLayout>

@@ -1,24 +1,35 @@
 package com.pos.priory.beans;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class CreateOrderParamsBean {
 
     /**
-     * member : 0
-     * staff : 0
-     * status : 未完成
-     * items : [{"stock":0,"discount":"string","fixdiscount":"string","returned":true}]
-     * discount : string
-     * fixdiscount : string
+     * order_type : 0
+     * member : 1
+     * paymethods : [{"id":1,"amount":800},{"id":2,"amount":11},{"id":7,"amount":100,"cash_coupon_id":31}]
+     * amount_payable : 911
+     * cash_coupons : [31]
+     * shop : 1
+     * cache_token : 3f3142b17d85452b9e1ffc96c6d06ed8
      */
 
+    private int order_type;
     private int member;
-    private int staff;
-    private String status;
-    private String discount;
-    private String fixdiscount;
-    private List<ItemsBean> items;
+    private BigDecimal amount_payable;
+    private int shop;
+    private String cache_token;
+    private List<PaymethodsBean> paymethods;
+    private List<Integer> cash_coupons;
+
+    public int getOrder_type() {
+        return order_type;
+    }
+
+    public void setOrder_type(int order_type) {
+        this.order_type = order_type;
+    }
 
     public int getMember() {
         return member;
@@ -28,89 +39,79 @@ public class CreateOrderParamsBean {
         this.member = member;
     }
 
-    public int getStaff() {
-        return staff;
+    public BigDecimal getAmount_payable() {
+        return amount_payable;
     }
 
-    public void setStaff(int staff) {
-        this.staff = staff;
+    public void setAmount_payable(BigDecimal amount_payable) {
+        this.amount_payable = amount_payable;
     }
 
-    public String getStatus() {
-        return status;
+    public int getShop() {
+        return shop;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setShop(int shop) {
+        this.shop = shop;
     }
 
-    public String getDiscount() {
-        return discount;
+    public String getCache_token() {
+        return cache_token;
     }
 
-    public void setDiscount(String discount) {
-        this.discount = discount;
+    public void setCache_token(String cache_token) {
+        this.cache_token = cache_token;
     }
 
-    public String getFixdiscount() {
-        return fixdiscount;
+    public List<PaymethodsBean> getPaymethods() {
+        return paymethods;
     }
 
-    public void setFixdiscount(String fixdiscount) {
-        this.fixdiscount = fixdiscount;
+    public void setPaymethods(List<PaymethodsBean> paymethods) {
+        this.paymethods = paymethods;
     }
 
-    public List<ItemsBean> getItems() {
-        return items;
+    public List<Integer> getCash_coupons() {
+        return cash_coupons;
     }
 
-    public void setItems(List<ItemsBean> items) {
-        this.items = items;
+    public void setCash_coupons(List<Integer> cash_coupons) {
+        this.cash_coupons = cash_coupons;
     }
 
-    public static class ItemsBean {
+    public static class PaymethodsBean {
         /**
-         * stock : 0
-         * discount : string
-         * fixdiscount : string
-         * returned : true
+         * id : 1
+         * amount : 800
+         * cash_coupon_id : 31
          */
 
-        private int stock;
-        private String discount;
-        private String fixdiscount;
-        private boolean returned;
+        private int id;
+        private double amount;
+        private int cash_coupon_id;
 
-        public int getStock() {
-            return stock;
+        public int getId() {
+            return id;
         }
 
-        public void setStock(int stock) {
-            this.stock = stock;
+        public void setId(int id) {
+            this.id = id;
         }
 
-        public String getDiscount() {
-            return discount;
+        public double getAmount() {
+            return amount;
         }
 
-        public void setDiscount(String discount) {
-            this.discount = discount;
+        public void setAmount(double amount) {
+            this.amount = amount;
         }
 
-        public String getFixdiscount() {
-            return fixdiscount;
+        public int getCash_coupon_id() {
+            return cash_coupon_id;
         }
 
-        public void setFixdiscount(String fixdiscount) {
-            this.fixdiscount = fixdiscount;
-        }
-
-        public boolean isReturned() {
-            return returned;
-        }
-
-        public void setReturned(boolean returned) {
-            this.returned = returned;
+        public void setCash_coupon_id(int cash_coupon_id) {
+            this.cash_coupon_id = cash_coupon_id;
         }
     }
 }

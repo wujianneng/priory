@@ -9,17 +9,24 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.infitack.rxretorfit2library.ModelListener;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.MyApplication;
 import com.pos.priory.R;
 import com.pos.priory.adapters.DataAmountAdapter;
 import com.pos.priory.beans.DataAmountBean;
+import com.pos.priory.networks.ApiService;
+import com.pos.priory.utils.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +35,10 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+
+import static com.pos.priory.fragments.OrderFragment.getDayReport;
+
 
 public class SaleAmountDatasFragment extends BaseFragment {
     View view;
@@ -47,7 +58,13 @@ public class SaleAmountDatasFragment extends BaseFragment {
     RecyclerView recyclerView;
 
     DataAmountAdapter dataAmountAdapter;
-    List<DataAmountBean> dataAmountBeanList = new ArrayList<>();
+    List<DataAmountBean.DataBean> dataAmountBeanList = new ArrayList<>();
+
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
+
+    double sum = 0;
+    boolean isFirstCreate = true;
 
     @Nullable
     @Override
@@ -60,21 +77,37 @@ public class SaleAmountDatasFragment extends BaseFragment {
     }
 
     private void initViews() {
-        storeNameTv.setText("營業額(" + MyApplication.storeName + ")");
-        dataAmountAdapter = new DataAmountAdapter(R.layout.sale_amount_data_item,dataAmountBeanList);
+        storeNameTv.setText("營業額(" + MyApplication.staffInfoBean.getShop() + ")");
+        dataAmountAdapter = new DataAmountAdapter(R.layout.sale_amount_data_item,dataAmountBeanList,getActivity());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         recyclerView.setAdapter(dataAmountAdapter);
-        refreshDatas();
+
+        dataAmountAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                 dataAmountBeanList.get(position).setExpand(!dataAmountBeanList.get(position).isExpand());
+                 dataAmountAdapter.notifyItemChanged(position);
+            }
+        });
+
+        dataAmountAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                getDayReport(dataAmountBeanList.get(position).getDate(),getActivity(),gson);
+            }
+        });
     }
 
-    private void refreshDatas(){
-        dataAmountBeanList.clear();
-        for(int i = 0 ; i < 5 ; i++){
-            DataAmountBean bean = new DataAmountBean();
-            dataAmountBeanList.add(bean);
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(isFirstCreate){
+            dateTv.setText(DateUtils.getDateOfToday());
+            isFirstCreate = false;
         }
-        dataAmountAdapter.notifyDataSetChanged();
+        getDatas();
     }
+
 
     @OnClick({R.id.date_tv,R.id.start_date_tv,R.id.end_date_tv,R.id.btn_search_type})
     public void onClick(View v){
@@ -107,6 +140,16 @@ public class SaleAmountDatasFragment extends BaseFragment {
                 } else if (num == 2) {
                     endDateTv.setText(DateFormat.format("yyy-MM-dd", c));
                 }
+                if(dateTv.getVisibility() == View.VISIBLE){
+                    if(!dateTv.getText().toString().equals("選擇日期")){
+                        getDatas();
+                    }
+                }else {
+                    if(!startDateTv.getText().toString().equals("開始日期") &&
+                            !endDateTv.getText().toString().equals("結束日期")){
+                        getDatas();
+                    }
+                }
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
         dialog.show();
@@ -128,17 +171,74 @@ public class SaleAmountDatasFragment extends BaseFragment {
                         dateTv.setVisibility(View.VISIBLE);
                         startDateTv.setVisibility(View.GONE);
                         endDateTv.setVisibility(View.GONE);
+                        if(!dateTv.getText().toString().equals("選擇日期")){
+                            getDatas();
+                        }
                         break;
                     case R.id.menu1:
                         dateTv.setVisibility(View.GONE);
                         startDateTv.setVisibility(View.VISIBLE);
                         endDateTv.setVisibility(View.VISIBLE);
+                        if(!startDateTv.getText().toString().equals("開始日期") &&
+                                !endDateTv.getText().toString().equals("結束日期")){
+                            getDatas();
+                        }
                         break;
                 }
                 btnSearchType.setText(item.getTitle());
                 return true;
             }
         });
+    }
+
+    private void getDatas() {
+        Observable observable = null;
+        if(dateTv.getVisibility() == View.VISIBLE){
+            if(dateTv.getText().equals("選擇日期")){
+                return;
+            }
+            observable = RetrofitManager.createString(ApiService.class).getSaleAmountDatas
+                    (dateTv.getText().toString(),dateTv.getText().toString());
+        }else {
+            if(startDateTv.getText().equals("開始日期") || endDateTv.getText().equals("結束日期")){
+                return;
+            }
+            observable = RetrofitManager.createString(ApiService.class).getSaleAmountDatas
+                    (startDateTv.getText().toString(),endDateTv.getText().toString());
+        }
+        RetrofitManager.excute(observable,
+                new ModelListener() {
+                    @Override
+                    public void onSuccess(String result) throws Exception {
+                        Log.e("test","sadatas:" + result);
+                        DataAmountBean dataAmountBean = gson.fromJson(result,DataAmountBean.class);
+                        if(dataAmountBean != null && dataAmountBean.getData().size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            dataAmountBeanList.clear();
+                            dataAmountBeanList.addAll(dataAmountBean.getData());
+                            dataAmountAdapter.currency = dataAmountBean.getCurrency();
+                            sum = 0;
+                            for (DataAmountBean.DataBean dataBean : dataAmountBean.getData()) {
+                                for (DataAmountBean.DataBean.PaymentBean paymentBean : dataBean.getPayment()) {
+                                    sum += paymentBean.getAmount();
+                                }
+                            }
+                            amountTv.setText("總數：" + sum + dataAmountBean.getCurrency());
+                            dataAmountAdapter.notifyDataSetChanged();
+                        }else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(String erromsg) {
+                        Log.e("test","sadataserro:" + erromsg);
+                        empty_layout.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }
+                });
     }
 
     @Override

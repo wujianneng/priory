@@ -41,6 +41,7 @@
                         android:layout_marginLeft="15dp"
                         android:text="会员:  李先生"
                         android:textColor="#000000"
+                        android:typeface="sans"
                         android:textSize="14sp" />
 
                     <ImageView
@@ -58,6 +59,7 @@
                         android:layout_below="@+id/member_name_tv"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="3dp"
+                        android:typeface="sans"
                         android:text="手机号码:  666777888"
                         android:textColor="#000000"
                         android:textSize="14sp" />
@@ -69,9 +71,10 @@
                         android:layout_below="@+id/member_phone_tv"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="3dp"
-                        android:text="客户应付: "
+                        android:text="客户应付:"
+                        android:typeface="sans"
                         android:textColor="@color/blue_text"
-                        android:textSize="18sp" />
+                        android:textSize="17sp" />
 
                     <TextView
                         android:id="@+id/need_money_tv"
@@ -80,10 +83,11 @@
                         android:layout_below="@+id/member_phone_tv"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="3dp"
+                        android:typeface="sans"
                         android:layout_toRightOf="@+id/need_money_title"
                         android:text="$2305"
                         android:textColor="#DB2D43"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -93,9 +97,10 @@
                         android:layout_below="@+id/need_money_title"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="3dp"
-                        android:text="客户付款: "
+                        android:text="客户付款:"
+                        android:typeface="sans"
                         android:textColor="@color/blue_text"
-                        android:textSize="18sp" />
+                        android:textSize="17sp" />
 
                     <TextView
                         android:id="@+id/payed_money_tv"
@@ -103,43 +108,47 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/need_money_title"
                         android:layout_marginLeft="5dp"
+                        android:typeface="sans"
                         android:layout_marginTop="3dp"
                         android:layout_toRightOf="@+id/need_money_title"
                         android:text="$2305"
                         android:textColor="#DB2D43"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/trasition_time_tv"
-                        android:layout_width="200dp"
+                        android:layout_width="180dp"
+                        android:typeface="sans"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="5dp"
                         android:text="交易时间：2019-10-10 12:20:20"
                         android:textColor="#000000"
                         android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/update_time_tv"
-                        android:layout_width="200dp"
+                        android:layout_width="180dp"
+                        android:typeface="sans"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/trasition_time_tv"
                         android:layout_alignParentRight="true"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="5dp"
                         android:text="更新时间：2019-10-10 12:20:20"
                         android:textColor="#000000"
                         android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/order_number_tv"
-                        android:layout_width="200dp"
+                        android:layout_width="180dp"
+                        android:typeface="sans"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/update_time_tv"
                         android:layout_alignParentRight="true"
                         android:layout_marginTop="3dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="5dp"
                         android:text="订单号:  201805181220993"
                         android:textColor="#000000"
                         android:textSize="12sp" />
@@ -147,24 +156,26 @@
 
                     <TextView
                         android:id="@+id/gold_count_tv"
-                        android:layout_width="200dp"
+                        android:layout_width="180dp"
+                        android:typeface="sans"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/order_number_tv"
                         android:layout_alignParentRight="true"
                         android:layout_marginTop="5dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="5dp"
                         android:text="黄金：12件|15g"
                         android:textColor="#000000"
                         android:textSize="12sp" />
 
                     <TextView
+                        android:typeface="sans"
                         android:id="@+id/fitting_count_tv"
-                        android:layout_width="200dp"
+                        android:layout_width="180dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/gold_count_tv"
                         android:layout_alignParentRight="true"
                         android:layout_marginTop="5dp"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginRight="5dp"
                         android:text="配件：6件"
                         android:textColor="#000000"
                         android:textSize="12sp" />
@@ -234,6 +245,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:typeface="sans"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -252,6 +264,7 @@
                     android:layout_marginRight="15dp" />
 
                 <TextView
+                    android:typeface="sans"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
@@ -278,6 +291,7 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:typeface="sans"
                     android:id="@+id/gold_price_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -291,6 +305,7 @@
                 <TextView
                     android:id="@+id/operating_weight_tv"
                     android:layout_width="wrap_content"
+                    android:typeface="sans"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="5dp"
@@ -311,6 +326,7 @@
 
                     <TextView
                         android:id="@+id/operating_money_tv"
+                        android:typeface="sans"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -325,6 +341,7 @@
                     <TextView
                         android:id="@+id/btn_operator"
                         android:layout_width="110dp"
+                        android:typeface="sans"
                         android:layout_height="match_parent"
                         android:background="@color/colorAccent"
                         android:foreground="?attr/selectableItemBackground"

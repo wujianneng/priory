@@ -9,10 +9,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pos.priory.R;
-import com.pos.priory.beans.GoodBean;
-import com.pos.priory.beans.WarehouseBean;
-import com.pos.priory.utils.Constants;
-import com.pos.priory.utils.LogicUtils;
+import com.pos.priory.beans.FittingBean;
 
 import java.util.List;
 
@@ -20,32 +17,30 @@ import java.util.List;
  * Created by Lenovo on 2018/12/29.
  */
 
-public class AddNewOrderGoodsAdapter extends BaseQuickAdapter<WarehouseBean.ResultsBean, BaseViewHolder> {
+public class AddNewOrderGoodsAdapter extends BaseQuickAdapter<FittingBean.ResultsBean, BaseViewHolder> {
     Context context;
 
-    public AddNewOrderGoodsAdapter(Context context, @LayoutRes int layoutResId, @Nullable List<WarehouseBean.ResultsBean> data) {
+    public AddNewOrderGoodsAdapter(Context context, @LayoutRes int layoutResId, @Nullable List<FittingBean.ResultsBean> data) {
         super(layoutResId, data);
         this.context = context;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, WarehouseBean.ResultsBean item) {
-        helper.setText(R.id.code_tv, item.getItem().get(0).getProductcode() + "");
+    protected void convert(BaseViewHolder helper, FittingBean.ResultsBean item) {
+        helper.setText(R.id.code_tv, item.getProductcode() + item.getWhitem().get(0).getWhnumber());
         helper.setText(R.id.name_tv, item.getName());
-        helper.setText(R.id.weight_tv, item.getTotal().getWeight() + "g");
-        helper.setText(R.id.origin_price_tv, "原价：" + item.getItem().get(0).getPrice().get(0).getSymbol() +  item.getItem().get(0).getPrice().get(0).getPrice());
-        Glide.with(context).load(item.getItem().get(0).getImage())
+        if (item.getWhitem().size() != 0)
+            helper.setText(R.id.weight_tv, item.getWhitem().get(0).getWeight() + "g");
+        helper.setText(R.id.origin_price_tv, "售價：" + item.getPrice().get(0).getSymbol() + item.getPrice().get(0).getPrice());
+        helper.setGone(R.id.price_tv,false);
+        Glide.with(context).load(item.getImage())
                 .placeholder(android.R.drawable.ic_menu_gallery)
                 .error(android.R.drawable.ic_menu_gallery)
                 .into((ImageView) helper.getView(R.id.icon_good));
-        helper.setOnClickListener(R.id.decrease_btn, v -> {
-            item.getTotal().setQuantity(item.getTotal().getQuantity() == 1 ? 1 : item.getTotal().getQuantity() - 1);
-            notifyItemChanged(helper.getAdapterPosition());
-        });
-        helper.setOnClickListener(R.id.increase_btn, v -> {
-            item.getTotal().setQuantity(item.getTotal().getQuantity() + 1);
-            notifyItemChanged(helper.getAdapterPosition());
-        });
-        helper.setText(R.id.fitting_count_tv, item.getTotal().getQuantity() + "");
+        helper.addOnClickListener(R.id.decrease_btn);
+        helper.addOnClickListener(R.id.increase_btn);
+
+        helper.setText(R.id.fitting_count_tv, item.getBuyCount() + "");
+        helper.setGone(R.id.fitting_count_layout, item.isAccessory());
     }
 }

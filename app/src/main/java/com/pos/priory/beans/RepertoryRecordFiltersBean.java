@@ -4,12 +4,11 @@ import java.util.List;
 
 public class RepertoryRecordFiltersBean {
 
-
     /**
-     * code : 202
-     * msg : 成功
+     * code : 200
+     * msg : OK
      * level : info
-     * result : {"warehouse":[{"id":1,"name":"主倉庫"},{"id":2,"name":"回收倉"}],"type":[{"value":2,"name":"入庫"}],"purpose":[{"value":3,"name":"入貨"}],"whfrom":[{"id":5,"name":"內測分店- 主倉庫"}]}
+     * result : {"warehouse":[{"id":"primary","name":"主倉庫"},{"id":"returned","name":"回收倉"}],"type":[{"value":1,"name":"出庫"},{"value":2,"name":"入庫"}],"purpose":[{"value":1,"name":"銷售"},{"value":3,"name":"入貨"},{"value":4,"name":"回收"},{"value":5,"name":"換貨"},{"value":6,"name":"撤回"},{"value":7,"name":"刪除"}],"whfrom":[{"id":1,"name":"澳門測試店- 主倉庫"},{"id":2,"name":"澳門測試店- 回收倉"}]}
      */
 
     private int code;
@@ -89,18 +88,18 @@ public class RepertoryRecordFiltersBean {
 
         public static class WarehouseBean {
             /**
-             * id : 1
+             * id : primary
              * name : 主倉庫
              */
 
-            private int id;
+            private String id;
             private String name;
 
-            public int getId() {
+            public String getId() {
                 return id;
             }
 
-            public void setId(int id) {
+            public void setId(String id) {
                 this.id = id;
             }
 
@@ -115,8 +114,8 @@ public class RepertoryRecordFiltersBean {
 
         public static class TypeBean {
             /**
-             * value : 2
-             * name : 入庫
+             * value : 1
+             * name : 出庫
              */
 
             private int value;
@@ -141,8 +140,8 @@ public class RepertoryRecordFiltersBean {
 
         public static class PurposeBean {
             /**
-             * value : 3
-             * name : 入貨
+             * value : 1
+             * name : 銷售
              */
 
             private int value;
@@ -167,8 +166,8 @@ public class RepertoryRecordFiltersBean {
 
         public static class WhfromBean {
             /**
-             * id : 5
-             * name : 內測分店- 主倉庫
+             * id : 1
+             * name : 澳門測試店- 主倉庫
              */
 
             private int id;

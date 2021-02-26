@@ -10,22 +10,22 @@ import com.pos.priory.beans.FittingBean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SeletFittingAdapter extends BaseQuickAdapter<FittingBean, BaseViewHolder> {
-    public List<FittingBean> selectFittingList = new ArrayList<>();
+public class SeletFittingAdapter extends BaseQuickAdapter<FittingBean.ResultsBean, BaseViewHolder> {
+    public List<FittingBean.ResultsBean> selectFittingList = new ArrayList<>();
 
-    public SeletFittingAdapter(int layoutResId, @Nullable List<FittingBean> data) {
+    public SeletFittingAdapter(int layoutResId, @Nullable List<FittingBean.ResultsBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, FittingBean item) {
+    protected void convert(BaseViewHolder helper, FittingBean.ResultsBean item) {
         helper.setText(R.id.name_tv, item.getName());
-        helper.setText(R.id.price_tv, item.getPrice());
-        helper.setChecked(R.id.checkbox, item.isSeleted());
+        helper.setText(R.id.price_tv, item.getPrice().size() == 0 ? "" : item.getPrice().get(0).getSymbol() + item.getPrice().get(0).getPrice());
+        helper.setChecked(R.id.checkbox, item.isSelected());
         helper.setOnCheckedChangeListener(R.id.checkbox, (buttonView, isChecked) -> {
             if (isChecked) selectFittingList.add(item);
             else selectFittingList.remove(item);
-            item.setSeleted(isChecked);
+            item.setSelected(isChecked);
         });
     }
 }

@@ -160,37 +160,37 @@
 
         <TextView
             android:id="@+id/text2"
-            android:layout_width="130dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text1"
             android:layout_marginLeft="20dp"
-            android:text="1.黃金貨品可憑公司收據售回本公司,回售計算方式:重量 x 購入金價 x 0.95;"
+            android:text="1. 購買起計7內無人為損壞，無受化妝品化學作用，可慿收據按本公司的規定換貨（不提供退款服務）。"
             android:textColor="#333"
             android:textSize="6sp" />
 
         <TextView
             android:id="@+id/text3"
-            android:layout_width="130dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text2"
             android:layout_marginLeft="20dp"
-            android:text="2.黃金貨品可憑公司收據可享有8折換貨服務(不包括手繩製作,水晶,k金和玉器類產品);"
+            android:text="2. 只有黃金貨品慿本公司的收據，可按本公司的當天黃金回收金價及規定售回本公司，或享有8折換貨服務（不包括手繩製作、水晶、K金和玉石和其它類產品等）。"
             android:textColor="#333"
             android:textSize="6sp" />
 
         <TextView
             android:id="@+id/text4"
-            android:layout_width="130dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text3"
             android:layout_marginLeft="20dp"
-            android:text="3.更換皮繩或編制手繩本公司收取材料費手工費$50;"
+            android:text="3. 更換皮繩或編制手繩，需要收取材費及手工費。"
             android:textColor="#333"
             android:textSize="6sp" />
 
         <TextView
             android:id="@+id/text5"
-            android:layout_width="130dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/text4"
             android:layout_marginLeft="20dp"
@@ -311,7 +311,8 @@
             android:layout_marginRight="20dp"
             android:text="$ 13,480.0"
             android:textColor="#333"
-            android:textSize="6sp" />
+            android:textSize="7sp"
+            />
 
     </RelativeLayout>
 
@@ -334,7 +335,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_marginRight="50dp"
-            android:text="www.annabala.com"
+            android:text="www.annabella.com"
             android:textColor="#333"
             android:textSize="10sp" />
     </FrameLayout>

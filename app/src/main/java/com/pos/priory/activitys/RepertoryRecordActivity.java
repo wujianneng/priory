@@ -1,7 +1,6 @@
 package com.pos.priory.activitys;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
@@ -13,24 +12,26 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.infitack.rxretorfit2library.ModelGsonListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
-import com.pos.priory.adapters.RepertoryAdapter;
 import com.pos.priory.adapters.RepertoryRecordAdapter;
-import com.pos.priory.beans.RepertoryFiltersBean;
 import com.pos.priory.beans.RepertoryRecordBean;
 import com.pos.priory.beans.RepertoryRecordFiltersBean;
-import com.pos.priory.beans.WarehouseBean;
 import com.pos.priory.networks.ApiService;
+import com.pos.priory.utils.DateUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
 import java.util.ArrayList;
@@ -89,11 +90,18 @@ public class RepertoryRecordActivity extends BaseActivity {
     RepertoryRecordAdapter repertoryAdapter;
 
     String currentStr = "";
+    @Bind(R.id.left_layout)
+    FrameLayout leftLayout;
+
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
 
     private List<RepertoryRecordFiltersBean.ResultBean.WarehouseBean> warehouse;
     private List<RepertoryRecordFiltersBean.ResultBean.TypeBean> type;
     private List<RepertoryRecordFiltersBean.ResultBean.PurposeBean> purpose;
     private List<RepertoryRecordFiltersBean.ResultBean.WhfromBean> whfrom;
+
+    int requestPage = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,11 +113,18 @@ public class RepertoryRecordActivity extends BaseActivity {
 
     private void initViews() {
         titleTv.setText("倉庫記錄");
-        refreshLayout.setEnableLoadMore(false);
+        addressTv.setText(MyApplication.staffInfoBean.getShop());
+        startDateTv.setText(DateUtils.getDateOfToday());
+        endDateTv.setText(DateUtils.getDateOfToday());
+        refreshLayout.setEnableLoadMore(true);
         refreshLayout.setOnRefreshListener(refreshLayout -> {
-            refreshRecyclerView();
+            refreshRecyclerView(true);
+        });
+        refreshLayout.setOnLoadMoreListener(refreshLayout1 -> {
+            refreshRecyclerView(false);
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(this));
+        refreshLayout.setRefreshFooter(new ClassicsFooter(this));
 
         repertoryAdapter = new RepertoryRecordAdapter(this, R.layout.repertory_record_list_item, dataList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -129,7 +144,7 @@ public class RepertoryRecordActivity extends BaseActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 currentStr = s.toString();
-                refreshRecyclerView();
+                refreshRecyclerView(true);
             }
 
             @Override
@@ -157,6 +172,7 @@ public class RepertoryRecordActivity extends BaseActivity {
                         btnSelectWhere.setText(currentPurpose.getName());
                         btnSelectType.setText(currentType.getName());
                         btnSelectAddress.setText(currentWhfrom.getName());
+                        refreshRecyclerView(true);
                     }
 
                     @Override
@@ -245,40 +261,57 @@ public class RepertoryRecordActivity extends BaseActivity {
 
     Disposable call;
 
-    private void refreshRecyclerView() {
+    private void refreshRecyclerView(boolean isRefresh) {
         if (call != null)
             call.dispose();
-        dataList.clear();
+        if(isRefresh) {
+            dataList.clear();
+            repertoryAdapter.notifyDataSetChanged();
+            requestPage = 1;
+        }
         Observable<RepertoryRecordBean> observable = null;
-        if (currentStr.isEmpty())
-            observable = RetrofitManager.createGson(ApiService.class).getRepertoryRecords(currentWarehouse.getId(), currentWhfrom.getId(),
-                    currentType.getValue(), currentPurpose.getValue(), startDateTv.getText().toString(),
-                    endDateTv.getText().toString());
-        else
-            observable = RetrofitManager.createGson(ApiService.class).getRepertoryRecordsWithSearch(currentWarehouse.getId(), currentWhfrom.getId(),
-                    currentType.getValue(), currentPurpose.getValue(), startDateTv.getText().toString(),
-                    endDateTv.getText().toString(), currentStr);
+        observable = RetrofitManager.createGson(ApiService.class).getRepertoryRecordsWithSearch(currentWarehouse.getId(), currentWhfrom.getId(),
+                currentType.getValue(), currentPurpose.getValue(), startDateTv.getText().toString(),
+                endDateTv.getText().toString(), currentStr,requestPage);
         call = RetrofitManager.excuteGson(this.bindToLifecycle(), observable,
                 new ModelGsonListener<RepertoryRecordBean>() {
                     @Override
                     public void onSuccess(RepertoryRecordBean result) throws Exception {
-                        if (result != null) {
-                            dataList.clear();
+                        if (result != null && result.getResults().size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            refreshLayout.setVisibility(View.VISIBLE);
                             dataList.addAll(result.getResults());
                             repertoryAdapter.notifyDataSetChanged();
-                            double sumCount = 0, sumWeight = 0;
-                            for (RepertoryRecordBean.ResultsBean resultsBean : result.getResults()) {
-                                sumCount += resultsBean.getWhitem().getSubtotal().getQuantity();
-                                sumWeight += resultsBean.getWhitem().getSubtotal().getWeight();
-                            }
-                            leftTv.setText("數量：" + sumCount + "件，" + "重量：" + sumWeight + "g");
+                            leftTv.setText("數量：" + result.getQuantity_total() + "件，" + "重量：" + result.getWeight_total() + "g");
+                            leftLayout.setVisibility(View.VISIBLE);
+                            sizeTv.setText("記錄:" + dataList.size());
+                        } else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            refreshLayout.setVisibility(View.GONE);
+                            leftTv.setText("數量：" + 0 + "件，" + "重量：" + 0 + "g");
+                            leftLayout.setVisibility(View.VISIBLE);
+                            sizeTv.setText("記錄:" + 0);
                         }
-                        refreshLayout.finishRefresh();
+                        if(isRefresh) {
+                            refreshLayout.finishRefresh();
+                        }else {
+                            refreshLayout.finishLoadMore();
+                        }
+                        requestPage++;
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
-                        refreshLayout.finishRefresh();
+                        if(isRefresh) {
+                            refreshLayout.finishRefresh(false);
+                        }else {
+                            if(erromsg.contains("404")){
+                                refreshLayout.finishLoadMoreWithNoMoreData();
+                            }else {
+                                refreshLayout.finishLoadMore(false);
+                            }
+
+                        }
                     }
                 });
     }

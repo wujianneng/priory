@@ -1,5 +1,7 @@
 package com.pos.priory.beans;
 
+import java.util.List;
+
 /**
  * Created by Lenovo on 2019/1/4.
  */
@@ -8,25 +10,28 @@ public class StaffInfoBean {
 
 
     /**
-     * id : 6
-     * shop : 測試店
-     * shopid : 2
-     * user : staff01
-     * permission : 店员
+     * id : 4
+     * shop : 澳門測試店
+     * shopid : 1
+     * user : manager01
+     * apppermit : 店长
      * name :
      * gender :
      * staffno :
      * mobile :
      * status : true
-     * created : 2020-03-02T07:41:44.910501+08:00
-     * updated : 2020-03-20T16:05:15.028471+08:00
+     * created : 2020-08-13T16:09:12.832735+08:00
+     * updated : 2020-08-13T16:19:02.280433+08:00
+     * backendpermit : []
      */
 
     private int id;
     private String shop;
     private int shopid;
     private String user;
-    private String permission;
+    private String shop_address;
+    private String shop_tel;
+    private String apppermit;
     private String name;
     private String gender;
     private String staffno;
@@ -34,6 +39,23 @@ public class StaffInfoBean {
     private boolean status;
     private String created;
     private String updated;
+    private List<?> backendpermit;
+
+    public String getShop_address() {
+        return shop_address;
+    }
+
+    public void setShop_address(String shop_address) {
+        this.shop_address = shop_address;
+    }
+
+    public String getShop_tel() {
+        return shop_tel;
+    }
+
+    public void setShop_tel(String shop_tel) {
+        this.shop_tel = shop_tel;
+    }
 
     public int getId() {
         return id;
@@ -67,12 +89,12 @@ public class StaffInfoBean {
         this.user = user;
     }
 
-    public String getPermission() {
-        return permission;
+    public String getApppermit() {
+        return apppermit;
     }
 
-    public void setPermission(String permission) {
-        this.permission = permission;
+    public void setApppermit(String apppermit) {
+        this.apppermit = apppermit;
     }
 
     public String getName() {
@@ -129,5 +151,13 @@ public class StaffInfoBean {
 
     public void setUpdated(String updated) {
         this.updated = updated;
+    }
+
+    public List<?> getBackendpermit() {
+        return backendpermit;
+    }
+
+    public void setBackendpermit(List<?> backendpermit) {
+        this.backendpermit = backendpermit;
     }
 }

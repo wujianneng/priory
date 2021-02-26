@@ -88,6 +88,9 @@ public class QueryFragment extends BaseFragment {
     @Bind(R.id.btn_search_type)
     MaterialButton btnSearchType;
 
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -153,10 +156,17 @@ public class QueryFragment extends BaseFragment {
             }
         });
 
-        refreshMemberRecyclerView("");
 //        showKeyBord();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (btnSearchType.getText().toString().equals("搜索会员"))
+            refreshMemberRecyclerView(edtSearch.getText().toString());
+        else
+            refreshOrderRecyclerView(edtSearch.getText().toString());
+    }
 
     Disposable memberCall;
 
@@ -170,12 +180,24 @@ public class QueryFragment extends BaseFragment {
                 .subscribe(new Consumer<MemberBean>() {
                     @Override
                     public void accept(MemberBean results) throws Exception {
-                        if (results.getResults() != null) {
+                        if (results.getResults() != null && results.getResults().size() != 0) {
                             new RunOnUiThreadSafe(getActivity()) {
                                 @Override
                                 public void runOnUiThread() {
+                                    empty_layout.setVisibility(View.GONE);
+                                    memberRecyclerView.setVisibility(View.VISIBLE);
+                                    orderRecyclerView.setVisibility(View.GONE);
                                     memberList.addAll(results.getResults());
                                     memberAdapter.notifyDataSetChanged();
+                                }
+                            };
+                        } else {
+                            new RunOnUiThreadSafe(getActivity()) {
+                                @Override
+                                public void runOnUiThread() {
+                                    empty_layout.setVisibility(View.VISIBLE);
+                                    memberRecyclerView.setVisibility(View.GONE);
+                                    orderRecyclerView.setVisibility(View.GONE);
                                 }
                             };
                         }
@@ -183,22 +205,24 @@ public class QueryFragment extends BaseFragment {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        empty_layout.setVisibility(View.VISIBLE);
+                        memberRecyclerView.setVisibility(View.GONE);
+                        orderRecyclerView.setVisibility(View.GONE);
                     }
                 });
     }
 
     Disposable dateCall;
 
-    private void refreshDateRecyclerView(String date) {
+    private void refreshDateRecyclerView(String sd, String ed) {
         if (dateCall != null)
             dateCall.dispose();
         orderList.clear();
         orderAdapter.notifyDataSetChanged();
-        if (date.equals(""))
+        if (sd.equals("") || ed.equals(""))
             return;
         dateCall = RetrofitManager.createString(ApiService.class)
-                .getOrdersByDate(date)
+                .getOrdersByDate(sd, ed)
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
@@ -206,15 +230,24 @@ public class QueryFragment extends BaseFragment {
                     public void accept(String results) throws Exception {
                         Log.e("test", "....refreshDateRecyclerView");
                         OrderBean orderBean = gson.fromJson(results, OrderBean.class);
-                        if (orderBean != null) {
+                        if (orderBean != null && orderBean.getResults().size() != 0) {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            orderRecyclerView.setVisibility(View.VISIBLE);
                             orderList.addAll(orderBean.getResults());
                             orderAdapter.notifyDataSetChanged();
+                        } else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            orderRecyclerView.setVisibility(View.GONE);
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        empty_layout.setVisibility(View.VISIBLE);
+                        memberRecyclerView.setVisibility(View.GONE);
+                        orderRecyclerView.setVisibility(View.GONE);
                     }
                 });
     }
@@ -236,15 +269,24 @@ public class QueryFragment extends BaseFragment {
                     @Override
                     public void accept(String results) throws Exception {
                         OrderBean orderBean = gson.fromJson(results, OrderBean.class);
-                        if (orderBean != null) {
+                        if (orderBean != null && orderBean.getResults().size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            orderRecyclerView.setVisibility(View.VISIBLE);
                             orderList.addAll(orderBean.getResults());
                             orderAdapter.notifyDataSetChanged();
+                        } else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            orderRecyclerView.setVisibility(View.GONE);
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        empty_layout.setVisibility(View.VISIBLE);
+                        memberRecyclerView.setVisibility(View.GONE);
+                        orderRecyclerView.setVisibility(View.GONE);
                     }
                 });
     }
@@ -290,32 +332,60 @@ public class QueryFragment extends BaseFragment {
                         dateTv.setVisibility(View.GONE);
                         startDateTv.setVisibility(View.GONE);
                         endDateTv.setVisibility(View.GONE);
-                        memberRecyclerView.setVisibility(View.VISIBLE);
-                        orderRecyclerView.setVisibility(View.GONE);
+                        if (memberList.size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            memberRecyclerView.setVisibility(View.VISIBLE);
+                            orderRecyclerView.setVisibility(View.GONE);
+                        } else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            orderRecyclerView.setVisibility(View.GONE);
+                        }
                         break;
                     case R.id.menu1:
                         inputLayout.setVisibility(View.VISIBLE);
                         dateTv.setVisibility(View.GONE);
                         startDateTv.setVisibility(View.GONE);
                         endDateTv.setVisibility(View.GONE);
-                        memberRecyclerView.setVisibility(View.GONE);
-                        orderRecyclerView.setVisibility(View.VISIBLE);
+                        if (orderList.size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            orderRecyclerView.setVisibility(View.VISIBLE);
+                        } else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            orderRecyclerView.setVisibility(View.GONE);
+                        }
                         break;
                     case R.id.menu2:
                         inputLayout.setVisibility(View.GONE);
                         dateTv.setVisibility(View.VISIBLE);
                         startDateTv.setVisibility(View.GONE);
                         endDateTv.setVisibility(View.GONE);
-                        memberRecyclerView.setVisibility(View.GONE);
-                        orderRecyclerView.setVisibility(View.VISIBLE);
+                        if (orderList.size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            orderRecyclerView.setVisibility(View.VISIBLE);
+                        } else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            orderRecyclerView.setVisibility(View.GONE);
+                        }
                         break;
                     case R.id.menu3:
                         inputLayout.setVisibility(View.GONE);
                         dateTv.setVisibility(View.GONE);
                         startDateTv.setVisibility(View.VISIBLE);
                         endDateTv.setVisibility(View.VISIBLE);
-                        memberRecyclerView.setVisibility(View.GONE);
-                        orderRecyclerView.setVisibility(View.VISIBLE);
+                        if (orderList.size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            orderRecyclerView.setVisibility(View.VISIBLE);
+                        } else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            orderRecyclerView.setVisibility(View.GONE);
+                        }
                         break;
                 }
                 btnSearchType.setText(item.getTitle());
@@ -333,11 +403,13 @@ public class QueryFragment extends BaseFragment {
                 c.set(year, monthOfYear, dayOfMonth);
                 if (num == 0) {
                     dateTv.setText(DateFormat.format("yyy-MM-dd", c));
-                    refreshDateRecyclerView(dateTv.getText().toString());
+                    refreshDateRecyclerView(dateTv.getText().toString(), dateTv.getText().toString());
                 } else if (num == 1) {
                     startDateTv.setText(DateFormat.format("yyy-MM-dd", c));
+                    refreshDateRecyclerView(startDateTv.getText().toString(), endDateTv.getText().toString());
                 } else if (num == 2) {
                     endDateTv.setText(DateFormat.format("yyy-MM-dd", c));
+                    refreshDateRecyclerView(startDateTv.getText().toString(), endDateTv.getText().toString());
                 }
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));

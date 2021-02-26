@@ -11,8 +11,10 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,9 +22,11 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.reflect.TypeToken;
 import com.infitack.rxretorfit2library.ModelGsonListener;
+import com.infitack.rxretorfit2library.ModelListener;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.adapters.DinghuoAdapter;
+import com.pos.priory.beans.ProductSelectResultBean;
 import com.pos.priory.beans.RepertoryFiltersBean;
 import com.pos.priory.beans.WarehouseBean;
 import com.pos.priory.coustomViews.CustomDialog;
@@ -31,9 +35,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -65,10 +67,15 @@ public class DinghuoActivity extends BaseActivity {
     RecyclerView recyclerView;
 
     DinghuoAdapter adapter;
-    List<WarehouseBean.ResultsBean.ItemBean> goodBeanList = new ArrayList<>();
+    List<ProductSelectResultBean> goodBeanList = new ArrayList<>();
     String currentStr = "";
     @Bind(R.id.refresh_layout)
     SmartRefreshLayout refreshLayout;
+    @Bind(R.id.right_layout)
+    FrameLayout rightLayout;
+
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
 
     private List<RepertoryFiltersBean.ResultBean.CategoryBean> category;
 
@@ -82,10 +89,11 @@ public class DinghuoActivity extends BaseActivity {
     }
 
     int categoryId = 0;
+
     private void initViews() {
         category = gson.fromJson(getIntent().getStringExtra("categoryList"),
                 new TypeToken<List<RepertoryFiltersBean.ResultBean.CategoryBean>>() {
-        }.getType());
+                }.getType());
         btnSelectType.setText(category.get(0).getName());
         refreshLayout.setEnableLoadMore(false);
         refreshLayout.setOnRefreshListener(refreshLayout -> {
@@ -123,7 +131,8 @@ public class DinghuoActivity extends BaseActivity {
     }
 
     AlertDialog actionDialog;
-    private void showIsDingHuoDialog(WarehouseBean.ResultsBean.ItemBean goodBean) {
+
+    private void showIsDingHuoDialog(ProductSelectResultBean goodBean) {
         if (actionDialog == null) {
             actionDialog = new AlertDialog.Builder(this).setTitle("確認要訂貨嗎？")
                     .setNegativeButton("取消", ((dialog, which) -> dialog.dismiss()))
@@ -137,12 +146,12 @@ public class DinghuoActivity extends BaseActivity {
         }
     }
 
-    private void doDingHuo(WarehouseBean.ResultsBean.ItemBean goodBean) {
+    private void doDingHuo(ProductSelectResultBean goodBean) {
         if (customDialog == null)
             customDialog = new CustomDialog(this, "订货中..");
         customDialog.setOnDismissListener(dialog -> customDialog = null);
         customDialog.show();
-        RetrofitManager.createString(ApiService.class).createPurchasingitem(goodBean.getProduct_id())
+        RetrofitManager.createString(ApiService.class).createPurchasingitem(goodBean.getId())
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(s -> {
@@ -172,39 +181,41 @@ public class DinghuoActivity extends BaseActivity {
     private void refreshRecyclerView() {
         if (call != null)
             call.dispose();
-        Observable<WarehouseBean> observable;
+        Observable<String> observable;
         for (RepertoryFiltersBean.ResultBean.CategoryBean categoryBean : category) {
             if (categoryBean.getName().equals(btnSelectType.getText().toString())) {
                 categoryId = categoryBean.getCid();
             }
         }
-        if (currentStr.equals("")) {
-            observable = RetrofitManager.createGson(ApiService.class).getStockLists2(getIntent().getIntExtra("mainRepertoryId", 0),
-                    categoryId);
-        } else {
-            observable = RetrofitManager.createGson(ApiService.class).getStockListByParam2(getIntent().getIntExtra("mainRepertoryId", 0),
-                    categoryId, currentStr);
-        }
-        call = RetrofitManager.excuteGson(bindToLifecycle(), observable,
-                new ModelGsonListener<WarehouseBean>() {
+        observable = RetrofitManager.createString(ApiService.class).getProductSelectList(categoryId, currentStr);
+        call = RetrofitManager.excute(bindToLifecycle(), observable,
+                new ModelListener() {
                     @Override
-                    public void onSuccess(WarehouseBean result) throws Exception {
-                        if(result != null && result.getResults().size() != 0) {
+                    public void onSuccess(String result) throws Exception {
+                        List<ProductSelectResultBean> datalist = gson.fromJson(result,new TypeToken<List<ProductSelectResultBean>>(){}.getType());
+                        if (datalist != null && datalist.size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            refreshLayout.setVisibility(View.VISIBLE);
                             goodBeanList.clear();
-                            goodBeanList.addAll(result.getResults().get(0).getItem());
+                            goodBeanList.addAll(datalist);
                             adapter.notifyDataSetChanged();
-                            refreshLayout.finishRefresh();
+                        }else{
+                            empty_layout.setVisibility(View.VISIBLE);
+                            refreshLayout.setVisibility(View.GONE);
                         }
+                        refreshLayout.finishRefresh();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
-
+                        Log.e("test","erro:" + erromsg);
+                        empty_layout.setVisibility(View.VISIBLE);
+                        refreshLayout.setVisibility(View.GONE);
                     }
                 });
     }
 
-    @OnClick({R.id.back_btn,R.id.btn_select_type,R.id.right_img})
+    @OnClick({R.id.back_btn, R.id.btn_select_type, R.id.right_layout})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -213,8 +224,8 @@ public class DinghuoActivity extends BaseActivity {
             case R.id.btn_select_type:
                 showCategoryMenu();
                 break;
-            case R.id.right_img:
-                startActivity(new Intent(DinghuoActivity.this,DinghuoListActivity.class));
+            case R.id.right_layout:
+                startActivity(new Intent(DinghuoActivity.this, DinghuoListActivity.class));
                 break;
         }
     }

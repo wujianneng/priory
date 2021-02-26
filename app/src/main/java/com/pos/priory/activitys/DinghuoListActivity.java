@@ -11,6 +11,7 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +56,10 @@ public class DinghuoListActivity extends BaseActivity {
 
     DinghuoListAdapter adapter;
 
-    List<DinghuoGoodBean.ResultsBean> goodBeanList = new ArrayList<>();
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
+
+    List<DinghuoGoodBean.ResultBean> goodBeanList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,12 +103,12 @@ public class DinghuoListActivity extends BaseActivity {
                     int quantity = goodBeanList.get(position).getQuantity();
                     if (quantity > 1) {
                         quantity -= 1;
-                        editOneItem(position, quantity, goodBeanList.get(position).getWeight());
+                        editOneItem(position, quantity, goodBeanList.get(position).getWeight() + "");
                     }
                 } else if (view.getId() == R.id.increase_btn) {
-                    int quantity = 0;
+                    int quantity = goodBeanList.get(position).getQuantity();
                     quantity += 1;
-                    editOneItem(position, quantity, goodBeanList.get(position).getWeight());
+                    editOneItem(position, quantity, goodBeanList.get(position).getWeight() + "");
                 } else if (view.getId() == R.id.weight_edt) {
                     showEditItemWeightDialog(position);
                 }
@@ -116,8 +120,8 @@ public class DinghuoListActivity extends BaseActivity {
 
     private void showEditItemWeightDialog(int position) {
         EditText editText = new EditText(this);
-        editText.setText(goodBeanList.get(position).getWeight());
-        editText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        editText.setText(goodBeanList.get(position).getWeight() + "");
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         new AlertDialog.Builder(this).setTitle("修改重量")
                 .setView(editText)
                 .setNegativeButton("取消", ((dialog, which) -> dialog.dismiss()))
@@ -132,6 +136,7 @@ public class DinghuoListActivity extends BaseActivity {
     }
 
     private void editOneItem(int position, int quantity, String weight) {
+        Log.e("test","quantity：" + quantity);
         if (customDialog == null)
             customDialog = new CustomDialog(this, "更改中..");
         customDialog.setOnDismissListener(dialog -> customDialog = null);
@@ -144,7 +149,7 @@ public class DinghuoListActivity extends BaseActivity {
                         customDialog.dismiss();
                         showToast("更改成功！");
                         goodBeanList.get(position).setQuantity(quantity);
-                        goodBeanList.get(position).setWeight(weight);
+                        goodBeanList.get(position).setWeight(Double.parseDouble(weight));
                         adapter.notifyItemChanged(position);
                     }
 
@@ -184,14 +189,23 @@ public class DinghuoListActivity extends BaseActivity {
                 new ModelGsonListener<DinghuoGoodBean>() {
                     @Override
                     public void onSuccess(DinghuoGoodBean result) throws Exception {
-                        goodBeanList.clear();
-                        goodBeanList.addAll(result.getResults());
-                        adapter.notifyDataSetChanged();
+                        if(result != null && result.getResult().size() != 0) {
+                            empty_layout.setVisibility(View.GONE);
+                            refreshLayout.setVisibility(View.VISIBLE);
+                            goodBeanList.clear();
+                            goodBeanList.addAll(result.getResult());
+                            adapter.notifyDataSetChanged();
+                        }else {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            refreshLayout.setVisibility(View.GONE);
+                        }
                         refreshLayout.finishRefresh();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
+                        empty_layout.setVisibility(View.VISIBLE);
+                        refreshLayout.setVisibility(View.GONE);
                         refreshLayout.finishRefresh();
                     }
                 });
@@ -210,11 +224,15 @@ public class DinghuoListActivity extends BaseActivity {
     }
 
     private void doSubmit() {
+        if(goodBeanList.size() == 0){
+            showToast("請選擇要提交的數據！");
+            return;
+        }
         if (customDialog == null)
             customDialog = new CustomDialog(this, "提交訂貨列表中..");
         customDialog.setOnDismissListener(dialog -> customDialog = null);
         customDialog.show();
-        RetrofitManager.excute(bindToLifecycle(), RetrofitManager.createString(ApiService.class).submitDinghuoList(goodBeanList.get(0).getPurchase_id()),
+        RetrofitManager.excute(bindToLifecycle(), RetrofitManager.createString(ApiService.class).submitDinghuoList(goodBeanList.get(0).getPurchase_id() + ""),
                 new ModelListener() {
                     @Override
                     public void onSuccess(String result) throws Exception {

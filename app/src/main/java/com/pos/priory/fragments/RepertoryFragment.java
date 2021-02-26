@@ -32,6 +32,7 @@ import com.pos.priory.activitys.RepertoryRecordActivity;
 import com.pos.priory.adapters.RepertoryAdapter;
 import com.pos.priory.beans.RepertoryFiltersBean;
 import com.pos.priory.beans.WarehouseBean;
+import com.pos.priory.beans.WarehouseReturnBean;
 import com.pos.priory.networks.ApiService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
@@ -54,7 +55,7 @@ import io.reactivex.disposables.Disposable;
 
 public class RepertoryFragment extends BaseFragment {
     View view;
-    List<WarehouseBean.ResultsBean.ItemBean> dataList = new ArrayList<>();
+    List<WarehouseBean.ResultsBean> dataList = new ArrayList<>();
     RepertoryAdapter repertoryAdapter;
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
@@ -97,6 +98,9 @@ public class RepertoryFragment extends BaseFragment {
     @Bind(R.id.btn_select_return_order_params)
     MaterialButton btnSelectReturnOrderParams;
 
+    @Bind(R.id.empty_layout)
+    FrameLayout empty_layout;
+
     private List<RepertoryFiltersBean.ResultBean.WarehouseBean> warehouse;
     RepertoryFiltersBean.ResultBean.WarehouseBean currentWarehouse;
     private List<RepertoryFiltersBean.ResultBean.CategoryBean> category;
@@ -136,7 +140,7 @@ public class RepertoryFragment extends BaseFragment {
                 Intent intent2 = new Intent(getActivity(), AddOrEditReturnItemActivity.class);
                 intent2.putExtra("isCreate", false);
                 intent2.putExtra("warehouseId", currentWarehouse.getId());
-                intent2.putExtra("returnBean",gson.toJson(dataList.get(position)));
+                intent2.putExtra("returnBean", gson.toJson(dataList.get(position)));
                 startActivity(intent2);
             }
         });
@@ -169,16 +173,20 @@ public class RepertoryFragment extends BaseFragment {
                         warehouse = result.getResult().getWarehouse();
                         category = result.getResult().getCategory();
                         returntypeBeanList = result.getResult().getReturntype();
-                        currentWarehouse = warehouse.get(0);
-                        btnSelectRepertory.setText(currentWarehouse.getName());
-                        btnSelectType.setText(category.get(0).getName());
-                        btnSelectReturnType.setText(returntypeBeanList.get(0).getName());
+                        if (warehouse.size() != 0) {
+                            currentWarehouse = warehouse.get(0);
+                            btnSelectRepertory.setText(currentWarehouse.getName());
+                        }
+                        if (category.size() != 0)
+                            btnSelectType.setText(category.get(0).getName());
+                        if (returntypeBeanList.size() != 0)
+                            btnSelectReturnType.setText(returntypeBeanList.get(0).getName());
                         refreshLayout.autoRefresh();
                     }
 
                     @Override
                     public void onFailed(String erromsg) {
-
+                        Log.e("test", "erro:" + erromsg);
                     }
                 });
     }
@@ -197,7 +205,8 @@ public class RepertoryFragment extends BaseFragment {
             }
             btnSelectRepertory.setText(item.getTitle());
             dinghuoTv.setVisibility(currentWarehouse.isWh_primary() ? View.VISIBLE : View.GONE);
-            addTv.setVisibility(currentWarehouse.isWh_primary() ? View.GONE : View.VISIBLE);
+//            addTv.setVisibility(currentWarehouse.isWh_primary() ? View.GONE : View.VISIBLE);
+            addTv.setVisibility(View.GONE);
             btnSelectType.setVisibility(currentWarehouse.isWh_primary() ? View.VISIBLE : View.GONE);
             btnSelectReturnType.setVisibility(currentWarehouse.isWh_primary() ? View.GONE : View.VISIBLE);
             btnSelectOrderParams.setVisibility(currentWarehouse.isWh_primary() ? View.VISIBLE : View.GONE);
@@ -299,10 +308,10 @@ public class RepertoryFragment extends BaseFragment {
                 case R.id.menu0:
                     btnSelectReturnOrderParams.setText(item.getTitle());
                     break;
-                case R.id.menu1:
+                case R.id.menu3:
                     btnSelectReturnOrderParams.setText(item.getTitle());
                     break;
-                case R.id.menu2:
+                case R.id.menu4:
                     btnSelectReturnOrderParams.setText(item.getTitle());
                     break;
             }
@@ -321,7 +330,6 @@ public class RepertoryFragment extends BaseFragment {
             call.dispose();
         dataList.clear();
         repertoryAdapter.notifyDataSetChanged();
-        Observable<WarehouseBean> observable = null;
         repertoryId = currentWarehouse.getId();
         String ordering = "", orderName,
                 orderType;
@@ -333,71 +341,100 @@ public class RepertoryFragment extends BaseFragment {
             }
             orderName = btnSelectOrderParams.getText().toString();
             orderType = btnSelectOrderType.getText().toString();
+
         } else {
             orderName = btnSelectReturnOrderParams.getText().toString();
             orderType = btnSelectOrderType.getText().toString();
         }
 
-        if (orderName.equals("按入库時間") && orderType.equals("升序")) ordering = "returndate";
-        if (orderName.equals("按入库時間") && orderType.equals("降序")) ordering = "-returndate";
+        if (orderName.equals("按入庫時間") && orderType.equals("升序")) ordering = "updated";
+        if (orderName.equals("按入庫時間") && orderType.equals("降序")) ordering = "-updated";
 
-        if (orderName.equals("按更新時間") && orderType.equals("升序")) ordering = "updated";
-        if (orderName.equals("按更新時間") && orderType.equals("降序")) ordering = "-updated";
+        if (orderName.equals("按更新時間") && orderType.equals("升序")) ordering = "wh_updated";
+        if (orderName.equals("按更新時間") && orderType.equals("降序")) ordering = "-wh_updated";
 
-        if (orderName.equals("按名稱") && orderType.equals("升序")) ordering = "product__name";
-        if (orderName.equals("按名稱") && orderType.equals("降序")) ordering = "-product__name";
+        if (orderName.equals("按名稱") && orderType.equals("升序")) ordering = "name";
+        if (orderName.equals("按名稱") && orderType.equals("降序")) ordering = "-name";
 
-        if (orderName.equals("按數量") && orderType.equals("升序")) ordering = "quantity";
-        if (orderName.equals("按數量") && orderType.equals("降序")) ordering = "-quantity";
+        if (orderName.equals("按數量") && orderType.equals("升序")) ordering = "prd_stock_quantity";
+        if (orderName.equals("按數量") && orderType.equals("降序")) ordering = "-prd_stock_quantity";
 
-        if (orderName.equals("按重量") && orderType.equals("升序")) ordering = "weight";
-        if (orderName.equals("按重量") && orderType.equals("降序")) ordering = "-weight";
 
-        if (orderName.equals("按售價") && orderType.equals("升序")) ordering = "product__price";
-        if (orderName.equals("按售價") && orderType.equals("降序")) ordering = "-product__price";
+        if (currentWarehouse.isWh_primary()) {
+            if (orderName.equals("按重量") && orderType.equals("升序")) ordering = "prd_stock_weight";
+            if (orderName.equals("按重量") && orderType.equals("降序")) ordering = "-prd_stock_weight";
 
-        if (currentStr.equals("")) {
-            if (currentWarehouse.isWh_primary()) {
-                observable = RetrofitManager.createGson(ApiService.class).getStockLists(repertoryId,
-                        categoryId, ordering);
-            } else {
-                observable = RetrofitManager.createGson(ApiService.class).getStockListsReturn(repertoryId,
-                        btnSelectReturnType.getText().toString(), ordering);
-            }
-        } else {
-            if (currentWarehouse.isWh_primary()) {
-                observable = RetrofitManager.createGson(ApiService.class).getStockListByParam(currentStr, repertoryId, categoryId, ordering);
-            } else {
-                observable = RetrofitManager.createGson(ApiService.class).getStockListByParamReturn(currentStr, repertoryId,
-                        btnSelectReturnType.getText().toString(), ordering);
-            }
-        }
-        call = RetrofitManager.excuteGson(this.bindToLifecycle(), observable,
-                new ModelGsonListener<WarehouseBean>() {
-                    @Override
-                    public void onSuccess(WarehouseBean result) throws Exception {
-                        Log.e("test","1111");
-                        if (result != null) {
-                            Log.e("test","22222");
-                            dataList.clear();
-                            dataList.addAll(result.getResults().get(0).getItem());
-                            repertoryAdapter.notifyDataSetChanged();
-                            double sumCount = 0, sumWeight = 0;
-                            for (WarehouseBean.ResultsBean resultsBean : result.getResults()) {
-                                sumCount += resultsBean.getTotal().getQuantity();
-                                sumWeight += resultsBean.getTotal().getWeight();
+            if (orderName.equals("按售價") && orderType.equals("升序")) ordering = "unitprice";
+            if (orderName.equals("按售價") && orderType.equals("降序"))  ordering = "-unitprice";
+            call = RetrofitManager.excuteGson(this.bindToLifecycle(),RetrofitManager.createGson(ApiService.class)
+                            .getStockListByParam(currentStr,categoryId, ordering),
+                    new ModelGsonListener<WarehouseBean>() {
+                        @Override
+                        public void onSuccess(WarehouseBean result) throws Exception {
+                            Log.e("test", "1111");
+                            if (result != null && result.getResults().size() != 0) {
+                                empty_layout.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                Log.e("test", "22222");
+                                dataList.clear();
+                                dataList.addAll(result.getResults());
+                                repertoryAdapter.notifyDataSetChanged();
+                                leftTv.setText("數量：" + result.getQuantity_total() + "件，" + "重量：" + result.getWeight_total() + "g");
+                            }else {
+                                empty_layout.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
                             }
-                            leftTv.setText("數量：" + sumCount + "件，" + "重量：" + sumWeight + "g");
+                            refreshLayout.finishRefresh();
                         }
-                        refreshLayout.finishRefresh();
-                    }
 
-                    @Override
-                    public void onFailed(String erromsg) {
-                        Log.e("test","3333");
-                        refreshLayout.finishRefresh();
-                    }
-                });
+                        @Override
+                        public void onFailed(String erromsg) {
+                            Log.e("test", erromsg);
+                            empty_layout.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                            refreshLayout.finishRefresh();
+                        }
+                    });
+        } else {
+            if (orderName.equals("按重量") && orderType.equals("升序")) ordering = "returnweight";
+            if (orderName.equals("按重量") && orderType.equals("降序")) ordering = "-returnweight";
+
+            if (orderName.equals("按售價") && orderType.equals("升序")) ordering = "returncost";
+            if (orderName.equals("按售價") && orderType.equals("降序"))  ordering = "-returncost";
+            Log.e("test", "orderName：" + orderName + " orderType：" + orderType);
+            call = RetrofitManager.excuteGson(this.bindToLifecycle(),RetrofitManager.createGson(ApiService.class)
+                            .getStockListByParamReturn(currentStr, btnSelectReturnType.getText().toString(), ordering),
+                    new ModelGsonListener<WarehouseReturnBean>() {
+                        @Override
+                        public void onSuccess(WarehouseReturnBean result) throws Exception {
+                            if (result != null && result.getResults().size() != 0) {
+                                empty_layout.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                dataList.clear();
+                                for(WarehouseReturnBean.ResultsBean returnResultsBean : result.getResults()){
+                                    WarehouseBean.ResultsBean resultsBean = new WarehouseBean.ResultsBean();
+                                    resultsBean.setResultsBean(returnResultsBean);
+                                    dataList.add(resultsBean);
+                                }
+                                repertoryAdapter.notifyDataSetChanged();
+                                leftTv.setText("數量：" + result.getQuantity_total() + "件，" + "重量：" + result.getWeight_total() + "g");
+                            }else {
+                                empty_layout.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                            }
+                            refreshLayout.finishRefresh();
+                        }
+
+                        @Override
+                        public void onFailed(String erromsg) {
+                            Log.e("test", erromsg);
+                            empty_layout.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                            refreshLayout.finishRefresh();
+                        }
+                    });
+        }
+
 
     }
 
@@ -443,10 +480,10 @@ public class RepertoryFragment extends BaseFragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void handleEventBus(String event){
-       if(event.equals("refreshReturnList")){
-           refreshLayout.autoRefresh();
-       }
+    public void handleEventBus(String event) {
+        if (event.equals("refreshReturnList")) {
+            refreshLayout.autoRefresh();
+        }
     }
 
 

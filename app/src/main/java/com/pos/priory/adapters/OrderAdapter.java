@@ -28,7 +28,7 @@ public class OrderAdapter extends BaseQuickAdapter<OrderBean.ResultsBean, BaseVi
 
     @Override
     public int getItemViewType(int position) {
-        if (MyApplication.staffInfoBean.getPermission().equals("店长") ? true : false)
+        if ("店长".equals(MyApplication.staffInfoBean.getApppermit()) ? true : false)
             return 0;
         else
             return 1;
@@ -36,14 +36,14 @@ public class OrderAdapter extends BaseQuickAdapter<OrderBean.ResultsBean, BaseVi
 
     @Override
     protected void convert(BaseViewHolder helper, OrderBean.ResultsBean item) {
-        helper.setVisible(R.id.right_line, MyApplication.staffInfoBean.getPermission().equals("店长") ? true : false);
-        OrderBean.ResultsBean.MemberBean memberBean = item.getMember();
-        if (memberBean != null) {
-            helper.setText(R.id.detial_tv, item.getMember().getMobile());
-            helper.setText(R.id.name_tv, item.getMember().getName());
-            helper.setImageResource(R.id.sex_img, item.getMember().getGender().equals("男") ? R.drawable.icon_boy : R.drawable.icon_girl);
+        if(item != null) {
+            helper.setVisible(R.id.right_line, "店长".equals(MyApplication.staffInfoBean.getApppermit()) ? true : false);
+            helper.setText(R.id.detial_tv, item.getMember_mobile());
+            helper.setText(R.id.name_tv, item.getMember_lastname() + " " + item.getMember_firstname());
+            helper.setImageResource(R.id.sex_img, item.getMember_gender().equals("1") ? R.drawable.icon_boy : R.drawable.icon_girl);
+            helper.setText(R.id.date_tv, item.getCreated());
+            helper.setText(R.id.money_tv, "" + item.getAmount());
+            helper.setText(R.id.status_tv, "" + item.getOrder_status_display());
         }
-        helper.setText(R.id.date_tv, item.getCreated());
-        helper.setText(R.id.money_tv, "" + item.getTotalprice());
     }
 }

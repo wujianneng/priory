@@ -9,9 +9,12 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.infitack.rxretorfit2library.ModelListener;
+import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.adapters.SeletFittingAdapter;
 import com.pos.priory.beans.FittingBean;
+import com.pos.priory.networks.ApiService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,7 @@ public class AddFittingActivity extends BaseActivity {
     RecyclerView recyclerView;
 
     SeletFittingAdapter adapter;
-    List<FittingBean> fittingList = new ArrayList<>();
+    List<FittingBean.ResultsBean> fittingList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +54,36 @@ public class AddFittingActivity extends BaseActivity {
         nextTv.setText("確定");
         nextTv.setVisibility(View.VISIBLE);
 
-        fittingList.add(new FittingBean(false,"幸运手绳","$150"));
-        fittingList.add(new FittingBean(false,"小玉石","$15"));
         recyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,
                 false));
         adapter = new SeletFittingAdapter(R.layout.fitting_list_item,fittingList);
         recyclerView.setAdapter(adapter);
+
+        getFittings();
     }
 
-    @OnClick({R.id.next_tv})
+    private void getFittings() {
+        RetrofitManager.excute(RetrofitManager.createString(ApiService.class).getFittings(true), new ModelListener() {
+            @Override
+            public void onSuccess(String result) throws Exception {
+              FittingBean fittingBean = gson.fromJson(result,FittingBean.class);
+              fittingList.addAll(fittingBean.getResults());
+              adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailed(String erromsg) {
+
+            }
+        });
+    }
+
+    @OnClick({R.id.back_btn,R.id.next_tv})
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.back_btn:
+                finish();
+                break;
             case R.id.next_tv:
                 Intent intent = new Intent();
                 intent.putExtra("selectFittingList", gson.toJson(adapter.selectFittingList));

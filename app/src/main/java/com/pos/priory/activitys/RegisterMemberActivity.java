@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.button.MaterialButton;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,7 +14,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.infitack.rxretorfit2library.RetrofitManager;
+import com.pos.priory.MyApplication;
 import com.pos.priory.R;
+import com.pos.priory.beans.MemberBean;
 import com.pos.priory.coustomViews.CustomDialog;
 import com.pos.priory.networks.ApiService;
 
@@ -91,6 +94,7 @@ public class RegisterMemberActivity extends BaseActivity {
                                 btnSex.setText(items[yourChoice]);
                             }
                             choiceSexDialog.dismiss();
+                            Log.e("test","sex:" + btnSex.getText().toString());
                         }
                     });
             choiceSexDialog = singleChoiceDialog.create();
@@ -142,10 +146,12 @@ public class RegisterMemberActivity extends BaseActivity {
         });
         customDialog.show();
         Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("shop", MyApplication.staffInfoBean.getShopid());
         paramMap.put("lastname", edtFirstName.getText().toString());
         paramMap.put("firstname", edtName.getText().toString());
         paramMap.put("mobile", edtPhone.getText().toString());
-        paramMap.put("gender", btnSex.getText().toString());
+        paramMap.put("gender", btnSex.getText().toString().equals("男") ? 1 : 2);
+        Log.e("test","params:" + gson.toJson(paramMap));
         RetrofitManager.createString(ApiService.class)
                 .registerMember(paramMap)
                 .compose(this.<String>bindToLifecycle())
@@ -159,17 +165,22 @@ public class RegisterMemberActivity extends BaseActivity {
                         customDialog.dismiss();
                         finish();
                         Intent intent = new Intent(RegisterMemberActivity.this, AddNewOrderActivity.class);
-                        intent.putExtra("memberId", jsonObject.getInt("id"));
-                        intent.putExtra("memberMobile", jsonObject.getString("mobile"));
-                        intent.putExtra("memberReward", jsonObject.getInt("reward"));
-                        intent.putExtra("memberName", jsonObject.getString("last_name") +
-                                jsonObject.getString("first_name"));
+                        MemberBean.ResultsBean resultsBean = new MemberBean.ResultsBean();
+                        resultsBean.setId(jsonObject.getInt("id"));
+                        resultsBean.setMobile(jsonObject.getString("mobile"));
+                        resultsBean.setGender(jsonObject.getInt("gender") == 1 ? "男" : "女");
+                        resultsBean.setName(jsonObject.getString("lastname") +
+                                jsonObject.getString("firstname"));
+                        resultsBean.setReward(jsonObject.getInt("reward"));
+                        resultsBean.setCreated(jsonObject.getString("created"));
+                        intent.putExtra("memberInfo", gson.toJson(resultsBean));
                         startActivity(intent);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         customDialog.dismiss();
+
                         if (throwable.getMessage().contains("400")) {
                             Toast.makeText(RegisterMemberActivity.this, "该手机号已经注册", Toast.LENGTH_SHORT).show();
                         } else

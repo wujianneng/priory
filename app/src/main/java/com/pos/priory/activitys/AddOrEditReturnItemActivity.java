@@ -5,7 +5,6 @@ import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.button.MaterialButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.text.format.DateFormat;
@@ -51,8 +50,6 @@ public class AddOrEditReturnItemActivity extends BaseActivity {
     TextView nextTv;
     @Bind(R.id.title_layout)
     CardView titleLayout;
-    @Bind(R.id.btn_select_returntype)
-    MaterialButton btnSelectReturnType;
     @Bind(R.id.edt_weight)
     EditText edtWeight;
     @Bind(R.id.start_date_tv)
@@ -61,9 +58,7 @@ public class AddOrEditReturnItemActivity extends BaseActivity {
     EditText edtPrice;
 
     boolean isCreating = true;
-    WarehouseBean.ResultsBean.ItemBean editingBean;
-    @Bind(R.id.btn_select_product)
-    MaterialButton btnSelectProduct;
+    WarehouseBean.ResultsBean editingBean;
 
     private List<ReturnFilterBean.ResultBean.TypeBean> type;
     private List<ReturnFilterBean.ResultBean.ProductBean> product;
@@ -81,84 +76,21 @@ public class AddOrEditReturnItemActivity extends BaseActivity {
         titleTv.setText(isCreating ? "添加回收产品" : "编辑回收产品");
         nextTv.setVisibility(View.VISIBLE);
         nextTv.setText("保存");
-        btnSelectProduct.setEnabled(isCreating ? true : false);
-        btnSelectReturnType.setEnabled(isCreating ? true : false);
         startDateTv.setEnabled(isCreating ? true : false);
-        btnSelectReturnType.setTextColor(isCreating ? Color.BLACK : Color.GRAY);
         startDateTv.setTextColor(isCreating ? Color.BLACK : Color.GRAY);
         edtPrice.setEnabled(isCreating ? true : false);
         if (!isCreating) {
             editingBean = gson.fromJson(getIntent().getStringExtra("returnBean"),
-                    WarehouseBean.ResultsBean.ItemBean.class);
-            btnSelectProduct.setText(editingBean.getName());
-            btnSelectReturnType.setText(editingBean.getReturninfo().getType());
-            edtWeight.setText(editingBean.getReturninfo().getWeight() + "");
-            startDateTv.setText(editingBean.getReturninfo().getDate());
-            edtPrice.setText(editingBean.getReturninfo().getCost() + "");
-        } else {
-            getReturnFilters();
+                    WarehouseBean.ResultsBean.class);
+//            edtWeight.setText(editingBean.getReturninfo().getWeight() + "");
+//            startDateTv.setText(editingBean.getReturninfo().getDate());
+//            edtPrice.setText(editingBean.getReturninfo().getCost() + "");
         }
     }
 
-    private void getReturnFilters() {
-        RetrofitManager.excuteGson(bindToLifecycle(), RetrofitManager.createGson(ApiService.class).getReturnFilters(),
-                new ModelGsonListener<ReturnFilterBean>() {
-                    @Override
-                    public void onSuccess(ReturnFilterBean result) throws Exception {
-                        if (result != null && result.getResult() != null) {
-                            type = result.getResult().getType();
-                            product = result.getResult().getProduct();
-                            currentProduct = product.get(0);
-                            currentType = type.get(0);
-                            btnSelectProduct.setText(currentProduct.getName());
-                            btnSelectReturnType.setText(currentType.getName());
-                        }
-                    }
 
-                    @Override
-                    public void onFailed(String erromsg) {
 
-                    }
-                });
-    }
-
-    ReturnFilterBean.ResultBean.ProductBean currentProduct;
-
-    private void showProductMenu() {
-        PopupMenu popupMenu = new PopupMenu(this, btnSelectProduct);
-        for (ReturnFilterBean.ResultBean.ProductBean product : product) {
-            popupMenu.getMenu().add(product.getName());
-        }
-        popupMenu.show();
-        popupMenu.setOnMenuItemClickListener((item) -> {
-            for (ReturnFilterBean.ResultBean.ProductBean product : product) {
-                if (product.getName().equals(item.getTitle()))
-                    currentProduct = product;
-            }
-            btnSelectReturnType.setText(item.getTitle());
-            return true;
-        });
-    }
-
-    ReturnFilterBean.ResultBean.TypeBean currentType;
-
-    private void showTypeMenu() {
-        PopupMenu popupMenu = new PopupMenu(this, btnSelectReturnType);
-        for (ReturnFilterBean.ResultBean.TypeBean typeBean : type) {
-            popupMenu.getMenu().add(typeBean.getName());
-        }
-        popupMenu.show();
-        popupMenu.setOnMenuItemClickListener((item) -> {
-            for (ReturnFilterBean.ResultBean.TypeBean typeBean : type) {
-                if (typeBean.getName().equals(item.getTitle()))
-                    currentType = typeBean;
-            }
-            btnSelectReturnType.setText(item.getTitle());
-            return true;
-        });
-    }
-
-    @OnClick({R.id.back_btn, R.id.next_tv, R.id.btn_select_product, R.id.btn_select_returntype, R.id.start_date_tv})
+    @OnClick({R.id.back_btn, R.id.next_tv,  R.id.start_date_tv})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back_btn:
@@ -166,12 +98,6 @@ public class AddOrEditReturnItemActivity extends BaseActivity {
                 break;
             case R.id.start_date_tv:
                 getDate();
-                break;
-            case R.id.btn_select_product:
-                showProductMenu();
-                break;
-            case R.id.btn_select_returntype:
-                showTypeMenu();
                 break;
             case R.id.next_tv:
                 doSave();
@@ -196,38 +122,38 @@ public class AddOrEditReturnItemActivity extends BaseActivity {
     private void doSave() {
         if (isCreating) {
             RetrofitManager.excute(bindToLifecycle(), RetrofitManager.createString(ApiService.class).createReturnItem(
-                    getIntent().getIntExtra("warehouseId", 0), currentProduct.getId(), currentType.getName(),
+                    getIntent().getIntExtra("warehouseId", 0),"回收",
                     startDateTv.getText().toString(), edtPrice.getText().toString(), edtWeight.getText().toString()),
                     new ModelListener() {
                         @Override
                         public void onSuccess(String result) throws Exception {
-                            Toast.makeText(AddOrEditReturnItemActivity.this,"添加成功！",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddOrEditReturnItemActivity.this, "添加成功！", Toast.LENGTH_SHORT).show();
                             EventBus.getDefault().post("refreshReturnList");
                             finish();
                         }
 
                         @Override
                         public void onFailed(String erromsg) {
-                            Toast.makeText(AddOrEditReturnItemActivity.this,"添加失敗！",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddOrEditReturnItemActivity.this, "添加失敗！", Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("weight", edtWeight.getText().toString());
-            Log.e("test","params:" + gson.toJson(paramMap));
+            Log.e("test", "params:" + gson.toJson(paramMap));
             RetrofitManager.excute(bindToLifecycle(), RetrofitManager.createString(ApiService.class).editReturnItem(editingBean.getId(),
                     RequestBody.create(MediaType.parse("application/json"), gson.toJson(paramMap))),
                     new ModelListener() {
                         @Override
                         public void onSuccess(String result) throws Exception {
-                            Toast.makeText(AddOrEditReturnItemActivity.this,"編輯成功！",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddOrEditReturnItemActivity.this, "編輯成功！", Toast.LENGTH_SHORT).show();
                             EventBus.getDefault().post("refreshReturnList");
                             finish();
                         }
 
                         @Override
                         public void onFailed(String erromsg) {
-                            Toast.makeText(AddOrEditReturnItemActivity.this,"編輯失敗！",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddOrEditReturnItemActivity.this, "編輯失敗！", Toast.LENGTH_SHORT).show();
                         }
                     });
         }

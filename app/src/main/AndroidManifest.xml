@@ -3,6 +3,7 @@
     package="com.pos.priory">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:name="android.hardware.usb.host" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -20,7 +21,8 @@
         android:roundIcon="@drawable/app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activitys.ExchangeCashCouponActivity"></activity>
+        <activity android:name=".activitys.NfcActivity"></activity>
+        <activity android:name=".activitys.ExchangeCashCouponActivity" />
         <activity android:name=".activitys.SelectCashCouponActivity" />
         <activity android:name=".activitys.AddFittingActivity" />
         <activity android:name=".activitys.BigInventoryTypesDetialActivity" />
@@ -86,13 +88,25 @@
             android:windowSoftInputMode="adjustPan" /> <!-- 以下是增加的代码start， 注意替换应用的包名 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.pos.priory.fileprovider"
+            android:authorities="com.pos.priory.fileprovider.test"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <service android:name=".services.OTGService">
+            <intent-filter>
+                <action android:name="OTG_ACTION_SERVICE_START" />
+                <action android:name="OTG_ACTION_SERVICE_STOP" />
+                <action android:name="OTG_ACTION_CONNECT" />
+                <action android:name="OTG_ACTION_SEND_DATA" />
+                <action android:name="OTG_ACTION_RECEIVE_DATA" />
+                <action android:name="OTG_ACTION_DISCONNECT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.infitack.rxretorfit2library.MyAppGlideModule"
