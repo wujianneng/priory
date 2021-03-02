@@ -37,6 +37,15 @@
             android:textSize="8sp" />
 
         <TextView
+            android:id="@+id/weight_tv"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="重量  300"
+            android:textColor="@color/blue_text"
+            android:textSize="8sp" />
+
+        <TextView
             android:id="@+id/gold_price_tv"
             android:layout_width="0dp"
             android:layout_weight="2"

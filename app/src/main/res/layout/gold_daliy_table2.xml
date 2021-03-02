@@ -145,22 +145,6 @@
                     android:gravity="center"
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
-                    android:text="信用卡"
-                    android:textColor="#333"
-                    android:textSize="10sp" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
                     android:text="電子支付"
                     android:textColor="#333"
                     android:textSize="10sp" />
@@ -286,23 +270,6 @@
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
                     android:text="23334"
-                    android:textColor="#333"
-                    android:textSize="10sp" />
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#333333" />
-
-                <TextView
-                    android:id="@+id/card_pay_tv"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:paddingTop="5dp"
-                    android:paddingBottom="5dp"
-                    android:text="434343"
                     android:textColor="#333"
                     android:textSize="10sp" />
 

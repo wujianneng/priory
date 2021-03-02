@@ -303,11 +303,34 @@ public class AddNewOrderActivity extends BaseActivity {
 
             List<OrderCalculationParamBean.ProductsBean> products = new ArrayList<>();
             for (FittingBean.ResultsBean fittingBean : goodList) {
-                OrderCalculationParamBean.ProductsBean productsBean = new OrderCalculationParamBean.ProductsBean();
-                productsBean.setId(fittingBean.getId());
-                productsBean.setCount(fittingBean.getBuyCount());
-                productsBean.setWhnumber(fittingBean.getWhitem().get(0).getWhnumber());
-                products.add(productsBean);
+                if(fittingBean.isAccessory() && fittingBean.getBuyCount() > 1){//配件确数量大于1
+                    int needCount = fittingBean.getBuyCount();
+                    for(FittingBean.ResultsBean.WhitemBean whitemBean : fittingBean.getWhitem()){
+                        if(needCount != 0) {
+                            OrderCalculationParamBean.ProductsBean productsBean = new OrderCalculationParamBean.ProductsBean();
+                            productsBean.setId(fittingBean.getId());
+                            if(needCount >= whitemBean.getPrd_stock_quantity()) {
+                                productsBean.setCount(whitemBean.getPrd_stock_quantity());
+                            }else {
+                                productsBean.setCount(needCount);
+                            }
+                            productsBean.setWhnumber(whitemBean.getWhnumber());
+                            products.add(productsBean);
+                            if(needCount >= whitemBean.getPrd_stock_quantity()) {
+                                needCount = needCount - whitemBean.getPrd_stock_quantity();
+                            }else {
+                                needCount = 0;
+                            }
+
+                        }
+                    }
+                }else {//黄金或配件数量等于1
+                    OrderCalculationParamBean.ProductsBean productsBean = new OrderCalculationParamBean.ProductsBean();
+                    productsBean.setId(fittingBean.getId());
+                    productsBean.setCount(1);
+                    productsBean.setWhnumber(fittingBean.getWhitem().get(0).getWhnumber());
+                    products.add(productsBean);
+                }
             }
             calculationParamBean.setProducts(products);
             calculationParamBean.setShop(MyApplication.staffInfoBean.getShopid());

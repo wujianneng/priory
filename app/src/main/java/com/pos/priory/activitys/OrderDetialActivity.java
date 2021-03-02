@@ -214,6 +214,7 @@ public class OrderDetialActivity extends BaseActivity {
 
                         memberNameTv.setText("會員：" + orderDetailReslutBean.getMember_detail().getLastname() +
                               " "  + orderDetailReslutBean.getMember_detail().getFirstname());
+                        sexImg.setImageResource(orderDetailReslutBean.getMember_detail().getGender() == 1 ? R.drawable.icon_boy : R.drawable.icon_girl);
                         memberPhoneTv.setText("手機號碼：" + orderDetailReslutBean.getMember_detail().getMobile());
                         needMoneyTv.setText(orderDetailReslutBean.getAmount_payable() + "元");
                         payedMoneyTv.setText(orderDetailReslutBean.getAmount_paid() + "元");

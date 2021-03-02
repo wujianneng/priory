@@ -37,6 +37,7 @@ public class TablePrintGoodsAdapter extends BaseMultiItemQuickAdapter<DayReportD
                 helper.setText(R.id.title_tv, item.getCategory_name());
                 helper.setText(R.id.money_tv, "金額 " + item.getAmount_total());
                 helper.setText(R.id.count_tv, "數量 " + item.getQuantity_total());
+                helper.setText(R.id.weight_tv, "數量 " + item.getWeight_total() + "克");
                 helper.setText(R.id.gold_price_tv, "回收金價（元/克） " + item.getReturn_goldpricd());
                 helper.setVisible(R.id.gold_price_tv, item.getCategory_name().equals("回收"));
                 break;

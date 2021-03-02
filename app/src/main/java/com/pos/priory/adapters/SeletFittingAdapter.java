@@ -22,6 +22,7 @@ public class SeletFittingAdapter extends BaseQuickAdapter<FittingBean.ResultsBea
         helper.setText(R.id.name_tv, item.getName());
         helper.setText(R.id.price_tv, item.getPrice().size() == 0 ? "" : item.getPrice().get(0).getSymbol() + item.getPrice().get(0).getPrice());
         helper.setChecked(R.id.checkbox, item.isSelected());
+        helper.getView(R.id.checkbox).setEnabled(item.getWhitem().size() != 0);
         helper.setOnCheckedChangeListener(R.id.checkbox, (buttonView, isChecked) -> {
             if (isChecked) selectFittingList.add(item);
             else selectFittingList.remove(item);
