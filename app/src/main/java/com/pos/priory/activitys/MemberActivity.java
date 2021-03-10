@@ -117,7 +117,7 @@ public class MemberActivity extends BaseActivity {
         memberList.clear();
         memberAdapter.notifyDataSetChanged();
             memberCall = RetrofitManager.createGson(ApiService.class)
-                    .getMembers(str)
+                    .getMembers(str,1)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<MemberBean>() {

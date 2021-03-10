@@ -35,6 +35,7 @@ import com.pos.priory.beans.WarehouseBean;
 import com.pos.priory.beans.WarehouseReturnBean;
 import com.pos.priory.networks.ApiService;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -48,6 +49,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
+import retrofit2.http.Query;
 
 /**
  * Created by Lenovo on 2018/12/29.
@@ -101,6 +103,8 @@ public class RepertoryFragment extends BaseFragment {
     @Bind(R.id.empty_layout)
     FrameLayout empty_layout;
 
+    int currentPage = 1;
+
     private List<RepertoryFiltersBean.ResultBean.WarehouseBean> warehouse;
     RepertoryFiltersBean.ResultBean.WarehouseBean currentWarehouse;
     private List<RepertoryFiltersBean.ResultBean.CategoryBean> category;
@@ -116,11 +120,15 @@ public class RepertoryFragment extends BaseFragment {
     }
 
     private void initViews() {
-        refreshLayout.setEnableLoadMore(false);
+        refreshLayout.setEnableLoadMore(true);
         refreshLayout.setOnRefreshListener(refreshLayout -> {
-            refreshRecyclerView();
+            refreshRecyclerView(true);
+        });
+        refreshLayout.setOnLoadMoreListener(refreshLayout1 -> {
+            refreshRecyclerView(false);
         });
         refreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
+        refreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()));
 
         repertoryAdapter = new RepertoryAdapter(getActivity(), R.layout.repertory_list_item, dataList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -154,7 +162,7 @@ public class RepertoryFragment extends BaseFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 currentStr = s.toString();
-                refreshRecyclerView();
+                refreshRecyclerView(true);
             }
 
             @Override
@@ -323,13 +331,16 @@ public class RepertoryFragment extends BaseFragment {
     Disposable call;
     int categoryId = 0, repertoryId = 0;
 
-    public void refreshRecyclerView() {
+    public void refreshRecyclerView(boolean isRefresh) {
         if (currentWarehouse == null)
             return;
         if (call != null)
             call.dispose();
-        dataList.clear();
-        repertoryAdapter.notifyDataSetChanged();
+        if(isRefresh){
+            currentPage = 1;
+            dataList.clear();
+            repertoryAdapter.notifyDataSetChanged();
+        }
         repertoryId = currentWarehouse.getId();
         String ordering = "", orderName,
                 orderType;
@@ -367,16 +378,16 @@ public class RepertoryFragment extends BaseFragment {
             if (orderName.equals("按售價") && orderType.equals("升序")) ordering = "unitprice";
             if (orderName.equals("按售價") && orderType.equals("降序"))  ordering = "-unitprice";
             call = RetrofitManager.excuteGson(this.bindToLifecycle(),RetrofitManager.createGson(ApiService.class)
-                            .getStockListByParam(currentStr,categoryId, ordering),
+                            .getStockListByParam(currentPage,currentStr,categoryId, ordering),
                     new ModelGsonListener<WarehouseBean>() {
                         @Override
                         public void onSuccess(WarehouseBean result) throws Exception {
                             Log.e("test", "1111");
+                            currentPage++;
                             if (result != null && result.getResults().size() != 0) {
                                 empty_layout.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
                                 Log.e("test", "22222");
-                                dataList.clear();
                                 dataList.addAll(result.getResults());
                                 repertoryAdapter.notifyDataSetChanged();
                                 leftTv.setText("數量：" + result.getQuantity_total() + "件，" + "重量：" + result.getWeight_total() + "g");
@@ -385,14 +396,18 @@ public class RepertoryFragment extends BaseFragment {
                                 recyclerView.setVisibility(View.GONE);
                             }
                             refreshLayout.finishRefresh();
+                            refreshLayout.finishLoadMore();
                         }
 
                         @Override
                         public void onFailed(String erromsg) {
                             Log.e("test", erromsg);
-                            empty_layout.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
+                            if(dataList.size() == 0) {
+                                empty_layout.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                            }
                             refreshLayout.finishRefresh();
+                            refreshLayout.finishLoadMore();
                         }
                     });
         } else {
@@ -403,14 +418,14 @@ public class RepertoryFragment extends BaseFragment {
             if (orderName.equals("按售價") && orderType.equals("降序"))  ordering = "-returncost";
             Log.e("test", "orderName：" + orderName + " orderType：" + orderType);
             call = RetrofitManager.excuteGson(this.bindToLifecycle(),RetrofitManager.createGson(ApiService.class)
-                            .getStockListByParamReturn(currentStr, btnSelectReturnType.getText().toString(), ordering),
+                            .getStockListByParamReturn(currentPage,currentStr, btnSelectReturnType.getText().toString(), ordering),
                     new ModelGsonListener<WarehouseReturnBean>() {
                         @Override
                         public void onSuccess(WarehouseReturnBean result) throws Exception {
+                            currentPage++;
                             if (result != null && result.getResults().size() != 0) {
                                 empty_layout.setVisibility(View.GONE);
                                 recyclerView.setVisibility(View.VISIBLE);
-                                dataList.clear();
                                 for(WarehouseReturnBean.ResultsBean returnResultsBean : result.getResults()){
                                     WarehouseBean.ResultsBean resultsBean = new WarehouseBean.ResultsBean();
                                     resultsBean.setResultsBean(returnResultsBean);
@@ -423,14 +438,18 @@ public class RepertoryFragment extends BaseFragment {
                                 recyclerView.setVisibility(View.GONE);
                             }
                             refreshLayout.finishRefresh();
+                            refreshLayout.finishLoadMore();
                         }
 
                         @Override
                         public void onFailed(String erromsg) {
                             Log.e("test", erromsg);
-                            empty_layout.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
+                            if(dataList.size() == 0) {
+                                empty_layout.setVisibility(View.VISIBLE);
+                                recyclerView.setVisibility(View.GONE);
+                            }
                             refreshLayout.finishRefresh();
+                            refreshLayout.finishLoadMore();
                         }
                     });
         }

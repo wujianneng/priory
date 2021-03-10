@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.google.gson.reflect.TypeToken;
 import com.infitack.rxretorfit2library.RetrofitManager;
 import com.pos.priory.R;
 import com.pos.priory.activitys.MemberInfoActivity;
@@ -36,7 +35,10 @@ import com.pos.priory.beans.MemberBean;
 import com.pos.priory.beans.OrderBean;
 import com.pos.priory.networks.ApiService;
 import com.pos.priory.utils.LogicUtils;
-import com.pos.priory.utils.RunOnUiThreadSafe;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
@@ -91,6 +93,10 @@ public class QueryFragment extends BaseFragment {
     @Bind(R.id.empty_layout)
     FrameLayout empty_layout;
 
+    int currentPage = 1;
+    @Bind(R.id.srf_lay)
+    SmartRefreshLayout smartRefreshLayout;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -106,6 +112,22 @@ public class QueryFragment extends BaseFragment {
     }
 
     private void initViews() {
+        smartRefreshLayout.setEnableLoadMore(true);
+        smartRefreshLayout.setOnRefreshListener(refreshLayout -> {
+            if (btnSearchType.getText().toString().equals("搜索订单"))
+                refreshOrderRecyclerView(true, edtSearch.getText().toString());
+            else
+                refreshDateRecyclerView(true, dateTv.getText().toString(), dateTv.getText().toString());
+        });
+        smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
+        smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()).setSpinnerStyle(SpinnerStyle.Translate));
+        smartRefreshLayout.setOnLoadMoreListener(refreshLayout -> {
+            if (btnSearchType.getText().toString().equals("搜索订单"))
+                refreshOrderRecyclerView(false, edtSearch.getText().toString());
+            else
+                refreshDateRecyclerView(false, dateTv.getText().toString(), dateTv.getText().toString());
+        });
+
         memberAdapter = new QueryMemberAdapter(R.layout.query_member_list_item, memberList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mLayoutManager.setOrientation(OrientationHelper.VERTICAL);
@@ -145,9 +167,9 @@ public class QueryFragment extends BaseFragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (btnSearchType.getText().toString().equals("搜索会员"))
-                    refreshMemberRecyclerView(charSequence.toString());
+                    refreshMemberRecyclerView(true, charSequence.toString());
                 else
-                    refreshOrderRecyclerView(charSequence.toString());
+                    refreshOrderRecyclerView(true, charSequence.toString());
             }
 
             @Override
@@ -163,130 +185,149 @@ public class QueryFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         if (btnSearchType.getText().toString().equals("搜索会员"))
-            refreshMemberRecyclerView(edtSearch.getText().toString());
+            refreshMemberRecyclerView(true, edtSearch.getText().toString());
         else
-            refreshOrderRecyclerView(edtSearch.getText().toString());
+            smartRefreshLayout.autoRefresh();
+
     }
 
     Disposable memberCall;
 
-    private void refreshMemberRecyclerView(String str) {
+    private void refreshMemberRecyclerView(boolean isRefresh, String str) {
         if (memberCall != null)
             memberCall.dispose();
-        memberList.clear();
-        memberAdapter.notifyDataSetChanged();
-        memberCall = RetrofitManager.createGson(ApiService.class).getMembers(str)
+        if (isRefresh) {
+            currentPage = 1;
+            memberList.clear();
+            memberAdapter.notifyDataSetChanged();
+        }
+        memberCall = RetrofitManager.createGson(ApiService.class).getMembers(str, currentPage)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<MemberBean>() {
                     @Override
                     public void accept(MemberBean results) throws Exception {
+                        currentPage++;
                         if (results.getResults() != null && results.getResults().size() != 0) {
-                            new RunOnUiThreadSafe(getActivity()) {
-                                @Override
-                                public void runOnUiThread() {
-                                    empty_layout.setVisibility(View.GONE);
-                                    memberRecyclerView.setVisibility(View.VISIBLE);
-                                    orderRecyclerView.setVisibility(View.GONE);
-                                    memberList.addAll(results.getResults());
-                                    memberAdapter.notifyDataSetChanged();
-                                }
-                            };
+                            Log.e("test", "refreshMemberRecyclerView:" + results.getResults().size());
+                            empty_layout.setVisibility(View.GONE);
+                            memberRecyclerView.setVisibility(View.VISIBLE);
+                            smartRefreshLayout.setVisibility(View.GONE);
+                            memberList.addAll(results.getResults());
+                            memberAdapter.notifyDataSetChanged();
                         } else {
-                            new RunOnUiThreadSafe(getActivity()) {
-                                @Override
-                                public void runOnUiThread() {
-                                    empty_layout.setVisibility(View.VISIBLE);
-                                    memberRecyclerView.setVisibility(View.GONE);
-                                    orderRecyclerView.setVisibility(View.GONE);
-                                }
-                            };
+                            Log.e("test", "refreshMemberRecyclerView0:" + results.getResults().size());
+                            if (memberList.size() == 0) {
+                                empty_layout.setVisibility(View.VISIBLE);
+                                memberRecyclerView.setVisibility(View.GONE);
+                                smartRefreshLayout.setVisibility(View.GONE);
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        empty_layout.setVisibility(View.VISIBLE);
-                        memberRecyclerView.setVisibility(View.GONE);
-                        orderRecyclerView.setVisibility(View.GONE);
+                        if (memberList.size() == 0) {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            smartRefreshLayout.setVisibility(View.GONE);
+                        }
                     }
                 });
     }
 
     Disposable dateCall;
 
-    private void refreshDateRecyclerView(String sd, String ed) {
+    private void refreshDateRecyclerView(boolean isRefresh, String sd, String ed) {
         if (dateCall != null)
             dateCall.dispose();
-        orderList.clear();
-        orderAdapter.notifyDataSetChanged();
+        if (isRefresh) {
+            currentPage = 1;
+            orderList.clear();
+            orderAdapter.notifyDataSetChanged();
+        }
         if (sd.equals("") || ed.equals(""))
             return;
         dateCall = RetrofitManager.createString(ApiService.class)
-                .getOrdersByDate(sd, ed)
+                .getOrdersByDate(sd, ed, currentPage)
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String results) throws Exception {
                         Log.e("test", "....refreshDateRecyclerView");
+                        currentPage++;
                         OrderBean orderBean = gson.fromJson(results, OrderBean.class);
                         if (orderBean != null && orderBean.getResults().size() != 0) {
-                            empty_layout.setVisibility(View.VISIBLE);
+                            empty_layout.setVisibility(View.GONE);
                             memberRecyclerView.setVisibility(View.GONE);
-                            orderRecyclerView.setVisibility(View.VISIBLE);
+                            smartRefreshLayout.setVisibility(View.VISIBLE);
                             orderList.addAll(orderBean.getResults());
                             orderAdapter.notifyDataSetChanged();
                         } else {
                             empty_layout.setVisibility(View.VISIBLE);
                             memberRecyclerView.setVisibility(View.GONE);
-                            orderRecyclerView.setVisibility(View.GONE);
+                            smartRefreshLayout.setVisibility(View.GONE);
                         }
+                        smartRefreshLayout.finishLoadMore();
+                        smartRefreshLayout.finishRefresh();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        empty_layout.setVisibility(View.VISIBLE);
-                        memberRecyclerView.setVisibility(View.GONE);
-                        orderRecyclerView.setVisibility(View.GONE);
+                        if (orderList.size() == 0) {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            smartRefreshLayout.setVisibility(View.GONE);
+                        }
+                        smartRefreshLayout.finishLoadMore();
+                        smartRefreshLayout.finishRefresh();
                     }
                 });
     }
 
     Disposable orderCall;
 
-    private void refreshOrderRecyclerView(String orderNum) {
+    private void refreshOrderRecyclerView(boolean isRefresh, String orderNum) {
         if (orderCall != null)
             orderCall.dispose();
-        orderList.clear();
-        orderAdapter.notifyDataSetChanged();
-        if (orderNum.equals(""))
-            return;
+        if (isRefresh) {
+            currentPage = 1;
+            orderList.clear();
+            orderAdapter.notifyDataSetChanged();
+        }
         orderCall = RetrofitManager.createString(ApiService.class)
-                .getOrdersByOrdernumber(orderNum)
+                .getOrdersByOrdernumber(orderNum, currentPage)
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String results) throws Exception {
+                        currentPage++;
                         OrderBean orderBean = gson.fromJson(results, OrderBean.class);
                         if (orderBean != null && orderBean.getResults().size() != 0) {
                             empty_layout.setVisibility(View.GONE);
                             memberRecyclerView.setVisibility(View.GONE);
-                            orderRecyclerView.setVisibility(View.VISIBLE);
+                            smartRefreshLayout.setVisibility(View.VISIBLE);
                             orderList.addAll(orderBean.getResults());
                             orderAdapter.notifyDataSetChanged();
                         } else {
                             empty_layout.setVisibility(View.VISIBLE);
                             memberRecyclerView.setVisibility(View.GONE);
-                            orderRecyclerView.setVisibility(View.GONE);
+                            smartRefreshLayout.setVisibility(View.GONE);
                         }
+                        smartRefreshLayout.finishLoadMore();
+                        smartRefreshLayout.finishRefresh();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        empty_layout.setVisibility(View.VISIBLE);
-                        memberRecyclerView.setVisibility(View.GONE);
-                        orderRecyclerView.setVisibility(View.GONE);
+                        if (orderList.size() == 0) {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            memberRecyclerView.setVisibility(View.GONE);
+                            smartRefreshLayout.setVisibility(View.GONE);
+                        }
+                        smartRefreshLayout.finishLoadMore();
+                        smartRefreshLayout.finishRefresh();
                     }
                 });
     }
@@ -325,6 +366,7 @@ public class QueryFragment extends BaseFragment {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                btnSearchType.setText(item.getTitle());
                 // 控件每一个item的点击事件
                 switch (item.getItemId()) {
                     case R.id.menu0:
@@ -335,12 +377,13 @@ public class QueryFragment extends BaseFragment {
                         if (memberList.size() != 0) {
                             empty_layout.setVisibility(View.GONE);
                             memberRecyclerView.setVisibility(View.VISIBLE);
-                            orderRecyclerView.setVisibility(View.GONE);
+                            smartRefreshLayout.setVisibility(View.GONE);
                         } else {
                             empty_layout.setVisibility(View.VISIBLE);
                             memberRecyclerView.setVisibility(View.GONE);
-                            orderRecyclerView.setVisibility(View.GONE);
+                            smartRefreshLayout.setVisibility(View.GONE);
                         }
+                        refreshMemberRecyclerView(true,edtSearch.getText().toString());
                         break;
                     case R.id.menu1:
                         inputLayout.setVisibility(View.VISIBLE);
@@ -350,12 +393,13 @@ public class QueryFragment extends BaseFragment {
                         if (orderList.size() != 0) {
                             empty_layout.setVisibility(View.GONE);
                             memberRecyclerView.setVisibility(View.GONE);
-                            orderRecyclerView.setVisibility(View.VISIBLE);
+                            smartRefreshLayout.setVisibility(View.VISIBLE);
                         } else {
                             empty_layout.setVisibility(View.VISIBLE);
                             memberRecyclerView.setVisibility(View.GONE);
-                            orderRecyclerView.setVisibility(View.GONE);
+                            smartRefreshLayout.setVisibility(View.GONE);
                         }
+                        smartRefreshLayout.autoRefresh();
                         break;
                     case R.id.menu2:
                         inputLayout.setVisibility(View.GONE);
@@ -365,12 +409,13 @@ public class QueryFragment extends BaseFragment {
                         if (orderList.size() != 0) {
                             empty_layout.setVisibility(View.GONE);
                             memberRecyclerView.setVisibility(View.GONE);
-                            orderRecyclerView.setVisibility(View.VISIBLE);
+                            smartRefreshLayout.setVisibility(View.VISIBLE);
                         } else {
                             empty_layout.setVisibility(View.VISIBLE);
                             memberRecyclerView.setVisibility(View.GONE);
-                            orderRecyclerView.setVisibility(View.GONE);
+                            smartRefreshLayout.setVisibility(View.GONE);
                         }
+                        smartRefreshLayout.autoRefresh();
                         break;
                     case R.id.menu3:
                         inputLayout.setVisibility(View.GONE);
@@ -380,15 +425,15 @@ public class QueryFragment extends BaseFragment {
                         if (orderList.size() != 0) {
                             empty_layout.setVisibility(View.GONE);
                             memberRecyclerView.setVisibility(View.GONE);
-                            orderRecyclerView.setVisibility(View.VISIBLE);
+                            smartRefreshLayout.setVisibility(View.VISIBLE);
                         } else {
                             empty_layout.setVisibility(View.VISIBLE);
                             memberRecyclerView.setVisibility(View.GONE);
-                            orderRecyclerView.setVisibility(View.GONE);
+                            smartRefreshLayout.setVisibility(View.GONE);
                         }
+                        smartRefreshLayout.autoRefresh();
                         break;
                 }
-                btnSearchType.setText(item.getTitle());
                 return true;
             }
         });
@@ -403,13 +448,13 @@ public class QueryFragment extends BaseFragment {
                 c.set(year, monthOfYear, dayOfMonth);
                 if (num == 0) {
                     dateTv.setText(DateFormat.format("yyy-MM-dd", c));
-                    refreshDateRecyclerView(dateTv.getText().toString(), dateTv.getText().toString());
+                    refreshDateRecyclerView(true, dateTv.getText().toString(), dateTv.getText().toString());
                 } else if (num == 1) {
                     startDateTv.setText(DateFormat.format("yyy-MM-dd", c));
-                    refreshDateRecyclerView(startDateTv.getText().toString(), endDateTv.getText().toString());
+                    refreshDateRecyclerView(true, startDateTv.getText().toString(), endDateTv.getText().toString());
                 } else if (num == 2) {
                     endDateTv.setText(DateFormat.format("yyy-MM-dd", c));
-                    refreshDateRecyclerView(startDateTv.getText().toString(), endDateTv.getText().toString());
+                    refreshDateRecyclerView(true, startDateTv.getText().toString(), endDateTv.getText().toString());
                 }
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));

@@ -149,7 +149,7 @@ public class OrderFragment extends BaseFragment {
     }
 
     private void initViews() {
-        smartRefreshLayout.setEnableLoadMore(false);
+        smartRefreshLayout.setEnableLoadMore(true);
         smartRefreshLayout.setOnRefreshListener(refreshLayout -> refreshRecyclerView(false));
         smartRefreshLayout.setRefreshHeader(new ClassicsHeader(getActivity()));
         smartRefreshLayout.setRefreshFooter(new ClassicsFooter(getActivity()).setSpinnerStyle(SpinnerStyle.Translate));
@@ -266,7 +266,7 @@ public class OrderFragment extends BaseFragment {
         }
         Observable<String> observable = edtSearch.getText().toString().isEmpty() ?
                 RetrofitManager.createString(ApiService.class).getTodayOrders(currentPage,"true")
-                : RetrofitManager.createString(ApiService.class).getOrdersByOrdernumber(edtSearch.getText().toString());
+                : RetrofitManager.createString(ApiService.class).getOrdersByOrdernumber(edtSearch.getText().toString(),currentPage);
         observable
                 .compose(this.<String>bindToLifecycle())
                 .subscribeOn(Schedulers.io())
@@ -294,8 +294,10 @@ public class OrderFragment extends BaseFragment {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        empty_layout.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
+                        if(orderList.size() == 0) {
+                            empty_layout.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }
                         smartRefreshLayout.finishLoadMore();
                         smartRefreshLayout.finishRefresh();
                     }
@@ -463,7 +465,6 @@ public class OrderFragment extends BaseFragment {
 
             ((TextView) printView.findViewById(R.id.sum_pay_tv)).setText(dayReportBean.getPay_amount() + "");
             ((TextView) printView.findViewById(R.id.cash_tv)).setText(dayReportBean.getCash() + "");
-            ((TextView) printView.findViewById(R.id.card_pay_tv)).setText(dayReportBean.getCredit_card() + "");
             ((TextView) printView.findViewById(R.id.e_pay_tv)).setText(dayReportBean.getE_pay() + "");
             ((TextView) printView.findViewById(R.id.coupon_tv)).setText(dayReportBean.getCashcoupon() + "");
             ((TextView) printView.findViewById(R.id.yingshou_tv)).setText(dayReportBean.getInvoice_amount() + "");

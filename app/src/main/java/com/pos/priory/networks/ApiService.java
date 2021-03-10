@@ -90,13 +90,13 @@ public interface ApiService {
     Observable<String> getTodayOrders(@Query("page") int page,@Query("today") String today);//獲取當天所有訂單
 
     @GET("/api/orders/order_list")
-    Observable<String> getOrdersByOrdernumber(@Query("search") String ordernumber);//通过订单号码查询订单
+    Observable<String> getOrdersByOrdernumber(@Query("search") String ordernumber,@Query("page") int page);//通过订单号码查询订单
 
     @GET("/api/orders/order/{id}")
     Observable<OrderDetailReslutBean> getOrderByOrderId(@Path("id") int id);//通过订单id查询订单
 
     @GET("/api/orders/order_list")
-    Observable<String> getOrdersByDate(@Query("created_date__gte") String created__gte,@Query("created_date__lte") String created__lte);//通过日期查询订单
+    Observable<String> getOrdersByDate(@Query("created_date__gte") String created__gte,@Query("created_date__lte") String created__lte,@Query("page") int page);//通过日期查询订单
 
     @POST("/api/orders/order_calculation")
     Observable<OrderCalculationResultBean> orderCalculation(@Body OrderCalculationParamBean paramsBean);//計算訂單應付
@@ -113,7 +113,7 @@ public interface ApiService {
 
     //Members
     @GET("/api/members/list")
-    Observable<MemberBean> getMembers(@Query("search") String mobile);//根據電話號碼查詢會員信息
+    Observable<MemberBean> getMembers(@Query("search") String mobile,@Query("page") int page);//根據電話號碼查詢會員信息
 
     @GET("/api/members/detail/{id}")
     Observable<MemberDetailResultBean> getMemberDetail(@Path("id") int id);//根據電話號碼查詢會員信息
@@ -169,11 +169,11 @@ public interface ApiService {
                                                   @Query("ordering") String ordering);//获取所有商品
 
     @GET("/api/warehouses/warehouse/returned/list/")
-    Observable<WarehouseReturnBean> getStockListByParamReturn(
+    Observable<WarehouseReturnBean> getStockListByParamReturn(@Query("page") int page,
             @Query("search") String param, @Query("returntype") String returntype, @Query("ordering") String ordering);
 
     @GET("/api/warehouses/warehouse/primary/list/")
-    Observable<WarehouseBean> getStockListByParam(
+    Observable<WarehouseBean> getStockListByParam(@Query("page") int page,
             @Query("search") String param , @Query("category_id") int category, @Query("ordering") String ordering);
 
     @GET("/api/warehouses/whitem_detail/{id}/")

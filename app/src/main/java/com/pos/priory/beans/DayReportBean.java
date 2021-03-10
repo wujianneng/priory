@@ -6,25 +6,24 @@ public class DayReportBean {
 
 
     /**
-     * id : 0
-     * dayend_item : [{"id":0,"status":true,"created":"2021-01-14T09:34:32.417Z","updated":"2021-01-14T09:34:32.417Z","dayend_type":0,"price":0,"quantity":0,"weight":0,"dayend_table":0,"whitem":0}]
+     * id : 68
+     * dayend_item : [{"id":1163,"status":true,"created":"2021-03-02T17:35:48.178154+08:00","updated":"2021-03-02T17:35:48.178163+08:00","dayend_type":0,"price":100,"originprice":100,"quantity":1,"weight":0,"dayend_table":68,"whitem":3246},{"id":1164,"status":true,"created":"2021-03-02T17:35:48.181231+08:00","updated":"2021-03-02T17:35:48.181240+08:00","dayend_type":0,"price":1234.05,"originprice":1299,"quantity":1,"weight":1.94,"dayend_table":68,"whitem":10711},{"id":1165,"status":true,"created":"2021-03-02T17:35:48.184139+08:00","updated":"2021-03-02T17:35:48.184148+08:00","dayend_type":0,"price":664.05,"originprice":699,"quantity":1,"weight":1.09,"dayend_table":68,"whitem":25179},{"id":1166,"status":true,"created":"2021-03-02T17:35:48.186978+08:00","updated":"2021-03-02T17:35:48.186987+08:00","dayend_type":0,"price":474.05,"originprice":499,"quantity":1,"weight":0.41,"dayend_table":68,"whitem":43336},{"id":1167,"status":true,"created":"2021-03-02T17:35:48.189975+08:00","updated":"2021-03-02T17:35:48.189984+08:00","dayend_type":0,"price":474.05,"originprice":499,"quantity":1,"weight":0.45,"dayend_table":68,"whitem":35767},{"id":1168,"status":true,"created":"2021-03-02T17:35:48.192807+08:00","updated":"2021-03-02T17:35:48.192815+08:00","dayend_type":0,"price":499,"originprice":499,"quantity":1,"weight":0.5,"dayend_table":68,"whitem":15047},{"id":1169,"status":true,"created":"2021-03-02T17:35:48.195710+08:00","updated":"2021-03-02T17:35:48.195719+08:00","dayend_type":0,"price":50,"originprice":50,"quantity":1,"weight":0,"dayend_table":68,"whitem":3180}]
      * status : true
-     * created : 2021-01-14T09:34:32.417Z
-     * updated : 2021-01-14T09:34:32.417Z
-     * dayend_no : string
-     * dayendno_num : 0
-     * dayend_date : 2021-01-14
-     * invoice_amount : 0
-     * cash : 0
-     * credit_card : 0
-     * alipay : 0
-     * wechatpay : 0
-     * cashcoupon : 0
-     * other_pay : 0
-     * exchange : 0
-     * returned : 0
-     * return_goldprice : 0
-     * shop : 0
+     * created : 2021-03-02T17:35:48.174532+08:00
+     * updated : 2021-03-02T17:35:48.174545+08:00
+     * dayend_no : 0042021030202
+     * dayendno_num : 2
+     * dayend_date : 2021-03-02
+     * invoice_amount : 3495.0
+     * cash : 3495.0
+     * e_pay : 0.0
+     * cashcoupon : 0.0
+     * other_pay : 0.0
+     * manual_exchange : 0.0
+     * exchange : 0.0
+     * returned : 0.0
+     * return_goldprice : 0.0
+     * shop : 7
      */
 
     private int id;
@@ -36,11 +35,10 @@ public class DayReportBean {
     private String dayend_date;
     private double invoice_amount;
     private double cash;
-    private double credit_card;
-    private double alipay;
-    private double wechatpay;
+    private double e_pay;
     private double cashcoupon;
     private double other_pay;
+    private double manual_exchange;
     private double exchange;
     private double returned;
     private double return_goldprice;
@@ -119,28 +117,12 @@ public class DayReportBean {
         this.cash = cash;
     }
 
-    public double getCredit_card() {
-        return credit_card;
+    public double getE_pay() {
+        return e_pay;
     }
 
-    public void setCredit_card(double credit_card) {
-        this.credit_card = credit_card;
-    }
-
-    public double getAlipay() {
-        return alipay;
-    }
-
-    public void setAlipay(double alipay) {
-        this.alipay = alipay;
-    }
-
-    public double getWechatpay() {
-        return wechatpay;
-    }
-
-    public void setWechatpay(double wechatpay) {
-        this.wechatpay = wechatpay;
+    public void setE_pay(double e_pay) {
+        this.e_pay = e_pay;
     }
 
     public double getCashcoupon() {
@@ -157,6 +139,14 @@ public class DayReportBean {
 
     public void setOther_pay(double other_pay) {
         this.other_pay = other_pay;
+    }
+
+    public double getManual_exchange() {
+        return manual_exchange;
+    }
+
+    public void setManual_exchange(double manual_exchange) {
+        this.manual_exchange = manual_exchange;
     }
 
     public double getExchange() {
@@ -201,16 +191,17 @@ public class DayReportBean {
 
     public static class DayendItemBean {
         /**
-         * id : 0
+         * id : 1163
          * status : true
-         * created : 2021-01-14T09:34:32.417Z
-         * updated : 2021-01-14T09:34:32.417Z
+         * created : 2021-03-02T17:35:48.178154+08:00
+         * updated : 2021-03-02T17:35:48.178163+08:00
          * dayend_type : 0
-         * price : 0
-         * quantity : 0
-         * weight : 0
-         * dayend_table : 0
-         * whitem : 0
+         * price : 100.0
+         * originprice : 100.0
+         * quantity : 1
+         * weight : 0.0
+         * dayend_table : 68
+         * whitem : 3246
          */
 
         private int id;
@@ -219,9 +210,10 @@ public class DayReportBean {
         private String updated;
         private int dayend_type;
         private double price;
+        private double originprice;
         private int quantity;
         private double weight;
-        private double dayend_table;
+        private int dayend_table;
         private int whitem;
 
         public int getId() {
@@ -272,6 +264,14 @@ public class DayReportBean {
             this.price = price;
         }
 
+        public double getOriginprice() {
+            return originprice;
+        }
+
+        public void setOriginprice(double originprice) {
+            this.originprice = originprice;
+        }
+
         public int getQuantity() {
             return quantity;
         }
@@ -288,11 +288,11 @@ public class DayReportBean {
             this.weight = weight;
         }
 
-        public double getDayend_table() {
+        public int getDayend_table() {
             return dayend_table;
         }
 
-        public void setDayend_table(double dayend_table) {
+        public void setDayend_table(int dayend_table) {
             this.dayend_table = dayend_table;
         }
 
